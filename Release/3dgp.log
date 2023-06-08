@@ -1,0 +1,63 @@
+﻿C:\Users\2220036\Desktop\x3dgp.00\Source\Shader\blur_ps.hlsl(58,17-43): warning X3571: pow(f, e) will not work for negative f, use abs(f) or conditionally handle negative values if you expect them
+  
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\blur_ps.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\fullscreen_quad_ps.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\fullscreen_quad_vs.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\geometric_primitive_ps.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\geometric_primitive_vs.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\gltf_model_ps.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\gltf_model_vs.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\luminance_extraction_ps.cso
+C:\Users\2220036\Desktop\x3dgp.00\Source\Shader\skinned_mesh_ps.hlsl(14,17-37): warning X3571: pow(f, e) will not work for negative f, use abs(f) or conditionally handle negative values if you expect them
+  
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\skinned_mesh_ps.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\skinned_mesh_vs.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\sprite_change_ps.cso
+C:\Users\2220036\Desktop\x3dgp.00\Source\Shader\sprite_ps.hlsl(14,17-37): warning X3571: pow(f, e) will not work for negative f, use abs(f) or conditionally handle negative values if you expect them
+  
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\sprite_ps.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\sprite_vs.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\static_mesh_ps.cso
+  compilation object save succeeded; see C:\Users\2220036\Desktop\x3dgp.00\static_mesh_vs.cso
+  imgui.cpp
+  imgui_draw.cpp
+  imgui_impl_dx11.cpp
+  imgui_impl_win32.cpp
+  imgui_ja_gryph_ranges.cpp
+  imgui_widgets.cpp
+  framebuffer.cpp
+  framework.cpp
+  fullscreen_quad.cpp
+  geometric_primitive.cpp
+  gltf_model.cpp
+  main.cpp
+  Graphics.cpp
+  LambertShader.cpp
+  Model.cpp
+  ModelResource.cpp
+  GamePad.cpp
+  Input.cpp
+  Mouse.cpp
+  BaseScene.cpp
+  SceneGame.cpp
+  SceneManager.cpp
+  SceneTitle.cpp
+  Transform.cpp
+  shader.cpp
+  skinned_mesh.cpp
+  sprite.cpp
+  sprite_batch.cpp
+  static_mesh.cpp
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.29.30133\include\memory(3416,56): warning C4244: '引数': '_Ty' から 'float' への変換です。データが失われる可能性があります。
+          with
+          [
+              _Ty=int
+          ] (ソース ファイルをコンパイルしています Source\framework.cpp)
+C:\Users\2220036\Desktop\x3dgp.00\Source\framework.cpp(339): message : コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<skinned_mesh,std::default_delete<skinned_mesh>> std::make_unique<skinned_mesh,ID3D11Device*,const char(&)[21],int,bool,0>(ID3D11Device *&&,const char (&)[21],int &&,bool &&)' のリファレンスを確認してください
+  texture.cpp
+C:\Users\2220036\Desktop\x3dgp.00\Source\texture.h(2,10): fatal error C1083: include ファイルを開けません。'WICTextureLoader.h':No such file or directory (ソース ファイルをコンパイルしています Source\texture.cpp)
+C:\Users\2220036\Desktop\x3dgp.00\Source\texture.h(2,10): fatal error C1083: include ファイルを開けません。'WICTextureLoader.h':No such file or directory (ソース ファイルをコンパイルしています Source\gltf_model.cpp)
+C:\Users\2220036\Desktop\x3dgp.00\Source\texture.h(2,10): fatal error C1083: include ファイルを開けません。'WICTextureLoader.h':No such file or directory (ソース ファイルをコンパイルしています Source\sprite.cpp)
+C:\Users\2220036\Desktop\x3dgp.00\Source\texture.h(2,10): fatal error C1083: include ファイルを開けません。'WICTextureLoader.h':No such file or directory (ソース ファイルをコンパイルしています Source\skinned_mesh.cpp)
+C:\Users\2220036\Desktop\x3dgp.00\Source\texture.h(2,10): fatal error C1083: include ファイルを開けません。'WICTextureLoader.h':No such file or directory (ソース ファイルをコンパイルしています Source\sprite_batch.cpp)
+C:\Users\2220036\Desktop\x3dgp.00\Source\texture.h(2,10): fatal error C1083: include ファイルを開けません。'WICTextureLoader.h':No such file or directory (ソース ファイルをコンパイルしています Source\static_mesh.cpp)
