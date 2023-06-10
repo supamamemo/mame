@@ -9,7 +9,8 @@ Player::Player()
     
     //model = new Model(graphics.GetDevice(), "./resources/idle3.fbx", false);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
-    model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
+    //model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = new Model(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);    //model = new Model(graphics.GetDevice(), "./resources/mame.fbx", 0, true);
     //model = new Model(graphics.GetDevice(), "./resources/byoga/plantune.fbx", 0, true);
     //model = new Model(graphics.GetDevice(), "/resources/byoga/nico.fbx");
