@@ -9,15 +9,12 @@
 
 void SceneGame::Initialize()
 {
-    player = new Player();
-    player->Initialize();
-
     StageManager::Instance().ChangeStage(new StagePlains);
 }
 
 void SceneGame::Finalize()
 {
-    player->Finalize();
+    StageManager::Instance().Clear();
 }
 
 void SceneGame::Begin()
@@ -36,9 +33,8 @@ void SceneGame::Update(float elapesdTime)
     }
 
     // stage更新
-    StageManager::Instance().Update();
+    StageManager::Instance().Update(elapesdTime);
 
-    player->Update();
 
     End();
 }
@@ -66,12 +62,8 @@ void SceneGame::Render(float elapsedTime)
     shader->Begin(graphics.GetDeviceContext(), rc);
 
     StageManager::Instance().Render(elapsedTime);
-
-    // プレイヤー描画
-    player->Render(elapsedTime);
 }
 
 void SceneGame::DrawDebug()
 {
-    player->DrawDebug();
 }

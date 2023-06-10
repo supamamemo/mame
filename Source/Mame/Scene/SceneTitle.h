@@ -10,7 +10,7 @@
 class SceneTitle : public Mame::Scene::BaseScene
 {
 public:
-    SceneTitle() {}
+    SceneTitle();
     ~SceneTitle()override {}
 
     void Initialize()override;      // ‰Šú‰»
@@ -38,7 +38,7 @@ public:
     Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
 
 public:
-    Player* player = nullptr;
+    std::unique_ptr<Player>player;
 
     Sprite_dissolve sprite_dissolve;
 

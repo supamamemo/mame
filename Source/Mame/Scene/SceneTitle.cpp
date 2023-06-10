@@ -9,12 +9,17 @@
 #include "../../misc.h"
 #include "../../texture.h"
 
+SceneTitle::SceneTitle()
+{
+    // playerê∂ê¨
+    player = std::make_unique<Player>();
+}
+
 // èâä˙âª
 void SceneTitle::Initialize()
 {
     Graphics& graphics = Graphics::Instance();
 
-    player = new Player();
     player->Initialize();
 
 

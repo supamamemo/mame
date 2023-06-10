@@ -18,6 +18,5 @@ public:
     void DrawDebug()override;
 
 public:
-    Player* player = nullptr;
 };
 
