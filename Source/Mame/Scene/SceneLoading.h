@@ -22,7 +22,7 @@ public:
     void Begin()override;
 
     // XVˆ—
-    void Update(float elapesdTime)override;
+    void Update(float elapsedTime)override;
 
     void End()override;
 

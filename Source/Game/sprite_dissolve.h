@@ -24,14 +24,24 @@ public:
     bool debug_initialize = false;
 
     // load—p
+    void fadeIn(float elapsedTime);
     void fadeOut(float elapsedTime);
-    void SetFadeOutTexture(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 texSize, float delay, int textureType)
+    void SetFadeInTexture(DirectX::XMFLOAT2 position, DirectX::XMFLOAT2 textureSize, float delay, int textureType)
     {
-        spr_dissolve.pos = pos;
-        spr_dissolve.posD = texSize;
+        spr_dissolve.pos = position;
+        spr_dissolve.posD = textureSize;
+        spr_dissolve.delay = delay;
+        spr_dissolve.mask_texture_value = textureType;
+        spr_dissolve.dissolve_value1 = 1.5f;
+    }
+    void SetFadeOutTexture(DirectX::XMFLOAT2 position, DirectX::XMFLOAT2 textureSize, float delay, int textureType)
+    {
+        spr_dissolve.pos = position;
+        spr_dissolve.posD = textureSize;
         spr_dissolve.delay = delay;
         spr_dissolve.mask_texture_value = textureType;
     }
+    bool fadeInReady(float time) { return spr_dissolve.dissolve_value1 < time; }
     bool fadeOutReady(float time) { return spr_dissolve.dissolve_value1 > time; }
 
 private:

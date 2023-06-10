@@ -157,7 +157,8 @@ void SceneTitle::Initialize()
         //}
 
         //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fire));
-        sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/ground.png");
+        sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/fade.jpg");
+        //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/ground.png");
     }
 }
 
@@ -175,8 +176,6 @@ void SceneTitle::Begin()
 // XVˆ—
 void SceneTitle::Update(float elapesdTime)
 {
-    Begin();
-
     GamePad& gamePad = Input::Instance().GetGamePad();
 
 
@@ -204,8 +203,6 @@ void SceneTitle::Update(float elapesdTime)
     }
 
     player->Update();
-
-    End();
 }
 
 
@@ -343,6 +340,7 @@ void SceneTitle::DrawDebug()
 
     player->model->skinned_meshes.Drawdebug();
 
-    sprite_dissolve.DrawDebug(L"./resources/ground.png");
+    //sprite_dissolve.DrawDebug(L"./resources/ground.png");
+    sprite_dissolve.DrawDebug(L"./resources/fade.jpg");
 #endif
 }

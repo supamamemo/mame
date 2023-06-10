@@ -8,7 +8,7 @@
 // {
 //
 //   float4 parameters;                 // Offset:    0 Size:    16
-//   float4 edgeColor;                  // Offset:   16 Size:    16
+//   float4 edgeColor;                  // Offset:   16 Size:    16 [unused]
 //
 // }
 //
@@ -41,14 +41,14 @@
 //
 ps_5_0
 dcl_globalFlags refactoringAllowed | skipOptimization
-dcl_constantbuffer CB3[2], immediateIndexed
+dcl_constantbuffer CB3[1], immediateIndexed
 dcl_sampler s0, mode_default
 dcl_resource_texture2d (float,float,float,float) t0
 dcl_resource_texture2d (float,float,float,float) t1
 dcl_input_ps linear v1.xyzw
 dcl_input_ps linear v2.xy
 dcl_output o0.xyzw
-dcl_temps 3
+dcl_temps 2
 //
 // Initial variable locations:
 //   v0.x <- pin.position.x; v0.y <- pin.position.y; v0.z <- pin.position.z; v0.w <- pin.position.w; 
@@ -56,55 +56,23 @@ dcl_temps 3
 //   v2.x <- pin.texcoord.x; v2.y <- pin.texcoord.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 10 "C:\Users\2220036\Desktop\x3dgp.00\Source\Shader\sprite_fade_ps.hlsl"
+#line 37 "C:\Users\koro\OneDrive\チEクトップ\ゲーム制作\Source\Shader\sprite_fade_ps.hlsl"
 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v2.xyxx, t0.xyzw, s0
 mul r0.xyzw, r0.xyzw, v1.xyzw  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z; r0.w <- color.w
 
-#line 12
+#line 39
 sample_indexable(texture2d)(float,float,float,float) r1.x, v2.xyxx, t1.xyzw, s0
 mov r1.x, r1.x  // r1.x <- mask_value
 
-#line 14
-ge r1.y, r1.x, cb3[0].x
-movc r1.y, r1.y, l(1.000000), l(0)  // r1.y <- alpha
+#line 41
+ge r1.x, r1.x, cb3[0].x
+movc r1.x, r1.x, l(1.000000), l(0)  // r1.x <- alpha
 
-#line 15
-mul r0.w, r0.w, r1.y
-
-#line 21
-mov r1.z, -cb3[0].x
-add r1.z, r1.z, r1.x
-ge r1.z, cb3[0].x, r1.z
-movc r1.z, r1.z, l(1.000000), l(0)
-ge r1.w, r1.x, cb3[0].x
-movc r1.w, r1.w, l(1.000000), l(0)
-mul r1.z, r1.w, r1.z
-add r1.w, cb3[0].z, cb3[0].x
-ge r1.x, r1.w, r1.x
-movc r1.x, r1.x, l(1.000000), l(0)
-mul r1.x, r1.x, r1.z  // r1.x <- edgeValue
-
-#line 23
-ge r1.z, l(0.200000), r1.x
-movc r1.z, r1.z, l(1.000000), l(0)  // r1.z <- temp1
-
-#line 24
-mul r2.xyz, r1.xxxx, cb3[1].xyzx
-add r0.xyz, r0.xyzx, r2.xyzx
-
-#line 25
-mul r0.xyz, r1.zzzz, r0.xyzx
-
-#line 26
-add r1.x, r1.x, r1.y
-max r1.x, r1.x, l(0.000000)
-min r1.x, r1.x, l(1.000000)  // r1.x <- alpha
-
-#line 29
+#line 48
 mul r0.w, r0.w, r1.x
 
-#line 33
+#line 50
 mov o0.xyz, r0.xyzx
 mov o0.w, r0.w
 ret 
-// Approximately 30 instruction slots used
+// Approximately 10 instruction slots used

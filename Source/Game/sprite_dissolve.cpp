@@ -176,6 +176,13 @@ void Sprite_dissolve::DrawDebug(const wchar_t* filename)
     ImGui::End();
 }
 
+// フェイドインを自動的にしてくれる
+void Sprite_dissolve::fadeIn(float elapsedTime)
+{
+    spr_dissolve.dissolve_value1 -= elapsedTime;
+}
+
+// フェイドアウトを自動的にしてくれる
 void Sprite_dissolve::fadeOut(float elapsedTime)
 {
     spr_dissolve.dissolve_value1 += elapsedTime;

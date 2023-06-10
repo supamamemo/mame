@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Character.h"
+#include "Block.h"
 
-class Player : public Character
+class GrassBlock :
+    public Block
 {
 public:
-    Player();
-    ~Player()override;
+    GrassBlock();
+    ~GrassBlock()override;
 
     void Initialize();      // ‰Šú‰»
     void Finalize();        // I—¹‰»
@@ -16,7 +17,6 @@ public:
     void Render(float elapsedTime);          // •`‰æˆ—
     void DrawDebug()override;
 
-public:
-    void InputMove();
+    
 };
 

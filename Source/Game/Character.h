@@ -22,6 +22,6 @@ public:
     virtual void DrawDebug();
     
 public:
-    Model* model = nullptr;
+    std::unique_ptr<Model> model;
 };
 

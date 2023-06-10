@@ -3,7 +3,6 @@
 // デバッグ用
 void Transform::DrawDebug()
 {
-    ImGui::Begin("player");
     if (ImGui::TreeNode("Transform"))
     {
         ImGui::DragFloat3("Position", &position.x, 1.0f, -FLT_MAX, FLT_MAX);
@@ -30,7 +29,6 @@ void Transform::DrawDebug()
 
         ImGui::TreePop();
     }
-    ImGui::End();
 }
 
 void Transform::Reset()

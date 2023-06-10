@@ -3,6 +3,7 @@
 #include "Stage.h"
 
 #include "../Player.h"
+#include "../GrassBlock.h"
 
 class StagePlains : public Stage
 {
@@ -20,5 +21,6 @@ public:
 
 private:
     std::unique_ptr<Player>player;
+    std::unique_ptr<GrassBlock> grassBlock;
 };
 
