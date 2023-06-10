@@ -16,7 +16,7 @@ namespace Mame::Scene
             return instance;
         }
 
-        void Update();  // 更新処理
+        void Update(float elapesdTime);  // 更新処理
         void Render(float elapsedTime);  // 描画処理
         void Clear();   // シーンクリア
 

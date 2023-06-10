@@ -22,7 +22,7 @@ float4 main(VS_OUT pin) : SV_TARGET
     float edgeValue = step(mask - parameters.x, parameters.x) * step(parameters.x, mask) * step(mask, parameters.x + parameters.z);
 
 
-    color.rgb += edgeColor.rbg * edgeValue;
+    color.rgb += edgeColor.rgb * edgeValue;
     alpha = saturate(alpha + edgeValue);
 
     // color‚Ì“§‰ß’l‚ÉæZ‚·‚é

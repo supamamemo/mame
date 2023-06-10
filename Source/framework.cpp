@@ -53,7 +53,7 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
     input.Update();
 
     // シーン更新処理
-    Mame::Scene::SceneManager::Instance().Update();
+    Mame::Scene::SceneManager::Instance().Update(elapsed_time);
 
     //ImGui::ShowDemoWindow();
 

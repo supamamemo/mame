@@ -1,0 +1,93 @@
+#include "SceneLoading.h"
+#include "../Graphics/Graphics.h"
+#include "SceneManager.h"
+
+// 初期化
+void SceneLoading::Initialize()
+{
+    Graphics& graphics = Graphics::Instance();
+
+    // spriteDissolve
+    spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/load.png");
+    spriteDissolve.SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
+
+    // スレッド開始
+    thread = new std::thread(LoadingThread, this);
+}
+
+// 終了化
+void SceneLoading::Finalize()
+{
+    // スレッド終了化
+    thread->join();
+    if (thread != nullptr)
+    {
+        delete thread;
+        thread = nullptr;
+    }
+}
+
+void SceneLoading::Begin()
+{
+}
+
+// 更新処理
+void SceneLoading::Update(float elapesdTime)
+{
+    spriteDissolve.fadeOut(elapesdTime);
+
+    // 次のシーンの準備が完了したらシーンを切り替える
+    if (nextScene->IsReady() &&
+        spriteDissolve.fadeOutReady(1.5f))
+    {
+        Mame::Scene::SceneManager::Instance().ChangeScene(nextScene);
+        return;
+    }
+}
+
+void SceneLoading::End()
+{
+}
+
+// 描画処理
+void SceneLoading::Render(float elapsedTime)
+{
+    Graphics& graphics = Graphics::Instance();
+    ID3D11DeviceContext* deviceContext = graphics.GetDeviceContext();
+    ID3D11RenderTargetView* renderTargetView = graphics.GetRenderTargetView();
+    ID3D11DepthStencilView* depthStencileView = graphics.GetDepthStencilView();
+
+    // 画面クリア&レンダーターゲット設定
+    FLOAT color[] = { 0.0f,1.0f,0.0f,1.0f };
+    deviceContext->ClearRenderTargetView(renderTargetView, color);
+    deviceContext->ClearDepthStencilView(depthStencileView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencileView);
+
+    // fade out
+    {
+        spriteDissolve.Render();
+    }
+}
+
+void SceneLoading::DrawDebug()
+{
+#ifdef USE_IMGUI
+    spriteDissolve.DrawDebug(L"./resources/load.png");
+#endif// USE_IMGUI
+}
+
+// ローディングスレッド
+void SceneLoading::LoadingThread(SceneLoading* scene)
+{
+    // COM関連の初期化でスレッド毎に呼ぶ必要がある
+    std::ignore = CoInitialize(nullptr); // std::ignoreで返り値警告解消
+
+    // 次のシーンの初期化を行う
+    scene->nextScene->Initialize();
+
+    // スレッドが終わる前にCOM関連の終了化
+    CoUninitialize();
+
+    // 次のシーンの準備完了設定
+    scene->nextScene->SetReady();
+}

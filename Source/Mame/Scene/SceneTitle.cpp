@@ -1,5 +1,6 @@
 #include "SceneTitle.h"
 #include "SceneGame.h"
+#include "SceneLoading.h"
 #include "../Mame.h"
 
 #include "../Graphics/Graphics.h"
@@ -151,7 +152,7 @@ void SceneTitle::Initialize()
         //}
 
         //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fire));
-        sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade));
+        sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/ground.png");
     }
 }
 
@@ -167,7 +168,7 @@ void SceneTitle::Begin()
 }
 
 // XVˆ—
-void SceneTitle::Update()
+void SceneTitle::Update(float elapesdTime)
 {
     Begin();
 
@@ -176,7 +177,7 @@ void SceneTitle::Update()
 
     if (gamePad.GetButtonDown() & GamePad::BTN_A)
     {
-        Mame::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
+        Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
     }
 
     // UVScroll
@@ -337,6 +338,6 @@ void SceneTitle::DrawDebug()
 
     player->model->skinned_meshes.Drawdebug();
 
-    sprite_dissolve.DrawDebug();
+    sprite_dissolve.DrawDebug(L"./resources/ground.png");
 #endif
 }

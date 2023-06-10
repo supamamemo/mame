@@ -82,7 +82,7 @@ movc r1.x, r1.x, l(1.000000), l(0)
 mul r1.x, r1.x, r1.z  // r1.x <- edgeValue
 
 #line 25
-mul r2.xyz, r1.xxxx, cb3[1].xzyx
+mul r2.xyz, r1.xxxx, cb3[1].xyzx
 add r0.xyz, r0.xyzx, r2.xyzx
 
 #line 26

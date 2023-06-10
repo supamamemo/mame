@@ -153,6 +153,9 @@
     <ClCompile Include="Source\Game\sprite_dissolve.cpp">
       <Filter>mameLib\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Mame\Scene\SceneLoading.cpp">
+      <Filter>mameLib\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\framebuffer.h">
@@ -283,6 +286,9 @@
     </ClInclude>
     <ClInclude Include="Source\Game\sprite_dissolve.h">
       <Filter>mameLib\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mame\Scene\SceneLoading.h">
+      <Filter>mameLib\Scene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

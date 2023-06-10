@@ -24,7 +24,7 @@ void SceneGame::Begin()
 {
 }
 
-void SceneGame::Update()
+void SceneGame::Update(float elapesdTime)
 {
     Begin();
 

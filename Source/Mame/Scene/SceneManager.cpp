@@ -3,9 +3,9 @@
 namespace Mame::Scene
 {
     // 更新処理
-    void SceneManager::Update()
+    void SceneManager::Update(float elapesdTime)
     {
-        if (nextScene != nullptr)
+        if (nextScene)
         {
             // 古いシーンを終了
             Clear();
@@ -14,14 +14,17 @@ namespace Mame::Scene
             currentScene = nextScene;
             nextScene = nullptr;
 
-            // シーン初期化処理
-            currentScene->Initialize();
+            // シーン初期化処理(マルチスレッド処理をしていない場合に行う)
+            if (!currentScene->IsReady())
+            {
+                currentScene->Initialize();
+            }
         }
 
-        if (currentScene != nullptr)
+        if (currentScene)
         {
             currentScene->Begin();
-            currentScene->Update();
+            currentScene->Update(elapesdTime);
 #ifdef USE_IMGUI
             currentScene->DrawDebug();
 #endif
@@ -32,21 +35,19 @@ namespace Mame::Scene
     // 描画処理
     void SceneManager::Render(float elapsedTime)
     {
-        if (currentScene != nullptr)
-        {
-            currentScene->Render(elapsedTime);
-        }
+        if (!currentScene)return;
+
+        currentScene->Render(elapsedTime);        
     }
 
     // シーンクリア
     void SceneManager::Clear()
     {
-        if (currentScene != nullptr)
-        {
-            currentScene->Finalize();
-            delete currentScene;
-            currentScene = nullptr;
-        }
+        if (!currentScene)return;
+        
+        currentScene->Finalize();
+        delete currentScene;
+        currentScene = nullptr;
     }
 
 

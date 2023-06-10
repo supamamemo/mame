@@ -221,6 +221,7 @@
     <ClCompile Include="Source\Mame\Input\Mouse.cpp" />
     <ClCompile Include="Source\Mame\Scene\BaseScene.cpp" />
     <ClCompile Include="Source\Mame\Scene\SceneGame.cpp" />
+    <ClCompile Include="Source\Mame\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\Mame\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Mame\Scene\SceneTitle.cpp" />
     <ClCompile Include="Source\Mame\Transform.cpp" />
@@ -265,6 +266,7 @@
     <ClInclude Include="Source\Mame\Mame.h" />
     <ClInclude Include="Source\Mame\Scene\BaseScene.h" />
     <ClInclude Include="Source\Mame\Scene\SceneGame.h" />
+    <ClInclude Include="Source\Mame\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Mame\Scene\SceneManager.h" />
     <ClInclude Include="Source\Mame\Scene\SceneTitle.h" />
     <ClInclude Include="Source\Mame\Transform.h" />

@@ -5,8 +5,7 @@
 #include "../misc.h"
 
 
-
-void Sprite_dissolve::Initialize(int state)
+void Sprite_dissolve::Initialize(int state, const wchar_t* filename)
 {
     spr_dissolve.dissolve_state = state;
 
@@ -56,7 +55,7 @@ void Sprite_dissolve::Initialize(int state)
     };
 
     //dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/chip_win.png");
-    dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/ground.png");
+    dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), filename);
 
     // mask
     {
@@ -68,6 +67,20 @@ void Sprite_dissolve::Initialize(int state)
             mask_texture[2].GetAddressOf(), &mask_texture2d_desc);
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dissolve_3.png",
             mask_texture[3].GetAddressOf(), &mask_texture2d_desc);
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise.jpg",
+            mask_texture[4].GetAddressOf(), &mask_texture2d_desc);
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise1.jpg",
+            mask_texture[5].GetAddressOf(), &mask_texture2d_desc);
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise2.jpg",
+            mask_texture[6].GetAddressOf(), &mask_texture2d_desc);
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise3.jpg",
+            mask_texture[7].GetAddressOf(), &mask_texture2d_desc);
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise4.png",
+            mask_texture[8].GetAddressOf(), &mask_texture2d_desc);
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/di.png",
+            mask_texture[9].GetAddressOf(), &mask_texture2d_desc);
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dl.png",
+            mask_texture[10].GetAddressOf(), &mask_texture2d_desc);
     }
 
     // dissolve_sprite
@@ -129,7 +142,7 @@ void Sprite_dissolve::Render()
     }
 }
 
-void Sprite_dissolve::DrawDebug()
+void Sprite_dissolve::DrawDebug(const wchar_t* filename)
 {
     ImGui::Begin("sprite_dissolve");
 
@@ -147,16 +160,30 @@ void Sprite_dissolve::DrawDebug()
         spr_dissolve.dissolve_value = spr_dissolve.dissolve_value1 - spr_dissolve.delay;
     }
 
-    ImGui::SliderInt("mask_texture", &spr_dissolve.mask_texture_value, 0, 3);
+    ImGui::SliderInt("mask_texture", &spr_dissolve.mask_texture_value, 0, 10);
 
-    ImGui::SliderFloat4("edgeColor", &spr_dissolve.edgeColor.x, 0.0f, 1.0f);
+    ImGui::ColorEdit4("test", &spr_dissolve.edgeColor.x);
+
+    ImGui::SliderFloat("edge_threshold", &spr_dissolve.edge_threshold, 0.0f, 1.0f);
 
     // デバッグ用
     ImGui::SliderInt("dissolve_type", &spr_dissolve.dissolve_state, 0, 1);
     if (ImGui::Button("debug_intialize"))
     {
-        Initialize(spr_dissolve.dissolve_state);
+        Initialize(spr_dissolve.dissolve_state,filename);
     }
 
     ImGui::End();
+}
+
+void Sprite_dissolve::fadeOut(float elapsedTime)
+{
+    spr_dissolve.dissolve_value1 += elapsedTime;
+
+    if (spr_dissolve.dissolve_state == static_cast<int>(Dissolve::Fade))
+    {
+        // いい感じにfadeになるように設定してる
+        spr_dissolve.dissolve_value = spr_dissolve.dissolve_value1 - spr_dissolve.delay;
+    }
+
 }
