@@ -2,10 +2,13 @@
 
 #include "Stage.h"
 
+#include "../Player.h"
+#include "../GrassBlock.h"
+
 class StagePlains : public Stage
 {
 public:
-    StagePlains() {}
+    StagePlains();
     ~StagePlains()override {}
 
     void Initialize()override;  // ‰Šú‰»
@@ -15,5 +18,9 @@ public:
     void End()override;         // –ˆƒtƒŒ[ƒ€ˆê”ÔÅŒã‚ÉŒÄ‚Î‚ê‚é
     void Render(float elapsedTime)override;     // •`‰æˆ—
     void DrawDebug()override;
+
+private:
+    std::unique_ptr<Player>player;
+    std::unique_ptr<GrassBlock> grassBlock[10];
 };
 

@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "../Mame/Graphics/Graphics.h"
 #include "../Mame/Input/Input.h"
-#include "../skinned_mesh.h"
 
 Player::Player()
 {
@@ -9,7 +8,9 @@ Player::Player()
 
     
     //model = new Model(graphics.GetDevice(), "./resources/idle3.fbx", false);
-    model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
+    //model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = new Model(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);    //model = new Model(graphics.GetDevice(), "./resources/mame.fbx", 0, true);
     //model = new Model(graphics.GetDevice(), "./resources/byoga/plantune.fbx", 0, true);
     //model = new Model(graphics.GetDevice(), "/resources/byoga/nico.fbx");
@@ -22,7 +23,7 @@ Player::~Player()
 void Player::Initialize()
 {
     model->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
-    model->GetTransform()->SetRotation(DirectX::XMFLOAT3(0, DirectX::XMConvertToRadians(180), 0));
+    model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
     model->GetTransform()->SetScale(DirectX::XMFLOAT3(3, 3, 3));
 }
 
@@ -36,8 +37,6 @@ void Player::Begin()
 
 void Player::Update()
 {
-    Begin();
-
     // GamePadŽæ“¾
     GamePad& gamePad = Input::Instance().GetGamePad();
     
@@ -45,14 +44,12 @@ void Player::Update()
 
     if (gamePad.GetButton() & GamePad::BTN_B)
     {
-        pos.x += 0.01;
+        pos.x += 0.01f;
     }
 
     model->GetTransform()->SetPosition(pos);
 
     InputMove();
-
-    End();
 }
 
 void Player::End()

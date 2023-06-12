@@ -18,7 +18,5 @@ public:
 
 public:
     void InputMove();
-
-    //std::unique_ptr<skinned_mesh> skinned_meshes;
 };
 

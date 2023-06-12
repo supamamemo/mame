@@ -15,10 +15,11 @@ public:
         return instance;
     }
 
-    void Update();  // 更新処理
+    void Update(float elapsedTime);  // 更新処理
     void Render(float elapsedTime); // 描画処理
     void Clear();   // クリア
 
+    // ステージ切り替え
     void ChangeStage(Stage* stage);
 
     Stage* GetCurrentStage()const { return currentStage; }

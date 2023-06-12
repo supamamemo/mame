@@ -81,7 +81,7 @@ dcl_temps 6
 //   v5.x <- pin.color.x; v5.y <- pin.color.y; v5.z <- pin.color.z; v5.w <- pin.color.w; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 10 "C:\Users\2220036\Desktop\x3dgp.00\Source\Shader\skinned_mesh_ps.hlsl"
+#line 10 "C:\Users\koro\OneDrive\チEクトップ\ゲーム制作\Source\Shader\skinned_mesh_ps.hlsl"
 sample_indexable(texture2d)(float,float,float,float) r0.x, v4.xyxx, t15.xyzw, s0
 mul r0.x, r0.x, v5.x  // r0.x <- mask_value
 

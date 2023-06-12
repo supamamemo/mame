@@ -1,5 +1,6 @@
 #include "SceneTitle.h"
 #include "SceneGame.h"
+#include "SceneLoading.h"
 #include "../Mame.h"
 
 #include "../Graphics/Graphics.h"
@@ -8,12 +9,17 @@
 #include "../../misc.h"
 #include "../../texture.h"
 
+SceneTitle::SceneTitle()
+{
+    // playerê∂ê¨
+    player = std::make_unique<Player>();
+}
+
 // èâä˙âª
 void SceneTitle::Initialize()
 {
     Graphics& graphics = Graphics::Instance();
 
-    player = new Player();
     player->Initialize();
 
 
@@ -151,7 +157,8 @@ void SceneTitle::Initialize()
         //}
 
         //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fire));
-        sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade));
+        sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/fade.jpg");
+        //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/ground.png");
     }
 }
 
@@ -167,24 +174,22 @@ void SceneTitle::Begin()
 }
 
 // çXêVèàóù
-void SceneTitle::Update()
+void SceneTitle::Update(float elapesdTime)
 {
-    Begin();
-
     GamePad& gamePad = Input::Instance().GetGamePad();
 
 
     if (gamePad.GetButtonDown() & GamePad::BTN_A)
     {
-        Mame::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
+        Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
     }
 
     // UVScroll
     {
         if (gamePad.GetButton() & GamePad::BTN_X)
-            scroll_direction.x += 0.001;
+            scroll_direction.x += 0.001f;
         if (gamePad.GetButton() & GamePad::BTN_Y)
-            scroll_direction.x -= 0.001;
+            scroll_direction.x -= 0.001f;
 
         // Ç»Ç∫Ç©UVScrollé©ìÆÇ≈ÇµÇƒÇ≠ÇÍÇ»Ç¢Ç©ÇÁÇ±ÇÍÇ≈ë„ÇÌÇËÇ…Ç‚Ç¡ÇƒÇÈ
         scroll_direction.x += scroll_value.x;
@@ -198,8 +203,6 @@ void SceneTitle::Update()
     }
 
     player->Update();
-
-    End();
 }
 
 
@@ -337,6 +340,7 @@ void SceneTitle::DrawDebug()
 
     player->model->skinned_meshes.Drawdebug();
 
-    sprite_dissolve.DrawDebug();
+    //sprite_dissolve.DrawDebug(L"./resources/ground.png");
+    sprite_dissolve.DrawDebug(L"./resources/fade.jpg");
 #endif
 }

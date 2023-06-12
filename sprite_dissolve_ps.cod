@@ -56,7 +56,7 @@ dcl_temps 3
 //   v2.x <- pin.texcoord.x; v2.y <- pin.texcoord.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 9 "C:\Users\2220036\Desktop\x3dgp.00\Source\Shader\sprite_dissolve_ps.hlsl"
+#line 9 "C:\Users\koro\OneDrive\チEクトップ\ゲーム制作\Source\Shader\sprite_dissolve_ps.hlsl"
 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v2.xyxx, t0.xyzw, s0
 mul r0.xyzw, r0.xyzw, v1.xyzw  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z; r0.w <- color.w
 
@@ -82,7 +82,7 @@ movc r1.x, r1.x, l(1.000000), l(0)
 mul r1.x, r1.x, r1.z  // r1.x <- edgeValue
 
 #line 25
-mul r2.xyz, r1.xxxx, cb3[1].xzyx
+mul r2.xyz, r1.xxxx, cb3[1].xyzx
 add r0.xyz, r0.xyzx, r2.xyzx
 
 #line 26

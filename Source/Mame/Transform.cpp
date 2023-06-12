@@ -3,7 +3,6 @@
 // デバッグ用
 void Transform::DrawDebug()
 {
-    ImGui::Begin("player");
     if (ImGui::TreeNode("Transform"))
     {
         ImGui::DragFloat3("Position", &position.x, 1.0f, -FLT_MAX, FLT_MAX);
@@ -30,14 +29,13 @@ void Transform::DrawDebug()
 
         ImGui::TreePop();
     }
-    ImGui::End();
 }
 
 void Transform::Reset()
 {
     position = DirectX::XMFLOAT3(0, 0, 0);
     scale = DirectX::XMFLOAT3(1, 1, 1);
-    rotation = DirectX::XMFLOAT3(0, 0, 0);
+    rotation = DirectX::XMFLOAT4(0, 0, 0, 0);
 }
 
 // ワールド座標取得

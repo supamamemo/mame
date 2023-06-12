@@ -7,27 +7,26 @@
 #include "../../Game/Stage/StageManager.h"
 #include "../../Game/Stage/StagePlains.h"
 
+// 初期化
 void SceneGame::Initialize()
 {
-    player = new Player();
-    player->Initialize();
-
     StageManager::Instance().ChangeStage(new StagePlains);
 }
 
+// 終了化
 void SceneGame::Finalize()
 {
-    player->Finalize();
+    StageManager::Instance().Clear();
 }
 
+// Updateの前に呼び出される
 void SceneGame::Begin()
 {
 }
 
-void SceneGame::Update()
+// 更新処理
+void SceneGame::Update(float elapesdTime)
 {
-    Begin();
-
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     if (gamePad.GetButtonDown() & GamePad::BTN_A)
@@ -36,17 +35,16 @@ void SceneGame::Update()
     }
 
     // stage更新
-    StageManager::Instance().Update();
+    StageManager::Instance().Update(elapesdTime);
 
-    player->Update();
-
-    End();
 }
 
+// Updateの後に呼び出される
 void SceneGame::End()
 {
 }
 
+// 描画処理
 void SceneGame::Render(float elapsedTime)
 {
     Graphics& graphics = Graphics::Instance();
@@ -66,12 +64,9 @@ void SceneGame::Render(float elapsedTime)
     shader->Begin(graphics.GetDeviceContext(), rc);
 
     StageManager::Instance().Render(elapsedTime);
-
-    // プレイヤー描画
-    player->Render(elapsedTime);
 }
 
+// debug用
 void SceneGame::DrawDebug()
 {
-    player->DrawDebug();
 }

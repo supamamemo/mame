@@ -18,7 +18,16 @@ public:
     DirectX::XMMATRIX GetV() { return V; }
 
     void DrawDebug();
-    DirectX::XMFLOAT3 pos{ 0.0f,0.0f,-10.0f };
+
+    struct view_camera
+    {
+        DirectX::XMFLOAT3 eye{ 0.0f,0.0f,-10.0f };
+        DirectX::XMFLOAT3 focus{ 0.0f,0.0f,0.0f };
+        DirectX::XMFLOAT3 up{ 0.0f,1.0f,0.0f };
+    }camera;
+
+    void Reset();
+    void DebugMoveCamera();
 
 private:
     Transform transform{};

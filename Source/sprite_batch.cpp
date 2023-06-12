@@ -458,7 +458,7 @@ sprite_batch::sprite_batch(ID3D11Device* device, const wchar_t* filename, size_t
     // D3D11_BUFFER_DESC構造体 
     D3D11_BUFFER_DESC buffer_desc{};
     //buffer_desc.ByteWidth = sizeof(vertices); // バッファーのサイズ(バイト単位)
-    buffer_desc.ByteWidth = sizeof(vertex) * max_vertices;
+    buffer_desc.ByteWidth = sizeof(vertex) * static_cast<UINT>(max_vertices);
     buffer_desc.Usage = D3D11_USAGE_DYNAMIC; // バッファーの読み取りと書き込み方法を特定します
     buffer_desc.BindFlags = D3D11_BIND_VERTEX_BUFFER; // バッファーをパイプラインにバインドする方法を特定する
     buffer_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE; // CPUアクセスフラグまた穂CPUアクセスが必要ない場合は０

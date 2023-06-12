@@ -202,7 +202,9 @@
     <ClCompile Include="Source\framebuffer.cpp" />
     <ClCompile Include="Source\framework.cpp" />
     <ClCompile Include="Source\fullscreen_quad.cpp" />
+    <ClCompile Include="Source\Game\Block.cpp" />
     <ClCompile Include="Source\Game\Character.cpp" />
+    <ClCompile Include="Source\Game\GrassBlock.cpp" />
     <ClCompile Include="Source\Game\Player.cpp" />
     <ClCompile Include="Source\Game\sprite_dissolve.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
@@ -221,6 +223,7 @@
     <ClCompile Include="Source\Mame\Input\Mouse.cpp" />
     <ClCompile Include="Source\Mame\Scene\BaseScene.cpp" />
     <ClCompile Include="Source\Mame\Scene\SceneGame.cpp" />
+    <ClCompile Include="Source\Mame\Scene\SceneLoading.cpp" />
     <ClCompile Include="Source\Mame\Scene\SceneManager.cpp" />
     <ClCompile Include="Source\Mame\Scene\SceneTitle.cpp" />
     <ClCompile Include="Source\Mame\Transform.cpp" />
@@ -243,7 +246,9 @@
     <ClInclude Include="Source\framebuffer.h" />
     <ClInclude Include="Source\framework.h" />
     <ClInclude Include="Source\fullscreen_quad.h" />
+    <ClInclude Include="Source\Game\Block.h" />
     <ClInclude Include="Source\Game\Character.h" />
+    <ClInclude Include="Source\Game\GrassBlock.h" />
     <ClInclude Include="Source\Game\Player.h" />
     <ClInclude Include="Source\Game\sprite_dissolve.h" />
     <ClInclude Include="Source\Game\Stage\Stage.h" />
@@ -265,6 +270,7 @@
     <ClInclude Include="Source\Mame\Mame.h" />
     <ClInclude Include="Source\Mame\Scene\BaseScene.h" />
     <ClInclude Include="Source\Mame\Scene\SceneGame.h" />
+    <ClInclude Include="Source\Mame\Scene\SceneLoading.h" />
     <ClInclude Include="Source\Mame\Scene\SceneManager.h" />
     <ClInclude Include="Source\Mame\Scene\SceneTitle.h" />
     <ClInclude Include="Source\Mame\Transform.h" />

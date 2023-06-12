@@ -153,6 +153,15 @@
     <ClCompile Include="Source\Game\sprite_dissolve.cpp">
       <Filter>mameLib\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Mame\Scene\SceneLoading.cpp">
+      <Filter>mameLib\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Block.cpp">
+      <Filter>mameLib\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\GrassBlock.cpp">
+      <Filter>mameLib\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\framebuffer.h">
@@ -282,6 +291,15 @@
       <Filter>mameLib\Game\Stage</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\sprite_dissolve.h">
+      <Filter>mameLib\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mame\Scene\SceneLoading.h">
+      <Filter>mameLib\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Block.h">
+      <Filter>mameLib\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\GrassBlock.h">
       <Filter>mameLib\Game</Filter>
     </ClInclude>
   </ItemGroup>

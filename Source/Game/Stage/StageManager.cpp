@@ -1,7 +1,7 @@
 #include "StageManager.h"
 
 // XVˆ—
-void StageManager::Update()
+void StageManager::Update(float elapsedTime)
 {
     if (nextStage != nullptr)
     {

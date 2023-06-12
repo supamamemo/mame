@@ -15,21 +15,41 @@ public:
     Sprite_dissolve() {}
     ~Sprite_dissolve() {}
 
-    void Initialize(int state);
+    void Initialize(int state, const wchar_t* filename);
     void Update();
     void Render();
-    void DrawDebug();
+    void DrawDebug(const wchar_t* filename);
 
     // デバッグ用
-    void DebugInitialize();
     bool debug_initialize = false;
+
+    // load用
+    void fadeIn(float elapsedTime);
+    void fadeOut(float elapsedTime);
+    void SetFadeInTexture(DirectX::XMFLOAT2 position, DirectX::XMFLOAT2 textureSize, float delay, int textureType)
+    {
+        spr_dissolve.pos = position;
+        spr_dissolve.posD = textureSize;
+        spr_dissolve.delay = delay;
+        spr_dissolve.mask_texture_value = textureType;
+        spr_dissolve.dissolve_value1 = 1.5f;
+    }
+    void SetFadeOutTexture(DirectX::XMFLOAT2 position, DirectX::XMFLOAT2 textureSize, float delay, int textureType)
+    {
+        spr_dissolve.pos = position;
+        spr_dissolve.posD = textureSize;
+        spr_dissolve.delay = delay;
+        spr_dissolve.mask_texture_value = textureType;
+    }
+    bool fadeInReady(float time) { return spr_dissolve.dissolve_value1 < time; }
+    bool fadeOutReady(float time) { return spr_dissolve.dissolve_value1 > time; }
 
 private:
     std::unique_ptr<sprite> dissolve_sprite;
     Microsoft::WRL::ComPtr<ID3D11SamplerState>  samplerState;
 
     D3D11_TEXTURE2D_DESC mask_texture2d_desc;
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture[10];
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture[20];
     struct dissolve_constants
     {
         DirectX::XMFLOAT4 parameters;   // x:ディゾルブ適応量、

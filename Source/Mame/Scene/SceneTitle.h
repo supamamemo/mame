@@ -10,13 +10,13 @@
 class SceneTitle : public Mame::Scene::BaseScene
 {
 public:
-    SceneTitle() {}
+    SceneTitle();
     ~SceneTitle()override {}
 
     void Initialize()override;      // 初期化
     void Finalize()override;        // 終了化
     void Begin()override;           // 毎フレーム一番最初に呼ばれる
-    void Update()override;          // 更新処理
+    void Update(float elapesdTime)override;          // 更新処理
     void End()override;             // 毎フレーム一番最後に呼ばれる
     void Render(float elapsedTime)override;          // 描画処理
     void DrawDebug()override;
@@ -38,7 +38,7 @@ public:
     Microsoft::WRL::ComPtr<ID3D11BlendState> blendState;
 
 public:
-    Player* player = nullptr;
+    std::unique_ptr<Player>player;
 
     Sprite_dissolve sprite_dissolve;
 

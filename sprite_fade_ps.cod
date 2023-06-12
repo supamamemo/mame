@@ -56,34 +56,23 @@ dcl_temps 2
 //   v2.x <- pin.texcoord.x; v2.y <- pin.texcoord.y; 
 //   o0.x <- <main return value>.x; o0.y <- <main return value>.y; o0.z <- <main return value>.z; o0.w <- <main return value>.w
 //
-#line 9 "C:\Users\2220036\Desktop\x3dgp.00\Source\Shader\sprite_fade_ps.hlsl"
+#line 37 "C:\Users\koro\OneDrive\チEクトップ\ゲーム制作\Source\Shader\sprite_fade_ps.hlsl"
 sample_indexable(texture2d)(float,float,float,float) r0.xyzw, v2.xyxx, t0.xyzw, s0
 mul r0.xyzw, r0.xyzw, v1.xyzw  // r0.x <- color.x; r0.y <- color.y; r0.z <- color.z; r0.w <- color.w
 
-#line 11
+#line 39
 sample_indexable(texture2d)(float,float,float,float) r1.x, v2.xyxx, t1.xyzw, s0
 mov r1.x, r1.x  // r1.x <- mask_value
 
-#line 13
-ge r1.y, r1.x, cb3[0].x
-movc r1.y, r1.y, l(1.000000), l(0)  // r1.y <- alpha
+#line 41
+ge r1.x, r1.x, cb3[0].x
+movc r1.x, r1.x, l(1.000000), l(0)  // r1.x <- alpha
 
-#line 14
-mul r0.w, r0.w, r1.y
+#line 48
+mul r0.w, r0.w, r1.x
 
-#line 17
-ge r1.x, r1.x, cb3[0].y
-movc r1.x, r1.x, l(1.000000), l(0)  // r1.x <- temp
-
-#line 18
-ge r1.x, r1.x, r1.y
-movc r1.x, r1.x, l(1.000000), l(0)  // r1.x <- temp1
-
-#line 19
-mul r0.xyz, r0.xyzx, r1.xxxx
-
-#line 21
+#line 50
 mov o0.xyz, r0.xyzx
 mov o0.w, r0.w
 ret 
-// Approximately 15 instruction slots used
+// Approximately 10 instruction slots used
