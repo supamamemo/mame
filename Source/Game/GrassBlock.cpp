@@ -15,13 +15,9 @@ GrassBlock::GrassBlock()
     model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
 
 
-    // 名前生成仮で作った。。。
-    auto a = std::to_string(nameNum);
-
-    std::string b = "GrassBlock";
-    std::string c = b + a;
-
-    SetName(c.c_str());
+    // imgui名前かぶり起きないように...
+    name = "GrassBlock" + std::to_string(nameNum);
+    SetName(name.c_str());
     ++nameNum;
 }
 
