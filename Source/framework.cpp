@@ -49,6 +49,8 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
     ImGui::NewFrame();
 #endif
 
+    SetImguiStyle3();
+
     // 入力更新処理
     input.Update();
 

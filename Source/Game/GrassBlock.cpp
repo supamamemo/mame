@@ -2,6 +2,10 @@
 
 #include "../Mame/Graphics/Graphics.h"
 
+#include <stdio.h>
+
+int GrassBlock::nameNum = 0;
+
 // コンストラクタ
 GrassBlock::GrassBlock()
 {
@@ -9,6 +13,16 @@ GrassBlock::GrassBlock()
 
     // model生成
     model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+
+
+    // 名前生成仮で作った。。。
+    auto a = std::to_string(nameNum);
+
+    std::string b = "GrassBlock";
+    std::string c = b + a;
+
+    SetName(c.c_str());
+    ++nameNum;
 }
 
 // デストラクタ
@@ -17,8 +31,9 @@ GrassBlock::~GrassBlock()
 }
 
 // 初期化
-void GrassBlock::Initialize()
+void GrassBlock::Initialize(DirectX::XMFLOAT3 pos)
 {
+    model->GetTransform()->SetPosition(pos);
 }
 
 // 終了化
@@ -59,7 +74,7 @@ void GrassBlock::Render(float elapsedTime)
 //debug用
 void GrassBlock::DrawDebug()
 {
-    ImGui::Begin("GrassBlock");
+    ImGui::Begin(GetName());
     
     Block::DrawDebug();
 

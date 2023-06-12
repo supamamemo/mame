@@ -35,7 +35,7 @@ void Transform::Reset()
 {
     position = DirectX::XMFLOAT3(0, 0, 0);
     scale = DirectX::XMFLOAT3(1, 1, 1);
-    rotation = DirectX::XMFLOAT3(0, 0, 0);
+    rotation = DirectX::XMFLOAT4(0, 0, 0, 0);
 }
 
 // ƒ[ƒ‹ƒhÀ•Wæ“¾

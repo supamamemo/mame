@@ -23,7 +23,7 @@ Player::~Player()
 void Player::Initialize()
 {
     model->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
-    model->GetTransform()->SetRotation(DirectX::XMFLOAT3(0, DirectX::XMConvertToRadians(180), 0));
+    model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
     model->GetTransform()->SetScale(DirectX::XMFLOAT3(3, 3, 3));
 }
 

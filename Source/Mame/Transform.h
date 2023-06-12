@@ -24,7 +24,7 @@ public:
 	Transform() :
 		position(DirectX::XMFLOAT3())
 		, scale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f))
-		, rotation(DirectX::XMFLOAT3())
+		, rotation(DirectX::XMFLOAT4())
 		, scaleFactor(1.0f)
 		, coordinateSystem(static_cast<int>(CoordinateSystem::cRightYup))
 	{}
@@ -41,11 +41,11 @@ public:
 
 	DirectX::XMFLOAT3 GetPosition()const { return position; }
 	DirectX::XMFLOAT3 GetScale()const { return scale; }
-	DirectX::XMFLOAT3 GetRotation()const { return rotation; }
+	DirectX::XMFLOAT4 GetRotation()const { return rotation; }
 
 	void SetPosition(const DirectX::XMFLOAT3& pos) { position = pos; }
 	void SetScale(const DirectX::XMFLOAT3& scl) { scale = scl; }
-	void SetRotation(const DirectX::XMFLOAT3& rot) { rotation = rot; }
+	void SetRotation(const DirectX::XMFLOAT4& rot) { rotation = rot; }
 
 	void AddPosition(const DirectX::XMFLOAT3& pos)
 	{
@@ -60,7 +60,7 @@ public:
 private:
     DirectX::XMFLOAT3 position;
     DirectX::XMFLOAT3 scale;
-    DirectX::XMFLOAT3 rotation;
+    DirectX::XMFLOAT4 rotation;
 
 	float scaleFactor;
 
