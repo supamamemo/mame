@@ -187,9 +187,9 @@ void SceneTitle::Update(float elapesdTime)
     // UVScroll
     {
         if (gamePad.GetButton() & GamePad::BTN_X)
-            scroll_direction.x += 0.001;
+            scroll_direction.x += 0.001f;
         if (gamePad.GetButton() & GamePad::BTN_Y)
-            scroll_direction.x -= 0.001;
+            scroll_direction.x -= 0.001f;
 
         // ‚È‚º‚©UVScrollŽ©“®‚Å‚µ‚Ä‚­‚ê‚È‚¢‚©‚ç‚±‚ê‚Å‘ã‚í‚è‚É‚â‚Á‚Ä‚é
         scroll_direction.x += scroll_value.x;
