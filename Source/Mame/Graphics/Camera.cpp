@@ -96,10 +96,13 @@ void Camera::DebugMoveCamera()
     float ax = 0;
     float ay = 0;
 
-    if (gamePad.GetButton() & GamePad::BTN_UP)ay = 1;
-    if (gamePad.GetButton() & GamePad::BTN_DOWN)ay = -1;
-    if (gamePad.GetButton() & GamePad::BTN_RIGHT)ax = 1;
-    if (gamePad.GetButton() & GamePad::BTN_LEFT)ax = -1;
+    //if (gamePad.GetButton() & GamePad::BTN_UP)ay = 0.01f;
+    //if (gamePad.GetButton() & GamePad::BTN_DOWN)ay = -0.01f;
+    //if (gamePad.GetButton() & GamePad::BTN_RIGHT)ax = 0.01f;
+    //if (gamePad.GetButton() & GamePad::BTN_LEFT)ax = -0.01f;
+
+    ax = gamePad.GetAxisLX() * 0.01f;
+    ay = gamePad.GetAxisLY() * 0.01f;
 
     forward.x *= ay;
     forward.y *= ay;
@@ -109,7 +112,7 @@ void Camera::DebugMoveCamera()
     right.z *= ax;
 
     pos.x += forward.x + right.x;
-    pos.y += forward.y + right.y;
+    //pos.y += forward.y + right.y;
     pos.z += forward.z + right.z;
 
     transform.SetPosition(pos);

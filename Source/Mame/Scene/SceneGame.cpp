@@ -69,4 +69,8 @@ void SceneGame::Render(float elapsedTime)
 // debug—p
 void SceneGame::DrawDebug()
 {
+    Graphics& graphics = Graphics::Instance();
+    Shader* shader = graphics.GetShader();
+
+    shader->DrawDebug();
 }
