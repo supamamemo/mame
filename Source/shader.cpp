@@ -255,7 +255,7 @@ void Shader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
     dc->PSSetConstantBuffers(1, 1, sceneConstantBuffer[0].GetAddressOf());
 
 #ifdef USE_IMGUI
-    DrawDebug();
+    //DrawDebug();
 #endif
 }
 

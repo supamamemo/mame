@@ -71,7 +71,7 @@ void Sprite_dissolve::Initialize(int state, const wchar_t* filename)
             mask_texture[4].GetAddressOf(), &mask_texture2d_desc);
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise1.jpg",
             mask_texture[5].GetAddressOf(), &mask_texture2d_desc);
-        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise2.jpg",
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise2.png",
             mask_texture[6].GetAddressOf(), &mask_texture2d_desc);
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise3.jpg",
             mask_texture[7].GetAddressOf(), &mask_texture2d_desc);
@@ -81,6 +81,8 @@ void Sprite_dissolve::Initialize(int state, const wchar_t* filename)
             mask_texture[9].GetAddressOf(), &mask_texture2d_desc);
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dl.png",
             mask_texture[10].GetAddressOf(), &mask_texture2d_desc);
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise5.png",
+            mask_texture[11].GetAddressOf(), &mask_texture2d_desc);
     }
 
     // dissolve_sprite
@@ -160,7 +162,7 @@ void Sprite_dissolve::DrawDebug(const wchar_t* filename)
         spr_dissolve.dissolve_value = spr_dissolve.dissolve_value1 - spr_dissolve.delay;
     }
 
-    ImGui::SliderInt("mask_texture", &spr_dissolve.mask_texture_value, 0, 10);
+    ImGui::SliderInt("mask_texture", &spr_dissolve.mask_texture_value, 0, 11);
 
     ImGui::ColorEdit4("test", &spr_dissolve.edgeColor.x);
 
