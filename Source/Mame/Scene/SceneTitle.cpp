@@ -236,6 +236,7 @@ void SceneTitle::Render(float elapsedTime)
     // プレイヤー描画
     player->Render(elapsedTime);
 
+    // スプライト描画
     shader->SetState(graphics.GetDeviceContext(), RS, DS, SS);
     // spriteがだせなかった　
 #if 1

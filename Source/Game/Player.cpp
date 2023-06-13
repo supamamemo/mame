@@ -6,7 +6,6 @@ Player::Player()
 {
     Graphics& graphics = Graphics::Instance();
 
-    
     //model = new Model(graphics.GetDevice(), "./resources/idle3.fbx", false);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
