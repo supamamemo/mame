@@ -162,8 +162,8 @@
     <ClCompile Include="Source\Game\GrassBlock.cpp">
       <Filter>mameLib\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Common.cpp">
-      <Filter>Sources</Filter>
+    <ClCompile Include="Source\Game\Common.cpp">
+      <Filter>mameLib\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -305,11 +305,11 @@
     <ClInclude Include="Source\Game\GrassBlock.h">
       <Filter>mameLib\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\OperatorXMFLOAT3.h">
-      <Filter>Headers</Filter>
+    <ClInclude Include="Source\Game\Common.h">
+      <Filter>mameLib\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Common.h">
-      <Filter>Headers</Filter>
+    <ClInclude Include="Source\Game\OperatorXMFLOAT3.h">
+      <Filter>mameLib\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
