@@ -43,18 +43,24 @@ void Camera::SetPerspectiveFov(ID3D11DeviceContext* dc)
     float aspect_ratio{ viewport.Width / viewport.Height };
     P = { DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(30),aspect_ratio,0.1f,100.0f) };
     
-    
-    DirectX::XMVECTOR eye{ DirectX::XMVectorSet(camera.eye.x,camera.eye.y,camera.eye.z,1.0f) };
-    DirectX::XMVECTOR focus{ DirectX::XMVectorSet(camera.focus.x,camera.focus.y,camera.focus.z,1.0f) };
+    DirectX::XMFLOAT3 pos = transform.GetPosition();
+    DirectX::XMFLOAT3 forward = transform.CalcForward();
+    DirectX::XMVECTOR eye{ DirectX::XMVectorSet(pos.x,pos.y,pos.z,1.0f) };
+    DirectX::XMVECTOR focus{ DirectX::XMVectorSet(pos.x + forward.x,pos.y + forward.y,pos.z + forward.z,1.0f) };
+    //DirectX::XMVECTOR eye{ DirectX::XMVectorSet(camera.eye.x,camera.eye.y,camera.eye.z,1.0f) };
+    //DirectX::XMVECTOR focus{ DirectX::XMVectorSet(camera.focus.x,camera.focus.y,camera.focus.z,1.0f) };
     DirectX::XMVECTOR up{ DirectX::XMVectorSet(camera.up.x,camera.up.y,camera.up.z,0.0f) };
     V = { DirectX::XMMatrixLookAtLH(eye, focus, up) };
 
 
+    DebugMoveCamera();
 }
 
 void Camera::DrawDebug()
 {
-    ImGui::Begin("camera");
+    ImGui::Begin("C_T");
+
+    transform.DrawDebug();
 
     if (ImGui::TreeNode("camera_information"))
     {
@@ -68,7 +74,7 @@ void Camera::DrawDebug()
     // デバッグ用にカメラを動かしやすいようにしている
     ImGui::DragFloat("camera_position.x", &camera.eye.x);
     ImGui::DragFloat("camera_position.y", &camera.eye.y);
-    DebugMoveCamera();
+    
     if (ImGui::Button("Reset"))Camera::Reset();
 
     ImGui::End();
@@ -83,11 +89,28 @@ void Camera::DebugMoveCamera()
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
-    if (gamePad.GetButton() & GamePad::BTN_UP)camera.eye.y += 0.01f;
-    if (gamePad.GetButton() & GamePad::BTN_DOWN)camera.eye.y -= 0.01f;
-    if (gamePad.GetButton() & GamePad::BTN_RIGHT)camera.eye.x += 0.01f;
-    if (gamePad.GetButton() & GamePad::BTN_LEFT)camera.eye.x -= 0.01f;
+    DirectX::XMFLOAT3 pos = transform.GetPosition();
+    DirectX::XMFLOAT3 forward = transform.CalcForward();
+    DirectX::XMFLOAT3 right = transform.CalcRight();
 
-    camera.focus.x = camera.eye.x;
-    camera.focus.y = camera.eye.y;
+    float ax = 0;
+    float ay = 0;
+
+    if (gamePad.GetButton() & GamePad::BTN_UP)ay = 1;
+    if (gamePad.GetButton() & GamePad::BTN_DOWN)ay = -1;
+    if (gamePad.GetButton() & GamePad::BTN_RIGHT)ax = 1;
+    if (gamePad.GetButton() & GamePad::BTN_LEFT)ax = -1;
+
+    forward.x *= ay;
+    forward.y *= ay;
+    forward.z *= ay;
+    right.x *= ax;
+    right.y *= ax;
+    right.z *= ax;
+
+    pos.x += forward.x + right.x;
+    pos.y += forward.y + right.y;
+    pos.z += forward.z + right.z;
+
+    transform.SetPosition(pos);
 }

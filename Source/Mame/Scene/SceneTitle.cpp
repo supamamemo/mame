@@ -299,6 +299,10 @@ void SceneTitle::Render(float elapsedTime)
 void SceneTitle::DrawDebug()
 {
 #ifdef USE_IMGUI
+    Graphics& graphics = Graphics::Instance();
+    Shader* shader = graphics.GetShader();
+    shader->DrawDebug();
+
     player->DrawDebug();
 
     if (ImGui::TreeNode("State"))

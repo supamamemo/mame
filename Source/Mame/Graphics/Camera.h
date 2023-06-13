@@ -26,6 +26,8 @@ public:
         DirectX::XMFLOAT3 up{ 0.0f,1.0f,0.0f };
     }camera;
 
+
+
     void Reset();
     void DebugMoveCamera();
 
