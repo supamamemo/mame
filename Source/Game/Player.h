@@ -42,7 +42,8 @@ private: // enum関連
     };
 
 private: // 変数関連
-    State state = State::Idle;
+    State   state           = State::Idle; // 現在のステート
 
+    int     animationIndex  = 0;
 };
 
