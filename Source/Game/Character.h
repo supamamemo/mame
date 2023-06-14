@@ -9,10 +9,14 @@
 #include "../../External/imgui/imgui_impl_win32.h"
 #endif
 
+<<<<<<< HEAD
 
 
 #include <DirectXMath.h>
 
+=======
+#include <DirectXMath.h>
+>>>>>>> mame/Taki
 
 #include "Common.h"
 
@@ -76,7 +80,11 @@ public:
     std::unique_ptr<Model> model = nullptr;
 
 protected:
+<<<<<<< HEAD
     DirectX::XMFLOAT3    velocity        =  { 0,0,0 };   // 速度
+=======
+    DirectX::XMFLOAT3 velocity  =  { 0,0,0 };   // 速度
+>>>>>>> mame/Taki
                                    
     float       stepOffset      =  1.0f;        // 位置補正(Y位置がキャラクターの中心になるように調整)
                                    

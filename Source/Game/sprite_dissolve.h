@@ -53,17 +53,17 @@ public:
 private:
     struct dissolve_constants
     {
-        DirectX::XMFLOAT4 parameters = {};   // x:ディゾルブ適応量、
-                                    // y: 黒色
-                                    // z: 縁の閾値
-                                    // w:空き
-        DirectX::XMFLOAT4 edgeColor  = {};   // 縁の色
+        DirectX::XMFLOAT4 parameters = {};  // x:ディゾルブ適応量、
+                                            // y: 黒色
+                                            // z: 縁の閾値
+                                            // w:空き
+        DirectX::XMFLOAT4 edgeColor  = {};  // 縁の色
     };
 
     struct SprDissolve
     {
-        DirectX::XMFLOAT2 pos                = { 600.0f, 420.0f };
-        DirectX::XMFLOAT2 posD               = { 300.0f, 300.0f };
+        DirectX::XMFLOAT2 pos       = { 600.0f, 420.0f };
+        DirectX::XMFLOAT2 posD      = { 300.0f, 300.0f };
 
         int      mask_texture_value = 0;
         float    dissolve_value     = 0.0f;
@@ -71,7 +71,7 @@ private:
 
         // mask edge
         float    edge_threshold     = 0.2f;        // 縁の閾値
-        DirectX::XMFLOAT4 edgeColor          = { 1,0,0,1 }; // 縁の色
+        DirectX::XMFLOAT4 edgeColor = { 1,0,0,1 }; // 縁の色
 
         int      dissolve_state     = 0;           // dissolveの種類
         float    delay              = 0.4f;        // fadeのいい感じにするための変数
@@ -79,12 +79,12 @@ private:
     } spr_dissolve = {};
 
 private:
-    std::unique_ptr<sprite>               dissolve_sprite     = nullptr;
-    Microsoft::WRL::ComPtr<ID3D11SamplerState>       samplerState        = nullptr;
+    std::unique_ptr<sprite> dissolve_sprite  = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState = nullptr;
 
-    D3D11_TEXTURE2D_DESC             mask_texture2d_desc = {};
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture[20]    = {};
+    D3D11_TEXTURE2D_DESC mask_texture2d_desc = {};
+    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture[20] = {};
 
-    Microsoft::WRL::ComPtr<ID3D11Buffer>             dissolve_constant_buffer = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11Buffer> dissolve_constant_buffer = nullptr;
 };
 

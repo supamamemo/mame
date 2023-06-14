@@ -7,8 +7,6 @@
 #include "../../Game/Player.h"
 #include "../../Game/sprite_dissolve.h"
 
-using namespace Microsoft::WRL;
-
 class SceneTitle : public Mame::Scene::BaseScene
 {
 public:
@@ -29,14 +27,14 @@ public:
     std::unique_ptr<sprite> dummy_sprite                = nullptr;
     std::unique_ptr<sprite> dissolve_sprite             = nullptr;
 
-    ComPtr<ID3D11VertexShader> sprite_vertex_shader     = nullptr;
-    ComPtr<ID3D11InputLayout>  sprite_input_layout      = nullptr;
-    ComPtr<ID3D11PixelShader>  sprite_pixel_shader      = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11VertexShader> sprite_vertex_shader     = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11InputLayout>  sprite_input_layout      = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11PixelShader>  sprite_pixel_shader      = nullptr;
 
-    ComPtr<ID3D11SamplerState>      samplerState        = nullptr;
-    ComPtr<ID3D11RasterizerState>   rasterizerState     = nullptr;
-    ComPtr<ID3D11DepthStencilState> depthStencilState   = nullptr;
-    ComPtr<ID3D11BlendState>        blendState          = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11SamplerState>      samplerState        = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState>   rasterizerState     = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depthStencilState   = nullptr;
+    Microsoft::WRL::ComPtr<ID3D11BlendState>        blendState          = nullptr;
 
 public:
     std::unique_ptr<Player> player  = nullptr;
