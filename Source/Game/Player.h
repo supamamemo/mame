@@ -19,13 +19,9 @@ public:
 
 private: // 入力処理関数関連   
     const DirectX::XMFLOAT3 GetMoveVec() const;                  // スティック入力値から移動ベクトルを取得   
-<<<<<<< HEAD
-    const bool     InputMove(const float& elapsedTime); // 移動入力処理   
-    const bool     InputJump();                         // ジャンプ入力処理
-=======
     const bool              InputMove(const float& elapsedTime); // 移動入力処理   
     const bool              InputJump();                         // ジャンプ入力処理
->>>>>>> mame/Taki
+
 
 private: // ステート関数関連
     void TransitionIdleState();                     // 待機ステートへ遷移
