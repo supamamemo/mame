@@ -6,30 +6,21 @@
 
 #include "../../Game/sprite_dissolve.h"
 
-class SceneLoading :
-    public Mame::Scene::BaseScene
+class SceneLoading : public Mame::Scene::BaseScene
 {
 public:
     SceneLoading(BaseScene* nextScene);
     ~SceneLoading() override {}
 
-    // 初期化
-    void Initialize()override;
 
-    // 終了化
-    void Finalize()override;
+    void Initialize()   override;                   // 初期化
+    void Finalize()     override;                   // 終了化
+    void Begin()        override;                   // 毎フレーム一番最初に呼ばれる
+    void Update(const float& elapsedTime) override; // 更新処理
+    void End()          override;                   // 毎フレーム一番最後に呼ばれる
+    void Render(const float& elapsedTime) override; // 描画処理
 
-    void Begin()override;
-
-    // 更新処理
-    void Update(float elapsedTime)override;
-
-    void End()override;
-
-    // 描画処理
-    void Render(float elapsedTime)override;
-
-    void DrawDebug()override;
+    void DrawDebug()    override;
 
 private:
     // ローディングスレッド
@@ -38,7 +29,7 @@ private:
 private:
     std::unique_ptr<Sprite_dissolve> spriteDissolve;
 
-    BaseScene* nextScene = nullptr;
-    std::thread* thread = nullptr;
+    BaseScene*      nextScene   = nullptr;
+    std::thread*    thread      = nullptr;
 };
 

@@ -48,10 +48,10 @@ void StageBoss::Begin()
 }
 
 // 更新処理
-void StageBoss::Update()
+void StageBoss::Update(const float& elapsedTime)
 {
     // player更新
-    player->Update();
+    player->Update(elapsedTime);
 
     // boss更新
     boss->Update();
@@ -68,7 +68,7 @@ void StageBoss::End()
 }
 
 // 描画処理
-void StageBoss::Render(float elapsedTime)
+void StageBoss::Render(const float& elapsedTime)
 {
     // player描画
     player->Render(elapsedTime);

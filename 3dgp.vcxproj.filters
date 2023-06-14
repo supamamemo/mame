@@ -162,6 +162,7 @@
     <ClCompile Include="Source\Game\GrassBlock.cpp">
       <Filter>mameLib\Game</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="Source\Game\StateMachine.cpp">
       <Filter>mameLib\Game</Filter>
     </ClCompile>
@@ -169,6 +170,15 @@
       <Filter>mameLib\Game\Stage</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Boss.cpp">
+=======
+    <ClCompile Include="Source\Game\Common.cpp">
+      <Filter>mameLib\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Collision.cpp">
+      <Filter>mameLib\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Mathf.cpp">
+>>>>>>> mame/Taki
       <Filter>mameLib\Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -311,6 +321,7 @@
     <ClInclude Include="Source\Game\GrassBlock.h">
       <Filter>mameLib\Game</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="Source\Game\StateMachine.h">
       <Filter>mameLib\Game</Filter>
     </ClInclude>
@@ -321,6 +332,18 @@
       <Filter>mameLib\Game\Stage</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Boss.h">
+=======
+    <ClInclude Include="Source\Game\Common.h">
+      <Filter>mameLib\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\OperatorXMFLOAT3.h">
+      <Filter>mameLib\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Collision.h">
+      <Filter>mameLib\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Mathf.h">
+>>>>>>> mame/Taki
       <Filter>mameLib\Game</Filter>
     </ClInclude>
   </ItemGroup>

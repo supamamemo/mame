@@ -32,7 +32,7 @@ void SceneGame::Begin()
 }
 
 // 更新処理
-void SceneGame::Update(float elapesdTime)
+void SceneGame::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -42,7 +42,7 @@ void SceneGame::Update(float elapesdTime)
     }
 
     // stage更新
-    StageManager::Instance().Update(elapesdTime);
+    StageManager::Instance().Update(elapsedTime);
 
 }
 
@@ -52,7 +52,7 @@ void SceneGame::End()
 }
 
 // 描画処理
-void SceneGame::Render(float elapsedTime)
+void SceneGame::Render(const float& elapsedTime)
 {
     Graphics& graphics = Graphics::Instance();
     ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();

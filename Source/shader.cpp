@@ -215,11 +215,14 @@ Shader::Shader(ID3D11Device* device)
 
 void Shader::Initialize()
 {
+    Camera& camera = Camera::Instance();
     camera.Initialize();
 }
 
 void Shader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 {
+    Camera& camera = Camera::Instance();
+
     // サンプラーステート
     dc->PSSetSamplers(0, 1, samplerState[0].GetAddressOf());
     dc->PSSetSamplers(1, 1, samplerState[1].GetAddressOf());
@@ -281,6 +284,8 @@ void Shader::End(ID3D11DeviceContext* dc)
 
 void Shader::DrawDebug()
 {
+    Camera& camera = Camera::Instance();
+
     ImGui::Begin("view");
 
     if (ImGui::TreeNode("camera"))

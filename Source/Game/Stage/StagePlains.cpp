@@ -65,10 +65,10 @@ void StagePlains::Begin()
 }
 
 // 更新処理
-void StagePlains::Update()
+void StagePlains::Update(const float& elapsedTime)
 {
     // player更新
-    player->Update();
+    player->Update(elapsedTime);
 
     // 草ブロック更新
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
@@ -91,7 +91,7 @@ void StagePlains::End()
 }
 
 // 描画処理
-void StagePlains::Render(float elapsedTime)
+void StagePlains::Render(const float& elapsedTime)
 {
     // player
     player->Render(elapsedTime);

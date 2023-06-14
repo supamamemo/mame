@@ -42,7 +42,7 @@ void SceneLoading::Begin()
 }
 
 // XVˆ—
-void SceneLoading::Update(float elapsedTime)
+void SceneLoading::Update(const float& elapsedTime)
 {
     //spriteDissolve.fadeOut(elapsedTime);
     spriteDissolve->fadeIn(elapsedTime);
@@ -63,7 +63,7 @@ void SceneLoading::End()
 }
 
 // •`‰æˆ—
-void SceneLoading::Render(float elapsedTime)
+void SceneLoading::Render(const float& elapsedTime)
 {
     Graphics& graphics = Graphics::Instance();
     ID3D11DeviceContext* deviceContext = graphics.GetDeviceContext();
