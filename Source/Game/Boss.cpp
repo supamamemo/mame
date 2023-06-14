@@ -1,5 +1,8 @@
 #include "Boss.h"
 #include "../Mame/Graphics/Graphics.h"
+#include "../Mame/Input/Input.h"
+
+int Boss::nameNum = 0;
 
 // コンストラクタ
 Boss::Boss()
@@ -7,6 +10,23 @@ Boss::Boss()
     Graphics& graphics = Graphics::Instance();
 
     model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_block.fbx", true);
+
+    // imgui名前かぶり起きないように...
+    name = "Boss" + std::to_string(nameNum);
+    SetName(name.c_str());
+    ++nameNum;
+}
+
+Boss::Boss(const char* filename)
+{
+    Graphics& graphics = Graphics::Instance();
+
+    model = std::make_unique<Model>(graphics.GetDevice(), filename, true);
+
+    // imgui名前かぶり起きないように...
+    name = "Boss" + std::to_string(nameNum);
+    SetName(name.c_str());
+    ++nameNum;
 }
 
 // デストラクタ
@@ -33,6 +53,15 @@ void Boss::Begin()
 // 更新処理
 void Boss::Update()
 {
+    GamePad& gamePad = Input::Instance().GetGamePad();
+
+    float ax = gamePad.GetAxisRX();
+
+    float speed = 0.001f;
+    speed *= ax;
+    DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
+    pos.x += speed;
+    model->GetTransform()->SetPosition(pos);
 }
 
 // Updateの後に呼ばれる
@@ -81,7 +110,7 @@ void Boss::Render(float elapsedTime)
 // debug用
 void Boss::DrawDebug()
 {
-    ImGui::Begin("boss");
+    ImGui::Begin(GetName());
 
     Character::DrawDebug();
 

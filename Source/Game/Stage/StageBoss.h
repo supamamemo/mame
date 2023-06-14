@@ -23,7 +23,9 @@ private:
     std::unique_ptr<Player> player;
     std::unique_ptr<Boss> boss;
 
-    std::unique_ptr<Model>stage[2];
+
+    // ‰¼‚ÉbossƒNƒ‰ƒX‚Å•\Ž¦‚µ‚Ä‚é
+    std::unique_ptr<Boss> stage[3];
 
 };
 

@@ -12,9 +12,11 @@ StageBoss::StageBoss()
     boss = std::make_unique<Boss>();
 
 
-    Graphics& graphics = Graphics::Instance();
-    stage[0] = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_ground.fbx", true);
-    stage[1] = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_block.fbx", true);
+    // ‰¼
+    for (std::unique_ptr<Boss>& temp : stage)
+    {
+        temp = std::make_unique<Boss>("./resources/temporary/assets_ground.fbx");
+    }
 }
 
 // ‰Šú‰»
@@ -25,6 +27,14 @@ void StageBoss::Initialize()
 
     // boss‰Šú‰»
     boss->Initialize();
+
+    stage[0]->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 0, 10));
+    stage[1]->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(4, 20, 10));
+    stage[1]->model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, DirectX::XMConvertToRadians(90), 0));
+    stage[2]->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(-5.5f, 20, 10));
+    stage[2]->model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, DirectX::XMConvertToRadians(90), 0));
+    
+    //stage[1]->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 0));
 }
 
 // I—¹‰»
@@ -76,39 +86,13 @@ void StageBoss::Render(const float& elapsedTime)
     // boss•`‰æ
     boss->Render(elapsedTime);
 
-    Graphics& graphics = Graphics::Instance();
-    ID3D11DeviceContext* deviceContext = graphics.GetDeviceContext();
 
-    // TransformXV
-    DirectX::XMFLOAT4X4 transform;
-    DirectX::XMStoreFloat4x4(&transform, stage[0]->GetTransform()->CalcWorldMatrix(0.01f));
-
-    // model•`‰æ
-    if (stage[0]->skinned_meshes.animation_clips.size() > 0)
+    // ‰¼
+    for (std::unique_ptr<Boss>& temp : stage)
     {
-        int clip_index{ 0 };
-        int frame_index{ 0 };
-        static float animation_tick{ 0 };
-
-        animation& animation{ stage[0]->skinned_meshes.animation_clips.at(clip_index) };
-        frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
-        if (frame_index > animation.sequence.size() - 1)
-        {
-            frame_index = 0;
-            animation_tick = 0;
-        }
-        else
-        {
-            animation_tick += elapsedTime;
-        }
-        animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
-
-        stage[0]->skinned_meshes.render(deviceContext, transform, DirectX::XMFLOAT4(1, 1, 1, 1), &keyframe);
+        temp->Render(elapsedTime);
     }
-    else
-    {
-        stage[0]->skinned_meshes.render(deviceContext, transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
-    }
+
 }
 
 // debug—p
@@ -121,7 +105,11 @@ void StageBoss::DrawDebug()
     // boss
     boss->DrawDebug();
 
-    stage[0]->GetTransform()->DrawDebug();
+    for (std::unique_ptr<Boss>& temp : stage)
+    {
+        temp->DrawDebug();
+    }
+
 
 #endif
 }
