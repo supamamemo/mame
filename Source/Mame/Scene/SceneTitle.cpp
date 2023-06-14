@@ -19,6 +19,10 @@ SceneTitle::SceneTitle()
 void SceneTitle::Initialize()
 {
     Graphics& graphics = Graphics::Instance();
+    Shader* shader = graphics.GetShader();
+ 
+    // カメラ位置リセット
+    shader->Initialize();
 
     player->Initialize();
 
@@ -118,7 +122,7 @@ void SceneTitle::Initialize()
         };
 
         //dummy_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/chip_win.png");
-        dummy_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/ground.png");
+        //dummy_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/ground.png");
         
         //dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/chip_win.png");
         //dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/ground.png");
@@ -136,6 +140,7 @@ void SceneTitle::Initialize()
         //}
 
         // dummy_sprite
+        if(dummy_sprite)
         {
             // シェーダー関連
             create_vs_from_cso(graphics.GetDevice(), "sprite_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
@@ -157,7 +162,7 @@ void SceneTitle::Initialize()
         //}
 
         //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fire));
-        sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/fade.jpg");
+        //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/fade.jpg");
         //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/ground.png");
     }
 }
@@ -181,6 +186,7 @@ void SceneTitle::Update(const float& elapsedTime)
 
     if (gamePad.GetButtonDown() & GamePad::BTN_A)
     {
+        //Mame::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
         Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
     }
 
@@ -266,30 +272,9 @@ void SceneTitle::Render(const float& elapsedTime)
         //dummy_sprite->render(immediate_context, 256, 120, 1280 - 256 * 2, 720 - 120 * 2);
     }
 
-    sprite_dissolve.Render();
+    //sprite_dissolve->Render();
 
-    //if (dissolve_sprite)
-    //{
-    //    immediate_context->IASetInputLayout(dummy_sprite->GetInputLayout());
-    //    immediate_context->VSSetShader(dummy_sprite->GetVertexShader(), nullptr, 0);
-    //    immediate_context->PSSetShader(dummy_sprite->GetPixelShader(), nullptr, 0);
-    //    immediate_context->PSSetSamplers(0, 1, samplerState.GetAddressOf());
-    //    immediate_context->PSSetShaderResources(1, 1, mask_texture[mask_texture_value].GetAddressOf());
 
-    //    // 定数バッファの更新
-    //    {
-    //        dissolve_constants dissolve{};
-    //        dissolve.parameters.x = dissolve_value;
-    //        dissolve.parameters.y = dissolve_value1;
-    //        dissolve.parameters.z = edge_threshold;
-    //        dissolve.edgeColor = edgeColor;
-    //        immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
-    //        immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-    //        immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-    //    }
-
-    //    dissolve_sprite->render(immediate_context, spr[1].pos.x, spr[1].pos.y, spr[1].posD.x, spr[1].posD.y);
-    //}
 #endif
 
 }
@@ -330,13 +315,9 @@ void SceneTitle::DrawDebug()
         ImGui::DragFloat2("pos", &spr[1].pos.x);
         ImGui::DragFloat2("posD", &spr[1].posD.x);
 
-        ImGui::SliderFloat("dissolve_value", &dissolve_value, 0.0f, 1.0f);
-        ImGui::SliderFloat("dissolve_value1", &dissolve_value1, 0.0f, 2.0f);
+
         //dissolve_value = dissolve_value1 - 0.4f;
 
-        ImGui::SliderInt("mask_texture", &mask_texture_value, 0, 3);
-
-        ImGui::SliderFloat4("edgeColor", &edgeColor.x, 0.0f, 1.0f);
 
         ImGui::TreePop();
     }
@@ -344,6 +325,6 @@ void SceneTitle::DrawDebug()
     player->model->skinned_meshes.Drawdebug();
 
     //sprite_dissolve.DrawDebug(L"./resources/ground.png");
-    sprite_dissolve.DrawDebug(L"./resources/fade.jpg");
+    //sprite_dissolve->DrawDebug();
 #endif
 }

@@ -11,6 +11,8 @@ private: // シングルトン化
     Camera() {}
     ~Camera() {}
 
+
+
 public:
     // 唯一のインスタンス取得
     static Camera& Instance()
@@ -19,6 +21,8 @@ public:
         return camera;
     }
 
+
+    void Initialize();
 
     void SetPerspectiveFov(ID3D11DeviceContext* dc);
     //void SetPerspectiveFov(ID3D11DeviceContext* dc, float fovY, float aspect, float nearZ, float farZ);
@@ -41,7 +45,7 @@ public:
     void DebugMoveCamera();
 
 public:
-    const Transform& GetTransform() const { return transform; }
+    Transform* GetTransform() { return &transform; }
 
 private:
     Transform transform{};
@@ -49,13 +53,5 @@ private:
     DirectX::XMMATRIX P{};
     DirectX::XMMATRIX V{};
 
-    //DirectX::XMFLOAT4X4 view;
-    //DirectX::XMFLOAT4X4 projection;
-    //DirectX::XMFLOAT3 eye;
-    //DirectX::XMFLOAT3 focus;
-
-    //DirectX::XMFLOAT3 up;
-    //DirectX::XMFLOAT3 front;
-    //DirectX::XMFLOAT3 right;
 };
 

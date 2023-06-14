@@ -39,7 +39,8 @@ public:
 public:
     std::unique_ptr<Player> player  = nullptr;
 
-    Sprite_dissolve sprite_dissolve = {};
+    //std::unique_ptr<Sprite_dissolve> sprite_dissolve;
+
 
     int RS = 3;
     int DS = 0;
@@ -63,26 +64,6 @@ public:
     Microsoft::WRL::ComPtr<ID3D11Buffer> scroll_constant_buffer;
     DirectX::XMFLOAT2 scroll_direction{};
     DirectX::XMFLOAT2 scroll_value{ 0.001f,0.0f };
-
-    // mask
-    D3D11_TEXTURE2D_DESC mask_texture2dDesc;
-    Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture[5];
-    int mask_texture_value = 0;
-    struct dissolve_constants
-    {
-        DirectX::XMFLOAT4 parameters;   // x:ディゾルブ適応量、
-                                        // y:
-                                        // z: 縁の閾値
-                                        // w:空き
-        DirectX::XMFLOAT4 edgeColor;    // 縁の色
-    };
-    float dissolve_value{ 0.0f };
-    float dissolve_value1{ 0.0f };
-    Microsoft::WRL::ComPtr<ID3D11Buffer> dissolve_constant_buffer;
-
-    // mask edge
-    float edge_threshold{ 0.2f };   // 縁の閾値
-    DirectX::XMFLOAT4 edgeColor{ 1,0,0,1 };    // 縁の色
 
 
 };

@@ -9,8 +9,9 @@
 class SceneLoading : public Mame::Scene::BaseScene
 {
 public:
-    SceneLoading(BaseScene* nextScene) :nextScene(nextScene) {}
-    ~SceneLoading()     override {}
+    SceneLoading(BaseScene* nextScene);
+    ~SceneLoading() override {}
+
 
     void Initialize()   override;                   // èâä˙âª
     void Finalize()     override;                   // èIóπâª
@@ -26,7 +27,7 @@ private:
     static void LoadingThread(SceneLoading* scene);
 
 private:
-    Sprite_dissolve spriteDissolve;
+    std::unique_ptr<Sprite_dissolve> spriteDissolve;
 
     BaseScene*      nextScene   = nullptr;
     std::thread*    thread      = nullptr;

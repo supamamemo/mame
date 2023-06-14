@@ -213,6 +213,12 @@ Shader::Shader(ID3D11Device* device)
     }
 }
 
+void Shader::Initialize()
+{
+    Camera& camera = Camera::Instance();
+    camera.Initialize();
+}
+
 void Shader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 {
     Camera& camera = Camera::Instance();

@@ -8,6 +8,7 @@ class GrassBlock :
 {
 public:
     GrassBlock();
+    GrassBlock(const char* filename);
     ~GrassBlock()override;
 
     void Initialize(DirectX::XMFLOAT3 pos);      // ‰Šú‰»

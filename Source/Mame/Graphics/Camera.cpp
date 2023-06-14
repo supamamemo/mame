@@ -34,6 +34,12 @@
 //}
 
 
+void Camera::Initialize()
+{
+    transform.SetPosition({});
+    transform.SetRotation({});
+}
+
 void Camera::SetPerspectiveFov(ID3D11DeviceContext* dc)
 {
     D3D11_VIEWPORT viewport{};

@@ -16,6 +16,8 @@ public:
     Shader(ID3D11Device* device);
     ~Shader() {}
 
+    void Initialize();
+
     // •`‰æŠJŽn
     void Begin(ID3D11DeviceContext* dc, const RenderContext& rc);
     void SetState(ID3D11DeviceContext* dc,

@@ -3,6 +3,7 @@
 #include "../sprite.h"
 #include <memory>
 
+
 enum class Dissolve
 {
     Fire,
@@ -12,13 +13,15 @@ enum class Dissolve
 class Sprite_dissolve
 {
 public:
-    Sprite_dissolve() {}
+    Sprite_dissolve();
     ~Sprite_dissolve() {}
 
-    void Initialize(int state, const wchar_t* filename);
+    void Initialize();
+    //void Initialize(int state, const wchar_t* filename);
+    
     void Update();
     void Render();
-    void DrawDebug(const wchar_t* filename);
+    void DrawDebug();
 
     // load用
     void fadeIn(float elapsedTime);
@@ -45,6 +48,8 @@ public:
     // デバッグ用
     bool debug_initialize = false;
 
+
+    
 private:
     struct dissolve_constants
     {

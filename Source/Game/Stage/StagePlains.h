@@ -22,6 +22,6 @@ public:
 
 private:
     std::unique_ptr<Player>player;
-    std::unique_ptr<GrassBlock> grassBlock[10];
+    std::unique_ptr<GrassBlock> grassBlock[7];
 };
 

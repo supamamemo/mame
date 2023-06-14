@@ -8,8 +8,8 @@ Player::Player()
 
     //model = new Model(graphics.GetDevice(), "./resources/idle3.fbx", false);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
 
@@ -30,7 +30,7 @@ void Player::Initialize()
 {
     model->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
     model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
-    model->GetTransform()->SetScale(DirectX::XMFLOAT3(3, 3, 3));
+    model->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
 }
 
 void Player::Finalize()
@@ -133,7 +133,7 @@ const DirectX::XMFLOAT3 Player::GetMoveVec() const
     const float&   ay      = gamePad.GetAxisLY();
 
     // カメラ方向とスティックの入力値によって進行方向を計算する
-    const Transform& cameraTransform = Camera::Instance().GetTransform();
+    const Transform& cameraTransform = *Camera::Instance().GetTransform();
     const DirectX::XMFLOAT3&  cameraRight = cameraTransform.CalcRight();
     const DirectX::XMFLOAT3&  cameraFront = cameraTransform.CalcForward();
 
