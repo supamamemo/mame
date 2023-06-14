@@ -134,7 +134,7 @@ const XMFLOAT3 Player::GetMoveVec() const
     const float&   ay      = gamePad.GetAxisLY();
 
     // カメラ方向とスティックの入力値によって進行方向を計算する
-    const Transform& cameraTransform = Camera::Instance().GetTransform();
+    const Transform& cameraTransform = *Camera::Instance().GetTransform();
     const XMFLOAT3&  cameraRight = cameraTransform.CalcRight();
     const XMFLOAT3&  cameraFront = cameraTransform.CalcForward();
 

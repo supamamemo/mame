@@ -45,7 +45,7 @@ public:
     void DebugMoveCamera();
 
 public:
-    const Transform& GetTransform() const { return transform; }
+    Transform* GetTransform() { return &transform; }
 
 private:
     Transform transform{};
