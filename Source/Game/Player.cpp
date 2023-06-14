@@ -1,7 +1,6 @@
 #include "Player.h"
 #include "../Mame/Graphics/Graphics.h"
 #include "../Mame/Input/Input.h"
-#include "OperatorXMFLOAT3.h"
 
 Player::Player()
 {
@@ -126,7 +125,7 @@ void Player::DrawDebug()
 
 
 // スティック入力値から移動ベクトルを取得
-const XMFLOAT3 Player::GetMoveVec() const
+const DirectX::XMFLOAT3 Player::GetMoveVec() const
 {
     // 入力情報を取得
     const GamePad& gamePad = Input::Instance().GetGamePad();
@@ -135,8 +134,8 @@ const XMFLOAT3 Player::GetMoveVec() const
 
     // カメラ方向とスティックの入力値によって進行方向を計算する
     const Transform& cameraTransform = Camera::Instance().GetTransform();
-    const XMFLOAT3&  cameraRight = cameraTransform.CalcRight();
-    const XMFLOAT3&  cameraFront = cameraTransform.CalcForward();
+    const DirectX::XMFLOAT3&  cameraRight = cameraTransform.CalcRight();
+    const DirectX::XMFLOAT3&  cameraFront = cameraTransform.CalcForward();
 
 
     // 移動ベクトルはXZ平面に水平なベクトルになるようにする
@@ -173,7 +172,7 @@ const XMFLOAT3 Player::GetMoveVec() const
     // スティックの水平入力値をカメラ右方向に反映し、
     // スティックの垂直入力値をカメラ前方向に反映し、
     // 進行ベクトルを計算する
-    const XMFLOAT3 vec = {
+    const DirectX::XMFLOAT3 vec = {
        (cameraRightX * ax) + (cameraFrontX * ay),
        0.0f, // Y軸方向には移動しない
        (cameraRightZ * ax) + (cameraFrontZ * ay),       
@@ -203,7 +202,7 @@ const bool Player::InputMove(const float& elapsedTime)
 #endif
 
     // 進行方向ベクトル取得
-    const XMFLOAT3& moveVec = GetMoveVec();
+    const DirectX::XMFLOAT3& moveVec = GetMoveVec();
 
     // 移動処理
     Move(moveVec.x, moveVec.z, moveSpeed);
