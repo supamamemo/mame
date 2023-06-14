@@ -2,6 +2,8 @@
 
 #include "../../Mame/Graphics/Graphics.h"
 
+
+
 // コンストラクタ
 StageBoss::StageBoss()
 {
@@ -65,6 +67,15 @@ void StageBoss::Update(const float& elapsedTime)
 
     // boss更新
     boss->Update();
+
+    DirectX::XMFLOAT2 resultPos{};
+    if (Collision::IntersectAABBVsAABB(&boss->aabb, &player->aabb,  resultPos))
+    {
+        DirectX::XMFLOAT3 pos = player->model->GetTransform()->GetPosition();
+        pos.x += resultPos.x;
+        pos.y += resultPos.y;
+        player->model->GetTransform()->SetPosition(pos);
+    }
 }
 
 // Updateの後に呼ばれる処理

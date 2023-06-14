@@ -14,6 +14,7 @@
 
 #include "Common.h"
 
+#include "Collision.h"
 
 class Character
 {
@@ -72,6 +73,8 @@ private:
 
 public:
     std::unique_ptr<Model> model = nullptr;
+
+    AABB aabb{};
 
 protected:
 

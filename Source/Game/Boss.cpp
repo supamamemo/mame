@@ -62,6 +62,9 @@ void Boss::Update()
     DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
     pos.x += speed;
     model->GetTransform()->SetPosition(pos);
+
+    DirectX::XMFLOAT3 pos1 = model->GetTransform()->GetPosition();
+    aabb = { {pos1.x,pos1.y},{0.5f,0.5f} };
 }
 
 // Update‚ÌŒã‚ÉŒÄ‚Î‚ê‚é

@@ -1,5 +1,7 @@
 #include "Collision.h"
 
+#define ADJUST      (0.125f)
+
 // ‹…‚Æ‹…‚ÌŒð·”»’è
 bool Collision::IntersectSphereVsSphere(
     const DirectX::XMFLOAT3& positionA, const float radiusA,
@@ -543,4 +545,48 @@ void Collision::FixOBB(
     obb2.center.y += correction.y;
     obb2.center.z += correction.z;
     
+}
+
+
+
+
+
+bool Collision::IntersectAABBVsAABB(
+    AABB* aabb1, AABB* aabb2,
+    DirectX::XMFLOAT2& resultPos
+)
+{
+    float aabb1Right = aabb1->center.x + aabb1->range.x;
+    float aabb1Left = aabb1->center.x - aabb1->range.x;
+    float aabb1Top = aabb1->center.y + aabb1->range.y;
+    float aabb1Bottom = aabb1->center.y - aabb1->range.y;
+    float aabb2Right = aabb2->center.x + aabb2->range.x;
+    float aabb2Left = aabb2->center.x - aabb2->range.x;
+    float aabb2Top = aabb2->center.y + aabb2->range.y;
+    float aabb2Bottom = aabb2->center.y - aabb2->range.y;
+
+    // “–‚½‚Á‚Ä‚¢‚È‚¢
+    if (aabb1Right < aabb2Left)return false;
+    if (aabb1Left > aabb2Right)return false;
+    if (aabb1Top < aabb2Bottom)return false;
+    if (aabb1Bottom > aabb2Top)return false;
+
+    
+    if (aabb1Right > aabb2Left || aabb1Left < aabb2Right)
+    {
+        if (aabb1Right > aabb2Right)
+            resultPos.x = aabb2Right - aabb1Left - ADJUST;    // checkLeft
+        if (aabb1Left < aabb2Left)
+            resultPos.x = aabb2Left - aabb1Right - ADJUST;    // checkRight
+    }
+
+    if (aabb1Top > aabb2Bottom || aabb1Bottom < aabb2Top)
+    {
+        if (aabb1Top > aabb2Bottom)
+            resultPos.y = aabb2Top - aabb1Bottom - ADJUST;    // checkDown
+        if (aabb1Bottom < aabb2Bottom)
+            resultPos.y = aabb2Bottom - aabb1Top - ADJUST;    // checkTop
+    }
+
+    return true;
 }
