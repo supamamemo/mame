@@ -9,13 +9,14 @@ Player::Player()
     
     //model = new Model(graphics.GetDevice(), "./resources/idle3.fbx", false);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
-    //model = new Model(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);    //model = new Model(graphics.GetDevice(), "./resources/mame.fbx", 0, true);
-    //model = new Model(graphics.GetDevice(), "./resources/byoga/plantune.fbx", 0, true);
-    //model = new Model(graphics.GetDevice(), "/resources/byoga/nico.fbx");
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
+    //model = new Model(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);   
+    //model = new Model(graphics.GetDevice(), "./resources/mame.fbx", 0, true);
+    //model = new Model(graphics.GetDevice(), "./resources/byoga/plantune.fbx", 0, true);    
 }
 
 Player::~Player()
@@ -70,7 +71,7 @@ void Player::Render(float elapsedTime)
     // model•`‰æ
     if (model->skinned_meshes.animation_clips.size() > 0)
     {
-        int clip_index{ 0 };
+        int clip_index{ animationIndex };
         int frame_index{ 0 };
         static float animation_tick{ 0 };
 
@@ -97,7 +98,13 @@ void Player::Render(float elapsedTime)
 
 void Player::DrawDebug()
 {
+    ImGui::Begin("player");
+    
     Character::DrawDebug();
+
+    ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
+
+    ImGui::End();
 }
 
 // “ü—ÍˆÚ“®

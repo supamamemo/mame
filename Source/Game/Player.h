@@ -18,5 +18,8 @@ public:
 
 public:
     void InputMove();
+
+private:
+    int animationIndex = 0;
 };
 
