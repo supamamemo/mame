@@ -2,17 +2,23 @@
 #include "../Graphics/Graphics.h"
 #include "SceneManager.h"
 
+SceneLoading::SceneLoading(BaseScene* nextScene) :nextScene(nextScene) 
+{
+    spriteDissolve = std::make_unique<Sprite_dissolve>();
+}
+
 // 初期化
 void SceneLoading::Initialize()
 {
     Graphics& graphics = Graphics::Instance();
 
     // spriteDissolve
-    spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/load.png");
+    spriteDissolve->Initialize();
+    //spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/load.png");
     //spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/fade.jpg");
     
     //spriteDissolve.SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
-    spriteDissolve.SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+    spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
 
     // スレッド開始
     thread = new std::thread(LoadingThread, this);
@@ -39,11 +45,11 @@ void SceneLoading::Begin()
 void SceneLoading::Update(float elapsedTime)
 {
     //spriteDissolve.fadeOut(elapsedTime);
-    spriteDissolve.fadeIn(elapsedTime);
+    spriteDissolve->fadeIn(elapsedTime);
 
     // 次のシーンの準備が完了したらシーンを切り替える
     if (nextScene->IsReady() &&
-        spriteDissolve.fadeInReady(0.0f))
+        spriteDissolve->fadeInReady(0.0f))
         //spriteDissolve.fadeOutReady(1.5f))
     {
         Mame::Scene::SceneManager::Instance().ChangeScene(nextScene);
@@ -72,14 +78,14 @@ void SceneLoading::Render(float elapsedTime)
 
     // fade out
     {
-        spriteDissolve.Render();
+        spriteDissolve->Render();
     }
 }
 
 void SceneLoading::DrawDebug()
 {
 #ifdef USE_IMGUI
-    spriteDissolve.DrawDebug(L"./resources/load.png");
+    spriteDissolve->DrawDebug();
 #endif// USE_IMGUI
 }
 

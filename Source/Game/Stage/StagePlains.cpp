@@ -7,10 +7,20 @@ StagePlains::StagePlains()
     player = std::make_unique<Player>();
 
     // ‘ƒuƒƒbƒN¶¬
+#if 0
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
     {
         block = std::make_unique<GrassBlock>();
     }
+#else
+    grassBlock[0] = std::make_unique<GrassBlock>("./resources/temporary/assets_air_ground.fbx");
+    grassBlock[1] = std::make_unique<GrassBlock>("./resources/temporary/assets_air_ground_move.fbx");
+    grassBlock[2] = std::make_unique<GrassBlock>("./resources/temporary/assets_block.fbx");
+    grassBlock[3] = std::make_unique<GrassBlock>("./resources/temporary/assets_cannon.fbx");
+    grassBlock[4] = std::make_unique<GrassBlock>("./resources/temporary/assets_cannon_bullet.fbx");
+    grassBlock[5] = std::make_unique<GrassBlock>("./resources/temporary/assets_flag.fbx");
+    grassBlock[6] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
+#endif
 }
 
 // ‰Šú‰»

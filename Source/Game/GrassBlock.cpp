@@ -12,8 +12,22 @@ GrassBlock::GrassBlock()
     Graphics& graphics = Graphics::Instance();
 
     // model生成
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_air_ground.fbx", true);
 
+    // imgui名前かぶり起きないように...
+    name = "GrassBlock" + std::to_string(nameNum);
+    SetName(name.c_str());
+    ++nameNum;
+}
+
+GrassBlock::GrassBlock(const char* filename)
+{
+    Graphics& graphics = Graphics::Instance();
+
+    // model生成
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), filename, true);
 
     // imgui名前かぶり起きないように...
     name = "GrassBlock" + std::to_string(nameNum);

@@ -6,11 +6,18 @@
 
 #include "../../Game/Stage/StageManager.h"
 #include "../../Game/Stage/StagePlains.h"
+#include "../../Game/Stage/StageBoss.h"
 
 // 初期化
 void SceneGame::Initialize()
 {
-    StageManager::Instance().ChangeStage(new StagePlains);
+    Graphics& graphics = Graphics::Instance();
+    Shader* shader = graphics.GetShader();
+    
+    // カメラの位置リセット
+    shader->Initialize();
+
+    StageManager::Instance().ChangeStage(new StageBoss);
 }
 
 // 終了化

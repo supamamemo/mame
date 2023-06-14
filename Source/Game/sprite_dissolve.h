@@ -3,22 +3,20 @@
 #include "../sprite.h"
 #include <memory>
 
-enum class Dissolve
-{
-    Fire,
-    Fade,
-};
+
 
 class Sprite_dissolve
 {
 public:
-    Sprite_dissolve() {}
+    Sprite_dissolve();
     ~Sprite_dissolve() {}
 
-    void Initialize(int state, const wchar_t* filename);
+    void Initialize();
+    //void Initialize(int state, const wchar_t* filename);
+    
     void Update();
     void Render();
-    void DrawDebug(const wchar_t* filename);
+    void DrawDebug();
 
     // デバッグ用
     bool debug_initialize = false;
@@ -48,7 +46,7 @@ private:
     std::unique_ptr<sprite> dissolve_sprite;
     Microsoft::WRL::ComPtr<ID3D11SamplerState>  samplerState;
 
-    D3D11_TEXTURE2D_DESC mask_texture2d_desc;
+    
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture[20];
     struct dissolve_constants
     {

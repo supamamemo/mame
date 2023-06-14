@@ -213,6 +213,11 @@ Shader::Shader(ID3D11Device* device)
     }
 }
 
+void Shader::Initialize()
+{
+    camera.Initialize();
+}
+
 void Shader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 {
     // サンプラーステート

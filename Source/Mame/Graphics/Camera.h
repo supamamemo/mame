@@ -11,6 +11,8 @@ public:
     Camera() {}
     ~Camera() {}
 
+    void Initialize();
+
     void SetPerspectiveFov(ID3D11DeviceContext* dc);
     //void SetPerspectiveFov(ID3D11DeviceContext* dc, float fovY, float aspect, float nearZ, float farZ);
    

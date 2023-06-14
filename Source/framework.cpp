@@ -22,17 +22,6 @@ bool framework::initialize()
     create_ps_from_cso(graphics.GetDevice(), "luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
     create_ps_from_cso(graphics.GetDevice(), "blur_ps.cso", pixel_shaders[1].GetAddressOf());
 
-    // gltf
-    //gltf_models[0] = std::make_unique<gltf_model>(device.Get(),
-    //    "./glTF-Sample-Models-master/2.0/Duck/glTF/Duck.gltf");
-    // engin
-    //gltf_models[0] = std::make_unique<gltf_model>(device.Get(),
-    //    "./glTF-Sample-Models-master/2.0/2CylinderEngine/glTF/2CylinderEngine.gltf");
-    //gltf_models[0] = std::make_unique<gltf_model>(graphics.GetDevice(),
-    //    "./glTF-Sample-Models-master/2.0/DamagedHelmet/glTF/DamagedHelmet.gltf");
-    //gltf_models[0] = std::make_unique<gltf_model>(device.Get(),
-    //    "./glTF-Sample-Models-master/2.0/ABeautifulGame/glTF/ABeautifulGame.gltf");
-
 
     // シーンタイトル
     Mame::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
@@ -49,7 +38,6 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
     ImGui::NewFrame();
 #endif
 
-    //SetImguiStyle3();
 
     // 入力更新処理
     input.Update();
@@ -67,9 +55,11 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
 void framework::render(float elapsed_time/*Elapsed seconds from last frame*/)
 {
     Graphics& graphics = Graphics::Instance();
-    ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
-    ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
-    ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
+    //ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
+    //ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
+    //ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
+
+
 
 #if 0
 #if 0
@@ -293,9 +283,7 @@ void framework::render(float elapsed_time/*Elapsed seconds from last frame*/)
     //gltf_models[0]->render(immediate_context, world);
 #endif
 
-    //
-    // DirectX::XMMATRIX Projection = DirectX::XMMatrixOrthographicLH(1280, 720, nearZ, farZ);
-
+ 
     // todo scenemanager
     Mame::Scene::SceneManager::Instance().Render(elapsed_time);
 

@@ -3,13 +3,13 @@
 #include "Stage.h"
 
 #include "../Player.h"
-#include "../GrassBlock.h"
+#include "../Boss.h"
 
-class StagePlains : public Stage
+class StageBoss : public Stage
 {
 public:
-    StagePlains();
-    ~StagePlains()override {}
+    StageBoss();
+    ~StageBoss()override {}
 
     void Initialize()override;  // ‰Šú‰»
     void Finalize()override;    // I—¹ˆ—
@@ -20,7 +20,10 @@ public:
     void DrawDebug()override;
 
 private:
-    std::unique_ptr<Player>player;
-    std::unique_ptr<GrassBlock> grassBlock[7];
+    std::unique_ptr<Player> player;
+    std::unique_ptr<Boss> boss;
+
+    std::unique_ptr<Model>stage[2];
+
 };
 
