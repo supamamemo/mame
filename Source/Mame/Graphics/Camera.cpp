@@ -59,7 +59,7 @@ void Camera::SetPerspectiveFov(ID3D11DeviceContext* dc)
     V = { DirectX::XMMatrixLookAtLH(eye, focus, up) };
 
 
-    DebugMoveCamera();
+    //DebugMoveCamera();
 }
 
 void Camera::DrawDebug()

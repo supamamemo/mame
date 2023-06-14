@@ -7,16 +7,12 @@
 #include "../../External/imgui/imgui_internal.h"
 #include "../../External/imgui/imgui_impl_dx11.h"
 #include "../../External/imgui/imgui_impl_win32.h"
-//#include "../../imgui/imgui.h"
-//#include "../../imgui/imgui_internal.h"
-//#include "../../imgui/imgui_impl_dx11.h"
-//#include "../../imgui/imgui_impl_win32.h"
 #endif
 
-using namespace std;
+
 
 #include <DirectXMath.h>
-using namespace DirectX;
+
 
 #include "Common.h"
 
@@ -77,10 +73,10 @@ private:
     void UpdateHorizontalMove(const float& elapsedTime);
 
 public:
-    unique_ptr<Model> model = nullptr;
+    std::unique_ptr<Model> model = nullptr;
 
 protected:
-    XMFLOAT3    velocity        =  { 0,0,0 };   // 速度
+    DirectX::XMFLOAT3    velocity        =  { 0,0,0 };   // 速度
                                    
     float       stepOffset      =  1.0f;        // 位置補正(Y位置がキャラクターの中心になるように調整)
                                    

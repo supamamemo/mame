@@ -18,7 +18,7 @@ public:
     void DrawDebug() override;
 
 private: // 入力処理関数関連   
-    const XMFLOAT3 GetMoveVec() const;                  // スティック入力値から移動ベクトルを取得   
+    const DirectX::XMFLOAT3 GetMoveVec() const;                  // スティック入力値から移動ベクトルを取得   
     const bool     InputMove(const float& elapsedTime); // 移動入力処理   
     const bool     InputJump();                         // ジャンプ入力処理
 
