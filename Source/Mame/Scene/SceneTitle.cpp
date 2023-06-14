@@ -174,7 +174,7 @@ void SceneTitle::Begin()
 }
 
 // 更新処理
-void SceneTitle::Update(float elapesdTime)
+void SceneTitle::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -202,10 +202,8 @@ void SceneTitle::Update(float elapesdTime)
         if (scroll_direction.y < -10.0f)scroll_direction.y += 10.0f;
     }
 
-    player->Update();
+    player->Update(elapsedTime);
 }
-
-
 
 // 毎フレーム一番最後に呼ばれる
 void SceneTitle::End()
@@ -213,7 +211,7 @@ void SceneTitle::End()
 }
 
 // 描画処理
-void SceneTitle::Render(float elapsedTime)
+void SceneTitle::Render(const float& elapsedTime)
 {
     Graphics& graphics = Graphics::Instance();
     ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();

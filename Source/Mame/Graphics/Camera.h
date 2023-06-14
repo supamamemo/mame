@@ -7,9 +7,18 @@
 
 class Camera
 {
-public:
+private: // シングルトン化
     Camera() {}
     ~Camera() {}
+
+public:
+    // 唯一のインスタンス取得
+    static Camera& Instance()
+    {
+        static Camera camera;
+        return camera;
+    }
+
 
     void SetPerspectiveFov(ID3D11DeviceContext* dc);
     //void SetPerspectiveFov(ID3D11DeviceContext* dc, float fovY, float aspect, float nearZ, float farZ);
@@ -30,6 +39,9 @@ public:
 
     void Reset();
     void DebugMoveCamera();
+
+public:
+    const Transform& GetTransform() const { return transform; }
 
 private:
     Transform transform{};

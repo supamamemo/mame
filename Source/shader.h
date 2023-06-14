@@ -41,7 +41,7 @@ public:
     }view;
 
 private:
-    Camera camera;
+    //Camera camera;
 
     DirectX::XMFLOAT3 eye{ 0.0f,0.0f,-10.0f };
     DirectX::XMFLOAT3 focus{ 0.0f,0.0f,0.0f };

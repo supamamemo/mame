@@ -165,6 +165,12 @@
     <ClCompile Include="Source\Game\Common.cpp">
       <Filter>mameLib\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Collision.cpp">
+      <Filter>mameLib\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Mathf.cpp">
+      <Filter>mameLib\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\framebuffer.h">
@@ -309,6 +315,12 @@
       <Filter>mameLib\Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\OperatorXMFLOAT3.h">
+      <Filter>mameLib\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Collision.h">
+      <Filter>mameLib\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Mathf.h">
       <Filter>mameLib\Game</Filter>
     </ClInclude>
   </ItemGroup>

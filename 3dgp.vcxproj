@@ -204,8 +204,10 @@
     <ClCompile Include="Source\fullscreen_quad.cpp" />
     <ClCompile Include="Source\Game\Block.cpp" />
     <ClCompile Include="Source\Game\Character.cpp" />
+    <ClCompile Include="Source\Game\Collision.cpp" />
     <ClCompile Include="Source\Game\Common.cpp" />
     <ClCompile Include="Source\Game\GrassBlock.cpp" />
+    <ClCompile Include="Source\Game\Mathf.cpp" />
     <ClCompile Include="Source\Game\Player.cpp" />
     <ClCompile Include="Source\Game\sprite_dissolve.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
@@ -249,8 +251,10 @@
     <ClInclude Include="Source\fullscreen_quad.h" />
     <ClInclude Include="Source\Game\Block.h" />
     <ClInclude Include="Source\Game\Character.h" />
+    <ClInclude Include="Source\Game\Collision.h" />
     <ClInclude Include="Source\Game\Common.h" />
     <ClInclude Include="Source\Game\GrassBlock.h" />
+    <ClInclude Include="Source\Game\Mathf.h" />
     <ClInclude Include="Source\Game\OperatorXMFLOAT3.h" />
     <ClInclude Include="Source\Game\Player.h" />
     <ClInclude Include="Source\Game\sprite_dissolve.h" />

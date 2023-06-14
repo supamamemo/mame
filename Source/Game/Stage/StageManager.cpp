@@ -1,7 +1,7 @@
 #include "StageManager.h"
 
 // XVˆ—
-void StageManager::Update(float elapsedTime)
+void StageManager::Update(const float& elapsedTime)
 {
     if (nextStage != nullptr)
     {
@@ -19,7 +19,7 @@ void StageManager::Update(float elapsedTime)
     if (currentStage != nullptr)
     {
         currentStage->Begin();
-        currentStage->Update();
+        currentStage->Update(elapsedTime);
 #ifdef USE_IMGUI
         currentStage->DrawDebug();
 #endif
@@ -28,7 +28,7 @@ void StageManager::Update(float elapsedTime)
 }
 
 // •`‰æˆ—
-void StageManager::Render(float elapsedTime)
+void StageManager::Render(const float& elapsedTime)
 {
     if (currentStage != nullptr)
     {

@@ -15,8 +15,8 @@ public:
         return instance;
     }
 
-    void Update(float elapsedTime);  // 更新処理
-    void Render(float elapsedTime); // 描画処理
+    void Update(const float& elapsedTime);  // 更新処理
+    void Render(const float& elapsedTime);  // 描画処理
     void Clear();   // クリア
 
     // ステージ切り替え
