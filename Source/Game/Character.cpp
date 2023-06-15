@@ -113,14 +113,14 @@ void Character::UpdateVerticalVelocity(const float& elapsedFrame)
 // 垂直移動更新処理
 void Character::UpdateVerticalMove(const float& elapsedTime)
 {
-    NO_CONST XMFLOAT3 position = model->GetTransform()->GetPosition();
-    NO_CONST XMFLOAT4 rotation = model->GetTransform()->GetRotation();
+    NO_CONST DirectX::XMFLOAT3 position = model->GetTransform()->GetPosition();
+    NO_CONST DirectX::XMFLOAT4 rotation = model->GetTransform()->GetRotation();
 
     // 垂直方向の移動量
     const float my = velocity.y * elapsedTime;
 
     // キャラクターのY軸方向となる法線ベクトル
-    NO_CONST XMFLOAT3 normal = { 0,1,0 };
+    NO_CONST DirectX::XMFLOAT3 normal = { 0,1,0 };
 
     // 傾斜率初期化
     slopeRate = 0.0f;
@@ -171,12 +171,21 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
 #else 1
         if (end.y <= 0.0f)
         {
-            position.y = 0.0f;
+            // バウンス中は跳ねさせる
+            if (isBounce)
+            {
+                OnBounce();
+            }
+            else
+            {
+                position.y = 0.0f;
 
-            // 着地した
-            if (!isGround) OnLanding();
-            isGround = true;
-            velocity.y = 0.0f;
+                // 着地した
+                if (!isGround) OnLanding();
+                isGround = true;
+                velocity.y = 0.0f;
+            }
+
         }
 #endif
         else
@@ -276,7 +285,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
 // 水平移動更新処理
 void Character::UpdateHorizontalMove(const float& elapsedTime)
 {
-    NO_CONST XMFLOAT3 position = model->GetTransform()->GetPosition();
+    NO_CONST DirectX::XMFLOAT3 position = model->GetTransform()->GetPosition();
 
     // 水平速力量計算
     const float velocityLengthX = sqrtf(velocity.x * velocity.x);
