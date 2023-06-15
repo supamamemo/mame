@@ -95,14 +95,14 @@ void Sprite_dissolve::Initialize()
     // dissolve_sprite
     {
         // シェーダー関連
-        create_vs_from_cso(graphics.GetDevice(), "sprite_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-        create_ps_from_cso(graphics.GetDevice(), "sprite_ps.cso", dissolve_sprite->GetPixelShaderAddress());
+        //create_vs_from_cso(graphics.GetDevice(), "sprite_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
+        //create_ps_from_cso(graphics.GetDevice(), "sprite_ps.cso", dissolve_sprite->GetPixelShaderAddress());
 
         
 
         // mask
-        //create_vs_from_cso(graphics.GetDevice(), "sprite_dissolve_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-        //create_ps_from_cso(graphics.GetDevice(), "sprite_dissolve_ps.cso", dissolve_sprite->GetPixelShaderAddress());
+        create_vs_from_cso(graphics.GetDevice(), "sprite_dissolve_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
+        create_ps_from_cso(graphics.GetDevice(), "sprite_dissolve_ps.cso", dissolve_sprite->GetPixelShaderAddress());
 
         //create_vs_from_cso(graphics.GetDevice(), "sprite_fade_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, ARRAYSIZE(input_element_desc));
         //create_ps_from_cso(graphics.GetDevice(), "sprite_fade_ps.cso", dissolve_sprite->GetPixelShaderAddress());
@@ -138,26 +138,16 @@ void Sprite_dissolve::Render()
         //immediate_context->PSSetSamplers(0, 1, samplerState.GetAddressOf());
         immediate_context->PSSetShaderResources(1, 1, mask_texture[spr_dissolve.mask_texture_value].GetAddressOf());
         // 定数バッファの更新
-        //{
-        //    dissolve_constants dissolve{};
-        //    dissolve.parameters.x = spr_dissolve.dissolve_value;
-        //    dissolve.parameters.y = spr_dissolve.dissolve_value1;
-        //        dissolve.parameters.z = spr_dissolve.edge_threshold;
-        //        dissolve.edgeColor = spr_dissolve.edgeColor;
-        //            immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
-        //            immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-        //            immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-        //}
-        //{
-        //    dissolve_constants dissolve{};
-        //    dissolve.parameters.x = spr_dissolve.dissolve_value;
-        //    dissolve.parameters.y = spr_dissolve.dissolve_value1;
-        //    dissolve.parameters.z = spr_dissolve.edge_threshold;
-        //    dissolve.edgeColor = spr_dissolve.edgeColor;
-        //    immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
-        //    immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-        //    immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
-        //}
+        {
+            dissolve_constants dissolve{};
+            dissolve.parameters.x = spr_dissolve.dissolve_value;
+            dissolve.parameters.y = spr_dissolve.dissolve_value1;
+            dissolve.parameters.z = spr_dissolve.edge_threshold;
+            dissolve.edgeColor = spr_dissolve.edgeColor;
+            immediate_context->UpdateSubresource(dissolve_constant_buffer.Get(), 0, 0, &dissolve, 0, 0);
+            immediate_context->VSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+            immediate_context->PSSetConstantBuffers(3, 1, dissolve_constant_buffer.GetAddressOf());
+        }
 
         dissolve_sprite->render(immediate_context, spr_dissolve.pos.x, spr_dissolve.pos.y, spr_dissolve.posD.x, spr_dissolve.posD.y);
     }

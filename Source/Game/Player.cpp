@@ -31,6 +31,8 @@ void Player::Initialize()
     model->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
     model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
     model->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
+
+    
 }
 
 void Player::Finalize()
@@ -53,6 +55,9 @@ void Player::Update(const float& elapsedTime)
     }
     model->GetTransform()->SetPosition(pos);
 #endif
+
+    DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
+    aabb = { {pos.x,pos.y},{0.5f,0.5f} };
 
     // ステート分岐処理
     switch (state)

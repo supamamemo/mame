@@ -7,16 +7,14 @@
 #include "../../External/imgui/imgui_internal.h"
 #include "../../External/imgui/imgui_impl_dx11.h"
 #include "../../External/imgui/imgui_impl_win32.h"
-//#include "../../imgui/imgui.h"
-//#include "../../imgui/imgui_internal.h"
-//#include "../../imgui/imgui_impl_dx11.h"
-//#include "../../imgui/imgui_impl_win32.h"
 #endif
+
 
 #include <DirectXMath.h>
 
 #include "Common.h"
 
+#include "Collision.h"
 
 class Character
 {
@@ -59,7 +57,11 @@ private:
 public:
     std::unique_ptr<Model> model = nullptr;
 
+    AABB aabb{};
+
 protected:
+
+
     DirectX::XMFLOAT3 velocity  =  { 0,0,0 };   // 速度
                                    
     float       stepOffset      =  1.0f;        // 位置補正(Y位置がキャラクターの中心になるように調整)

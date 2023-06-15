@@ -27,6 +27,7 @@ private: // 瞬間的に呼ばれる関数関連
     void OnDamaged() override;  // ダメージを受けた時に呼ばれる
     void OnDead()    override;  // 死亡したときに呼ばれる
 
+
 private: // ステート関数関連
     void TransitionIdleState();                     // 待機ステートへ遷移
     void UpdateIdleState(const float& elapsedTime); // 待機ステート更新処理
