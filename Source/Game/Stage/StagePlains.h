@@ -2,7 +2,7 @@
 
 #include "Stage.h"
 
-#include "../Player.h"
+#include "../PlayerManager.h"
 #include "../GrassBlock.h"
 
 class StagePlains : public Stage
@@ -21,7 +21,6 @@ public:
     void DrawDebug() override;
 
 private:
-    std::unique_ptr<Player>player;
     std::unique_ptr<GrassBlock> grassBlock[7];
 };
 

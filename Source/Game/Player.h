@@ -15,12 +15,17 @@ public:
     void End();                             // 毎フレーム一番最後に呼ばれる
     void Render(const float& elapsedTime);  // 描画処理
 
-    void DrawDebug() override;
+    void DrawDebug() override;              // デバッグ描画
 
 private: // 入力処理関数関連   
-    const DirectX::XMFLOAT3 GetMoveVec() const;                  // スティック入力値から移動ベクトルを取得   
-    const bool              InputMove(const float& elapsedTime); // 移動入力処理   
-    const bool              InputJump();                         // ジャンプ入力処理
+    const float GetMoveVecX() const;                 // スティック入力値から移動ベクトルを取得   
+    const bool  InputMove(const float& elapsedTime); // 移動入力処理   
+    const bool  InputJump();                         // ジャンプ入力処理
+
+private: // 瞬間的に呼ばれる関数関連
+    void OnLanding() override;  // 着地したときに呼ばれる   
+    void OnDamaged() override;  // ダメージを受けた時に呼ばれる
+    void OnDead()    override;  // 死亡したときに呼ばれる
 
 private: // ステート関数関連
     void TransitionIdleState();                     // 待機ステートへ遷移

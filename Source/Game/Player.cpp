@@ -13,7 +13,7 @@ Player::Player()
     //model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
 
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
     //model = new Model(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);   
     //model = new Model(graphics.GetDevice(), "./resources/mame.fbx", 0, true);
     //model = new Model(graphics.GetDevice(), "./resources/byoga/plantune.fbx", 0, true);    
@@ -125,60 +125,11 @@ void Player::DrawDebug()
 
 
 // スティック入力値から移動ベクトルを取得
-const DirectX::XMFLOAT3 Player::GetMoveVec() const
+const float Player::GetMoveVecX() const
 {
-    // 入力情報を取得
+    // 左スティックの水平入力情報を取得
     const GamePad& gamePad = Input::Instance().GetGamePad();
-    const float&   ax      = gamePad.GetAxisLX();
-    const float&   ay      = gamePad.GetAxisLY();
-
-    // カメラ方向とスティックの入力値によって進行方向を計算する
-    const Transform& cameraTransform = *Camera::Instance().GetTransform();
-    const DirectX::XMFLOAT3&  cameraRight = cameraTransform.CalcRight();
-    const DirectX::XMFLOAT3&  cameraFront = cameraTransform.CalcForward();
-
-
-    // 移動ベクトルはXZ平面に水平なベクトルになるようにする
-    // カメラ右方向ベクトルをXZ単位ベクトルに変換
-    NO_CONST float cameraRightX       = cameraRight.x;
-    NO_CONST float cameraRightZ       = cameraRight.z;
-    const    float cameraRighthLength = sqrtf(
-        cameraRightX * cameraRightX + 
-        cameraRightZ * cameraRightZ
-    );
-
-    if (cameraRighthLength > 0.0f)
-    {
-        // 単位ベクトル化
-        cameraRightX /= cameraRighthLength;
-        cameraRightZ /= cameraRighthLength;
-    }
-
-    // カメラ前方向ベクトルをXZ単位ベクトルに変換
-    NO_CONST float cameraFrontX      = cameraFront.x;
-    NO_CONST float cameraFrontZ      = cameraFront.z;
-    const    float cameraFrontLength = sqrtf(
-        cameraFrontX * cameraFrontX + 
-        cameraFrontZ * cameraFrontZ
-    );
-
-    if (cameraFrontLength > 0.0f)
-    {
-        // 単位ベクトル化
-        cameraFrontX /= cameraFrontLength;
-        cameraFrontZ /= cameraFrontLength;
-    }
-
-    // スティックの水平入力値をカメラ右方向に反映し、
-    // スティックの垂直入力値をカメラ前方向に反映し、
-    // 進行ベクトルを計算する
-    const DirectX::XMFLOAT3 vec = {
-       (cameraRightX * ax) + (cameraFrontX * ay),
-       0.0f, // Y軸方向には移動しない
-       (cameraRightZ * ax) + (cameraFrontZ * ay),       
-    };
-
-    return vec;
+    return gamePad.GetAxisLX();
 }
 
 
@@ -202,16 +153,16 @@ const bool Player::InputMove(const float& elapsedTime)
 #endif
 
     // 進行方向ベクトル取得
-    const DirectX::XMFLOAT3& moveVec = GetMoveVec();
+    const float moveVecX = GetMoveVecX();
 
     // 移動処理
-    Move(moveVec.x, moveVec.z, moveSpeed);
+    Move(moveVecX, moveSpeed);
 
     // 旋回処理
-    Turn(elapsedTime, moveVec.x, moveVec.z, turnSpeed);
+    Turn(elapsedTime, moveVecX, turnSpeed);
 
     // 進行ベクトルがゼロベクトルでない場合は入力された
-    return (moveVec.x != 0.0f || moveVec.z != 0.0f);
+    return (moveVecX != 0.0f);
 }
 
 
@@ -221,7 +172,8 @@ const bool Player::InputJump()
     const GamePad& gamePad = Input::Instance().GetGamePad();
 
     // ボタン入力でジャンプ（ジャンプ回数制限付き）
-    if (gamePad.GetButtonDown() & GamePad::BTN_A)
+    //if (gamePad.GetButtonDown() & GamePad::BTN_A)
+    if (gamePad.GetButtonDown() & GamePad::BTN_B)
     {
         // ジャンプ回数がジャンプ上限数以上ならジャンプしない
         if (jumpCount >= jumpLimit) return false;
@@ -239,6 +191,28 @@ const bool Player::InputJump()
     return false;
 }
 
+
+// 着地したときに呼ばれる関数
+void Player::OnLanding()
+{
+    // ジャンプ回数リセット
+    jumpCount = 0;
+
+    // 待機ステートへ遷移
+    TransitionIdleState();
+}
+
+
+// ダメージを受けた時に呼ばれる関数
+void Player::OnDamaged()
+{
+}
+
+
+// 死亡したときに呼ばれる関数
+void Player::OnDead()
+{
+}
 
 
 // 待機ステートへ遷移
@@ -284,6 +258,7 @@ void Player::UpdateMoveState(const float& elapsedTime)
 void Player::TransitionJumpState()
 {
     state = State::Jump;
+    
 
     //model->PlayAnimation(Anim_Jump, false);
 }

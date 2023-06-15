@@ -121,5 +121,6 @@ void Camera::DebugMoveCamera()
     //pos.y += forward.y + right.y;
     pos.z += forward.z + right.z;
 
-    transform.SetPosition(pos);
+    // プレイヤー移動確認のためにコメントアウトしています
+    //transform.SetPosition(pos);
 }

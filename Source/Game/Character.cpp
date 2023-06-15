@@ -11,12 +11,10 @@ void Character::DrawDebug()
 // 移動処理
 void Character::Move(
     const float& vx, 
-    const float& vz, 
     const float& moveSpeed)
 {
     // 移動方向ベクトルを設定
     moveVecX = vx;
-    moveVecZ = vz;
 
     // 最大速度設定
     maxMoveSpeed = moveSpeed; // elapsedTimeを乗算しない
@@ -27,29 +25,28 @@ void Character::Move(
 void Character::Turn(
     const    float& elapsedTime,
     NO_CONST float vx,  
-    NO_CONST float vz, 
     NO_CONST float turnSpeed)
 {
+    // 進行ベクトルがゼロベクトルの場合は処理する必要なし
+    if (vx == 0.0f) return;
+
+    NO_CONST DirectX::XMFLOAT4 rotation = model->GetTransform()->GetRotation();
+
     turnSpeed *= elapsedTime;
 
-    // 進行ベクトルがゼロベクトルの場合は処理する必要なし
-    if (vx == 0.0f && vz == 0.0f) return;
-
-    // 進行ベクトルの距離を求める
-    const float vLength = sqrtf(vx * vx + vz * vz);
+    // 進行ベクトルを単位ベクトル化
+    const float vLength = sqrtf(vx * vx);
     if (vLength < 0.001f) return;
 
     // 単位ベクトル化
     vx /= vLength;
-    vz /= vLength;
 
     // 自身の回転値から前方向を求める
-    NO_CONST XMFLOAT4 rotation = model->GetTransform()->GetRotation();
     const float frontX = sinf(rotation.y);
     const float frontZ = cosf(rotation.y);
 
     // 回転角を求めるため、2つの単位ベクトルの内積計算する
-    const float dot = (frontX * vx) + (frontZ * vz);    // 内積
+    const float dot = (frontX * vx) /*+ (frontZ * vz)*/;
 
     // 内積値は-1.0~1.0で表現されており、2つの単位ベクトルの角度が
     // 小さいほど1.0に近づくという性質を利用して回転速度を調整する  
@@ -57,12 +54,12 @@ void Character::Turn(
     if (rot > turnSpeed) rot = turnSpeed;
 
     // 左右判定を行うために2つの単位ベクトルの外積を計算する
-    const float cross = (frontZ * vx) - (frontX * vz);
+    const float cross = (frontZ * vx) /*- (frontX * vz)*/;
 
     // 2Dの外積値が正の場合か負の場合によって左右判定が行える
     // 左右判定を行うことによって左右回転を選択する
     rotation.y += (cross < 0.0f) ? -rot : rot;
-
+    
     model->GetTransform()->SetRotation(rotation);
 }
 
@@ -144,33 +141,45 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
             position.z
         };
 
-        //// レイキャストによる地面判定
-        //HitResult hit = {};
-        //if (StageManager::Instance().RayCast(start, end, hit))
-        //{
-        //    // 法線ベクトル取得
-        //    normal = hit.normal;
+#if 0
+        // レイキャストによる地面判定
+        HitResult hit = {};
+        if (StageManager::Instance().RayCast(start, end, hit))
+        {
+            // 法線ベクトル取得
+            normal = hit.normal;
 
-        //    // 傾斜率の計算
-        //    const float normalLengthXZ = sqrtf(
-        //        (hit.normal.x * hit.normal.x) +
-        //        (hit.normal.z * hit.normal.z)
-        //    );
-        //    slopeRate = 1.0f - (hit.normal.y / (normalLengthXZ + hit.normal.y));
+            // 傾斜率の計算
+            const float normalLengthXZ = sqrtf(
+                (hit.normal.x * hit.normal.x) +
+                (hit.normal.z * hit.normal.z)
+            );
+            slopeRate = 1.0f - (hit.normal.y / (normalLengthXZ + hit.normal.y));
 
-        //    // 地面に接地している
-        //    //position.y = hit.position.y;
-        //    position = hit.position;
+            // 地面に接地している
+            //position.y = hit.position.y;
+            position = hit.position;
 
-        //    // 回転
-        //    angle.y += hit.rotation.y;
+            // 回転
+            angle.y += hit.rotation.y;
 
-        //    // 着地した
-        //    if (!isGround) OnLanding();
-        //    isGround = true;
-        //    velocity.y = 0.0f;
-        //}
-        //else
+            // 着地した
+            if (!isGround) OnLanding();
+            isGround = true;
+            velocity.y = 0.0f;
+        }
+#else 1
+        if (end.y <= 0.0f)
+        {
+            position.y = 0.0f;
+
+            // 着地した
+            if (!isGround) OnLanding();
+            isGround = true;
+            velocity.y = 0.0f;
+        }
+#endif
+        else
         {
             // 空中に浮いている
             position.y += my;
@@ -203,9 +212,7 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
 // 水平速力更新処理
 void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
 {
-    const float dist = sqrtf(
-        (velocity.x * velocity.x) + (velocity.z * velocity.z)
-    );
+    const float dist = sqrtf(velocity.x * velocity.x);
 
     // XZ平面の速力を減速する
     if (dist > 0.0f)
@@ -220,27 +227,22 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
         {
             // 単位ベクトル化
             const float vx = velocity.x / dist;
-            const float vz = velocity.z / dist;
 
             velocity.x -= vx * friction;
-            velocity.z -= vz * friction;
         }
         // 横方向の速力が摩擦力以下になったら速力を無効化
         else
         {
             velocity.x = 0.0f;
-            velocity.z = 0.0f;
         }
     }
 
 
-    // XZ平面の速力を加速する
+    // X軸の速力を加速する
     if (dist <= maxMoveSpeed)
     {
         // 移動ベクトルがゼロベクトルでないなら加速する
-        const float moveVecDist = sqrtf(
-            (moveVecX * moveVecX) + (moveVecZ * moveVecZ)
-        );
+        const float moveVecDist = sqrtf(moveVecX * moveVecX);
         if (moveVecDist > 0.0f)
         {
             // 加速力
@@ -251,16 +253,12 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
 
             // 移動ベクトルによる加速処理
             velocity.x += moveVecX * acceleration;
-            velocity.z += moveVecZ * acceleration;
 
             // 最大速度制限
-            const float dist = sqrtf(
-                (velocity.x * velocity.x) + (velocity.z * velocity.z)
-            );
+            const float dist = sqrtf(velocity.x * velocity.x);
             if (dist > maxMoveSpeed)
             {
                 velocity.x = moveVecX * maxMoveSpeed;
-                velocity.z = moveVecZ * maxMoveSpeed;
             }
 
             // 下り坂でガタガタしないようにする
@@ -273,7 +271,6 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
 
     // 移動ベクトルをリセット
     moveVecX = 0.0f;
-    moveVecZ = 0.0f;
 }
 
 // 水平移動更新処理
@@ -282,15 +279,12 @@ void Character::UpdateHorizontalMove(const float& elapsedTime)
     NO_CONST XMFLOAT3 position = model->GetTransform()->GetPosition();
 
     // 水平速力量計算
-    const float velocityLengthXZ = sqrtf(
-        (velocity.x * velocity.x) + (velocity.z * velocity.z)
-    );
+    const float velocityLengthX = sqrtf(velocity.x * velocity.x);
 
-    if (velocityLengthXZ > 0.0f)
+    if (velocityLengthX > 0.0f)
     {
         // 水平移動値
         const float mx = velocity.x * elapsedTime;
-        const float mz = velocity.z * elapsedTime;
 
         // レイの開始位置と終点位置
         const DirectX::XMFLOAT3 start = {
@@ -301,7 +295,7 @@ void Character::UpdateHorizontalMove(const float& elapsedTime)
         const DirectX::XMFLOAT3 end = {
             position.x + mx,
             position.y + stepOffset,
-            position.z + mz,
+            position.z,
         };
 
         //// レイキャストによる壁判定
@@ -355,7 +349,6 @@ void Character::UpdateHorizontalMove(const float& elapsedTime)
         {
             // 移動処理
             position.x += mx;
-            position.z += mz;
         }
     }
 
