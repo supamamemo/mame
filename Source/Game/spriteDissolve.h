@@ -82,7 +82,7 @@ private:
     } spr_dissolve = {};
 
 private:
-    std::unique_ptr<sprite> dissolve_sprite  = nullptr;
+    std::unique_ptr<Sprite> dissolve_sprite  = nullptr;
     Microsoft::WRL::ComPtr<ID3D11SamplerState> samplerState = nullptr;
 
     D3D11_TEXTURE2D_DESC mask_texture2d_desc = {};

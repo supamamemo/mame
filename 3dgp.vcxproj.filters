@@ -210,8 +210,8 @@
     <ClCompile Include="Source\texture.cpp">
       <Filter>mamelib\default\source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\PlayerManager.cpp">
-      <Filter>mamelib\Game\Character</Filter>
+    <ClCompile Include="Source\Mame\Audio.cpp">
+      <Filter>mamelib\Mame</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -377,8 +377,8 @@
     <ClInclude Include="Source\static_mesh.h">
       <Filter>mamelib\default\header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\PlayerManager.h">
-      <Filter>mamelib\Game</Filter>
+    <ClInclude Include="Source\Mame\Audio.h">
+      <Filter>mamelib\Mame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

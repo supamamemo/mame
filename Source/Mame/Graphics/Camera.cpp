@@ -47,7 +47,7 @@ void Camera::SetPerspectiveFov(ID3D11DeviceContext* dc)
     dc->RSGetViewports(&unm_viewports, &viewport);
 
     float aspect_ratio{ viewport.Width / viewport.Height };
-    P = { DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(30),aspect_ratio,0.1f,100.0f) };
+    P = { DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(30),aspect_ratio,0.1f,1000.0f) };
     
     DirectX::XMFLOAT3 pos = transform.GetPosition();
     DirectX::XMFLOAT3 forward = transform.CalcForward();

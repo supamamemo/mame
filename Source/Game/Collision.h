@@ -24,6 +24,26 @@ struct AABB
     DirectX::XMFLOAT3 range;    // 半径
 };
 
+struct Box2D
+{
+    DirectX::XMFLOAT2 position;
+    DirectX::XMFLOAT2 lenght;
+
+    // lenghtは半径的な奴。
+    // キューブの長さの半分
+
+    // ーーーーー*ーーーーー
+    // |                 |
+    // |                 |
+    // |                 |
+    // |--------*        |
+    // | l e n  | l      |
+    // |        | e      |
+    // |        | n      |
+    // ーーーーー*ーーーーー
+    //      position
+};
+
 
 // コリジョン
 class Collision

@@ -19,8 +19,8 @@ bool framework::initialize()
     framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
     bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
     framebuffers[1] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280 / 2, 720 / 2);
-    create_ps_from_cso(graphics.GetDevice(), "luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
-    create_ps_from_cso(graphics.GetDevice(), "blur_ps.cso", pixel_shaders[1].GetAddressOf());
+    create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
+    create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/blur_ps.cso", pixel_shaders[1].GetAddressOf());
 
 
     // シーンタイトル

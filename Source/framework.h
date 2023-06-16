@@ -62,7 +62,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11BlendState> blend_states[4]; // ID3D11BlendStateインターフェイス
 	// blend-stateインターフェイスは、output-mergerステージにバインドできるブレンド状態の説明を保持します
 
-	std::unique_ptr<sprite> sprites[8];	// sprite*型配列
+	std::unique_ptr<Sprite> sprites[8];	// sprite*型配列
 
 	std::unique_ptr<sprite_batch> sprite_batches[8];
 

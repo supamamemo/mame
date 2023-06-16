@@ -10,6 +10,7 @@
 #endif
 
 #include "../GeometricPrimitive.h"
+#include "../sprite.h"
 
 #include <DirectXMath.h>
 
@@ -66,7 +67,11 @@ public:
     std::unique_ptr<Model>  model = nullptr;
     std::unique_ptr<Model> debugModel = nullptr;
 
-    AABB                    aabb  = {};
+    // AABB                    aabb  = {};
+    Box2D box2d{};
+    
+
+    std::unique_ptr<GeometricPrimitive> geometricPrimitive;
 
 protected:
     DirectX::XMFLOAT3 velocity      =   { 0,0,0 }; // ‘¬“x

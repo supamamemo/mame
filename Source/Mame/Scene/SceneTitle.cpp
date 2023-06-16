@@ -160,12 +160,12 @@ void SceneTitle::Initialize()
         if(dummy_sprite)
         {
             // シェーダー関連
-            create_vs_from_cso(graphics.GetDevice(), "sprite_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-            create_ps_from_cso(graphics.GetDevice(), "sprite_ps.cso", dummy_sprite->GetPixelShaderAddress());
+            create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
+            create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_ps.cso", dummy_sprite->GetPixelShaderAddress());
 
             // UVScroll
-            create_vs_from_cso(graphics.GetDevice(), "UVScroll_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-            create_ps_from_cso(graphics.GetDevice(), "UVScroll_ps.cso", dummy_sprite->GetPixelShaderAddress());
+            create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
+            create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_ps.cso", dummy_sprite->GetPixelShaderAddress());
         }
         // dissolve_sprite
         //{

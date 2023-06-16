@@ -63,13 +63,13 @@ void StageBoss::Begin()
 void StageBoss::Update(const float& elapsedTime)
 {
     DirectX::XMFLOAT3 resultPos{};
-    if (Collision::IntersectAABBVsAABB(&player->aabb, &boss->aabb,  resultPos))
-    {
-        DirectX::XMFLOAT3 pos = player->model->GetTransform()->GetPosition();
-        pos.x += resultPos.x;
-        pos.y += resultPos.y;
-        player->model->GetTransform()->SetPosition(pos);
-    }
+    //if (Collision::IntersectAABBVsAABB(&player->aabb, &boss->aabb,  resultPos))
+    //{
+    //    DirectX::XMFLOAT3 pos = player->model->GetTransform()->GetPosition();
+    //    pos.x += resultPos.x;
+    //    pos.y += resultPos.y;
+    //    player->model->GetTransform()->SetPosition(pos);
+    //}
 
     // playerXV
     player->Update(elapsedTime);

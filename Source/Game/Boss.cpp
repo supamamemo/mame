@@ -13,7 +13,7 @@ Boss::Boss()
 
     model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_block.fbx", true);
     DirectX::XMFLOAT3 pos1 = model->GetTransform()->GetPosition();
-    aabb = { {pos1.x,pos1.y,pos1.z},{0.5f,0.5f,0.5f} };
+    //aabb = { {pos1.x,pos1.y,pos1.z},{0.5f,0.5f,0.5f} };
 
 
     debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);

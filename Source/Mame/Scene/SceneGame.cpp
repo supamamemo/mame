@@ -46,8 +46,8 @@ void SceneGame::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
-    //StageManager::Instance().ChangeStage(new StagePlains);
-    StageManager::Instance().ChangeStage(new StageBoss);
+    StageManager::Instance().ChangeStage(new StagePlains);
+    //StageManager::Instance().ChangeStage(new StageBoss);
 }
 
 // I—¹‰»
@@ -129,12 +129,13 @@ void SceneGame::Render(const float& elapsedTime)
     Shader* shader = graphics.GetShader();
     shader->Begin(graphics.GetDeviceContext(), rc);
 
-    //StageManager::Instance().Render(elapsedTime);
 
     // fadeOut
     {
         spriteDissolve->Render();
     }
+
+    StageManager::Instance().Render(elapsedTime);
 }
 
 // debug—p
