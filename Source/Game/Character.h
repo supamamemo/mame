@@ -26,6 +26,10 @@ public:
 
     virtual void DrawDebug();   // デバッグ描画
 
+    // アニメーション関連
+    void SetAnimation(int index) { animationIndex = index; }
+    int GetAnimation() { return animationIndex; }
+
 protected:
     // 移動処理
     void Move(const float& vx, const float& moveSpeed);
@@ -105,5 +109,8 @@ protected:
                                    
     bool        isGround        =   false;        // 地面についているか
     bool        isBounce        =   false;        // バウンスさせるか
+
+private:
+    int     animationIndex = 0; // アニメーション番号
 };
 

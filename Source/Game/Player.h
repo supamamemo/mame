@@ -56,7 +56,7 @@ private: // enum関連
 private: // 変数関連
     State   state           = State::Idle; // 現在のステート
 
-    int     animationIndex  = 0;
+
 
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders;
 };

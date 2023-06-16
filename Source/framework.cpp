@@ -30,6 +30,7 @@ bool framework::initialize()
     hr = xAudio2->CreateMasteringVoice(&masterVoice);
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
+    // ここでbgmとか読み込んでるね(場所変えた方がいい)
     bgm[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/akumanokyoku.wav");
     se[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/jump.wav");
     se[1] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/coin.wav");

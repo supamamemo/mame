@@ -2,6 +2,12 @@
 
 #include "Character.h"
 
+enum class BossAnimation
+{
+    Idle,
+    Attack,
+};
+
 class Boss : public Character
 {
 public:

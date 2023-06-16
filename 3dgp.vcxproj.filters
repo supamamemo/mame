@@ -213,6 +213,9 @@
     <ClCompile Include="Source\Mame\Audio.cpp">
       <Filter>mamelib\Mame</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\BossStateDerived.cpp">
+      <Filter>mamelib\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -379,6 +382,9 @@
     </ClInclude>
     <ClInclude Include="Source\Mame\Audio.h">
       <Filter>mamelib\Mame</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\BossStateDerived.h">
+      <Filter>mamelib\Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

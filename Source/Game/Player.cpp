@@ -129,7 +129,7 @@ void Player::Render(const float& elapsedTime)
     // model•`‰æ
     if (model->skinned_meshes.animation_clips.size() > 0)
     {
-        int clip_index{ animationIndex };
+        int clip_index{ GetAnimation() };
         int frame_index{ 0 };
         static float animation_tick{ 0 };
 
@@ -228,7 +228,7 @@ void Player::DrawDebug()
     
     Character::DrawDebug();
 
-    ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
+    //ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
 
     ImGui::DragFloat2("box2dLenght", &box2d.lenght.x);
 
