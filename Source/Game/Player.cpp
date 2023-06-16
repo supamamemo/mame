@@ -9,7 +9,10 @@ Player::Player()
     //model = new Model(graphics.GetDevice(), "./resources/idle3.fbx", false);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
+    
+    
     //model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
 
@@ -18,8 +21,17 @@ Player::Player()
     //model = new Model(graphics.GetDevice(), "./resources/mame.fbx", 0, true);
     //model = new Model(graphics.GetDevice(), "./resources/byoga/plantune.fbx", 0, true);    
     
+    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+    //debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_air_ground_move.fbx", true);
+
+    
+    create_ps_from_cso(graphics.GetDevice(), "wireframe.cso", pixel_shaders.GetAddressOf());
+
     // 待機ステートへ遷移
     TransitionIdleState();
+
+    DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
+    aabb = { {pos.x,pos.y,pos.z},{0.5f,0.5f,0.5f} };
 }
 
 Player::~Player()
@@ -32,7 +44,7 @@ void Player::Initialize()
     model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
     model->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
 
-    
+    debugModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
 }
 
 void Player::Finalize()
@@ -56,8 +68,9 @@ void Player::Update(const float& elapsedTime)
     model->GetTransform()->SetPosition(pos);
 #endif
 
-    DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
-    aabb = { {pos.x,pos.y},{0.5f,0.5f} };
+
+    //debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
+    //debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
     // ステート分岐処理
     switch (state)
@@ -86,7 +99,12 @@ void Player::Render(const float& elapsedTime)
 
     // Transform更新
     DirectX::XMFLOAT4X4 transform;
+    DirectX::XMFLOAT4X4 transform2;
     DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
+    DirectX::XMStoreFloat4x4(&transform2, model->GetTransform()->CalcWorldMatrix(1.0f));
+
+    DirectX::XMFLOAT4X4 transform1;
+    DirectX::XMStoreFloat4x4(&transform1, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
 
     // model描画
     if (model->skinned_meshes.animation_clips.size() > 0)
@@ -114,6 +132,67 @@ void Player::Render(const float& elapsedTime)
     {
         model->skinned_meshes.render(immediate_context, transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
     }
+        
+    {
+        const DirectX::XMFLOAT3 min[2]{ model->skinned_meshes.bounding_box[0], debugModel->skinned_meshes.bounding_box[0] };
+        const DirectX::XMFLOAT3 max[2]{ model->skinned_meshes.bounding_box[1], debugModel->skinned_meshes.bounding_box[1] };
+        const DirectX::XMFLOAT3 dimensions[2]
+        {
+            { max[0].x - min[0].x, max[0].y - min[0].y, max[0].z - min[0].z },
+            { max[1].x - min[1].x, max[1].y - min[1].y, max[1].z - min[1].z }
+        };
+        DirectX::XMFLOAT3 relative_ratio{ dimensions[0].x / dimensions[1].x, dimensions[0].y / dimensions[1].y, dimensions[0].z / dimensions[1].z };
+
+        DirectX::XMMATRIX O{
+            DirectX::XMMatrixTranslation(dimensions[1].x / 2, dimensions[1].y / 2, dimensions[1].z / 2) *
+            DirectX::XMMatrixScaling(relative_ratio.x, relative_ratio.y, relative_ratio.z) *
+            DirectX::XMMatrixTranslation(min[0].x, min[0].y, min[0].z)
+        };
+        //DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(scaling.x, scaling.y, scaling.z) };
+        //DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
+        //DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(translation.x, translation.y, translation.z) };
+        //
+        auto temp = DirectX::XMLoadFloat4x4(&transform1);
+        DirectX::XMFLOAT4X4 world;
+        DirectX::XMStoreFloat4x4(&world, O * temp);
+        debugModel->skinned_meshes.render(immediate_context, world, { 1, 0, 0, 1 }, nullptr, pixel_shaders.Get());
+    }
+
+    //{
+    //    const DirectX::XMFLOAT3 min[2]{ model->skinned_meshes.bounding_box[0], debugModel->skinned_meshes.bounding_box[0] };
+    //    const DirectX::XMFLOAT3 max[2]{ model->skinned_meshes.bounding_box[1], debugModel->skinned_meshes.bounding_box[1] };
+    //    const DirectX::XMFLOAT3 dimensions[2]
+    //    {
+    //        { max[0].x - min[0].x, max[0].y - min[0].y, max[0].z - min[0].z },
+    //        { max[1].x - min[1].x, max[1].y - min[1].y, max[1].z - min[1].z }
+    //    };
+    //    DirectX::XMFLOAT3 relative_ratio{ dimensions[0].x / dimensions[1].x, dimensions[0].y / dimensions[1].y, dimensions[0].z / dimensions[1].z };
+
+    //    DirectX::XMMATRIX O{
+    //        DirectX::XMMatrixTranslation(dimensions[1].x / 2, dimensions[1].y / 2, dimensions[1].z / 2) *
+    //        DirectX::XMMatrixScaling(relative_ratio.x, relative_ratio.y, relative_ratio.z) *
+    //        DirectX::XMMatrixTranslation(min[0].x, min[0].y, min[0].z)
+    //    };
+
+    //    DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(scaling.x, scaling.y, scaling.z) };
+    //    DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
+    //    DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(translation.x, translation.y, translation.z) };
+    //    DirectX::XMFLOAT4X4 world;
+    //    DirectX::XMStoreFloat4x4(&world, O * S * R * T);
+    //    //debugModel->skinned_meshes.render(graphics.GetDeviceContext(), world, { 1, 0, 0, 1 }, nullptr, nullptr);
+    //    debugModel->skinned_meshes.render(immediate_context, transform1  , { 1, 0, 0, 1 }, nullptr, pixel_shaders.Get());
+    //    //static_meshes[1]->render(immediate_context.Get(), world, { 1, 0, 0, 1 }, pixel_shaders[0].Get());
+    //}
+
+    //debugModel->skinned_meshes.render(immediate_context, transform1, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
+
+    //{
+    //    const DirectX::XMFLOAT3 min[2]{model->skinned_meshes.bounding_box[0],}
+    //}
+
+    //debugModel->skinned_meshes.render(immediate_context, transform1, DirectX::XMFLOAT4(0, 0, 0, 0.3f), nullptr);
+
+    //geometricPrimitive->render(graphics.GetDeviceContext(), transform2, DirectX::XMFLOAT4(1, 0, 0, 0.3f));
 }
 
 
@@ -124,6 +203,19 @@ void Player::DrawDebug()
     Character::DrawDebug();
 
     ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
+
+    ImGui::SliderFloat("translation.x", &translation.x, -10.0f, +10.0f);
+    ImGui::SliderFloat("translation.y", &translation.y, -10.0f, +10.0f);
+    ImGui::SliderFloat("translation.z", &translation.z, -10.0f, +10.0f);
+
+    ImGui::SliderFloat("scaling.x", &scaling.x, -10.0f, +10.0f);
+    ImGui::SliderFloat("scaling.y", &scaling.y, -10.0f, +10.0f);
+    ImGui::SliderFloat("scaling.z", &scaling.z, -10.0f, +10.0f);
+
+    ImGui::SliderFloat("rotation.x", &rotation.x, -10.0f, +10.0f);
+    ImGui::SliderFloat("rotation.y", &rotation.y, -10.0f, +10.0f);
+    ImGui::SliderFloat("rotation.z", &rotation.z, -10.0f, +10.0f);
+
 
     ImGui::End();
 }

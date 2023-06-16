@@ -2,12 +2,13 @@
 #include "BaseScene.h"
 
 #include "../../Game/Player.h"
+#include "../../Game/spriteDissolve.h"
 
 class SceneGame : public Mame::Scene::BaseScene
 {
 public:
-    SceneGame() {}
-    ~SceneGame()        override {}
+    SceneGame();
+    ~SceneGame()override {}
 
     void Initialize()   override;                   // 初期化
     void Finalize()     override;                   // 終了化
@@ -19,5 +20,12 @@ public:
     void DrawDebug()    override;
 
 public:
+    // fadeOut/fadeIn用のディゾルブ
+    std::unique_ptr<SpriteDissolve> spriteDissolve;
+
+    // デバッグ用
+    int fadeType = 0;
+    int textureType = 0;
+
 };
 

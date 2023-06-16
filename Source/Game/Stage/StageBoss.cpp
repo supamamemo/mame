@@ -62,20 +62,20 @@ void StageBoss::Begin()
 // 更新処理
 void StageBoss::Update(const float& elapsedTime)
 {
-    // player更新
-    player->Update(elapsedTime);
-
-    // boss更新
-    boss->Update();
-
-    DirectX::XMFLOAT2 resultPos{};
-    if (Collision::IntersectAABBVsAABB(&boss->aabb, &player->aabb,  resultPos))
+    DirectX::XMFLOAT3 resultPos{};
+    if (Collision::IntersectAABBVsAABB(&player->aabb, &boss->aabb,  resultPos))
     {
         DirectX::XMFLOAT3 pos = player->model->GetTransform()->GetPosition();
         pos.x += resultPos.x;
         pos.y += resultPos.y;
         player->model->GetTransform()->SetPosition(pos);
     }
+
+    // player更新
+    player->Update(elapsedTime);
+
+    // boss更新
+    boss->Update();
 }
 
 // Updateの後に呼ばれる処理

@@ -2,6 +2,7 @@
 
 #include "Character.h"
 
+
 class Player : public Character
 {
 public:
@@ -46,5 +47,11 @@ private: // 変数関連
     State   state           = State::Idle; // 現在のステート
 
     int     animationIndex  = 0;
+
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders;
+
+    DirectX::XMFLOAT3 translation{ 0, 0, 0 };
+    DirectX::XMFLOAT3 scaling{ 1, 1, 1 };
+    DirectX::XMFLOAT3 rotation{ 0, 0, 0 };
 };
 

@@ -19,7 +19,7 @@
 #include "shader.h"
 #include "sprite.h"
 #include "sprite_batch.h"
-#include "geometric_primitive.h"
+#include "GeometricPrimitive.h"
 #include "static_mesh.h"
 #include "skinned_mesh.h"
 #include "framebuffer.h"
@@ -76,7 +76,7 @@ public:
 	};
 	Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffers[8];
 
-	std::unique_ptr<geometric_primitive> geometric_primitives[8];
+	std::unique_ptr<GeometricPrimitive> geometric_primitives[8];
 
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState>rasterizer_states[4];
 	

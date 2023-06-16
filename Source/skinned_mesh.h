@@ -89,7 +89,7 @@ struct skeleton
         int64_t parent_index{ -1 }; // -1: ボーンは孤立しています
         // 'node_index' はシーンのノード配列を参照するインデックスです。
         int64_t node_index{ 0 };
-        
+
         // 'offset_transform' は、モデル (メッシュ) 空間からボーン (ノード) シーンへの変換に使用されます。
         DirectX::XMFLOAT4X4 offset_transform{
             1,0,0,0,
@@ -342,7 +342,7 @@ public:
     };
     std::unordered_map<uint64_t, material> materials;
     // unordered_mapは、同一キーの要素を複数格納できず、格納準が規定されていないコンテナ
-    
+
     // アニメーション
     std::vector<animation> animation_clips;
 
@@ -350,7 +350,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex_shader;   // 頂点シェーダー
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shader;     // ピクセルシェーダー
     Microsoft::WRL::ComPtr<ID3D11InputLayout> input_layout;     // 入力レイアウト
-    Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffer;       
+    Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffer;
 
     void create_com_objects(ID3D11Device* device, const char* fbx_filename);
 
@@ -363,7 +363,8 @@ public:
 
     void render(ID3D11DeviceContext* immeddiate_context,
         const DirectX::XMFLOAT4X4 world, const DirectX::XMFLOAT4& material_color,
-        const animation::keyframe* keyframe);
+        const animation::keyframe* keyframe,
+        ID3D11PixelShader* alternative_pixel_shader = nullptr);
 
     void update_animation(animation::keyframe& keyframe);
 
@@ -382,6 +383,21 @@ public:
     float dissolve_value{ 0.0f };
     float dissolve_value1{ 0.0f };
     Microsoft::WRL::ComPtr<ID3D11Buffer> dissolve_constant_buffer;
+
+
+
+    // バウンディングボックス
+    DirectX::XMFLOAT3 bounding_box[2]
+    {
+        { +D3D11_FLOAT32_MAX, +D3D11_FLOAT32_MAX, +D3D11_FLOAT32_MAX },
+        { -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX }
+    };
+
+    template<class T>
+    void serialize(T& archive)
+    {
+        archive(bounding_box);
+    }
 
 protected:
     scene scene_view;

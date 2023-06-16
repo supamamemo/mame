@@ -5,7 +5,7 @@
 #include "../../sprite_batch.h"
 
 #include "../../Game/Player.h"
-#include "../../Game/sprite_dissolve.h"
+#include "../../Game/spriteDissolve.h"
 
 class SceneTitle : public Mame::Scene::BaseScene
 {
@@ -39,7 +39,8 @@ public:
 public:
     std::unique_ptr<Player> player  = nullptr;
 
-    //std::unique_ptr<Sprite_dissolve> sprite_dissolve;
+    // fadeOut/fadeIn用のディゾルブ
+    std::unique_ptr<SpriteDissolve> spriteDissolve;
 
 
     int RS = 3;
