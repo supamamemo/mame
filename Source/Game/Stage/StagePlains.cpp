@@ -4,7 +4,7 @@
 StagePlains::StagePlains()
 {
     // player生成
-    player = std::make_unique<Player>();
+    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 
     // 草ブロック生成
 #if 0
@@ -27,7 +27,7 @@ StagePlains::StagePlains()
 void StagePlains::Initialize()
 {
     // player初期化
-    player->Initialize();
+    PlayerManager::Instance().GetPlayer()->Initialize();
 
     // 草ブロック初期化
     int temp = 0;
@@ -42,7 +42,7 @@ void StagePlains::Initialize()
 void StagePlains::Finalize()
 {
     // player終了化
-    player->Finalize();
+    PlayerManager::Instance().GetPlayer()->Finalize();
 
     // 草ブロック終了化
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
@@ -55,7 +55,7 @@ void StagePlains::Finalize()
 void StagePlains::Begin()
 {
     // player
-    player->Begin();
+    PlayerManager::Instance().GetPlayer()->Begin();
 
     // 草ブロック
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
@@ -68,7 +68,7 @@ void StagePlains::Begin()
 void StagePlains::Update(const float& elapsedTime)
 {
     // player更新
-    player->Update(elapsedTime);
+    PlayerManager::Instance().GetPlayer()->Update(elapsedTime);
 
     // 草ブロック更新
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
@@ -81,7 +81,7 @@ void StagePlains::Update(const float& elapsedTime)
 void StagePlains::End()
 {
     // player
-    player->End();
+    PlayerManager::Instance().GetPlayer()->End();
 
     // 草ブロック
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
@@ -94,7 +94,7 @@ void StagePlains::End()
 void StagePlains::Render(const float& elapsedTime)
 {
     // player
-    player->Render(elapsedTime);
+    PlayerManager::Instance().GetPlayer()->Render(elapsedTime);
 
     // 草ブロック
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
@@ -108,7 +108,7 @@ void StagePlains::DrawDebug()
 {
 #ifdef USE_IMGUI
     // player
-    player->DrawDebug();
+    PlayerManager::Instance().GetPlayer()->DrawDebug();
 
     // 草ブロック
     for (std::unique_ptr<GrassBlock>& block : grassBlock)

@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "../Mame/Graphics/Graphics.h"
 #include "../Mame/Input/Input.h"
+#include "OperatorXMFLOAT3.h"
 
 Player::Player()
 {
@@ -16,7 +17,7 @@ Player::Player()
     //model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
 
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
     //model = new Model(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);   
     //model = new Model(graphics.GetDevice(), "./resources/mame.fbx", 0, true);
     //model = new Model(graphics.GetDevice(), "./resources/byoga/plantune.fbx", 0, true);    
@@ -68,16 +69,17 @@ void Player::Update(const float& elapsedTime)
     model->GetTransform()->SetPosition(pos);
 #endif
 
-
     //debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
     //debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+
 
     // ステート分岐処理
     switch (state)
     {
-    case State::Idle:   UpdateIdleState(elapsedTime);   break;
-    case State::Move:   UpdateMoveState(elapsedTime);   break;
-    case State::Jump:   UpdateJumpState(elapsedTime);   break;
+    case State::Idle:    UpdateIdleState(elapsedTime);    break;
+    case State::Move:    UpdateMoveState(elapsedTime);    break;
+    case State::Jump:    UpdateJumpState(elapsedTime);    break;
+    case State::HipDrop: UpdateHipDropState(elapsedTime); break;
     }
 
     // 速力更新処理
@@ -221,63 +223,22 @@ void Player::DrawDebug()
 }
 
 
-// スティック入力値から移動ベクトルを取得
-const DirectX::XMFLOAT3 Player::GetMoveVec() const
+// 左スティック入力値から移動X方向ベクトルを取得
+const float Player::GetMoveVecX() const
 {
-    // 入力情報を取得
+    // 左スティックの水平入力情報を取得
     const GamePad& gamePad = Input::Instance().GetGamePad();
-    const float&   ax      = gamePad.GetAxisLX();
-    const float&   ay      = gamePad.GetAxisLY();
-
-    // カメラ方向とスティックの入力値によって進行方向を計算する
-    const Transform& cameraTransform = *Camera::Instance().GetTransform();
-    const DirectX::XMFLOAT3&  cameraRight = cameraTransform.CalcRight();
-    const DirectX::XMFLOAT3&  cameraFront = cameraTransform.CalcForward();
-
-
-    // 移動ベクトルはXZ平面に水平なベクトルになるようにする
-    // カメラ右方向ベクトルをXZ単位ベクトルに変換
-    NO_CONST float cameraRightX       = cameraRight.x;
-    NO_CONST float cameraRightZ       = cameraRight.z;
-    const    float cameraRighthLength = sqrtf(
-        cameraRightX * cameraRightX + 
-        cameraRightZ * cameraRightZ
-    );
-
-    if (cameraRighthLength > 0.0f)
-    {
-        // 単位ベクトル化
-        cameraRightX /= cameraRighthLength;
-        cameraRightZ /= cameraRighthLength;
-    }
-
-    // カメラ前方向ベクトルをXZ単位ベクトルに変換
-    NO_CONST float cameraFrontX      = cameraFront.x;
-    NO_CONST float cameraFrontZ      = cameraFront.z;
-    const    float cameraFrontLength = sqrtf(
-        cameraFrontX * cameraFrontX + 
-        cameraFrontZ * cameraFrontZ
-    );
-
-    if (cameraFrontLength > 0.0f)
-    {
-        // 単位ベクトル化
-        cameraFrontX /= cameraFrontLength;
-        cameraFrontZ /= cameraFrontLength;
-    }
-
-    // スティックの水平入力値をカメラ右方向に反映し、
-    // スティックの垂直入力値をカメラ前方向に反映し、
-    // 進行ベクトルを計算する
-    const DirectX::XMFLOAT3 vec = {
-       (cameraRightX * ax) + (cameraFrontX * ay),
-       0.0f, // Y軸方向には移動しない
-       (cameraRightZ * ax) + (cameraFrontZ * ay),       
-    };
-
-    return vec;
+    return gamePad.GetAxisLX();
 }
 
+
+// 左スティック入力値から移動Y方向ベクトルを取得
+const float Player::GetMoveVecY() const
+{
+    // 左スティックの垂直入力情報を取得
+    const GamePad& gamePad = Input::Instance().GetGamePad();
+    return gamePad.GetAxisLY();
+}
 
 // 入力移動
 const bool Player::InputMove(const float& elapsedTime)
@@ -299,16 +260,20 @@ const bool Player::InputMove(const float& elapsedTime)
 #endif
 
     // 進行方向ベクトル取得
-    const DirectX::XMFLOAT3& moveVec = GetMoveVec();
+    const float moveVecX = GetMoveVecX();
 
     // 移動処理
-    Move(moveVec.x, moveVec.z, moveSpeed);
+    Move(moveVecX, moveSpeed);
+
+    // 移動ベクトルがゼロベクトルじゃなければ（更新されていたら）保存する
+    // ※保存することでボタンを押し続けなくても自動的に旋回する
+    if (moveVecX != 0.0f) saveMoveVecX = moveVecX; 
 
     // 旋回処理
-    Turn(elapsedTime, moveVec.x, moveVec.z, turnSpeed);
+    Turn(elapsedTime, saveMoveVecX, turnSpeed);
 
     // 進行ベクトルがゼロベクトルでない場合は入力された
-    return (moveVec.x != 0.0f || moveVec.z != 0.0f);
+    return (moveVecX != 0.0f);
 }
 
 
@@ -318,7 +283,8 @@ const bool Player::InputJump()
     const GamePad& gamePad = Input::Instance().GetGamePad();
 
     // ボタン入力でジャンプ（ジャンプ回数制限付き）
-    if (gamePad.GetButtonDown() & GamePad::BTN_A)
+    //if (gamePad.GetButtonDown() & GamePad::BTN_A)
+    if (gamePad.GetButtonDown() & GamePad::BTN_B)
     {
         // ジャンプ回数がジャンプ上限数以上ならジャンプしない
         if (jumpCount >= jumpLimit) return false;
@@ -336,6 +302,56 @@ const bool Player::InputJump()
     return false;
 }
 
+
+// 着地したときに呼ばれる関数
+void Player::OnLanding()
+{
+    // ジャンプ回数リセット
+    jumpCount = 0;
+
+    // 待機ステートへ遷移
+    TransitionIdleState();
+}
+
+
+// バウンス時に呼ばれる関数
+void Player::OnBounce()
+{
+    // 最大バウンスカウント以上ならバウンス終了させる
+    if (bounceCount >= bounceLimit)
+    {
+        velocity.y      = 0;                // Y速度リセット
+        bounceSpeed.x   = BOUNCE_SPEED_X;   // バウンスX速度リセット
+        bounceSpeed.y   = BOUNCE_SPEED_Y;   // バウンスY速度リセット
+        bounceCount     = 0;                // バウンスカウントリセット
+        isBounce        = false;            // バウンス終了
+    }
+    // バウンスさせる
+    else
+    {
+        // プレイヤーの前方向の単位ベクトルを求める
+        const float forward   = model->GetTransform()->CalcForward().x;
+        const float length    = sqrtf(forward * forward);
+        const float forward_n = forward / length;
+
+        velocity.x   = forward_n * bounceSpeed.x; // プレイヤーの向いている方向にバウンスX速度を代入
+        velocity.y   = bounceSpeed.y;             // バウンスY速度をY速度に代入
+        bounceSpeed *= BOUNCE_SPEED_DIVIDE;       // バウンス速度を減少
+        ++bounceCount;                            // 現在のバウンスカウント加算
+    }
+}
+
+
+// ダメージを受けた時に呼ばれる関数
+void Player::OnDamaged()
+{
+}
+
+
+// 死亡したときに呼ばれる関数
+void Player::OnDead()
+{
+}
 
 
 // 待機ステートへ遷移
@@ -381,6 +397,7 @@ void Player::UpdateMoveState(const float& elapsedTime)
 void Player::TransitionJumpState()
 {
     state = State::Jump;
+    
 
     //model->PlayAnimation(Anim_Jump, false);
 }
@@ -390,4 +407,31 @@ void Player::UpdateJumpState(const float& elapsedTime)
 {
     // 移動入力処理
     InputMove(elapsedTime);
+
+    // 下方向に押されていたらヒップドロップステートへ遷移
+    if (GetMoveVecY() < 0.0f) TransitionHipDropState();
+}
+
+
+// ヒップドロップステートへ遷移
+void Player::TransitionHipDropState()
+{
+    state = State::HipDrop;
+
+    gravity  = BOUNCE_GRAVITY;  // 落下速度を上昇
+    isBounce = true;            // バウンスさせる
+}
+
+// ヒップドロップステート更新処理
+void Player::UpdateHipDropState(const float& elapsedTime)
+{
+    // 旋回処理（カメラ目線のままバウンドしないように更新する）
+    Turn(elapsedTime, saveMoveVecX, turnSpeed);
+
+    // バウンスが終了したら待機ステートへ遷移
+    if (!isBounce)
+    {
+        gravity = GRAVITY; // 重力を元に戻す
+        TransitionIdleState();
+    }
 }
