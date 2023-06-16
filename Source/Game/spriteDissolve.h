@@ -10,11 +10,11 @@ enum class Dissolve
     Fade,
 };
 
-class Sprite_dissolve
+class SpriteDissolve
 {
 public:
-    Sprite_dissolve();
-    ~Sprite_dissolve() {}
+    SpriteDissolve();
+    ~SpriteDissolve() {}
 
     void Initialize();
     //void Initialize(int state, const wchar_t* filename);
@@ -24,8 +24,8 @@ public:
     void DrawDebug();
 
     // load用
-    void fadeIn(float elapsedTime);
-    void fadeOut(float elapsedTime);
+    void FadeIn(float elapsedTime);
+    void FadeOut(float elapsedTime);
     void SetFadeInTexture(DirectX::XMFLOAT2 position, DirectX::XMFLOAT2 textureSize, float delay, int textureType)
     {
         spr_dissolve.pos                = position;
@@ -40,9 +40,12 @@ public:
         spr_dissolve.posD               = textureSize;
         spr_dissolve.delay              = delay;
         spr_dissolve.mask_texture_value = textureType;
+        spr_dissolve.dissolve_value1 = 0.0f;
     }
-    bool fadeInReady(float time) { return spr_dissolve.dissolve_value1 < time; }
-    bool fadeOutReady(float time) { return spr_dissolve.dissolve_value1 > time; }
+    bool FadeInReady(float time) { return spr_dissolve.dissolve_value1 < time; }
+    bool FadeOutReady(float time) { return spr_dissolve.dissolve_value1 > time; }
+    bool IsFade() { return isFade; } // fadeするのかの判断に使う
+    void SetFade(bool fade) { isFade = fade; }
 
 public:
     // デバッグ用
@@ -86,5 +89,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mask_texture[20] = {};
 
     Microsoft::WRL::ComPtr<ID3D11Buffer> dissolve_constant_buffer = nullptr;
+
+    bool isFade = false;
 };
 

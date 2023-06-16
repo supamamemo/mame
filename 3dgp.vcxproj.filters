@@ -64,6 +64,9 @@
     <FxCompile Include="Source\Shader\UVScroll_vs.hlsl">
       <Filter>mamelib\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="Source\Shader\wireframe.hlsl">
+      <Filter>mamelib\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">
@@ -174,7 +177,7 @@
     <ClCompile Include="Source\fullscreen_quad.cpp">
       <Filter>mamelib\default\source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\geometric_primitive.cpp">
+    <ClCompile Include="Source\GeometricPrimitive.cpp">
       <Filter>mamelib\default\source</Filter>
     </ClCompile>
     <ClCompile Include="Source\gltf_model.cpp">
@@ -198,7 +201,7 @@
     <ClCompile Include="Source\sprite_batch.cpp">
       <Filter>mamelib\default\source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\sprite_dissolve.cpp">
+    <ClCompile Include="Source\Game\spriteDissolve.cpp">
       <Filter>mamelib\default\source</Filter>
     </ClCompile>
     <ClCompile Include="Source\static_mesh.cpp">
@@ -338,7 +341,7 @@
     <ClInclude Include="Source\fullscreen_quad.h">
       <Filter>mamelib\default\header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\geometric_primitive.h">
+    <ClInclude Include="Source\GeometricPrimitive.h">
       <Filter>mamelib\default\header</Filter>
     </ClInclude>
     <ClInclude Include="Source\gltf_model.h">
@@ -368,7 +371,7 @@
     <ClInclude Include="Source\sprite_batch.h">
       <Filter>mamelib\default\header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\sprite_dissolve.h">
+    <ClInclude Include="Source\Game\spriteDissolve.h">
       <Filter>mamelib\default\header</Filter>
     </ClInclude>
     <ClInclude Include="Source\static_mesh.h">

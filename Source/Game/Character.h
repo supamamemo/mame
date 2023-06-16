@@ -9,6 +9,7 @@
 #include "../../External/imgui/imgui_impl_win32.h"
 #endif
 
+#include "../GeometricPrimitive.h"
 
 #include <DirectXMath.h>
 
@@ -57,6 +58,7 @@ private:
 
 public:
     std::unique_ptr<Model>  model = nullptr;
+    std::unique_ptr<Model> debugModel = nullptr;
 
     AABB                    aabb  = {};
 protected:

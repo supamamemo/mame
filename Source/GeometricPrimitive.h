@@ -5,7 +5,7 @@
 #include <wrl.h>
 
 
-class geometric_primitive
+class GeometricPrimitive
 {
 public:
     struct vertex
@@ -29,8 +29,9 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffer;
 
 public:
-    geometric_primitive(ID3D11Device* device);
-    virtual ~geometric_primitive() = default;
+    GeometricPrimitive(ID3D11Device* device);
+    GeometricPrimitive(ID3D11Device* device, DirectX::XMFLOAT3 center, DirectX::XMFLOAT3 range);
+    virtual ~GeometricPrimitive() = default;
 
     void render(ID3D11DeviceContext* immediate_context,
         const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& material_color);

@@ -15,14 +15,20 @@ public:
         return instance;
     }
 
-    void Update(const float& elapsedTime);
-    //void Render(NO_CONST ID3D11DeviceContext*& dc, NO_CONST Shader*& shader);
-    void Render(const float& elapsedTime);
+    void Initialize();                      // 初期化
+    void Finalize();                        // 終了化
+    void Begin();                           // 毎フレーム一番最初に呼ばれる
+    void Update(const float& elapsedTime);  // 更新処理
+    void End();                             // 毎フレーム一番最後に呼ばれる
+    void Render(const float& elapsedTime);  // 描画処理
+
+    void DrawDebug();                       // デバッグ描画
 
     // プレイヤー取得
     NO_CONST std::unique_ptr<Player>& GetPlayer() { return player; }
 
 private:
     std::unique_ptr<Player> player = nullptr;
+
 };
 

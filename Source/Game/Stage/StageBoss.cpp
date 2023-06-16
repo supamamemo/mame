@@ -8,7 +8,7 @@
 StageBoss::StageBoss()
 {
     // player生成
-    player = std::make_unique<Player>();
+    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 
     // boss生成
     boss = std::make_unique<Boss>();
@@ -25,7 +25,7 @@ StageBoss::StageBoss()
 void StageBoss::Initialize()
 {
     // player初期化
-    player->Initialize();
+    PlayerManager::Instance().GetPlayer()->Initialize();
 
     // boss初期化
     boss->Initialize();
@@ -43,7 +43,7 @@ void StageBoss::Initialize()
 void StageBoss::Finalize()
 {
     // player終了化
-    player->Finalize();
+    PlayerManager::Instance().GetPlayer()->Finalize();
 
     // boss終了化
     boss->Finalize();
@@ -53,7 +53,7 @@ void StageBoss::Finalize()
 void StageBoss::Begin()
 {
     // player
-    player->Begin();
+    PlayerManager::Instance().GetPlayer()->Begin();
 
     // boss
     boss->Begin();
@@ -62,27 +62,28 @@ void StageBoss::Begin()
 // 更新処理
 void StageBoss::Update(const float& elapsedTime)
 {
+    DirectX::XMFLOAT3 resultPos{};
+    PlayerManager& playerManager = PlayerManager::Instance();
+    if (Collision::IntersectAABBVsAABB(&playerManager.GetPlayer()->aabb, &boss->aabb,  resultPos))
+    {
+        DirectX::XMFLOAT3 pos = playerManager.GetPlayer()->model->GetTransform()->GetPosition();
+        pos.x += resultPos.x;
+        pos.y += resultPos.y;
+        playerManager.GetPlayer()->model->GetTransform()->SetPosition(pos);
+    }
+
     // player更新
-    player->Update(elapsedTime);
+    playerManager.GetPlayer()->Update(elapsedTime);
 
     // boss更新
     boss->Update();
-
-    DirectX::XMFLOAT2 resultPos{};
-    if (Collision::IntersectAABBVsAABB(&boss->aabb, &player->aabb,  resultPos))
-    {
-        DirectX::XMFLOAT3 pos = player->model->GetTransform()->GetPosition();
-        pos.x += resultPos.x;
-        pos.y += resultPos.y;
-        player->model->GetTransform()->SetPosition(pos);
-    }
 }
 
 // Updateの後に呼ばれる処理
 void StageBoss::End()
 {
     // player
-    player->End();
+    PlayerManager::Instance().GetPlayer()->End();
 
     // boss
     boss->End();
@@ -92,7 +93,7 @@ void StageBoss::End()
 void StageBoss::Render(const float& elapsedTime)
 {
     // player描画
-    player->Render(elapsedTime);
+    PlayerManager::Instance().GetPlayer()->Render(elapsedTime);
 
     // boss描画
     boss->Render(elapsedTime);
@@ -111,7 +112,7 @@ void StageBoss::DrawDebug()
 {
 #ifdef USE_IMGUI
     // player
-    player->DrawDebug();
+    PlayerManager::Instance().GetPlayer()->DrawDebug();
 
     // boss
     boss->DrawDebug();

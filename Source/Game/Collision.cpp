@@ -248,7 +248,7 @@ bool Collision::IntersectSphereVsCylinder(
 
 bool Collision::IntersectAABBVsAABB(
     AABB* aabb1, AABB* aabb2,
-    DirectX::XMFLOAT2& resultPos
+    DirectX::XMFLOAT3& resultPos
 )
 {
     const float aabb1Right  = aabb1->center.x + aabb1->range.x;
@@ -271,17 +271,17 @@ bool Collision::IntersectAABBVsAABB(
     if (aabb1Right > aabb2Left || aabb1Left < aabb2Right)
     {
         if (aabb1Right > aabb2Right)
-            resultPos.x = aabb2Right - aabb1Left - ADJUST;    // checkLeft
-        if (aabb1Left < aabb2Left)
             resultPos.x = aabb2Left - aabb1Right - ADJUST;    // checkRight
+        if (aabb1Left < aabb2Left)
+            resultPos.x = aabb2Right - aabb1Left - ADJUST;    // checkLeft
     }
 
     if (aabb1Top > aabb2Bottom || aabb1Bottom < aabb2Top)
     {
         if (aabb1Top > aabb2Bottom)
-            resultPos.y = aabb2Top - aabb1Bottom - ADJUST;    // checkDown
-        if (aabb1Bottom < aabb2Bottom)
             resultPos.y = aabb2Bottom - aabb1Top - ADJUST;    // checkTop
+        if (aabb1Bottom < aabb2Bottom)
+            resultPos.y = aabb2Top - aabb1Bottom - ADJUST;    // checkDown
     }
 
     return true;

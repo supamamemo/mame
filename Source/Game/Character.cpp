@@ -6,6 +6,10 @@ void Character::DrawDebug()
 {
     // ImGui•`‰æ
     model->GetTransform()->DrawDebug();
+
+    ImGui::Begin("debugmodel");
+    debugModel->GetTransform()->DrawDebug();
+    ImGui::End();
 }
 
 // ˆÚ“®ˆ—

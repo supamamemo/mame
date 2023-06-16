@@ -1,11 +1,11 @@
-#include "geometric_primitive.h"
+#include "GeometricPrimitive.h"
 #include "shader.h"
 #include "misc.h"
 
 
 
 // コンストラクタ
-geometric_primitive::geometric_primitive(ID3D11Device* device)
+GeometricPrimitive::GeometricPrimitive(ID3D11Device* device)
 {
     // 球体
 #if 0
@@ -146,8 +146,125 @@ geometric_primitive::geometric_primitive(ID3D11Device* device)
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 }
 
+GeometricPrimitive::GeometricPrimitive(ID3D11Device* device, DirectX::XMFLOAT3 center, DirectX::XMFLOAT3 range)
+{
+
+    DirectX::XMFLOAT3 position[]
+    {
+        { center.x - range.x, center.y, center.z - range.z },
+        { center.x + range.x, center.y, center.z - range.z },
+        { center.x + range.x, center.y + range.y * 2, center.z - range.z },
+        { center.x - range.x, center.y + range.y * 2, center.z - range.z },
+
+        { center.x - range.x, center.y, center.z + range.z },
+
+        { center.x + range.x, center.y, center.z + range.z },
+        { center.x + range.x, center.y + range.y * 2, center.z + range.z },
+
+        { center.x - range.x, center.y + range.y * 2, center.z + range.z },
+
+
+        //{ -1.0f, -1.0f, -1.0f },    // 0
+        //{ 1.0f, -1.0f, -1.0f },     // 1
+        //{ 1.0f, 1.0f, -1.0f },      // 2
+        //{ -1.0f, 1.0f, -1.0f },     // 3
+
+        //{ -1.0f, -1.0f, 1.0f },     // 4
+
+        //{ 1.0f, -1.0f, 1.0f },      // 5
+        //{ 1.0f, 1.0f, 1.0f },       // 6
+
+        //{ -1.0f, 1.0f, 1.0f },      // 7
+    };
+
+    vertex vertices[24]
+    {
+
+        // front
+        { position[0], { 0, 0, -1 } },  // 0        
+        { position[1], { 0, 0, -1 } },  // 1
+        { position[2], { 0, 0, -1 } },  // 2
+        { position[3], { 0, 0, -1 } },  // 3
+
+        // right
+        { position[1], { 1, 0, 0 } },   // 1
+        { position[5], { 1, 0, 0 } },   // 5
+        { position[6], { 1, 0, 0 } },   // 6
+        { position[2], { 1, 0, 0 } },   // 2
+
+        // back
+        { position[5], { 0, 0, 1 } },   // 5
+        { position[4], { 0, 0, 1 } },   // 4
+        { position[7], { 0, 0, 1} },    // 7
+        { position[6], { 0, 0, 1} },    // 6
+
+        // left        
+        { position[4], { -1, 0, 0 } },  // 4
+        { position[0], { -1, 0, 0 } },  // 0
+        { position[3], { -1, 0, 0 } },  // 3
+        { position[7], { -1, 0, 0} },   // 7
+
+        // top
+        { position[3], { 0, 1, 0 } },   // 3
+        { position[2], { 0, 1, 0 } },   // 2
+        { position[6], { 0, 1, 0 } },   // 6
+        { position[7], { 0, 1, 0 } },   // 7
+
+        // bottom
+        { position[4], { 0, -1, 0 } },  // 4
+        { position[5], { 0, -1, 0 } },  // 5
+        { position[1], { 0, -1, 0 } },  // 1
+        { position[0], { 0, -1, 0 } },  // 0
+    };
+
+    uint32_t indices[36]
+    {
+        // front
+        0,3,2,
+        0,2,1,
+        // right
+        4,7,6,
+        4,6,5,
+        // back
+        8,11,10,
+        8,10,9,
+        // left
+        12,15,14,
+        12,14,13,
+        // top
+        16,19,18,
+        16,18,17,
+        //bottom
+        20,23,22,
+        20,22,21
+    };
+
+    create_com_buffers(device, vertices, 24, indices, 36);
+
+    HRESULT hr{ S_OK };
+
+    D3D11_INPUT_ELEMENT_DESC input_element_desc[]
+    {
+        {"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
+            D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+        {"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
+            D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+
+    };
+    create_vs_from_cso(device, "geometric_primitive_vs.cso", vertex_shader.GetAddressOf(),
+        input_layout.GetAddressOf(), input_element_desc, ARRAYSIZE(input_element_desc));
+    create_ps_from_cso(device, "geometric_primitive_ps.cso", pixel_shader.GetAddressOf());
+
+    D3D11_BUFFER_DESC buffer_desc{};
+    buffer_desc.ByteWidth = sizeof(constants);
+    buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+    buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    hr = device->CreateBuffer(&buffer_desc, nullptr, constant_buffer.GetAddressOf());
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+}
+
 // render
-void geometric_primitive::render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& material_color)
+void GeometricPrimitive::render(ID3D11DeviceContext* immediate_context, const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& material_color)
 {
     uint32_t stride{ sizeof(vertex) };
     uint32_t offset{ 0 };
@@ -173,7 +290,7 @@ void geometric_primitive::render(ID3D11DeviceContext* immediate_context, const D
 }
 
 
-void geometric_primitive::create_com_buffers(ID3D11Device* device, vertex* vertices, size_t vertex_count, uint32_t* indices, size_t index_count)
+void GeometricPrimitive::create_com_buffers(ID3D11Device* device, vertex* vertices, size_t vertex_count, uint32_t* indices, size_t index_count)
 {
     HRESULT hr{ S_OK };
 

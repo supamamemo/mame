@@ -211,13 +211,13 @@
     <ClCompile Include="Source\Game\Mathf.cpp" />
     <ClCompile Include="Source\Game\Player.cpp" />
     <ClCompile Include="Source\Game\PlayerManager.cpp" />
-    <ClCompile Include="Source\Game\sprite_dissolve.cpp" />
+    <ClCompile Include="Source\Game\spriteDissolve.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
     <ClCompile Include="Source\Game\Stage\StageBoss.cpp" />
     <ClCompile Include="Source\Game\Stage\StageManager.cpp" />
     <ClCompile Include="Source\Game\Stage\StagePlains.cpp" />
     <ClCompile Include="Source\Game\StateMachine.cpp" />
-    <ClCompile Include="Source\geometric_primitive.cpp" />
+    <ClCompile Include="Source\GeometricPrimitive.cpp" />
     <ClCompile Include="Source\gltf_model.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Mame\Graphics\Camera.cpp" />
@@ -263,14 +263,14 @@
     <ClInclude Include="Source\Game\OperatorXMFLOAT3.h" />
     <ClInclude Include="Source\Game\Player.h" />
     <ClInclude Include="Source\Game\PlayerManager.h" />
-    <ClInclude Include="Source\Game\sprite_dissolve.h" />
+    <ClInclude Include="Source\Game\spriteDissolve.h" />
     <ClInclude Include="Source\Game\Stage\Stage.h" />
     <ClInclude Include="Source\Game\Stage\StageBoss.h" />
     <ClInclude Include="Source\Game\Stage\StageManager.h" />
     <ClInclude Include="Source\Game\Stage\StagePlains.h" />
     <ClInclude Include="Source\Game\State.h" />
     <ClInclude Include="Source\Game\StateMachine.h" />
-    <ClInclude Include="Source\geometric_primitive.h" />
+    <ClInclude Include="Source\GeometricPrimitive.h" />
     <ClInclude Include="Source\gltf_model.h" />
     <ClInclude Include="Source\high_resolution_timer.h" />
     <ClInclude Include="Source\Mame\Graphics\Camera.h" />
@@ -424,6 +424,16 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\wireframe.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

@@ -9,8 +9,14 @@
 #include "../../misc.h"
 #include "../../texture.h"
 
+// todo: 後で消す
+#define FADE 1
+
+// コンストラクタ
 SceneTitle::SceneTitle()
 {
+    spriteDissolve = std::make_unique<SpriteDissolve>();
+
     // player生成
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 }
@@ -24,6 +30,18 @@ void SceneTitle::Initialize()
     // カメラ位置リセット
     shader->Initialize();
 
+
+    // fadeout用
+#if FADE
+    spriteDissolve->Initialize();
+    spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+#else
+    spriteDissolve->Initialize();
+    spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+#endif
+
+
+    // プレイヤー初期化
     PlayerManager::Instance().GetPlayer()->Initialize();
 
 
@@ -183,12 +201,39 @@ void SceneTitle::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
+    // ボタンを押したらfadeOut始まる
+    if (gamePad.GetButtonDown() & GamePad::BTN_A)spriteDissolve->SetFade(true);
 
-    if (gamePad.GetButtonDown() & GamePad::BTN_A)
+    // fadeOut
+    if (spriteDissolve->IsFade())
     {
-        //Mame::Scene::SceneManager::Instance().ChangeScene(new SceneGame);
-        Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+#if FADE
+        spriteDissolve->FadeIn(elapsedTime);
+
+        // fadeIn最後までできたら
+        if (spriteDissolve->FadeInReady(0.0f))
+        {
+            // シーンを切り替える
+            Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+
+            // fadeIn判定をリセット
+            spriteDissolve->SetFade(false);
+        }
+#else
+        spriteDissolve->FadeOut(elapsedTime);
+
+        // fadeOut最後までできたら
+        if (spriteDissolve->FadeOutReady(2.0f))
+        {
+            // シーンを切り替える
+            Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+
+            // fadeOut判定をリセット
+            spriteDissolve->SetFade(false);
+        }
+#endif
     }
+
 
     // UVScroll
     {
@@ -277,6 +322,11 @@ void SceneTitle::Render(const float& elapsedTime)
 
 #endif
 
+    // fadeOut
+    {
+        spriteDissolve->Render();
+    }
+
 }
 
 // デバッグ用
@@ -323,6 +373,8 @@ void SceneTitle::DrawDebug()
     }
 
     PlayerManager::Instance().GetPlayer()->model->skinned_meshes.Drawdebug();
+
+    spriteDissolve->DrawDebug();
 
     //sprite_dissolve.DrawDebug(L"./resources/ground.png");
     //sprite_dissolve->DrawDebug();

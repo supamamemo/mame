@@ -20,8 +20,8 @@ struct HitResult
 // 今回はZ軸がないからXMFLOAT2。何ならこれはAABBではない（笑）
 struct AABB
 {
-    DirectX::XMFLOAT2 center;   // 中心点の座標
-    DirectX::XMFLOAT2 range;    // 半径
+    DirectX::XMFLOAT3 center;   // 中心点の座標
+    DirectX::XMFLOAT3 range;    // 半径
 };
 
 
@@ -68,7 +68,7 @@ public:
     // AABBという名を名乗っているただの2D衝突判定
     static bool IntersectAABBVsAABB(
         AABB* aabb1, AABB* aabb2,
-        DirectX::XMFLOAT2& resultPos
+        DirectX::XMFLOAT3& resultPos
     );
 
 };

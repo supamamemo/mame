@@ -2,6 +2,8 @@
 #include "../Mame/Graphics/Graphics.h"
 #include "../Mame/Input/Input.h"
 
+
+
 int Boss::nameNum = 0;
 
 // コンストラクタ
@@ -10,6 +12,13 @@ Boss::Boss()
     Graphics& graphics = Graphics::Instance();
 
     model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_block.fbx", true);
+    DirectX::XMFLOAT3 pos1 = model->GetTransform()->GetPosition();
+    aabb = { {pos1.x,pos1.y,pos1.z},{0.5f,0.5f,0.5f} };
+
+
+    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+
+    
 
     // imgui名前かぶり起きないように...
     name = "Boss" + std::to_string(nameNum);
@@ -22,6 +31,8 @@ Boss::Boss(const char* filename)
     Graphics& graphics = Graphics::Instance();
 
     model = std::make_unique<Model>(graphics.GetDevice(), filename, true);
+
+    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
 
     // imgui名前かぶり起きないように...
     name = "Boss" + std::to_string(nameNum);
@@ -63,8 +74,9 @@ void Boss::Update()
     pos.x += speed;
     model->GetTransform()->SetPosition(pos);
 
-    DirectX::XMFLOAT3 pos1 = model->GetTransform()->GetPosition();
-    aabb = { {pos1.x,pos1.y},{0.5f,0.5f} };
+
+    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
+    debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 }
 
 // Updateの後に呼ばれる
@@ -81,6 +93,9 @@ void Boss::Render(float elapsedTime)
     // Transform更新
     DirectX::XMFLOAT4X4 transform;
     DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
+
+    DirectX::XMFLOAT4X4 transform1;
+    DirectX::XMStoreFloat4x4(&transform1, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
 
     // model描画
     if (model->skinned_meshes.animation_clips.size() > 0)
@@ -108,6 +123,8 @@ void Boss::Render(float elapsedTime)
     {
         model->skinned_meshes.render(deviceContext, transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
     }
+
+    debugModel->skinned_meshes.render(deviceContext, transform1, DirectX::XMFLOAT4(0, 0, 0, 0.3f), nullptr);
 }
 
 // debug用

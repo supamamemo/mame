@@ -288,18 +288,46 @@ void skinned_mesh::fetch_meshes(FbxScene* fbx_scene, std::vector<mesh>& meshes)
             }
         }
 
+        //for (const vertex& v : mesh.vertices)
+        //{
+        //    mesh.bounding_box[0].x = std::min<float>(mesh.bounding_box[0].x, v.position.x);
+        //    mesh.bounding_box[0].y = std::min<float>(mesh.bounding_box[0].y, v.position.y);
+        //    mesh.bounding_box[0].z = std::min<float>(mesh.bounding_box[0].z, v.position.z);
+        //    mesh.bounding_box[1].x = std::max<float>(mesh.bounding_box[1].x, v.position.x);
+        //    mesh.bounding_box[1].y = std::max<float>(mesh.bounding_box[1].y, v.position.y);
+        //    mesh.bounding_box[1].z = std::max<float>(mesh.bounding_box[1].z, v.position.z);
+        //}
+
         for (const vertex& v : mesh.vertices)
         {
-            mesh.bounding_box[0].x = std::min<float>(mesh.bounding_box[0].x, v.position.x);
-            mesh.bounding_box[0].y = std::min<float>(mesh.bounding_box[0].y, v.position.y);
-            mesh.bounding_box[0].z = std::min<float>(mesh.bounding_box[0].z, v.position.z);
-            mesh.bounding_box[1].x = std::min<float>(mesh.bounding_box[1].x, v.position.x);
-            mesh.bounding_box[1].y = std::min<float>(mesh.bounding_box[1].y, v.position.y);
-            mesh.bounding_box[1].z = std::min<float>(mesh.bounding_box[1].z, v.position.z);
+            bounding_box[0].x = std::min<float>(bounding_box[0].x, v.position.x);
+            bounding_box[0].y = std::min<float>(bounding_box[0].y, v.position.y);
+            bounding_box[0].z = std::min<float>(bounding_box[0].z, v.position.z);
+            bounding_box[1].x = std::max<float>(bounding_box[1].x, v.position.x);
+            bounding_box[1].y = std::max<float>(bounding_box[1].y, v.position.y);
+            bounding_box[1].z = std::max<float>(bounding_box[1].z, v.position.z);
         }
 
     }
 
+    //for (const mesh& mesh : meshes)
+    //{
+    //    //bounding_box[0].x = std::min<float>(bounding_box[0].x, mesh.bounding_box[0].x);
+    //    //bounding_box[0].y = std::min<float>(bounding_box[0].y, mesh.bounding_box[0].y);
+    //    //bounding_box[0].z = std::min<float>(bounding_box[0].z, mesh.bounding_box[0].z);
+    //    bounding_box[0].x = std::min<float>(mesh.bounding_box[0].x, bounding_box[0].x);
+    //    bounding_box[0].y = std::min<float>(mesh.bounding_box[0].y, bounding_box[0].y);
+    //    bounding_box[0].z = std::min<float>(mesh.bounding_box[0].z, bounding_box[0].z);
+
+
+    //    //bounding_box[1].x = std::max<float>(bounding_box[1].x, mesh.bounding_box[1].x);
+    //    //bounding_box[1].y = std::max<float>(bounding_box[1].y, mesh.bounding_box[1].y);
+    //    //bounding_box[1].z = std::max<float>(bounding_box[1].z, mesh.bounding_box[1].z);
+    //    bounding_box[1].x = std::max<float>(mesh.bounding_box[1].x, bounding_box[1].x);
+    //    bounding_box[1].y = std::max<float>(mesh.bounding_box[1].y, bounding_box[1].y);
+    //    bounding_box[1].z = std::max<float>(mesh.bounding_box[1].z, bounding_box[1].z);
+
+    //}
 
 }
 
@@ -407,7 +435,8 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
 // •`‰æ
 void skinned_mesh::render(ID3D11DeviceContext* immediate_context,
     const DirectX::XMFLOAT4X4 world, const DirectX::XMFLOAT4& material_color,
-    const animation::keyframe* keyframe)
+    const animation::keyframe* keyframe,
+    ID3D11PixelShader* alternative_pixel_shader)
 {
     immediate_context->PSSetShaderResources(15, 1, mask_texture[mask_texture_value].GetAddressOf());
 
@@ -430,7 +459,8 @@ void skinned_mesh::render(ID3D11DeviceContext* immediate_context,
         immediate_context->IASetInputLayout(input_layout.Get());
 
         immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
-        immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+        //immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+        alternative_pixel_shader ? immediate_context->PSSetShader(alternative_pixel_shader, nullptr, 0) : immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
 
         constants data;
 

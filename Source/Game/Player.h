@@ -2,6 +2,7 @@
 
 #include "Character.h"
 
+
 class Player : public Character
 {
 public:
@@ -11,7 +12,7 @@ public:
     void Initialize();                      // 初期化
     void Finalize();                        // 終了化
     void Begin();                           // 毎フレーム一番最初に呼ばれる
-    void Update(const float& elapsedTime);                          // 更新処理
+    void Update(const float& elapsedTime);  // 更新処理
     void End();                             // 毎フレーム一番最後に呼ばれる
     void Render(const float& elapsedTime);  // 描画処理
 
@@ -55,9 +56,15 @@ private: // enum関連
 private: // 初期値関連
 
 private: // 変数関連
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders = {};
+
+    DirectX::XMFLOAT3 translation   = { 0, 0, 0 };
+    DirectX::XMFLOAT3 scaling       = { 1, 1, 1 };
+    DirectX::XMFLOAT3 rotation      = { 0, 0, 0 };
+
     State   state                   = State::Idle;          // 現在のステート
 
-    float   hipDropGravity          = -3.0f;               // ヒップドロップ時の重力
+    float   hipDropGravity          = -3.0f;                // ヒップドロップ時の重力
 
     float   defaultBounceSpeedX     =  15.0f;               // バウンスX速度初期値
     float   defaultBounceSpeedY     =  10.0f;               // バウンスY速度初期値
@@ -68,11 +75,9 @@ private: // 変数関連
 
     float   saveMoveVec_n           =  0.0f;                // プレイヤーの前方向の単位ベクトルを保存する（バウンス時に使われる）
 
-    int     bounceCount             =  0;                    // バウンス回数
-    int     bounceLimit             =  3;                    // 最大バウンス回数
+    int     bounceCount             =  0;                   // バウンス回数
+    int     bounceLimit             =  3;                   // 最大バウンス回数
 
     int     animationIndex          =  0;
-
-
 };
 

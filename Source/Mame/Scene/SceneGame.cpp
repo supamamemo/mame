@@ -8,6 +8,15 @@
 #include "../../Game/Stage/StagePlains.h"
 #include "../../Game/Stage/StageBoss.h"
 
+
+// コンストラクタ
+SceneGame::SceneGame()
+{
+    spriteDissolve = std::make_unique<SpriteDissolve>();
+
+    
+}
+
 // 初期化
 void SceneGame::Initialize()
 {
@@ -17,6 +26,23 @@ void SceneGame::Initialize()
     // カメラの位置リセット
     shader->Initialize();
 
+    // fadeout用
+    switch (fadeType)
+    {
+    case 0:
+        spriteDissolve->Initialize();
+        spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+        break;
+    case 1:
+        spriteDissolve->Initialize();
+        spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+        break;
+    }
+    
+    spriteDissolve->SetFade(true);
+
+    // カメラを固定値にしている
+    // これまたどっかやる
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
@@ -39,6 +65,35 @@ void SceneGame::Begin()
 void SceneGame::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+    if (spriteDissolve->IsFade())
+    {
+        switch (fadeType)
+        {
+        case 0:
+            spriteDissolve->FadeIn(elapsedTime);
+
+            // fadeIn最後までできたら
+            if (spriteDissolve->FadeInReady(0.0f))
+            {
+                // fadeIn判定をリセット
+                spriteDissolve->SetFade(false);
+            }
+            break;
+        case 1:
+            spriteDissolve->FadeOut(elapsedTime);
+
+            // fadeOut最後までできたら
+            if (spriteDissolve->FadeOutReady(2.0f))
+            {
+                // シーンを切り替える
+                //Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
+
+                // fadeOut判定をリセット
+                spriteDissolve->SetFade(false);
+            }
+            break;
+        }
+    }
 
     if (gamePad.GetButtonDown() & GamePad::BTN_A)
     {
@@ -74,7 +129,12 @@ void SceneGame::Render(const float& elapsedTime)
     Shader* shader = graphics.GetShader();
     shader->Begin(graphics.GetDeviceContext(), rc);
 
-    StageManager::Instance().Render(elapsedTime);
+    //StageManager::Instance().Render(elapsedTime);
+
+    // fadeOut
+    {
+        spriteDissolve->Render();
+    }
 }
 
 // debug用
@@ -84,4 +144,21 @@ void SceneGame::DrawDebug()
     Shader* shader = graphics.GetShader();
 
     shader->DrawDebug();
+
+    spriteDissolve->DrawDebug();
+
+    ImGui::SliderInt("textureType", &textureType, 0, 11);
+    if (ImGui::Button("fadeIn"))
+    {
+        spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve->SetFade(true);
+        fadeType = 0;
+    }
+    if (ImGui::Button("fadeOut"))
+    {
+        spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve->SetFade(true);
+        fadeType = 1;
+    }
+
 }

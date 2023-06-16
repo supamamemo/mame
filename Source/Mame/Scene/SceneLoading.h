@@ -4,7 +4,7 @@
 
 #include <thread>
 
-#include "../../Game/sprite_dissolve.h"
+#include "../../Game/spriteDissolve.h"
 
 class SceneLoading : public Mame::Scene::BaseScene
 {
@@ -27,7 +27,7 @@ private:
     static void LoadingThread(SceneLoading* scene);
 
 private:
-    std::unique_ptr<Sprite_dissolve> spriteDissolve;
+    std::unique_ptr<SpriteDissolve> spriteDissolve;
 
     BaseScene*      nextScene   = nullptr;
     std::thread*    thread      = nullptr;

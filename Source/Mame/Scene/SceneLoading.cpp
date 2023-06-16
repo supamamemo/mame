@@ -4,7 +4,7 @@
 
 SceneLoading::SceneLoading(BaseScene* nextScene) :nextScene(nextScene) 
 {
-    spriteDissolve = std::make_unique<Sprite_dissolve>();
+    spriteDissolve = std::make_unique<SpriteDissolve>();
 }
 
 // 初期化
@@ -45,11 +45,11 @@ void SceneLoading::Begin()
 void SceneLoading::Update(const float& elapsedTime)
 {
     //spriteDissolve.fadeOut(elapsedTime);
-    spriteDissolve->fadeIn(elapsedTime);
+    spriteDissolve->FadeIn(elapsedTime);
 
     // 次のシーンの準備が完了したらシーンを切り替える
     if (nextScene->IsReady() &&
-        spriteDissolve->fadeInReady(0.0f))
+        spriteDissolve->FadeInReady(0.0f))
         //spriteDissolve.fadeOutReady(1.5f))
     {
         Mame::Scene::SceneManager::Instance().ChangeScene(nextScene);

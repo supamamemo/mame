@@ -1,18 +1,18 @@
-#include "sprite_dissolve.h"
+#include "spriteDissolve.h"
 
 #include "../Mame/Graphics/Graphics.h"
 #include "../texture.h"
 #include "../misc.h"
 
 
-Sprite_dissolve::Sprite_dissolve()
+SpriteDissolve::SpriteDissolve()
 {
     Graphics& graphics = Graphics::Instance();
 
     dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/load.png");
 }
 
-void Sprite_dissolve::Initialize()
+void SpriteDissolve::Initialize()
 {
     //spr_dissolve.dissolve_state = state;
 
@@ -118,11 +118,11 @@ void Sprite_dissolve::Initialize()
 
 }
 
-void Sprite_dissolve::Update()
+void SpriteDissolve::Update()
 {
 }
 
-void Sprite_dissolve::Render()
+void SpriteDissolve::Render()
 {
     Graphics& graphics = Graphics::Instance();
     ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
@@ -153,7 +153,7 @@ void Sprite_dissolve::Render()
     }
 }
 
-void Sprite_dissolve::DrawDebug()
+void SpriteDissolve::DrawDebug()
 {
     ImGui::Begin("sprite_dissolve");
 
@@ -182,13 +182,13 @@ void Sprite_dissolve::DrawDebug()
 }
 
 // フェイドインを自動的にしてくれる
-void Sprite_dissolve::fadeIn(float elapsedTime)
+void SpriteDissolve::FadeIn(float elapsedTime)
 {
     spr_dissolve.dissolve_value1 -= elapsedTime;
 }
 
 // フェイドアウトを自動的にしてくれる
-void Sprite_dissolve::fadeOut(float elapsedTime)
+void SpriteDissolve::FadeOut(float elapsedTime)
 {
     spr_dissolve.dissolve_value1 += elapsedTime;
 
