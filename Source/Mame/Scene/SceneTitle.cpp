@@ -12,7 +12,7 @@
 SceneTitle::SceneTitle()
 {
     // player生成
-    player = std::make_unique<Player>();
+    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 }
 
 // 初期化
@@ -24,7 +24,7 @@ void SceneTitle::Initialize()
     // カメラ位置リセット
     shader->Initialize();
 
-    player->Initialize();
+    PlayerManager::Instance().GetPlayer()->Initialize();
 
 
     HRESULT hr{ S_OK };
@@ -170,7 +170,7 @@ void SceneTitle::Initialize()
 // 終了化
 void SceneTitle::Finalize()
 {
-    player->Finalize();
+    PlayerManager::Instance().GetPlayer()->Finalize();
 }
 
 // 毎フレーム一番最初に呼ばれる
@@ -208,7 +208,7 @@ void SceneTitle::Update(const float& elapsedTime)
         if (scroll_direction.y < -10.0f)scroll_direction.y += 10.0f;
     }
 
-    player->Update(elapsedTime);
+    PlayerManager::Instance().GetPlayer()->Update(elapsedTime);
 }
 
 // 毎フレーム一番最後に呼ばれる
@@ -238,7 +238,7 @@ void SceneTitle::Render(const float& elapsedTime)
     //shader->DrawDebug();
 
     // プレイヤー描画
-    player->Render(elapsedTime);
+    PlayerManager::Instance().GetPlayer()->Render(elapsedTime);
 
     // スプライト描画
     shader->SetState(graphics.GetDeviceContext(), RS, DS, SS);
@@ -287,7 +287,7 @@ void SceneTitle::DrawDebug()
     Shader* shader = graphics.GetShader();
     shader->DrawDebug();
 
-    player->DrawDebug();
+    PlayerManager::Instance().GetPlayer()->DrawDebug();
 
     if (ImGui::TreeNode("State"))
     {
@@ -322,7 +322,7 @@ void SceneTitle::DrawDebug()
         ImGui::TreePop();
     }
 
-    player->model->skinned_meshes.Drawdebug();
+    PlayerManager::Instance().GetPlayer()->model->skinned_meshes.Drawdebug();
 
     //sprite_dissolve.DrawDebug(L"./resources/ground.png");
     //sprite_dissolve->DrawDebug();

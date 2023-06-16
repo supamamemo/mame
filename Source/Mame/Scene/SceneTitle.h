@@ -4,7 +4,7 @@
 #include "../../sprite.h"
 #include "../../sprite_batch.h"
 
-#include "../../Game/Player.h"
+#include "../../Game/PlayerManager.h"
 #include "../../Game/sprite_dissolve.h"
 
 class SceneTitle : public Mame::Scene::BaseScene
@@ -37,7 +37,7 @@ public:
     Microsoft::WRL::ComPtr<ID3D11BlendState>        blendState          = nullptr;
 
 public:
-    std::unique_ptr<Player> player  = nullptr;
+    //std::unique_ptr<Player> player  = nullptr;
 
     //std::unique_ptr<Sprite_dissolve> sprite_dissolve;
 

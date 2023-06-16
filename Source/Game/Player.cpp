@@ -23,26 +23,29 @@ Player::Player()
     TransitionIdleState();
 }
 
+
 Player::~Player()
 {
 }
+
 
 void Player::Initialize()
 {
     model->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
     model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
     model->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
-
-    
 }
+
 
 void Player::Finalize()
 {
 }
 
+
 void Player::Begin()
 {
 }
+
 
 void Player::Update(const float& elapsedTime)
 {  
@@ -75,6 +78,7 @@ void Player::Update(const float& elapsedTime)
     // 無敵時間更新
     UpdateInvincibleTimer(elapsedTime);
 }
+
 
 void Player::End()
 {
@@ -126,6 +130,29 @@ void Player::DrawDebug()
     Character::DrawDebug();
 
     ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
+
+    ImGui::SliderFloat("turnSpeed",      &turnSpeed,      0.0f, ToRadian(900.0f), "%.0f");  // 旋回速度
+    ImGui::SliderFloat("hipDropGravity", &hipDropGravity, 0.0f, -10.0f,           "%.0f");  // ヒップドロップ時の重力
+
+    // バウンスパラメータ
+    if (ImGui::TreeNode("Bounce"))
+    {
+        ImGui::SliderFloat("d_BounceSpeedX", &defaultBounceSpeedX, 0.0f,  30.0f, "%.0f");   // 跳ねるときのX速度(※一回ヒップドロップしてから変更が反映される)
+        ImGui::SliderFloat("d_BounceSpeedY", &defaultBounceSpeedY, 0.0f,  30.0f, "%.0f");   // 跳ねるときのY速度(※一回ヒップドロップしてから変更が反映される)
+        ImGui::SliderFloat("bounceScaleX",   &bounceScaleX,        0.0f,  1.0f,  "%.2f");   // 跳ねるときのX速度に掛ける値(※0.75なら現在のspeedXを75%の値にしていく)
+        ImGui::SliderFloat("bounceScaleY",   &bounceScaleY,        0.0f,  1.0f,  "%.2f");   // 跳ねるときのY速度に掛ける値(※0.75なら現在のspeedYを75%の値にしていく)
+        ImGui::SliderInt("bounceLimit",      &bounceLimit,         0,     10);              // 跳ねる最大回数
+        ImGui::TreePop();
+
+        if (ImGui::Button("Bounce Reset"))
+        {
+            defaultBounceSpeedX = 15.0f;
+            defaultBounceSpeedY = 10.0f;
+            bounceScaleX        = 0.75f;
+            bounceScaleY        = 0.75f;
+            bounceLimit         = 3;
+        }
+    }
 
     ImGui::End();
 }
@@ -228,24 +255,21 @@ void Player::OnBounce()
     // 最大バウンスカウント以上ならバウンス終了させる
     if (bounceCount >= bounceLimit)
     {
-        velocity.y      = 0;                // Y速度リセット
-        bounceSpeed.x   = BOUNCE_SPEED_X;   // バウンスX速度リセット
-        bounceSpeed.y   = BOUNCE_SPEED_Y;   // バウンスY速度リセット
-        bounceCount     = 0;                // バウンスカウントリセット
-        isBounce        = false;            // バウンス終了
+        velocity.y      = 0;                    // Y速度リセット
+        bounceSpeedX    = defaultBounceSpeedX;  // バウンスX速度リセット
+        bounceSpeedY    = defaultBounceSpeedY;  // バウンスY速度リセット
+        bounceCount     = 0;                    // バウンスカウントリセット
+        isBounce        = false;                // バウンス終了
     }
     // バウンスさせる
     else
     {
-        // プレイヤーの前方向の単位ベクトルを求める
-        const float forward   = model->GetTransform()->CalcForward().x;
-        const float length    = sqrtf(forward * forward);
-        const float forward_n = forward / length;
-
-        velocity.x   = forward_n * bounceSpeed.x; // プレイヤーの向いている方向にバウンスX速度を代入
-        velocity.y   = bounceSpeed.y;             // バウンスY速度をY速度に代入
-        bounceSpeed *= BOUNCE_SPEED_DIVIDE;       // バウンス速度を減少
-        ++bounceCount;                            // 現在のバウンスカウント加算
+        velocity.x    = saveMoveVec_n * bounceSpeedX;   // プレイヤーの向いている方向にバウンスX速度を代入
+        //velocity.y    = -velocity.y * bounceScaleY;   // 反転して減少させたY速度を代入
+        velocity.y    = bounceSpeedY;
+        bounceSpeedX *= bounceScaleX;                   // バウンスX速度を減少
+        bounceSpeedY *= bounceScaleY;                   // バウンスY速度を減少
+        ++bounceCount;                                  // バウンスカウント加算
     }
 }
 
@@ -326,7 +350,11 @@ void Player::TransitionHipDropState()
 {
     state = State::HipDrop;
 
-    gravity  = BOUNCE_GRAVITY;  // 落下速度を上昇
+    // プレイヤーの正規化移動ベクトルを求める(ステート遷移時に一回だけ計算する)
+    const float length    = sqrtf(saveMoveVecX * saveMoveVecX);
+    saveMoveVec_n         = saveMoveVecX / length;
+
+    gravity  = hipDropGravity;  // 落下速度を上昇
     isBounce = true;            // バウンスさせる
 }
 
@@ -336,10 +364,14 @@ void Player::UpdateHipDropState(const float& elapsedTime)
     // 旋回処理（カメラ目線のままバウンドしないように更新する）
     Turn(elapsedTime, saveMoveVecX, turnSpeed);
 
+    // 一回バウンスしたら重力をもとに戻す
+    if (bounceCount != 0) gravity = defaultGravity;
+
     // バウンスが終了したら待機ステートへ遷移
     if (!isBounce)
     {
-        gravity = GRAVITY; // 重力を元に戻す
+        gravity = defaultGravity; // 重力を元に戻す
         TransitionIdleState();
     }
+
 }

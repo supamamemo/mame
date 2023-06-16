@@ -52,9 +52,27 @@ private: // enum関連
         HipDrop, // ヒップドロップ
     };
 
-private: // 変数関連
-    State   state           = State::Idle; // 現在のステート
+private: // 初期値関連
 
-    int     animationIndex  = 0;
+private: // 変数関連
+    State   state                   = State::Idle;          // 現在のステート
+
+    float   hipDropGravity          = -3.0f;               // ヒップドロップ時の重力
+
+    float   defaultBounceSpeedX     =  15.0f;               // バウンスX速度初期値
+    float   defaultBounceSpeedY     =  10.0f;               // バウンスY速度初期値
+    float   bounceSpeedX            =  defaultBounceSpeedX; // バウンスX速度
+    float   bounceSpeedY            =  defaultBounceSpeedY; // バウンスY速度
+    float   bounceScaleX            =  0.75f;               // バウンスX速度にかける値
+    float   bounceScaleY            =  0.75f;               // バウンスY速度にかける値
+
+    float   saveMoveVec_n           =  0.0f;                // プレイヤーの前方向の単位ベクトルを保存する（バウンス時に使われる）
+
+    int     bounceCount             =  0;                    // バウンス回数
+    int     bounceLimit             =  3;                    // 最大バウンス回数
+
+    int     animationIndex          =  0;
+
+
 };
 

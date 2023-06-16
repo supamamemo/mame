@@ -375,7 +375,7 @@
       <Filter>mamelib\default\header</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\PlayerManager.h">
-      <Filter>mamelib\Game</Filter>
+      <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
