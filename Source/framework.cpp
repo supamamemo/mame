@@ -23,6 +23,17 @@ bool framework::initialize()
     create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/blur_ps.cso", pixel_shaders[1].GetAddressOf());
 
 
+    // XAUDIO2
+    hr = XAudio2Create(xAudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+    hr = xAudio2->CreateMasteringVoice(&masterVoice);
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+    bgm[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/akumanokyoku.wav");
+    se[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/jump.wav");
+    se[1] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/coin.wav");
+
     // シーンタイトル
     Mame::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
 
@@ -45,7 +56,26 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
     // シーン更新処理
     Mame::Scene::SceneManager::Instance().Update(elapsed_time);
 
-    //ImGui::ShowDemoWindow();
+    // XAUDIO2
+    if (GetAsyncKeyState('N') & 0x8000)
+    {
+        se[0]->Play();
+    }
+    else
+    {
+        se[0]->Stop();
+    }
+    if (GetAsyncKeyState('M') & 1)
+    {
+        if (bgm[0]->Queuing())
+        {
+            bgm[0]->Stop();
+        }
+        else
+        {
+            bgm[0]->Play(255);
+        }
+    }
 
 #ifdef USE_IMGUI
 

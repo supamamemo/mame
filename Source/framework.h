@@ -27,11 +27,9 @@
 
 #include "gltf_model.h"
 
+#include "./Mame/Audio.h"
+
 #ifdef USE_IMGUI
-//#include "../../imgui/imgui.h"
-//#include "../../imgui/imgui_internal.h"
-//#include "../../imgui/imgui_impl_dx11.h"
-//#include "../../imgui/imgui_impl_win32.h"
 #include "../External/imgui/imgui.h"
 #include "../External/imgui/imgui_internal.h"
 #include "../External/imgui/imgui_impl_dx11.h"
@@ -54,6 +52,14 @@ private:
 	Input input;
 
 public:
+
+	// XAUDIO2
+	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
+	IXAudio2MasteringVoice* masterVoice = nullptr;
+	std::unique_ptr<Audio> bgm[8];
+	std::unique_ptr<Audio> se[8];
+
+
 
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depth_stencil_states[4]; // ID3D11DepthStencilStateインターフェイス
 	// 深度ステンシル状態インターフェイスは、
