@@ -20,6 +20,8 @@ public:
     float GetTimer() const { return timer; }
     void SubtractTime(float time) { timer -= time; }
 
+    const char* GetName() { return name; }
+
 private:
     float timer = 0;
 

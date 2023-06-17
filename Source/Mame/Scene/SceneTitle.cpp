@@ -139,7 +139,7 @@ void SceneTitle::Initialize()
         };
 
         //dummy_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/chip_win.png");
-        //dummy_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/ground.png");
+        dummy_sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/ground.png");
         
         //dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/chip_win.png");
         //dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/ground.png");

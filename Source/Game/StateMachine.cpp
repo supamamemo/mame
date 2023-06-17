@@ -1,5 +1,6 @@
 #include "StateMachine.h"
 
+
 // デストラクタ
 StateMachine::~StateMachine()
 {
@@ -53,4 +54,18 @@ int StateMachine::GetStateIndex()
 
     // ステートが見つからなかったとき
     return -1;
+}
+
+// debug用
+void StateMachine::DrawDebug()
+{
+    if (ImGui::TreeNode("stateMachine"))
+    {
+        ImGui::Text(currentState->GetName());
+
+        float temp = currentState->GetTimer();
+        ImGui::DragFloat("time", &temp);
+
+        ImGui::TreePop();
+    }
 }

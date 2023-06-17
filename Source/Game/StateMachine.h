@@ -1,4 +1,12 @@
 #pragma once
+
+#ifdef USE_IMGUI
+#include "../../External/imgui/imgui.h"
+#include "../../External/imgui/imgui_internal.h"
+#include "../../External/imgui/imgui_impl_dx11.h"
+#include "../../External/imgui/imgui_impl_win32.h"
+#endif
+
 #include <vector>
 #include "State.h"
 
@@ -23,6 +31,9 @@ public:
 
     // 現在のステート番号取得
     int GetStateIndex();
+
+    // imgui用
+    void DrawDebug();
 
 private:
     // 現在のステート

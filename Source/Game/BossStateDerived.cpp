@@ -18,11 +18,12 @@ void BOSS::IdleState::Enter()
 // 更新
 void BOSS::IdleState::Execute(float elapsedTime)
 {
+    // タイマーが0になったらAttackステートへ
+    if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
+    
     // 時間を減らす
     SubtractTime(elapsedTime);
 
-    // タイマーが0になったらAttackステートへ
-    if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
 }
 
 // 終了
@@ -47,11 +48,20 @@ void BOSS::AttackState::Enter()
 // 更新
 void BOSS::AttackState::Execute(float elapsedTime)
 {
+    // タイマーが0になったらIdleステートへ
+    if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+
     // 時間を減らす
     SubtractTime(elapsedTime);
 
-    // タイマーが0になったらIdleステートへ
-    if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+    DirectX::XMFLOAT3 pos = owner->GetTransform()->GetPosition();
+    float moveSpeed = moveLeft ? -1 : 1;
+    pos.x += moveSpeed * elapsedTime;
+    owner->GetTransform()->SetPosition(pos);
+
+    if (pos.x > 3)moveLeft = true;
+    if (pos.x < -3)moveLeft = false;
+
 }
 
 // 終了

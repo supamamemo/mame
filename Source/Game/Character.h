@@ -75,6 +75,8 @@ public:
     std::unique_ptr<Model>  model = nullptr;
     std::unique_ptr<Model> debugModel = nullptr;
 
+    Transform* GetTransform() { return model->GetTransform(); }
+
     // AABB                    aabb  = {};
     Box2D box2d{};
     

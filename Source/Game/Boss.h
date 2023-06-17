@@ -40,6 +40,8 @@ public:
     DirectX::XMFLOAT4 materialColor = { 1,1,1,1 };
     void SetMaterialColor(DirectX::XMFLOAT4 color) { materialColor = color; }
 
+    
+
 private:
     std::string name;   // Imgui—p
 

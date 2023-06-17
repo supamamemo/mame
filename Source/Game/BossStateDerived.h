@@ -31,6 +31,9 @@ namespace BOSS
         void Enter()override;
         void Execute(float elapsedTime)override;
         void Exit()override;
+
+    private:
+        bool moveLeft = true;
     };
 }
 

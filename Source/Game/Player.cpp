@@ -43,9 +43,9 @@ Player::~Player()
 
 void Player::Initialize()
 {
-    model->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
-    model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
-    model->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
+    GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
+    GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
+    GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
 
     debugModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
 }

@@ -143,5 +143,7 @@ void Boss::DrawDebug()
 
     Character::DrawDebug();
 
+    if (stateMachine)stateMachine.get()->DrawDebug();
+
     ImGui::End();
 }
