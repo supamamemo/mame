@@ -30,6 +30,10 @@ public:
     void SetAnimation(int index) { animationIndex = index; }
     int GetAnimation() { return animationIndex; }
 
+    // これはテスト用で使ってるだけなので、、後でいらなくなるかも
+    DirectX::XMFLOAT4 materialColor = { 1,1,1,1 };
+    void SetMaterialColor(DirectX::XMFLOAT4 color) { materialColor = color; }
+
 protected:
     // 移動処理
     void Move(const float& vx, const float& moveSpeed);

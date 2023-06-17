@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Boss.h"
+class Boss;
 
 class State
 {
@@ -15,6 +15,14 @@ public:
     // ステートから出ていくときのメソッド
     virtual void Exit() = 0;
     
+public:
+    void SetTimer(float time) { timer = time; }
+    float GetTimer() const { return timer; }
+    void SubtractTime(float time) { timer -= time; }
+
+private:
+    float timer = 0;
+
 protected:
     Boss* owner;
     const char* name;

@@ -2,7 +2,7 @@
 #include "../Mame/Graphics/Graphics.h"
 #include "../Mame/Input/Input.h"
 
-
+#include "BossStateDerived.h"
 
 int Boss::nameNum = 0;
 
@@ -18,7 +18,14 @@ Boss::Boss()
 
     debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
 
-    
+    // ステートマシーンをセット
+    stateMachine.reset(new StateMachine);
+
+    stateMachine.get()->RegisterState(new BOSS::IdleState(this));
+    stateMachine.get()->RegisterState(new BOSS::AttackState(this));
+
+    stateMachine.get()->SetState(static_cast<int>(STATE::Idle));
+
 
     // imgui名前かぶり起きないように...
     name = "Boss" + std::to_string(nameNum);
@@ -62,7 +69,7 @@ void Boss::Begin()
 }
 
 // 更新処理
-void Boss::Update()
+void Boss::Update(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -77,6 +84,8 @@ void Boss::Update()
 
     debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
     debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+
+    if (stateMachine)stateMachine.get()->Update(elapsedTime);
 }
 
 // Updateの後に呼ばれる
@@ -117,11 +126,11 @@ void Boss::Render(float elapsedTime)
         }
         animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
 
-        model->skinned_meshes.render(deviceContext, transform, DirectX::XMFLOAT4(1, 1, 1, 1), &keyframe);
+        model->skinned_meshes.render(deviceContext, transform, materialColor, &keyframe);
     }
     else
     {
-        model->skinned_meshes.render(deviceContext, transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
+        model->skinned_meshes.render(deviceContext, transform, materialColor, nullptr);
     }
 
     debugModel->skinned_meshes.render(deviceContext, transform1, DirectX::XMFLOAT4(0, 0, 0, 0.3f), nullptr);

@@ -75,7 +75,7 @@ void StageBoss::Update(const float& elapsedTime)
     player->Update(elapsedTime);
 
     // bossXV
-    boss->Update();
+    boss->Update(elapsedTime);
 }
 
 // Update‚ÌŒã‚ÉŒÄ‚Î‚ê‚éˆ—

@@ -130,7 +130,7 @@ void SceneGame::Render(const float& elapsedTime)
 
     // fadeOut
     {
-        spriteDissolve->Render();
+        //spriteDissolve->Render();
     }
 
     StageManager::Instance().Render(elapsedTime);

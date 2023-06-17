@@ -1,6 +1,14 @@
 #pragma once
 #include "State.h"
 
+// Ç∆ÇËÇ†Ç¶Ç∏Ç±Ç±Ç…íuÇ≠ÇØÇ«ÅABOSSÇåpè≥ÇµÇΩêÊÇ…ÇªÇÍÇºÇÍÇ…çÏÇÈÅB
+// BOSSTOUHU::STATE::Idle (ó·)
+enum class STATE
+{
+    Idle,
+    Attack,
+};
+
 namespace BOSS
 {
     class IdleState :public State
