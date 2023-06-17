@@ -128,12 +128,12 @@ void SceneGame::Render(const float& elapsedTime)
     shader->Begin(graphics.GetDeviceContext(), rc);
 
 
+    StageManager::Instance().Render(elapsedTime);
+
     // fadeOut
     {
-        //spriteDissolve->Render();
+        spriteDissolve->Render();
     }
-
-    StageManager::Instance().Render(elapsedTime);
 }
 
 // debug—p
