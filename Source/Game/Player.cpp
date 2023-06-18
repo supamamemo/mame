@@ -9,9 +9,11 @@ Player::Player()
 
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temp.fbx", true);
     
 
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/plantune.fbx", true);
