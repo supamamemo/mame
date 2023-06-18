@@ -1,7 +1,6 @@
 #pragma once
 #include "BaseScene.h"
 
-#include "../../Game/Player.h"
 #include "../../Game/spriteDissolve.h"
 
 class SceneGame : public Mame::Scene::BaseScene

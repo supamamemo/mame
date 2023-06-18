@@ -2,7 +2,7 @@
 
 #include "Stage.h"
 
-#include "../Player.h"
+#include "../PlayerManager.h"
 #include "../Boss.h"
 
 class StageBoss : public Stage
@@ -20,7 +20,7 @@ public:
     void DrawDebug()override;
 
 private:
-    std::unique_ptr<Player> player;
+    //std::unique_ptr<Player> player;
     std::unique_ptr<Boss> boss;
 
 
