@@ -7,7 +7,9 @@
 enum class BossAnimation
 {
     Idle,
+    Find,
     Attack,
+    Recoil,
 };
 
 class Boss : public Character

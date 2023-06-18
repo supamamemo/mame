@@ -22,6 +22,7 @@ Boss::Boss()
     stateMachine.reset(new StateMachine);
 
     stateMachine.get()->RegisterState(new BOSS::IdleState(this));
+    stateMachine.get()->RegisterState(new BOSS::FindState(this));
     stateMachine.get()->RegisterState(new BOSS::AttackState(this));
 
     stateMachine.get()->SetState(static_cast<int>(STATE::Idle));

@@ -25,7 +25,7 @@ private:
 
 
     // ‰¼‚ÉbossƒNƒ‰ƒX‚Å•\Ž¦‚µ‚Ä‚é
-    std::unique_ptr<Boss> stage[3];
+    std::unique_ptr<Boss> stage[10];
 
 };
 
