@@ -58,14 +58,8 @@ private: // 初期値関連
 private: // 変数関連
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders = {};
 
-<<<<<<< HEAD
 
 
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders;
-=======
-    DirectX::XMFLOAT3 translation   = { 0, 0, 0 };
-    DirectX::XMFLOAT3 scaling       = { 1, 1, 1 };
-    DirectX::XMFLOAT3 rotation      = { 0, 0, 0 };
 
     State   state                   = State::Idle;          // 現在のステート
 
@@ -84,6 +78,6 @@ private: // 変数関連
     int     bounceLimit             =  3;                   // 最大バウンス回数
 
     int     animationIndex          =  0;
->>>>>>> origin/Taki
+
 };
 

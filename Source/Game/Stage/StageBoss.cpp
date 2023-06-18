@@ -63,7 +63,7 @@ void StageBoss::Begin()
 void StageBoss::Update(const float& elapsedTime)
 {
     DirectX::XMFLOAT3 resultPos{};
-<<<<<<< HEAD
+
     //if (Collision::IntersectAABBVsAABB(&player->aabb, &boss->aabb,  resultPos))
     //{
     //    DirectX::XMFLOAT3 pos = player->model->GetTransform()->GetPosition();
@@ -71,16 +71,16 @@ void StageBoss::Update(const float& elapsedTime)
     //    pos.y += resultPos.y;
     //    player->model->GetTransform()->SetPosition(pos);
     //}
-=======
+
     PlayerManager& playerManager = PlayerManager::Instance();
-    if (Collision::IntersectAABBVsAABB(&playerManager.GetPlayer()->aabb, &boss->aabb,  resultPos))
-    {
-        DirectX::XMFLOAT3 pos = playerManager.GetPlayer()->model->GetTransform()->GetPosition();
-        pos.x += resultPos.x;
-        pos.y += resultPos.y;
-        playerManager.GetPlayer()->model->GetTransform()->SetPosition(pos);
-    }
->>>>>>> origin/Taki
+    //if (Collision::IntersectAABBVsAABB(&playerManager.GetPlayer()->aabb, &boss->aabb,  resultPos))
+    //{
+    //    DirectX::XMFLOAT3 pos = playerManager.GetPlayer()->model->GetTransform()->GetPosition();
+    //    pos.x += resultPos.x;
+    //    pos.y += resultPos.y;
+    //    playerManager.GetPlayer()->model->GetTransform()->SetPosition(pos);
+    //}
+
 
     // playerXV
     playerManager.GetPlayer()->Update(elapsedTime);

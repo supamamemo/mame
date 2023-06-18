@@ -82,11 +82,11 @@ namespace BOSS
         owner->SetMaterialColor(DirectX::XMFLOAT4(1, 0, 0, 1));
 
         // position取得
-        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->model->GetTransform()->GetPosition();
+        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
 
         // 左右判定
-        moveSpeed = playerPos.x > ownerPos.x ? 1 : -1;
+        moveSpeed = playerPos.x > ownerPos.x ? 3 : -3;
     }
 
     // 更新
@@ -100,20 +100,7 @@ namespace BOSS
         if (ownerPos.x > 3.3f || ownerPos.x < -4.0f)
             owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
 
-        //// タイマーが0になったらIdleステートへ
-        //if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
-
-        //// 時間を減らす
-        //SubtractTime(elapsedTime);
-
-        //DirectX::XMFLOAT3 pos = owner->GetTransform()->GetPosition();
-        //float moveSpeed = moveLeft ? -1 : 1;
-        //pos.x += moveSpeed * elapsedTime;
-        //owner->GetTransform()->SetPosition(pos);
-
-        //if (pos.x > 3)moveLeft = true;
-        //if (pos.x < -3)moveLeft = false;
-
+        owner->GetTransform()->SetPosition(ownerPos);
     }
 
     // 終了

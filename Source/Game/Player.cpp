@@ -237,23 +237,10 @@ void Player::DrawDebug()
     
     Character::DrawDebug();
 
-<<<<<<< HEAD
     //ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
 
     ImGui::DragFloat2("box2dLenght", &box2d.lenght.x);
-=======
-    ImGui::SliderFloat("translation.x", &translation.x, -10.0f, +10.0f);
-    ImGui::SliderFloat("translation.y", &translation.y, -10.0f, +10.0f);
-    ImGui::SliderFloat("translation.z", &translation.z, -10.0f, +10.0f);
 
-    ImGui::SliderFloat("scaling.x", &scaling.x, -10.0f, +10.0f);
-    ImGui::SliderFloat("scaling.y", &scaling.y, -10.0f, +10.0f);
-    ImGui::SliderFloat("scaling.z", &scaling.z, -10.0f, +10.0f);
-
-    ImGui::SliderFloat("rotation.x", &rotation.x, -10.0f, +10.0f);
-    ImGui::SliderFloat("rotation.y", &rotation.y, -10.0f, +10.0f);
-    ImGui::SliderFloat("rotation.z", &rotation.z, -10.0f, +10.0f);
->>>>>>> origin/Taki
 
     ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
 

@@ -69,7 +69,6 @@ public:
     std::unique_ptr<Model>  model = nullptr;
     std::unique_ptr<Model> debugModel = nullptr;
 
-<<<<<<< HEAD
     Transform* GetTransform() { return model->GetTransform(); }
 
     // AABB                    aabb  = {};
@@ -78,9 +77,7 @@ public:
 
     std::unique_ptr<GeometricPrimitive> geometricPrimitive;
 
-=======
-    AABB                    aabb  = {};
->>>>>>> origin/Taki
+
 protected:
     DirectX::XMFLOAT3 velocity  = { 0,0,0 };    // 速度
                                   
@@ -108,15 +105,10 @@ protected:
     int         jumpCount       =   0;          // ジャンプ回数
     int         jumpLimit       =   1;          // 最大ジャンプ回数
                                    
-<<<<<<< HEAD
-    bool        isGround        =   false;        // 地面についているか
-    bool        isBounce        =   false;        // バウンスさせるか
+    bool        isGround        =   false;      // 地面についているか
+    bool        isBounce        =   false;      // バウンスさせるか
 
 private:
     int     animationIndex = 0; // アニメーション番号
-=======
-    bool        isGround        =   false;      // 地面についているか
-    bool        isBounce        =   false;      // バウンスさせるか
->>>>>>> origin/Taki
 };
 
