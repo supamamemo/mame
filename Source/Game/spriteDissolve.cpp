@@ -9,7 +9,7 @@ SpriteDissolve::SpriteDissolve()
 {
     Graphics& graphics = Graphics::Instance();
 
-    dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/load.png");
+    dissolve_sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/load.png");
 }
 
 void SpriteDissolve::Initialize()
@@ -101,8 +101,8 @@ void SpriteDissolve::Initialize()
         
 
         // mask
-        create_vs_from_cso(graphics.GetDevice(), "sprite_dissolve_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-        create_ps_from_cso(graphics.GetDevice(), "sprite_dissolve_ps.cso", dissolve_sprite->GetPixelShaderAddress());
+        create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_dissolve_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
+        create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_dissolve_ps.cso", dissolve_sprite->GetPixelShaderAddress());
 
         //create_vs_from_cso(graphics.GetDevice(), "sprite_fade_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, ARRAYSIZE(input_element_desc));
         //create_ps_from_cso(graphics.GetDevice(), "sprite_fade_ps.cso", dissolve_sprite->GetPixelShaderAddress());

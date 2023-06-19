@@ -7,12 +7,12 @@
 #include "texture.h"
 #include "shader.h"
 
-void sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle)
+void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle)
 {
     render(immediate_context, dx, dy, dw, dh, r, g, b, a, angle, 0.0f, 0.0f, static_cast<float>(texture2d_desc.Width), static_cast<float>(texture2d_desc.Height));
 }
 
-void sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle, float sx, float sy, float sw, float sh)
+void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle, float sx, float sy, float sw, float sh)
 {
     // <1> スクリーン（ビューポート）のサイズを取得する
 #if 1
@@ -134,7 +134,7 @@ void sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
     immediate_context->Draw(4, 0);
 }
 
-void sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh)
+void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh)
 {
     render(immediate_context, dx, dy, dw, dh, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f,
         static_cast<float>(texture2d_desc.Width), static_cast<float>(texture2d_desc.Height));
@@ -142,7 +142,7 @@ void sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
 
 
 // コンストラクタ
-sprite::sprite(ID3D11Device* device, const wchar_t* filename)
+Sprite::Sprite(ID3D11Device* device, const wchar_t* filename)
 {
     HRESULT hr{ S_OK };
 
@@ -211,6 +211,6 @@ sprite::sprite(ID3D11Device* device, const wchar_t* filename)
 }
 
 // デストラクタ
-sprite::~sprite()
+Sprite::~Sprite()
 {
 }

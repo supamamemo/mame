@@ -1,9 +1,11 @@
 #pragma once
 
+class Boss;
+
 class State
 {
 public:
-    State() {}
+    State(Boss* _boss, const char* name) :owner(_boss), name(name) {}
     virtual ~State() {}
     // すべての継承先で実装させる必要があるため純粋仮想関数で実装
     // ステートに入った時のメソッド
@@ -13,7 +15,18 @@ public:
     // ステートから出ていくときのメソッド
     virtual void Exit() = 0;
     
-protected:
+public:
+    void SetTimer(float time) { timer = time; }
+    float GetTimer() const { return timer; }
+    void SubtractTime(float time) { timer -= time; }
 
+    const char* GetName() { return name; }
+
+private:
+    float timer = 0;
+
+protected:
+    Boss* owner;
+    const char* name;
 };
 

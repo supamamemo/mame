@@ -19,9 +19,21 @@ bool framework::initialize()
     framebuffers[0] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280, 720);
     bit_block_transfer = std::make_unique<fullscreen_quad>(graphics.GetDevice());
     framebuffers[1] = std::make_unique<framebuffer>(graphics.GetDevice(), 1280 / 2, 720 / 2);
-    create_ps_from_cso(graphics.GetDevice(), "luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
-    create_ps_from_cso(graphics.GetDevice(), "blur_ps.cso", pixel_shaders[1].GetAddressOf());
+    create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
+    create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/blur_ps.cso", pixel_shaders[1].GetAddressOf());
 
+
+    // XAUDIO2
+    hr = XAudio2Create(xAudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+    hr = xAudio2->CreateMasteringVoice(&masterVoice);
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+    // ここでbgmとか読み込んでるね(場所変えた方がいい)
+    bgm[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/akumanokyoku.wav");
+    se[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/jump.wav");
+    se[1] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/coin.wav");
 
     // シーンタイトル
     Mame::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
@@ -45,7 +57,26 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
     // シーン更新処理
     Mame::Scene::SceneManager::Instance().Update(elapsed_time);
 
-    //ImGui::ShowDemoWindow();
+    // XAUDIO2
+    if (GetAsyncKeyState('N') & 0x8000)
+    {
+        se[0]->Play();
+    }
+    else
+    {
+        se[0]->Stop();
+    }
+    if (GetAsyncKeyState('M') & 1)
+    {
+        if (bgm[0]->Queuing())
+        {
+            bgm[0]->Stop();
+        }
+        else
+        {
+            bgm[0]->Play(255);
+        }
+    }
 
 #ifdef USE_IMGUI
 

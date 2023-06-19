@@ -24,8 +24,8 @@ public:
 
 public:
     // test
-    std::unique_ptr<sprite> dummy_sprite                = nullptr;
-    std::unique_ptr<sprite> dissolve_sprite             = nullptr;
+    std::unique_ptr<Sprite> dummy_sprite                = nullptr;
+    std::unique_ptr<Sprite> dissolve_sprite             = nullptr;
 
     Microsoft::WRL::ComPtr<ID3D11VertexShader> sprite_vertex_shader     = nullptr;
     Microsoft::WRL::ComPtr<ID3D11InputLayout>  sprite_input_layout      = nullptr;

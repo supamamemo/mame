@@ -7,6 +7,7 @@ Texture2D texture_maps[4]:register(t0);
 Texture2D mask_texture : register(t15);
 float4 main(VS_OUT pin) :SV_TARGET
 {
+
     float mask_value = mask_texture.Sample(sampler_states[0],pin.texcoord) * pin.color;
 
     float4 color = texture_maps[0].Sample(sampler_states[ANISOTROPIC],pin.texcoord);
@@ -38,7 +39,9 @@ float4 main(VS_OUT pin) :SV_TARGET
 
     //color.a *= alpha;
     //return color;
+    
+    //return color;
 
-
+    
     return float4(diffuse + specular, alpha) * pin.color;
 }

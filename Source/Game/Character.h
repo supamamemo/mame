@@ -10,6 +10,7 @@
 #endif
 
 #include "../GeometricPrimitive.h"
+#include "../sprite.h"
 
 #include <DirectXMath.h>
 
@@ -20,10 +21,18 @@
 class Character
 {
 public:
-    Character() {}
+    Character();
     virtual ~Character() {}
 
     virtual void DrawDebug();   // デバッグ描画
+
+    // アニメーション関連
+    void SetAnimation(int index) { animationIndex = index; }
+    int GetAnimation() { return animationIndex; }
+
+    // これはテスト用で使ってるだけなので、、後でいらなくなるかも
+    DirectX::XMFLOAT4 materialColor = { 1,1,1,1 };
+    void SetMaterialColor(DirectX::XMFLOAT4 color) { materialColor = color; }
 
 protected:
     // 移動処理
@@ -61,7 +70,17 @@ public:
     std::unique_ptr<Model>  model      = nullptr;
     std::unique_ptr<Model>  debugModel = nullptr;
 
-    AABB                    aabb  = {};
+    Transform* GetTransform() { return model->GetTransform(); }
+
+    DirectX::XMFLOAT4X4 SetDebugModelTransform(DirectX::XMFLOAT4X4 transform);
+
+    // AABB                    aabb  = {};
+    Box2D box2d{};
+    
+
+    std::unique_ptr<GeometricPrimitive> geometricPrimitive;
+
+
 protected:
     DirectX::XMFLOAT3 velocity  = { 0,0,0 };    // 速度
                                   
@@ -92,5 +111,9 @@ protected:
     bool        isGround        =   false;      // 地面についているか
     bool        isBounce        =   false;      // バウンスさせるか
     bool        isDash          =   false;      // ダッシュしているか
+
+private:
+    int     animationIndex = 0; // アニメーション番号
+
 };
 

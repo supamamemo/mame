@@ -131,9 +131,9 @@
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
-      <ObjectFileOutput>%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>resources\Shader\%(Filename).cso</ObjectFileOutput>
       <AssemblerOutput>AssemblyCode</AssemblerOutput>
-      <AssemblerOutputFile>%(Filename).cod</AssemblerOutputFile>
+      <AssemblerOutputFile>resources\Shader\%(Filename).cod</AssemblerOutputFile>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -188,7 +188,7 @@
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
-      <ObjectFileOutput>%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput>resources\Shader%(Filename).cso</ObjectFileOutput>
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -204,6 +204,7 @@
     <ClCompile Include="Source\fullscreen_quad.cpp" />
     <ClCompile Include="Source\Game\Block.cpp" />
     <ClCompile Include="Source\Game\Boss.cpp" />
+    <ClCompile Include="Source\Game\BossStateDerived.cpp" />
     <ClCompile Include="Source\Game\Character.cpp" />
     <ClCompile Include="Source\Game\Collision.cpp" />
     <ClCompile Include="Source\Game\Common.cpp" />
@@ -220,6 +221,7 @@
     <ClCompile Include="Source\GeometricPrimitive.cpp" />
     <ClCompile Include="Source\gltf_model.cpp" />
     <ClCompile Include="Source\main.cpp" />
+    <ClCompile Include="Source\Mame\Audio.cpp" />
     <ClCompile Include="Source\Mame\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Mame\Graphics\EffectManager.cpp" />
     <ClCompile Include="Source\Mame\Graphics\Graphics.cpp" />
@@ -255,6 +257,7 @@
     <ClInclude Include="Source\fullscreen_quad.h" />
     <ClInclude Include="Source\Game\Block.h" />
     <ClInclude Include="Source\Game\Boss.h" />
+    <ClInclude Include="Source\Game\BossStateDerived.h" />
     <ClInclude Include="Source\Game\Character.h" />
     <ClInclude Include="Source\Game\Collision.h" />
     <ClInclude Include="Source\Game\Common.h" />
@@ -273,6 +276,7 @@
     <ClInclude Include="Source\GeometricPrimitive.h" />
     <ClInclude Include="Source\gltf_model.h" />
     <ClInclude Include="Source\high_resolution_timer.h" />
+    <ClInclude Include="Source\Mame\Audio.h" />
     <ClInclude Include="Source\Mame\Graphics\Camera.h" />
     <ClInclude Include="Source\Mame\Graphics\EffectManager.h" />
     <ClInclude Include="Source\Mame\Graphics\Graphics.h" />

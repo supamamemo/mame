@@ -1,4 +1,12 @@
 #pragma once
+
+#ifdef USE_IMGUI
+#include "../../External/imgui/imgui.h"
+#include "../../External/imgui/imgui_internal.h"
+#include "../../External/imgui/imgui_impl_dx11.h"
+#include "../../External/imgui/imgui_impl_win32.h"
+#endif
+
 #include <vector>
 #include "State.h"
 
@@ -24,11 +32,20 @@ public:
     // 現在のステート番号取得
     int GetStateIndex();
 
+    // imgui用
+    void DrawDebug();
+
+    // 仮
+    void SetMoveRight(bool r) { moveRight = r; }
+    bool GetMoveRight() { return moveRight; }
+
 private:
     // 現在のステート
     State* currentState = nullptr;
     // 各ステートを保持する配列
     std::vector<State*> statePool;
 
+    // 仮にここに置きます
+    bool moveRight = false;
 };
 

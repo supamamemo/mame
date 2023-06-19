@@ -4,7 +4,7 @@
 #include <directxmath.h>
 #include <wrl.h>
 
-class sprite
+class Sprite
 {
 public:
     Microsoft::WRL::ComPtr<ID3D11VertexShader> vertex_shader;  // 頂点シェーダーインターフェイス
@@ -35,8 +35,8 @@ public:
     D3D11_TEXTURE2D_DESC texture2d_desc;
 
 public:
-    sprite(ID3D11Device* device, const wchar_t* filename);
-    ~sprite();
+    Sprite(ID3D11Device* device, const wchar_t* filename);
+    ~Sprite();
     
     void render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle/*degree*/);
     void render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle/*degree*/, float sx, float sy, float sw, float sh);

@@ -63,20 +63,30 @@ void StageBoss::Begin()
 void StageBoss::Update(const float& elapsedTime)
 {
     DirectX::XMFLOAT3 resultPos{};
+
+    //if (Collision::IntersectAABBVsAABB(&player->aabb, &boss->aabb,  resultPos))
+    //{
+    //    DirectX::XMFLOAT3 pos = player->model->GetTransform()->GetPosition();
+    //    pos.x += resultPos.x;
+    //    pos.y += resultPos.y;
+    //    player->model->GetTransform()->SetPosition(pos);
+    //}
+
     PlayerManager& playerManager = PlayerManager::Instance();
-    if (Collision::IntersectAABBVsAABB(&playerManager.GetPlayer()->aabb, &boss->aabb,  resultPos))
-    {
-        DirectX::XMFLOAT3 pos = playerManager.GetPlayer()->model->GetTransform()->GetPosition();
-        pos.x += resultPos.x;
-        pos.y += resultPos.y;
-        playerManager.GetPlayer()->model->GetTransform()->SetPosition(pos);
-    }
+    //if (Collision::IntersectAABBVsAABB(&playerManager.GetPlayer()->aabb, &boss->aabb,  resultPos))
+    //{
+    //    DirectX::XMFLOAT3 pos = playerManager.GetPlayer()->model->GetTransform()->GetPosition();
+    //    pos.x += resultPos.x;
+    //    pos.y += resultPos.y;
+    //    playerManager.GetPlayer()->model->GetTransform()->SetPosition(pos);
+    //}
+
 
     // player更新
     playerManager.GetPlayer()->Update(elapsedTime);
 
     // boss更新
-    boss->Update();
+    boss->Update(elapsedTime);
 }
 
 // Updateの後に呼ばれる処理
