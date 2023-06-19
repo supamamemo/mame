@@ -22,7 +22,8 @@ Player::Player()
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
 
     
-    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.000.fbx", true);
+    //debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
     //debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_air_ground_move.fbx", true);
 
     //geometricPrimitive = std::make_unique<GeometricPrimitive>(graphics.GetDevice());
@@ -112,28 +113,7 @@ void Player::Render(const float& elapsedTime)
 
     // TransformXV
     DirectX::XMFLOAT4X4 transform;
-    //DirectX::XMFLOAT4X4 transform2;
     DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
-    //DirectX::XMStoreFloat4x4(&transform2, model->GetTransform()->CalcWorldMatrix(1.0f));
-
-    /*DirectX::XMFLOAT4X4 transform1;
-    DirectX::XMStoreFloat4x4(&transform1, debugModel->GetTransform()->CalcWorldMatrix(1.0f));*/
-
-
-
-    //auto p = model->GetTransform()->GetPosition();
-    //auto s = model->GetTransform()->GetScale();
-    //auto r = model->GetTransform()->GetRotation();
-    //auto sVec = DirectX::XMLoadFloat3(&s);
-    //DirectX::XMVectorScale(sVec, 100);
-    //DirectX::XMStoreFloat3(&s, sVec);
-    //DirectX::XMMATRIX P = DirectX::XMMatrixTranslation(p.x, p.y, p.z);
-    //DirectX::XMMATRIX R = DirectX::XMMatrixRotationRollPitchYaw(r.x, r.y, r.z);
-    //DirectX::XMMATRIX S = DirectX::XMMatrixScaling(s.x, s.y, s.z);
-
-    //DirectX::XMStoreFloat4x4(&transform1, S * R * P);
-
-    //geometricPrimitive->render(immediate_context, transform1, { 1,0,0,0.3f });
 
     // model•`‰æ
     if (model->skinned_meshes.animation_clips.size() > 0)
@@ -161,73 +141,53 @@ void Player::Render(const float& elapsedTime)
     {
         model->skinned_meshes.render(immediate_context, transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
     }
-        
-    {
-        const DirectX::XMFLOAT3 min[2]{ model->skinned_meshes.bounding_box[0] * 0.01f, debugModel->skinned_meshes.bounding_box[0] * 0.01f };
-        const DirectX::XMFLOAT3 max[2]{ model->skinned_meshes.bounding_box[1] * 0.01f, debugModel->skinned_meshes.bounding_box[1] * 0.01f };
-        const DirectX::XMFLOAT3 dimensions[2]
-        {
-            { max[0].x - min[0].x, max[0].y - min[0].y, max[0].z - min[0].z },
-            { max[1].x - min[1].x, max[1].y - min[1].y, max[1].z - min[1].z }
-        };
-        DirectX::XMFLOAT3 relative_ratio{ dimensions[0].x / dimensions[1].x, dimensions[0].y / dimensions[1].y, dimensions[0].z / dimensions[1].z };
 
-        DirectX::XMMATRIX O{
-            DirectX::XMMatrixTranslation(dimensions[1].x / 2, dimensions[1].y / 2, dimensions[1].z / 2) *
-            //DirectX::XMMatrixScaling(relative_ratio.x * 0.01f, relative_ratio.y * 0.01f, relative_ratio.z * 0.01f) *
-            DirectX::XMMatrixScaling(relative_ratio.x * 0.01f, relative_ratio.y * 0.01f, relative_ratio.z * 0.01f) *
-            DirectX::XMMatrixTranslation(min[0].x, min[0].y, min[0].z)
+    // BOUNDING_BOX
+    {
+        using namespace DirectX;
+
+        // 0: Target model
+        // 1: Bounding box model
+        XMFLOAT3 dimensions[] = {
+#if 1
+            {
+                model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x,
+                model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y,
+                model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z,
+
+            },
+#else
+            { 100.0f, 150.0f, 60.0f },
+#endif
+            {
+                debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x,
+                debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y,
+                debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z,
+            },
         };
-        //DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(scaling.x, scaling.y, scaling.z) };
-        //DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
-        //DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(translation.x, translation.y, translation.z) };
-        //
-        auto temp = DirectX::XMLoadFloat4x4(&transform);
-        DirectX::XMFLOAT4X4 world;
-        DirectX::XMStoreFloat4x4(&world, O * temp);
-        debugModel->skinned_meshes.render(immediate_context, world, { 1, 0, 0, 0.3f }, nullptr, pixel_shaders.Get());
+        XMFLOAT3 centers[] = {
+            {
+                model->skinned_meshes.boundingBox[0].x + (model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x) * 0.5f,
+                model->skinned_meshes.boundingBox[0].y + (model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y) * 0.5f,
+                model->skinned_meshes.boundingBox[0].z + (model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z) * 0.5f,
+            },
+            {
+                debugModel->skinned_meshes.boundingBox[0].x + (debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x) * 0.5f,
+                debugModel->skinned_meshes.boundingBox[0].y + (debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y) * 0.5f,
+                debugModel->skinned_meshes.boundingBox[0].z + (debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z) * 0.5f,
+            },
+        };
+
+        XMMATRIX S = XMMatrixScaling(dimensions[0].x / dimensions[1].x, dimensions[0].y / dimensions[1].y, dimensions[0].z / dimensions[1].z);
+        XMMATRIX T = XMMatrixTranslation(centers[0].x - centers[1].x, centers[0].y - centers[1].y, centers[0].z - centers[1].z);
+
+        XMFLOAT4X4 t; // World transform matrix of bounding box model
+        XMStoreFloat4x4(&t, S * T * XMLoadFloat4x4(&transform/*World transform matrix of target model*/));
+        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
     }
 
     Shader* shader = graphics.GetShader();
     shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
-
-    
-
-    //{
-    //    const DirectX::XMFLOAT3 min[2]{ model->skinned_meshes.bounding_box[0], debugModel->skinned_meshes.bounding_box[0] };
-    //    const DirectX::XMFLOAT3 max[2]{ model->skinned_meshes.bounding_box[1], debugModel->skinned_meshes.bounding_box[1] };
-    //    const DirectX::XMFLOAT3 dimensions[2]
-    //    {
-    //        { max[0].x - min[0].x, max[0].y - min[0].y, max[0].z - min[0].z },
-    //        { max[1].x - min[1].x, max[1].y - min[1].y, max[1].z - min[1].z }
-    //    };
-    //    DirectX::XMFLOAT3 relative_ratio{ dimensions[0].x / dimensions[1].x, dimensions[0].y / dimensions[1].y, dimensions[0].z / dimensions[1].z };
-
-    //    DirectX::XMMATRIX O{
-    //        DirectX::XMMatrixTranslation(dimensions[1].x / 2, dimensions[1].y / 2, dimensions[1].z / 2) *
-    //        DirectX::XMMatrixScaling(relative_ratio.x, relative_ratio.y, relative_ratio.z) *
-    //        DirectX::XMMatrixTranslation(min[0].x, min[0].y, min[0].z)
-    //    };
-
-    //    DirectX::XMMATRIX S{ DirectX::XMMatrixScaling(scaling.x, scaling.y, scaling.z) };
-    //    DirectX::XMMATRIX R{ DirectX::XMMatrixRotationRollPitchYaw(rotation.x, rotation.y, rotation.z) };
-    //    DirectX::XMMATRIX T{ DirectX::XMMatrixTranslation(translation.x, translation.y, translation.z) };
-    //    DirectX::XMFLOAT4X4 world;
-    //    DirectX::XMStoreFloat4x4(&world, O * S * R * T);
-    //    //debugModel->skinned_meshes.render(graphics.GetDeviceContext(), world, { 1, 0, 0, 1 }, nullptr, nullptr);
-    //    debugModel->skinned_meshes.render(immediate_context, transform1  , { 1, 0, 0, 1 }, nullptr, pixel_shaders.Get());
-    //    //static_meshes[1]->render(immediate_context.Get(), world, { 1, 0, 0, 1 }, pixel_shaders[0].Get());
-    //}
-
-    //debugModel->skinned_meshes.render(immediate_context, transform1, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
-
-    //{
-    //    const DirectX::XMFLOAT3 min[2]{model->skinned_meshes.bounding_box[0],}
-    //}
-
-    //debugModel->skinned_meshes.render(immediate_context, transform1, DirectX::XMFLOAT4(0, 0, 0, 0.3f), nullptr);
-
-    //geometricPrimitive->render(graphics.GetDeviceContext(), transform2, DirectX::XMFLOAT4(1, 0, 0, 0.3f));
 }
 
 

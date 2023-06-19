@@ -386,18 +386,7 @@ public:
 
 
 
-    // バウンディングボックス
-    DirectX::XMFLOAT3 bounding_box[2]
-    {
-        { +D3D11_FLOAT32_MAX, +D3D11_FLOAT32_MAX, +D3D11_FLOAT32_MAX },
-        { -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX }
-    };
 
-    template<class T>
-    void serialize(T& archive)
-    {
-        archive(bounding_box);
-    }
 
 protected:
     scene scene_view;
@@ -411,5 +400,38 @@ protected:
     void fetch_animations(FbxScene* fbx_scene, std::vector<animation>& animation_clips, float sampling_rate/*If this value is 0, the animation data will be sampled at the default frame rate.*/);
     // シーン
     void fetch_scene(const char* fbx_filename, bool triangulate, float sampling_rate/*If this value is 0, the animation data will be sampled at the default frame rate.*/);
+
+public:
+    // BOUNDING_BOX
+    DirectX::XMFLOAT3 boundingBox[2]
+    {
+        { +D3D11_FLOAT32_MAX, +D3D11_FLOAT32_MAX, +D3D11_FLOAT32_MAX },
+        { -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX, -D3D11_FLOAT32_MAX }
+    };
+
+
+private:
+    // BOUNDING_BOX
+    void compute_bounding_box()
+    {
+        // Calculate a bounding box surrounding all meshes. In addition, coordinate values of all bounding boxes are converted to global space.
+        for (mesh& mesh : meshes)
+        {
+            DirectX::XMMATRIX M = DirectX::XMLoadFloat4x4(&mesh.default_global_transform);
+            DirectX::XMStoreFloat3(&mesh.bounding_box[0], DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&mesh.bounding_box[0]), M));
+            DirectX::XMStoreFloat3(&mesh.bounding_box[1], DirectX::XMVector3Transform(DirectX::XMLoadFloat3(&mesh.bounding_box[1]), M));
+
+            if (mesh.bounding_box[0].x > mesh.bounding_box[1].x) std::swap<float>(mesh.bounding_box[0].x, mesh.bounding_box[1].x);
+            if (mesh.bounding_box[0].y > mesh.bounding_box[1].y) std::swap<float>(mesh.bounding_box[0].y, mesh.bounding_box[1].y);
+            if (mesh.bounding_box[0].z > mesh.bounding_box[1].z) std::swap<float>(mesh.bounding_box[0].z, mesh.bounding_box[1].z);
+
+            boundingBox[0].x = std::min<float>(mesh.bounding_box[0].x, boundingBox[0].x);
+            boundingBox[0].y = std::min<float>(mesh.bounding_box[0].y, boundingBox[0].y);
+            boundingBox[0].z = std::min<float>(mesh.bounding_box[0].z, boundingBox[0].z);
+            boundingBox[1].x = std::max<float>(mesh.bounding_box[1].x, boundingBox[1].x);
+            boundingBox[1].y = std::max<float>(mesh.bounding_box[1].y, boundingBox[1].y);
+            boundingBox[1].z = std::max<float>(mesh.bounding_box[1].z, boundingBox[1].z);
+        }
+    }
 };
 

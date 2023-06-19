@@ -107,7 +107,7 @@ skinned_mesh::skinned_mesh(ID3D11Device* device, const char* fbx_filename, bool 
     {
         std::ifstream ifs(cereal_filename.c_str(), std::ios::binary);
         cereal::BinaryInputArchive deserialization(ifs);
-        deserialization(scene_view, meshes, materials, animation_clips, bounding_box);
+        deserialization(scene_view, meshes, materials, animation_clips);
     }
     else
     {
@@ -115,9 +115,12 @@ skinned_mesh::skinned_mesh(ID3D11Device* device, const char* fbx_filename, bool 
 
         std::ofstream ofs(cereal_filename.c_str(), std::ios::binary);
         cereal::BinaryOutputArchive serialization(ofs);
-        serialization(scene_view, meshes, materials, animation_clips,bounding_box);
+        serialization(scene_view, meshes, materials, animation_clips);
     }
     create_com_objects(device, fbx_filename);
+
+    // BOUNDING_BOX
+    compute_bounding_box();
 }
 
 skinned_mesh::skinned_mesh(ID3D11Device* device, const char* fbx_filename, std::vector<std::string>& animation_filenames, bool triangulate, float sampling_rate)
@@ -144,6 +147,9 @@ skinned_mesh::skinned_mesh(ID3D11Device* device, const char* fbx_filename, std::
         serialization(scene_view, meshes, materials, animation_clips);
     }
     create_com_objects(device, fbx_filename);
+
+    // BOUNDING_BOX
+    compute_bounding_box();
 }
 
 
@@ -288,6 +294,7 @@ void skinned_mesh::fetch_meshes(FbxScene* fbx_scene, std::vector<mesh>& meshes)
             }
         }
 
+
         for (const vertex& v : mesh.vertices)
         {
             mesh.bounding_box[0].x = std::min<float>(mesh.bounding_box[0].x, v.position.x);
@@ -297,38 +304,7 @@ void skinned_mesh::fetch_meshes(FbxScene* fbx_scene, std::vector<mesh>& meshes)
             mesh.bounding_box[1].y = std::max<float>(mesh.bounding_box[1].y, v.position.y);
             mesh.bounding_box[1].z = std::max<float>(mesh.bounding_box[1].z, v.position.z);
         }
-
-        for (const vertex& v : mesh.vertices)
-        {
-            bounding_box[0].x = std::min<float>(bounding_box[0].x, v.position.x);
-            bounding_box[0].y = std::min<float>(bounding_box[0].y, v.position.y);
-            bounding_box[0].z = std::min<float>(bounding_box[0].z, v.position.z);
-            bounding_box[1].x = std::max<float>(bounding_box[1].x, v.position.x);
-            bounding_box[1].y = std::max<float>(bounding_box[1].y, v.position.y);
-            bounding_box[1].z = std::max<float>(bounding_box[1].z, v.position.z);
-        }
-
     }
-
-    //for (const mesh& mesh : meshes)
-    //{
-    //    //bounding_box[0].x = std::min<float>(bounding_box[0].x, mesh.bounding_box[0].x);
-    //    //bounding_box[0].y = std::min<float>(bounding_box[0].y, mesh.bounding_box[0].y);
-    //    //bounding_box[0].z = std::min<float>(bounding_box[0].z, mesh.bounding_box[0].z);
-    //    bounding_box[0].x = std::min<float>(mesh.bounding_box[0].x, bounding_box[0].x);
-    //    bounding_box[0].y = std::min<float>(mesh.bounding_box[0].y, bounding_box[0].y);
-    //    bounding_box[0].z = std::min<float>(mesh.bounding_box[0].z, bounding_box[0].z);
-
-
-    //    //bounding_box[1].x = std::max<float>(bounding_box[1].x, mesh.bounding_box[1].x);
-    //    //bounding_box[1].y = std::max<float>(bounding_box[1].y, mesh.bounding_box[1].y);
-    //    //bounding_box[1].z = std::max<float>(bounding_box[1].z, mesh.bounding_box[1].z);
-    //    bounding_box[1].x = std::max<float>(mesh.bounding_box[1].x, bounding_box[1].x);
-    //    bounding_box[1].y = std::max<float>(mesh.bounding_box[1].y, bounding_box[1].y);
-    //    bounding_box[1].z = std::max<float>(mesh.bounding_box[1].z, bounding_box[1].z);
-
-    //}
-
 }
 
 void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_filename)
