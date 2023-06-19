@@ -64,9 +64,6 @@
     <FxCompile Include="Source\Shader\UVScroll_vs.hlsl">
       <Filter>mamelib\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\wireframe.hlsl">
-      <Filter>mamelib\Shader</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="External\imgui\imgui.cpp">

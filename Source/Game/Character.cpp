@@ -6,6 +6,7 @@
 Character::Character()
 {
     Graphics& graphics = Graphics::Instance();
+
     debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
 }
 

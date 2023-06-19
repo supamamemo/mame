@@ -15,16 +15,12 @@ Player::Player()
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temp.fbx", true);
     
+    
 
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/plantune.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/nico.fbx", true);
 
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
-
-
-    //geometricPrimitive = std::make_unique<GeometricPrimitive>(graphics.GetDevice());
-    
-    create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
 
     //sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/load.png");
 
@@ -32,8 +28,6 @@ Player::Player()
     TransitionIdleState();
 
     DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
-    box2d = { {pos.x,pos.y},{0.5f,0.5f} };
-    //aabb = { {pos.x,pos.y,pos.z},{0.5f,0.5f,0.5f} };
 }
 
 
@@ -76,8 +70,8 @@ void Player::Update(const float& elapsedTime)
     model->GetTransform()->SetPosition(pos);
 #endif
 
-    //debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
-    //debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
+    debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
 
     // ステート分岐処理
@@ -138,14 +132,13 @@ void Player::Render(const float& elapsedTime)
         model->skinned_meshes.render(immediate_context, transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
     }
 
+#if _DEBUG
     // BOUNDING_BOX
     {
         DirectX::XMFLOAT4X4 t = SetDebugModelTransform(transform);
         debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
     }
-
-    Shader* shader = graphics.GetShader();
-    shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
+#endif // _DEBUG
 }
 
 

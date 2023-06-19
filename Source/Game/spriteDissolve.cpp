@@ -20,24 +20,6 @@ void SpriteDissolve::Initialize()
 
     HRESULT hr{ S_OK };
 
-    //{
-    //    D3D11_SAMPLER_DESC sampler_desc{};
-    //    sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    //    sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    //    sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    //    sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-    //    sampler_desc.MipLODBias = 0;
-    //    sampler_desc.MaxAnisotropy = 16;
-    //    sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-    //    sampler_desc.BorderColor[0] = 0;
-    //    sampler_desc.BorderColor[1] = 0;
-    //    sampler_desc.BorderColor[2] = 0;
-    //    sampler_desc.BorderColor[3] = 0;
-    //    sampler_desc.MinLOD = 0;
-    //    sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
-    //    hr = graphics.GetDevice()->CreateSamplerState(&sampler_desc, samplerState.GetAddressOf());
-    //}
-
     // 定数バッファ
     {
         D3D11_BUFFER_DESC buffer_desc{};
@@ -120,6 +102,8 @@ void SpriteDissolve::Initialize()
 
 void SpriteDissolve::Update()
 {
+    // いい感じにfadeになるように設定してる
+    spr_dissolve.dissolve_value = spr_dissolve.dissolve_value1 - spr_dissolve.delay;
 }
 
 void SpriteDissolve::Render()
@@ -165,8 +149,6 @@ void SpriteDissolve::DrawDebug()
 
     {
         ImGui::SliderFloat("delay", &spr_dissolve.delay, 0.0f, 1.0f);
-        // いい感じにfadeになるように設定してる
-        spr_dissolve.dissolve_value = spr_dissolve.dissolve_value1 - spr_dissolve.delay;
     }
 
     ImGui::SliderInt("mask_texture", &spr_dissolve.mask_texture_value, 0, 11);

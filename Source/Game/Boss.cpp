@@ -105,9 +105,6 @@ void Boss::Render(float elapsedTime)
     DirectX::XMFLOAT4X4 transform;
     DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
 
-    DirectX::XMFLOAT4X4 transform1;
-    DirectX::XMStoreFloat4x4(&transform1, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
-
     // model•`‰æ
     if (model->skinned_meshes.animation_clips.size() > 0)
     {
@@ -135,7 +132,13 @@ void Boss::Render(float elapsedTime)
         model->skinned_meshes.render(deviceContext, transform, materialColor, nullptr);
     }
 
-    debugModel->skinned_meshes.render(deviceContext, transform1, DirectX::XMFLOAT4(0, 0, 0, 0.3f), nullptr);
+#if _DEBUG
+    // BOUNDING_BOX
+    {
+        DirectX::XMFLOAT4X4 t = SetDebugModelTransform(transform);
+        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.2f), nullptr);
+    }
+#endif // _DEBUG
 }
 
 // debug—p

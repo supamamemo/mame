@@ -63,6 +63,9 @@ void SceneGame::Begin()
 void SceneGame::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+
+    spriteDissolve->Update();
+
     if (spriteDissolve->IsFade())
     {
         switch (fadeType)

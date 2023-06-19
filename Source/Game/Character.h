@@ -77,7 +77,7 @@ public:
     Box2D box2d{};
     
 
-    std::unique_ptr<GeometricPrimitive> geometricPrimitive;
+    
 
 
 protected:

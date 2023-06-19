@@ -23,7 +23,7 @@ public:
     std::unique_ptr<SpriteDissolve> spriteDissolve;
 
     // デバッグ用
-    int fadeType = 0;
+    int fadeType = 1;
     int textureType = 0;
 
 };
