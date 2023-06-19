@@ -319,7 +319,6 @@ void framework::render(float elapsed_time/*Elapsed seconds from last frame*/)
     Mame::Scene::SceneManager::Instance().Render(elapsed_time);
 
 
-
 #ifdef USE_IMGUI
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

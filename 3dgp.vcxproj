@@ -208,6 +208,7 @@
     <ClCompile Include="Source\Game\Character.cpp" />
     <ClCompile Include="Source\Game\Collision.cpp" />
     <ClCompile Include="Source\Game\Common.cpp" />
+    <ClCompile Include="Source\Game\Enemy.cpp" />
     <ClCompile Include="Source\Game\GrassBlock.cpp" />
     <ClCompile Include="Source\Game\Mathf.cpp" />
     <ClCompile Include="Source\Game\Player.cpp" />
@@ -261,6 +262,7 @@
     <ClInclude Include="Source\Game\Character.h" />
     <ClInclude Include="Source\Game\Collision.h" />
     <ClInclude Include="Source\Game\Common.h" />
+    <ClInclude Include="Source\Game\Enemy.h" />
     <ClInclude Include="Source\Game\GrassBlock.h" />
     <ClInclude Include="Source\Game\Mathf.h" />
     <ClInclude Include="Source\Game\OperatorXMFLOAT3.h" />
@@ -343,6 +345,18 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\InstancingPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\InstancingVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Source\Shader\luminance_extraction_ps.hlsl">
@@ -434,6 +448,7 @@
     <None Include="Source\Shader\fullscreen_quad.hlsli" />
     <None Include="Source\Shader\geometric_primitive.hlsli" />
     <None Include="Source\Shader\gltf_model.hlsli" />
+    <None Include="Source\Shader\Instancing.hlsli" />
     <None Include="Source\Shader\skinned_mesh.hlsli" />
     <None Include="Source\Shader\sprite.hlsli" />
     <None Include="Source\Shader\sprite_dissolve.hlsli" />
