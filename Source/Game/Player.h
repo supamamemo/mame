@@ -65,19 +65,14 @@ private: // enum関連
         HipDrop, // ヒップドロップ
     };
 
-private: // 初期値関連
-
 private: // 変数関連
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders = {};
-
-
-
 
     State   state                   = State::Idle;          // 現在のステート
 
     float   hipDropGravity          = -3.0f;                // ヒップドロップ時の重力
 
-    float   dashSpeedX              =  30.0f;               // ダッシュ時の速度
+    float   dashAcceleration        =  30.0f;               // ダッシュ時のX速度
     float   defaultDashTime         =  0.1f;                // ダッシュ時間初期値
     float   dashTimer               =  defaultDashTime;     // ダッシュタイマー(ダッシュ時の操作制限時間を管理する)
     float   dashFinishScale         =  0.5f;                // ダッシュが終わって別のステート遷移前に速度を減速させる値
@@ -92,10 +87,7 @@ private: // 変数関連
     float   bounceSpeedY            =  defaultBounceSpeedY; // バウンスY速度
     float   bounceScaleX            =  0.75f;               // バウンスX速度にかける値
     float   bounceScaleY            =  0.75f;               // バウンスY速度にかける値
-    float   saveMoveVec_n           =  0.0f;                // プレイヤーの前方向の単位ベクトルを保存する（バウンス時に使われる）
-
-    float   transitionIdleStateDelayTime  = 1.f;           
-    float   transitionIdleStateDelayTimer = transitionIdleStateDelayTime;   // 左右入力が途切れたときにすぐ待機ステートへ遷移しないよう遅延時間をつくる
+    float   saveMoveVec_n           =  0.0f;                // プレイヤーの単位移動ベクトルを保存する（バウンス時に使われる）
 
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  3;                   // 最大バウンス回数

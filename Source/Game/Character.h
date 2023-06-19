@@ -32,7 +32,11 @@ public:
 
     // これはテスト用で使ってるだけなので、、後でいらなくなるかも
     DirectX::XMFLOAT4 materialColor = { 1,1,1,1 };
-    void SetMaterialColor(DirectX::XMFLOAT4 color) { materialColor = color; }
+    void SetMaterialColor(const DirectX::XMFLOAT4& color) { materialColor = color; }
+
+    Transform* GetTransform() { return model->GetTransform(); }
+
+    DirectX::XMFLOAT4X4 SetDebugModelTransform(DirectX::XMFLOAT4X4 transform);
 
 protected:
     // 移動処理
@@ -67,27 +71,21 @@ private:
     void UpdateHorizontalMove(const float& elapsedTime);        // 水平移動更新処理
 
 public:
-    std::unique_ptr<Model>  model      = nullptr;
-    std::unique_ptr<Model>  debugModel = nullptr;
-
-    Transform* GetTransform() { return model->GetTransform(); }
-
-    DirectX::XMFLOAT4X4 SetDebugModelTransform(DirectX::XMFLOAT4X4 transform);
+    std::unique_ptr<Model>  model       = nullptr;
+    std::unique_ptr<Model>  debugModel  = nullptr;
 
     // AABB                    aabb  = {};
-    Box2D box2d{};
+    Box2D                   box2d       = {};
     
-
-    std::unique_ptr<GeometricPrimitive> geometricPrimitive;
-
+    std::unique_ptr<GeometricPrimitive> geometricPrimitive = nullptr;
 
 protected:
-    DirectX::XMFLOAT3 velocity  = { 0,0,0 };    // 速度
+    DirectX::XMFLOAT3 velocity  =   { 0,0,0 };      // 速度
                                   
-    float       stepOffset      =   1.0f;       // 位置補正(Y位置がキャラクターの中心になるように調整)
+    float       stepOffset      =   1.0f;           // 位置補正(Y位置がキャラクターの中心になるように調整)
                                     
-    float       moveVecX        =   0.0f;       // 移動ベクトルX
-    float       saveMoveVecX    =   1.0f;       // 移動ベクトルを保存するベクトルX（最初は左を向かせておく）
+    float       moveVecX        =   0.0f;           // 移動ベクトルX
+    float       saveMoveVecX    =   1.0f;           // 移動ベクトルを保存するベクトルX（最初は右を向かせておく）
 
     float       acceleration    =   1.0f;           // 加速力
     float       defaultGravity  =  -1.0f;           // 重力初期値
@@ -96,24 +94,27 @@ protected:
     float       airControl      =   0.3f;           // 空中制御
 
     float       defaultMoveSpeed =  5.0f;               // 移動速度初期値
-    float       moveSpeed        =  defaultMoveSpeed;    // 移動速度(最大移動速度に代入される)
+    float       moveSpeed        =  defaultMoveSpeed;   // 移動速度(最大移動速度に代入される)
     float       turnSpeed        =  ToRadian(900.0f);   // 旋回速度(180.f * 5)
-    float       jumpSpeed        =  20.0f;              // ジャンプ速度
+    float       jumpSpeed        =  10.0f;              // ジャンプ速度
     float       maxMoveSpeed     =  5.0f;               // 最大移動速度
 
-    float       slopeRate       =   1.0f;       // 傾斜率
+    float       slopeRate       =   1.0f;           // 傾斜率
                                     
-    float       invincibleTimer =   1.0f;       // 無敵時間
+    float       invincibleTimer =   1.0f;           // 無敵時間
 
-    int         jumpCount       =   0;          // ジャンプ回数
-    int         jumpLimit       =   1;          // 最大ジャンプ回数
+    float       defaultJumpTime =   0.3f;           // ジャンプ時間
+    float       jumpTimer       =   0.0f;           // ジャンプタイマー
+
+    int         jumpCount       =   0;              // ジャンプ回数
+    int         jumpLimit       =   1;              // 最大ジャンプ回数
                                    
-    bool        isGround        =   false;      // 地面についているか
-    bool        isBounce        =   false;      // バウンスさせるか
-    bool        isDash          =   false;      // ダッシュしているか
+    bool        isGround        =   false;          // 地面についているか
+    bool        isBounce        =   false;          // バウンスさせるか
+    bool        isDash          =   false;          // ダッシュしているか
 
 private:
-    int     animationIndex = 0; // アニメーション番号
+    int         animationIndex  =   0;              // アニメーション番号
 
 };
 

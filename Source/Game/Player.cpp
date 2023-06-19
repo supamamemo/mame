@@ -7,19 +7,21 @@ Player::Player()
 {
     Graphics& graphics = Graphics::Instance();
 
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temp.fbx", true);    
+    // モデル生成
+    {
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
+        model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temp.fbx", true);    
 
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/plantune.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/nico.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/plantune.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/nico.fbx", true);
 
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
-
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
+    }
 
     //geometricPrimitive = std::make_unique<GeometricPrimitive>(graphics.GetDevice());
     
@@ -44,7 +46,7 @@ Player::~Player()
 void Player::Initialize()
 {
     GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
-    GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
+    GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
     GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
 
     debugModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
@@ -152,7 +154,7 @@ void Player::Render(const float& elapsedTime)
 }
 
 
-
+// デバッグ描画
 void Player::DrawDebug()
 {
     ImGui::Begin("player");
@@ -166,10 +168,57 @@ void Player::DrawDebug()
 
     ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
 
-    ImGui::SliderFloat("turnSpeed",      &turnSpeed,      0.0f, ToRadian(900.0f), "%.0f");  // 旋回速度
-    ImGui::SliderFloat("hipDropGravity", &hipDropGravity, 0.0f, -10.0f,           "%.0f");  // ヒップドロップ時の重力
+    // 速度関連パラメータ
+    if (ImGui::TreeNode("Speed"))
+    {
+        ImGui::SliderFloat("acceleration",     &acceleration,     0.0f, 5.0f);    // 加速力
+        ImGui::SliderFloat("d_Gravity",        &defaultGravity,   0.0f, 5.0f);    // 重力(バウンス後に反映)
+        ImGui::SliderFloat("hipDropGravity",   &hipDropGravity,   1.0f, -10.0f);  // ヒップドロップ時の重力
+        ImGui::SliderFloat("friction",         &friction,         0.0f, 5.0f);    // 摩擦力（停止する力）
+        ImGui::SliderFloat("airControl",       &airControl,       0.0f, 1.0f);    // 空中での身動きのしやすさ
 
-    // バウンスパラメータ
+        ImGui::SliderFloat("dashAcceleration", &dashAcceleration, 0.0f, 60.0f);   // ダッシュ時の加速力
+        ImGui::SliderFloat("d_MoveSpeed",      &defaultMoveSpeed, 0.0f, 20.0f);   // 通常時の最高移動速度
+        ImGui::SliderFloat("runMoveSpeed",     &runMoveSpeed,     0.0f, 30.0f);   // 走行時の最高移動速度
+
+        ImGui::SliderFloat("turnSpeed",        &turnSpeed, 1.0f, ToRadian(900.0f), "%.0f");  // 旋回速度
+
+        if (ImGui::Button("Speed Reset"))
+        {
+            acceleration        =  1.0f;
+            defaultGravity      = -1.0f;
+            hipDropGravity      = -3.0f;
+            friction            =  0.5f;
+            airControl          =  0.3f;
+
+            dashAcceleration    =  30.0f;
+            defaultMoveSpeed    =  5.0f;
+            runMoveSpeed        =  15.0f;
+                                   
+            turnSpeed           =  ToRadian(900.0f);
+        }
+
+        ImGui::TreePop();
+    }
+
+    // ジャンプ関連パラメータ
+    if (ImGui::TreeNode("Jump"))
+    {
+        ImGui::SliderFloat("jumpSpeed",  &jumpSpeed,       0.0f, 30.0f);   // ジャンプ速度
+        ImGui::SliderFloat("d_JumpTime", &defaultJumpTime, 0.0f, 1.0f);    // ジャンプし続けられる時間
+        ImGui::SliderInt("jumpLimit",    &jumpLimit,       1,    5);       // ジャンプ最大回数
+
+        if (ImGui::Button("Jump Reset"))
+        {
+            jumpSpeed       = 10.0f;
+            defaultJumpTime = 0.3f;
+            jumpLimit       = 1;
+        }
+
+        ImGui::TreePop();
+    }
+
+    // バウンス関連パラメータ
     if (ImGui::TreeNode("Bounce"))
     {
         ImGui::SliderFloat("d_BounceSpeedX", &defaultBounceSpeedX, 0.0f,  30.0f, "%.0f");   // 跳ねるときのX速度(※一回ヒップドロップしてから変更が反映される)
@@ -177,7 +226,6 @@ void Player::DrawDebug()
         ImGui::SliderFloat("bounceScaleX",   &bounceScaleX,        0.0f,  1.0f,  "%.2f");   // 跳ねるときのX速度に掛ける値(※0.75なら現在のspeedXを75%の値にしていく)
         ImGui::SliderFloat("bounceScaleY",   &bounceScaleY,        0.0f,  1.0f,  "%.2f");   // 跳ねるときのY速度に掛ける値(※0.75なら現在のspeedYを75%の値にしていく)
         ImGui::SliderInt("bounceLimit",      &bounceLimit,         0,     10);              // 跳ねる最大回数
-        ImGui::TreePop();
 
         if (ImGui::Button("Bounce Reset"))
         {
@@ -187,7 +235,10 @@ void Player::DrawDebug()
             bounceScaleY        = 0.75f;
             bounceLimit         = 3;
         }
+
+        ImGui::TreePop();
     }
+
 
     ImGui::End();
 }
@@ -209,6 +260,7 @@ const float Player::GetMoveVecY() const
     const GamePad& gamePad = Input::Instance().GetGamePad();
     return gamePad.GetAxisLY();
 }
+
 
 // 入力移動
 const bool Player::InputMove(const float& elapsedTime)
@@ -263,7 +315,9 @@ const bool Player::InputJump()
         if (jumpCount >= jumpLimit) return false;
 
         // Y速度にジャンプ速度を設定
-        Jump(jumpSpeed);
+        //Jump(jumpSpeed);
+        // ジャンプタイマーをセット
+        jumpTimer = defaultJumpTime;
 
         // ジャンプカウント加算
         ++jumpCount;
@@ -274,6 +328,7 @@ const bool Player::InputJump()
 
     return false;
 }
+
 
 void Player::UpdateDashCoolTimer(const float& elapsedTime)
 {
@@ -310,7 +365,7 @@ void Player::OnLanding()
 void Player::OnDash()
 {
     // ダッシュ時の速度を設定
-    velocity.x = saveMoveVecX * dashSpeedX;
+    velocity.x = saveMoveVecX * dashAcceleration;
 }
 
 
@@ -330,7 +385,7 @@ void Player::OnBounce()
     else
     {
         velocity.x    = saveMoveVec_n * bounceSpeedX;   // プレイヤーの向いている方向にバウンスX速度を代入
-        velocity.y    = bounceSpeedY;                    // バウンスY速度を代入
+        velocity.y    = bounceSpeedY;                   // バウンスY速度を代入
         bounceSpeedX *= bounceScaleX;   // バウンスX速度を減少
         bounceSpeedY *= bounceScaleY;   // バウンスY速度を減少
         ++bounceCount;                  // バウンスカウント加算
@@ -369,6 +424,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
         TransitionJumpState();
         return;
     }
+
     // 移動入力処理
     else if (InputMove(elapsedTime))
     {
@@ -380,7 +436,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
             TransitionDashState();
             return;
         }
-        // 走行速度の状態でダッシュキーが押され続けていれば走行ステートへ遷移
+        // 移動速度が走行速度と同じ（走行状態）でダッシュキーが押され続けていれば走行ステートへ遷移
         else if (moveSpeed == runMoveSpeed && gamePad.GetButton() & GamePad::BTN_Y)
         {
             TransitionRunState();
@@ -501,16 +557,11 @@ void Player::TransitionRunState()
 
     // 走行時の移動速度に設定
     moveSpeed = runMoveSpeed;
-
-    // 遷移遅延時間を設定
-    transitionIdleStateDelayTimer = transitionIdleStateDelayTime; 
 }
 
 // 走行ステート更新処理
 void Player::UpdateRunState(const float& elapsedTime)
 {
-    const GamePad& gamePad = Input::Instance().GetGamePad();
-
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
     if (InputJump())
     {   
@@ -519,7 +570,8 @@ void Player::UpdateRunState(const float& elapsedTime)
     }
     else if (InputMove(elapsedTime))
     {
-        // 移動入力がなければ歩行ステートへ
+        // 走行キー入力がなければ歩行ステートへ
+        const GamePad& gamePad = Input::Instance().GetGamePad();
         if (!(gamePad.GetButton() & GamePad::BTN_Y))
         {
             moveSpeed = defaultMoveSpeed; // 移動速度をリセット
@@ -542,7 +594,6 @@ void Player::TransitionJumpState()
 {
     state = State::Jump;
     
-
     //model->PlayAnimation(Anim_Jump, false);
 }
 
@@ -551,6 +602,20 @@ void Player::UpdateJumpState(const float& elapsedTime)
 {
     // 移動入力処理
     InputMove(elapsedTime);
+
+    // ジャンプタイマーがある場合（ジャンプ中）
+    if (jumpTimer > 0.0f)
+    {
+        // ジャンプボタンを押し続けると高く飛ぶ
+        const GamePad& gamePad = Input::Instance().GetGamePad();
+        if (gamePad.GetButton() & GamePad::BTN_B)
+        {
+            Jump(jumpSpeed);            // ジャンプ処理
+            jumpTimer -= elapsedTime;   // ジャンプタイマー減算
+        }
+        // ジャンプボタンを離したらジャンプ終了
+        else jumpTimer = 0.0f;
+    }
 
     // 下方向に押されていたらヒップドロップステートへ遷移
     if (GetMoveVecY() < 0.0f)
