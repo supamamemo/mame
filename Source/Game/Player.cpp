@@ -21,10 +21,6 @@ Player::Player()
 
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
 
-    
-    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.000.fbx", true);
-    //debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
-    //debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_air_ground_move.fbx", true);
 
     //geometricPrimitive = std::make_unique<GeometricPrimitive>(graphics.GetDevice());
     
@@ -144,51 +140,14 @@ void Player::Render(const float& elapsedTime)
 
     // BOUNDING_BOX
     {
-        using namespace DirectX;
-
-        // 0: Target model
-        // 1: Bounding box model
-        XMFLOAT3 dimensions[] = {
-#if 1
-            {
-                model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x,
-                model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y,
-                model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z,
-
-            },
-#else
-            { 100.0f, 150.0f, 60.0f },
-#endif
-            {
-                debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x,
-                debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y,
-                debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z,
-            },
-        };
-        XMFLOAT3 centers[] = {
-            {
-                model->skinned_meshes.boundingBox[0].x + (model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x) * 0.5f,
-                model->skinned_meshes.boundingBox[0].y + (model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y) * 0.5f,
-                model->skinned_meshes.boundingBox[0].z + (model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z) * 0.5f,
-            },
-            {
-                debugModel->skinned_meshes.boundingBox[0].x + (debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x) * 0.5f,
-                debugModel->skinned_meshes.boundingBox[0].y + (debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y) * 0.5f,
-                debugModel->skinned_meshes.boundingBox[0].z + (debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z) * 0.5f,
-            },
-        };
-
-        XMMATRIX S = XMMatrixScaling(dimensions[0].x / dimensions[1].x, dimensions[0].y / dimensions[1].y, dimensions[0].z / dimensions[1].z);
-        XMMATRIX T = XMMatrixTranslation(centers[0].x - centers[1].x, centers[0].y - centers[1].y, centers[0].z - centers[1].z);
-
-        XMFLOAT4X4 t; // World transform matrix of bounding box model
-        XMStoreFloat4x4(&t, S * T * XMLoadFloat4x4(&transform/*World transform matrix of target model*/));
+        DirectX::XMFLOAT4X4 t = SetDebugModelTransform(transform);
         debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
     }
 
     Shader* shader = graphics.GetShader();
     shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
 }
+
 
 
 void Player::DrawDebug()

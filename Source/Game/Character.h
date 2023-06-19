@@ -21,7 +21,7 @@
 class Character
 {
 public:
-    Character() {}
+    Character();
     virtual ~Character() {}
 
     virtual void DrawDebug();   // デバッグ描画
@@ -70,6 +70,8 @@ public:
     std::unique_ptr<Model> debugModel = nullptr;
 
     Transform* GetTransform() { return model->GetTransform(); }
+
+    DirectX::XMFLOAT4X4 SetDebugModelTransform(DirectX::XMFLOAT4X4 transform);
 
     // AABB                    aabb  = {};
     Box2D box2d{};
