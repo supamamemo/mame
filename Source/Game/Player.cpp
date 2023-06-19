@@ -11,7 +11,7 @@ Player::Player()
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
     
     
     //model = new Model(graphics.GetDevice(), "./resources/idletest.fbx", true);
@@ -77,12 +77,13 @@ void Player::Update(const float& elapsedTime)
     //debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
     //debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
-
     // ステート分岐処理
     switch (state)
     {
     case State::Idle:    UpdateIdleState(elapsedTime);    break;
-    case State::Move:    UpdateMoveState(elapsedTime);    break;
+    case State::Walk:    UpdateWalkState(elapsedTime);    break;
+    case State::Dash:    UpdateDashState(elapsedTime);    break;
+    case State::Run:     UpdateRunState(elapsedTime);     break;
     case State::Jump:    UpdateJumpState(elapsedTime);    break;
     case State::HipDrop: UpdateHipDropState(elapsedTime); break;
     }
@@ -92,6 +93,9 @@ void Player::Update(const float& elapsedTime)
 
     // 無敵時間更新
     UpdateInvincibleTimer(elapsedTime);
+
+    // ダッシュクールタイム更新
+    UpdateDashCoolTimer(elapsedTime);
 }
 
 
@@ -295,7 +299,10 @@ const bool Player::InputMove(const float& elapsedTime)
 
     // 移動ベクトルがゼロベクトルじゃなければ（更新されていたら）保存する
     // ※保存することでボタンを押し続けなくても自動的に旋回する
-    if (moveVecX != 0.0f) saveMoveVecX = moveVecX; 
+    if (moveVecX != 0.0f && moveVecX != saveMoveVecX)
+    {
+        saveMoveVecX = moveVecX;
+    }
 
     // 旋回処理
     Turn(elapsedTime, saveMoveVecX, turnSpeed);
@@ -330,6 +337,15 @@ const bool Player::InputJump()
     return false;
 }
 
+void Player::UpdateDashCoolTimer(const float& elapsedTime)
+{
+    // クールタイムがなければ飛ばす
+    if (dashCoolTimer <= 0.0f) return;
+
+    // クールタイム減少
+    dashCoolTimer -= elapsedTime;
+}
+
 
 // 着地したときに呼ばれる関数
 void Player::OnLanding()
@@ -337,8 +353,26 @@ void Player::OnLanding()
     // ジャンプ回数リセット
     jumpCount = 0;
 
+    // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
+    if (moveSpeed == runMoveSpeed)
+    {
+        TransitionRunState();
+        return;
+    }
     // 待機ステートへ遷移
-    TransitionIdleState();
+    else
+    {
+        TransitionIdleState();
+        return;
+    }
+}
+
+
+// ダッシュ時に呼ばれる関数
+void Player::OnDash()
+{
+    // ダッシュ時の速度を設定
+    velocity.x = saveMoveVecX * dashSpeedX;
 }
 
 
@@ -358,11 +392,10 @@ void Player::OnBounce()
     else
     {
         velocity.x    = saveMoveVec_n * bounceSpeedX;   // プレイヤーの向いている方向にバウンスX速度を代入
-        //velocity.y    = -velocity.y * bounceScaleY;   // 反転して減少させたY速度を代入
-        velocity.y    = bounceSpeedY;
-        bounceSpeedX *= bounceScaleX;                   // バウンスX速度を減少
-        bounceSpeedY *= bounceScaleY;                   // バウンスY速度を減少
-        ++bounceCount;                                  // バウンスカウント加算
+        velocity.y    = bounceSpeedY;                    // バウンスY速度を代入
+        bounceSpeedX *= bounceScaleX;   // バウンスX速度を減少
+        bounceSpeedY *= bounceScaleY;   // バウンスY速度を減少
+        ++bounceCount;                  // バウンスカウント加算
     }
 }
 
@@ -391,30 +424,178 @@ void Player::TransitionIdleState()
 // 待機ステート更新処理
 void Player::UpdateIdleState(const float& elapsedTime)
 {
-    // 移動入力処理(入力があれば移動ステートへ遷移)
-    if (InputMove(elapsedTime)) TransitionMoveState();
-
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
-    if (InputJump()) TransitionJumpState();
+    if (InputJump())
+    {
+        moveSpeed = defaultMoveSpeed; // 移動速度をリセット
+        TransitionJumpState();
+        return;
+    }
+    // 移動入力処理
+    else if (InputMove(elapsedTime))
+    {
+        // ダッシュキーが押された瞬間ならダッシュステートへ遷移
+        const GamePad& gamePad = Input::Instance().GetGamePad();
+        if (gamePad.GetButtonDown() & GamePad::BTN_Y)
+        {
+            moveSpeed = defaultMoveSpeed; // 移動速度をリセット
+            TransitionDashState();
+            return;
+        }
+        // 走行速度の状態でダッシュキーが押され続けていれば走行ステートへ遷移
+        else if (moveSpeed == runMoveSpeed && gamePad.GetButton() & GamePad::BTN_Y)
+        {
+            TransitionRunState();
+            return;
+        }
+        // 移動入力だけなら歩行ステートへ遷移
+        else
+        {
+            moveSpeed = defaultMoveSpeed; // 移動速度をリセット
+            TransitionWalkState();
+            return;
+        }
+    }
+
 }
 
 
-// 移動ステートへ遷移
-void Player::TransitionMoveState()
+// 歩行ステートへ遷移
+void Player::TransitionWalkState()
 {
-    state = State::Move;
+    state = State::Walk;
 
     //model->PlayAnimation(Anim_Running, true);
 }
 
-// 移動ステート更新処理
-void Player::UpdateMoveState(const float& elapsedTime)
+// 歩行ステート更新処理
+void Player::UpdateWalkState(const float& elapsedTime)
 {
-    // 移動入力処理(入力がなければ待機ステートへ遷移)
-    if (InputMove(elapsedTime) == false) TransitionIdleState();
+    // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
+    if (InputJump())
+    {
+        TransitionJumpState();
+        return;
+    }
+    else if (InputMove(elapsedTime))
+    {
+        // 移動とダッシュキーが入力されていたらダッシュステートへ
+        const GamePad& gamePad = Input::Instance().GetGamePad();
+        if (gamePad.GetButtonDown() & GamePad::BTN_Y)
+        {
+            TransitionDashState();
+            return;
+        }
+    }
+    // 移動入力がなければ待機ステートへ遷移
+    else
+    {
+        TransitionIdleState();
+        return;
+    }
+}
+
+
+// ダッシュステートへ遷移
+void Player::TransitionDashState()
+{
+    // ダッシュクールタイムが終わっていなければ遷移しない
+    if (dashCoolTimer > 0.0f) return;
+
+    state = State::Dash;
+
+    isDash = true;  // ダッシュさせる
+
+    dashCoolTimer = dashCoolTime;    // ダッシュクールタイムを設定
+}
+
+// ダッシュステート更新処理
+void Player::UpdateDashState(const float& elapsedTime)
+{
+    // 旋回処理（カメラ目線のままダッシュしないように更新する）
+    Turn(elapsedTime, saveMoveVecX, turnSpeed);
+
+    // ダッシュタイマーが残っていたらをダッシュを継続させる
+    if (dashTimer > 0.0f)
+    {
+        dashTimer -= elapsedTime;   // タイマー減算
+        return;
+    }
+    // ダッシュタイマーが終了していたらダッシュ終了
+    else 
+    {
+        dashTimer = defaultDashTime;    // ダッシュリセット
+        isDash    = false;              // ダッシュ終了
+    }
+
+    if (InputMove(elapsedTime))
+    {
+        // 移動とダッシュキーが入力され続けていたら走行ステートへ遷移
+        const GamePad& gamePad = Input::Instance().GetGamePad();
+        if (gamePad.GetButton() & GamePad::BTN_Y)
+        {
+            velocity.x = velocity.x * dashFinishScale; // 速度を減らす
+            TransitionRunState();
+            return;
+        }
+        // 移動だけ入力されていたら歩行ステートへ遷移
+        else
+        {
+            velocity.x = velocity.x * dashFinishScale; // 速度を減らす
+            TransitionWalkState();
+            return;
+        }
+    }
+    // 待機ステートへ遷移
+    else
+    {
+        velocity.x = velocity.x * dashFinishScale; // 速度を減らす
+        TransitionIdleState();
+        return;
+    }
+}
+
+
+// 走行ステートへ遷移
+void Player::TransitionRunState()
+{
+    state = State::Run;
+
+    // 走行時の移動速度に設定
+    moveSpeed = runMoveSpeed;
+
+    // 遷移遅延時間を設定
+    transitionIdleStateDelayTimer = transitionIdleStateDelayTime; 
+}
+
+// 走行ステート更新処理
+void Player::UpdateRunState(const float& elapsedTime)
+{
+    const GamePad& gamePad = Input::Instance().GetGamePad();
 
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
-    if (InputJump()) TransitionJumpState();
+    if (InputJump())
+    {   
+        TransitionJumpState();
+        return;
+    }
+    else if (InputMove(elapsedTime))
+    {
+        // 移動入力がなければ歩行ステートへ
+        if (!(gamePad.GetButton() & GamePad::BTN_Y))
+        {
+            moveSpeed = defaultMoveSpeed; // 移動速度をリセット
+            TransitionWalkState();
+            return;
+        }
+    }
+    // 移動入力がなければ待機ステートへ遷移
+    else
+    {
+        //moveSpeed = defaultMoveSpeed; // 移動速度をリセット(待機ステートでリセットするか決める)
+        TransitionIdleState();
+        return;
+    }
 }
 
 
@@ -434,7 +615,11 @@ void Player::UpdateJumpState(const float& elapsedTime)
     InputMove(elapsedTime);
 
     // 下方向に押されていたらヒップドロップステートへ遷移
-    if (GetMoveVecY() < 0.0f) TransitionHipDropState();
+    if (GetMoveVecY() < 0.0f)
+    {
+        TransitionHipDropState();
+        return;
+    }
 }
 
 
@@ -443,9 +628,9 @@ void Player::TransitionHipDropState()
 {
     state = State::HipDrop;
 
-    // プレイヤーの正規化移動ベクトルを求める(ステート遷移時に一回だけ計算する)
-    const float length    = sqrtf(saveMoveVecX * saveMoveVecX);
-    saveMoveVec_n         = saveMoveVecX / length;
+    // プレイヤーの正規化移動Xベクトルを求める(ステート遷移時に計算する)
+    const float length = sqrtf(saveMoveVecX * saveMoveVecX);
+    saveMoveVec_n      = saveMoveVecX / length;
 
     gravity  = hipDropGravity;  // 落下速度を上昇
     isBounce = true;            // バウンスさせる
@@ -454,7 +639,7 @@ void Player::TransitionHipDropState()
 // ヒップドロップステート更新処理
 void Player::UpdateHipDropState(const float& elapsedTime)
 {
-    // 旋回処理（カメラ目線のままバウンドしないように更新する）
+    // 旋回処理（カメラ目線のままバウンスしないように更新する）
     Turn(elapsedTime, saveMoveVecX, turnSpeed);
 
     // 一回バウンスしたら重力をもとに戻す
@@ -463,8 +648,8 @@ void Player::UpdateHipDropState(const float& elapsedTime)
     // バウンスが終了したら待機ステートへ遷移
     if (!isBounce)
     {
-        gravity = defaultGravity; // 重力を元に戻す
         TransitionIdleState();
+        return;
     }
 
 }

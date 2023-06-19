@@ -44,10 +44,11 @@ protected:
     void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
 
 protected:
-    virtual void OnLanding() {} // 着地したときに呼ばれる   
-    virtual void OnBounce()  {} // バウンスするときに呼ばれる
-    virtual void OnDamaged() {} // ダメージを受けたときに呼ばれる  
-    virtual void OnDead()    {} // 死亡したときに呼ばれる
+    virtual void OnLanding() {}                             // 着地したときに呼ばれる  
+    virtual void OnDash()    {}                             // ダッシュしているときに呼ばれる
+    virtual void OnBounce()  {}                             // バウンスするときに呼ばれる
+    virtual void OnDamaged() {}                             // ダメージを受けたときに呼ばれる  
+    virtual void OnDead()    {}                             // 死亡したときに呼ばれる
 
 private: 
     void UpdateVerticalVelocity(const float& elapsedFrame);     // 垂直速力更新処理
@@ -57,8 +58,8 @@ private:
     void UpdateHorizontalMove(const float& elapsedTime);        // 水平移動更新処理
 
 public:
-    std::unique_ptr<Model>  model = nullptr;
-    std::unique_ptr<Model> debugModel = nullptr;
+    std::unique_ptr<Model>  model      = nullptr;
+    std::unique_ptr<Model>  debugModel = nullptr;
 
     AABB                    aabb  = {};
 protected:
@@ -75,11 +76,11 @@ protected:
     float       friction        =   0.5f;           // 摩擦力
     float       airControl      =   0.3f;           // 空中制御
 
-    float       moveSpeed       =   5.0f;               // 移動速度(最大移動速度に代入される)
-    float       turnSpeed       =   ToRadian(900.0f);   // 旋回速度
-    //float       turnSpeed       =   ToRadian(720.0f);   // 旋回速度
-    float       jumpSpeed       =   20.0f;              // ジャンプ速度
-    float       maxMoveSpeed    =   5.0f;               // 最大移動速度
+    float       defaultMoveSpeed =  5.0f;               // 移動速度初期値
+    float       moveSpeed        =  defaultMoveSpeed;    // 移動速度(最大移動速度に代入される)
+    float       turnSpeed        =  ToRadian(900.0f);   // 旋回速度(180.f * 5)
+    float       jumpSpeed        =  20.0f;              // ジャンプ速度
+    float       maxMoveSpeed     =  5.0f;               // 最大移動速度
 
     float       slopeRate       =   1.0f;       // 傾斜率
                                     
@@ -90,5 +91,6 @@ protected:
                                    
     bool        isGround        =   false;      // 地面についているか
     bool        isBounce        =   false;      // バウンスさせるか
+    bool        isDash          =   false;      // ダッシュしているか
 };
 

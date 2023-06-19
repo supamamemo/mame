@@ -250,9 +250,13 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
         }
     }
 
-
+    // ダッシュしていたらダッシュ処理を行う
+    if (isDash)
+    {
+        OnDash();
+    }
     // X軸の速力を加速する
-    if (dist <= maxMoveSpeed)
+    else if (dist <= maxMoveSpeed)
     {
         // 移動ベクトルがゼロベクトルでないなら加速する
         const float moveVecDist = sqrtf(moveVecX * moveVecX);
