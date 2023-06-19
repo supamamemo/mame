@@ -90,7 +90,7 @@ private: // 変数関連
     float   saveMoveVec_n           =  0.0f;                // プレイヤーの単位移動ベクトルを保存する（バウンス時に使われる）
 
     int     bounceCount             =  0;                   // バウンス回数
-    int     bounceLimit             =  3;                   // 最大バウンス回数
+    int     bounceLimit             =  2;                   // 最大バウンス回数
 
     int     animationIndex          =  0;
 
