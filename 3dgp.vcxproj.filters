@@ -216,6 +216,9 @@
     <ClCompile Include="Source\Game\BossStateDerived.cpp">
       <Filter>mamelib\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\PlayerManager.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -385,6 +388,9 @@
     </ClInclude>
     <ClInclude Include="Source\Game\BossStateDerived.h">
       <Filter>mamelib\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\PlayerManager.h">
+      <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

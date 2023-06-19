@@ -50,5 +50,23 @@ namespace BOSS
 
         bool moveLeft = true;
     };
+
+    class RecoilState : public State
+    {
+    public:
+        RecoilState(Boss* _boss) :State(_boss, "recoil") {}
+        ~RecoilState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+
+    public:
+        void SetRecoil(float r) { recoil = r; }
+
+    private:
+        float recoil = 0;       // ”½“®‹——£
+        float recoilCount = 0;  // ¡‚Ç‚ê‚¾‚¯”½“®‚Å”ò‚ñ‚Å‚¢‚é‚©
+    };
 }
 

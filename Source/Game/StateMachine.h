@@ -35,11 +35,17 @@ public:
     // imgui用
     void DrawDebug();
 
+    // 仮
+    void SetMoveRight(bool r) { moveRight = r; }
+    bool GetMoveRight() { return moveRight; }
+
 private:
     // 現在のステート
     State* currentState = nullptr;
     // 各ステートを保持する配列
     std::vector<State*> statePool;
 
+    // 仮にここに置きます
+    bool moveRight = false;
 };
 

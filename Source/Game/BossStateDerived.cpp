@@ -97,8 +97,18 @@ namespace BOSS
         ownerPos.x += moveSpeed * elapsedTime;
 
         // 壁にぶつかったらIdleステートへ
-        if (ownerPos.x > 3.3f || ownerPos.x < -4.0f)
-            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+        if (ownerPos.x > 3.3f)
+        {
+            ownerPos.x = 3.3f;
+            owner->GetStateMachine()->SetMoveRight(false);
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Recoil));
+        }
+        if (ownerPos.x < -4.0f)
+        {
+            ownerPos.x = -4.0f;
+            owner->GetStateMachine()->SetMoveRight(true);
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Recoil));
+        }
 
         owner->GetTransform()->SetPosition(ownerPos);
     }
@@ -107,5 +117,51 @@ namespace BOSS
     void AttackState::Exit()
     {
 
+    }
+}
+
+// RecoilState
+namespace BOSS
+{
+    // 初期化
+    void RecoilState::Enter()
+    {
+        // アニメーションセット
+        owner->SetAnimation(static_cast<int>(BossAnimation::Recoil));
+
+        // materialColorを設定(紫)
+        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
+        
+        // 反動距離を設定
+        recoilCount = 0;
+        
+        SetRecoil(owner->GetStateMachine()->GetMoveRight() ? 1.0f : -1.0f);
+
+    }
+
+    // 更新
+    void RecoilState::Execute(float elapsedTime)
+    {
+        DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
+        float moveSpeed = owner->GetStateMachine()->GetMoveRight() ? 2.0f : -2.0f;
+        ownerPos.x += moveSpeed * elapsedTime;
+        recoilCount += moveSpeed * elapsedTime;
+
+        if (owner->GetStateMachine()->GetMoveRight())
+        {
+            if (recoilCount > recoil)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+        }
+        else
+        {
+            if (recoilCount < recoil)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+        }
+        
+        owner->GetTransform()->SetPosition(ownerPos);
+    }
+
+    // 終了
+    void RecoilState::Exit()
+    {
+        recoilCount = 0;
     }
 }
