@@ -225,6 +225,12 @@
     <ClCompile Include="Source\Game\Enemy.cpp">
       <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\EnemyCannon.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\EnemyManager.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -399,6 +405,12 @@
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Enemy.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\EnemyCannon.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\EnemyManager.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
   </ItemGroup>

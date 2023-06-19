@@ -1,10 +1,19 @@
 #include "StagePlains.h"
 
+#include "../EnemyManager.h"
+#include "../EnemyCannon.h"
+
 // コンストラクタ
 StagePlains::StagePlains()
 {
     // player生成
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+    // エネミー初期化
+    EnemyCannon* cannon = new EnemyCannon();
+    cannon->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f));
+    //cannon->GetTransform()->SetPosition(DirectX::XMFLOAT3(4.0f, 0.0f, 10.0f));
+    EnemyManager::Instance().Register(cannon);
 
     // 草ブロック生成
 #if 0
@@ -44,6 +53,9 @@ void StagePlains::Finalize()
     // player終了化
     PlayerManager::Instance().GetPlayer()->Finalize();
 
+    // エネミー終了化
+    EnemyManager::Instance().Clear();
+
     // 草ブロック終了化
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
     {
@@ -69,6 +81,9 @@ void StagePlains::Update(const float& elapsedTime)
 {
     // player更新
     PlayerManager::Instance().GetPlayer()->Update(elapsedTime);
+
+    // エネミー更新
+    EnemyManager::Instance().Update(elapsedTime);
 
     // 草ブロック更新
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
@@ -96,11 +111,14 @@ void StagePlains::Render(const float& elapsedTime)
     // player
     PlayerManager::Instance().GetPlayer()->Render(elapsedTime);
 
+    // エネミー描画
+    EnemyManager::Instance().Render(elapsedTime);
+
     // 草ブロック
-    for (std::unique_ptr<GrassBlock>& block : grassBlock)
-    {
-        block->Render(elapsedTime);
-    }
+    //for (std::unique_ptr<GrassBlock>& block : grassBlock)
+    //{
+    //    block->Render(elapsedTime);
+    //}
 }
 
 // debug用
@@ -109,6 +127,9 @@ void StagePlains::DrawDebug()
 #ifdef USE_IMGUI
     // player
     PlayerManager::Instance().GetPlayer()->DrawDebug();
+
+    // エネミー
+    EnemyManager::Instance().DrawDebug();
 
     // 草ブロック
     for (std::unique_ptr<GrassBlock>& block : grassBlock)

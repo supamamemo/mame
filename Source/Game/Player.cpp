@@ -99,7 +99,6 @@ void Player::End()
 void Player::Render(const float& elapsedTime)
 {
     Graphics& graphics = Graphics::Instance();
-    ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
     // TransformXV
     DirectX::XMFLOAT4X4 transform;
@@ -108,28 +107,28 @@ void Player::Render(const float& elapsedTime)
     // model•`‰æ
     if (model->skinned_meshes.animation_clips.size() > 0)
     {
-        int clip_index{ GetAnimation() };
-        int frame_index{ 0 };
-        static float animation_tick{ 0 };
+        int clipIndex{ GetAnimation() };
+        int frameIndex{ 0 };
+        static float animationTick{ 0 };
 
-        animation& animation{ model->skinned_meshes.animation_clips.at(clip_index) };
-        frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
-        if (frame_index > animation.sequence.size() - 1)
+        animation& animation{ model->skinned_meshes.animation_clips.at(clipIndex) };
+        frameIndex = static_cast<int>(animationTick * animation.sampling_rate);
+        if (frameIndex > animation.sequence.size() - 1)
         {
-            frame_index = 0;
-            animation_tick = 0;
+            frameIndex = 0;
+            animationTick = 0;
         }
         else
         {
-            animation_tick += elapsedTime;
+            animationTick += elapsedTime;
         }
-        animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
+        animation::keyframe& keyframe{ animation.sequence.at(frameIndex) };
 
-        model->skinned_meshes.render(immediate_context, transform, DirectX::XMFLOAT4(1, 1, 1, 1), &keyframe);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &keyframe);
     }
     else
     {
-        model->skinned_meshes.render(immediate_context, transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
     }
 
 #if _DEBUG

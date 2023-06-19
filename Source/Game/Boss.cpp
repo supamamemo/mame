@@ -16,7 +16,7 @@ Boss::Boss()
     //aabb = { {pos1.x,pos1.y,pos1.z},{0.5f,0.5f,0.5f} };
 
 
-    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
+    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
 
     // ステートマシーンをセット
     stateMachine.reset(new StateMachine);

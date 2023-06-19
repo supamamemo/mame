@@ -209,6 +209,8 @@
     <ClCompile Include="Source\Game\Collision.cpp" />
     <ClCompile Include="Source\Game\Common.cpp" />
     <ClCompile Include="Source\Game\Enemy.cpp" />
+    <ClCompile Include="Source\Game\EnemyCannon.cpp" />
+    <ClCompile Include="Source\Game\EnemyManager.cpp" />
     <ClCompile Include="Source\Game\GrassBlock.cpp" />
     <ClCompile Include="Source\Game\Mathf.cpp" />
     <ClCompile Include="Source\Game\Player.cpp" />
@@ -263,6 +265,8 @@
     <ClInclude Include="Source\Game\Collision.h" />
     <ClInclude Include="Source\Game\Common.h" />
     <ClInclude Include="Source\Game\Enemy.h" />
+    <ClInclude Include="Source\Game\EnemyCannon.h" />
+    <ClInclude Include="Source\Game\EnemyManager.h" />
     <ClInclude Include="Source\Game\GrassBlock.h" />
     <ClInclude Include="Source\Game\Mathf.h" />
     <ClInclude Include="Source\Game\OperatorXMFLOAT3.h" />
