@@ -40,8 +40,11 @@ void StageManager::Render(const float& elapsedTime)
 // stageƒNƒŠƒA
 void StageManager::Clear()
 {
-    currentStage->Finalize();
-    SafeDelete(currentStage);
+    if (currentStage != nullptr)
+    {
+        currentStage->Finalize();
+        SafeDelete(currentStage);
+    }
 }
 
 // stageØ‚è‘Ö‚¦

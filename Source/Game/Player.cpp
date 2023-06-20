@@ -21,6 +21,7 @@ Player::Player()
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/nico.fbx", true);
 
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
+        model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0620.fbx", true);
     }
 
     //geometricPrimitive = std::make_unique<GeometricPrimitive>(graphics.GetDevice());

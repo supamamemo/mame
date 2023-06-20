@@ -12,7 +12,6 @@
 extern float (* const ToRadian)(float); 
 
 
-// inlineŠÖ”
 // ƒ|ƒCƒ“ƒ^Á‹ŠÖ”
 template <typename T>
 inline void SafeDelete(T*& p)
