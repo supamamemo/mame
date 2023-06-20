@@ -59,7 +59,7 @@ void EnemyManager::Clear()
     {
         SafeDelete(enemy);
     }
-    enemies.clear();            // vector‚Ì‚·‚×‚Ä‚Ì—v‘f‚ğíœ‚·‚éŠÖ”
+    enemies.clear();
     enemies.shrink_to_fit();    // vector‚Ì—]•ª‚Èƒƒ‚ƒŠ‚ğ‰ğ•ú‚·‚éŠÖ”(C++11)
 }
 

@@ -26,14 +26,20 @@ public:
 
     virtual void DrawDebug();   // デバッグ描画
 
-    // アニメーション関連
-    void SetAnimation(int index) { animationIndex = index; }
-    int GetAnimation() { return animationIndex; }
+public: // 取得・設定関数関連
+
+    // アニメーション番号
+    int  GetAnimationIndex() const { return animationIndex; }
+    void SetAnimationIndex(const int& animationIndex) { this->animationIndex = animationIndex; }
+
+    // アニメーションデータ取得
+    std::vector<animation>* GetAnimation() const { return &model->skinned_meshes.animation_clips; };
 
     // これはテスト用で使ってるだけなので、、後でいらなくなるかも
     DirectX::XMFLOAT4 materialColor = { 1,1,1,1 };
     void SetMaterialColor(const DirectX::XMFLOAT4& color) { materialColor = color; }
 
+    // トランスフォーム取得
     Transform* GetTransform() { return model->GetTransform(); }
 
     DirectX::XMFLOAT4X4 SetDebugModelTransform(DirectX::XMFLOAT4X4 transform);
@@ -55,6 +61,16 @@ protected:
 protected:
     void UpdateVelocity(const float& elapsedTime);          // 速力処理更新処理
     void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
+
+protected: // アニメーション関数関連
+    // アニメーション再生設定
+    void PlayAnimation(const int& index, const bool& loop);
+
+    // アニメーション更新処理
+    void UpdateAnimation(const float& elapsedTime);
+
+    // アニメーションが再生中かどうか
+    bool IsPlayAnimation() const;
 
 protected:
     virtual void OnLanding() {}                             // 着地したときに呼ばれる  
@@ -80,6 +96,8 @@ public:
     std::unique_ptr<GeometricPrimitive> geometricPrimitive = nullptr;
 
 protected:
+    animation::keyframe keyframe = {};
+
     DirectX::XMFLOAT3 velocity  =   { 0,0,0 };      // 速度
                                   
     float       stepOffset      =   1.0f;           // 位置補正(Y位置がキャラクターの中心になるように調整)
@@ -112,6 +130,12 @@ protected:
     bool        isGround        =   false;          // 地面についているか
     bool        isBounce        =   false;          // バウンスさせるか
     bool        isDash          =   false;          // ダッシュしているか
+
+protected:
+    float       currentAnimationSeconds = 0.0f;     // 現在のアニメーション再生時間
+    int         currentAnimationIndex   = -1;	    // 現在のアニメーション番号
+    bool        animationLoopFlag       = false;    // アニメーションをループ再生するか
+    bool        animationEndFlag        = false;    // アニメーションが終了したか
 
 private:
     int         animationIndex  =   0;              // アニメーション番号

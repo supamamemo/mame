@@ -12,16 +12,11 @@ Player::Player()
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
-        model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
+        model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0620_1.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
-        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temp.fbx", true);    
-
-        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/plantune.fbx", true);
-        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/byoga/nico.fbx", true);
-
-        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/nopark.fbx", true);
-        model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0620.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temp.fbx", true);
     }
 
     //geometricPrimitive = std::make_unique<GeometricPrimitive>(graphics.GetDevice());
@@ -98,6 +93,9 @@ void Player::Update(const float& elapsedTime)
 
     // ダッシュクールタイム更新
     UpdateDashCoolTimer(elapsedTime);
+
+    // アニメーション更新
+    UpdateAnimation(elapsedTime);
 }
 
 
@@ -115,25 +113,8 @@ void Player::Render(const float& elapsedTime)
     DirectX::XMStoreFloat4x4(&transform, GetTransform()->CalcWorldMatrix(0.01f));
 
     // model描画
-    if (model->skinned_meshes.animation_clips.size() > 0)
+    if (&keyframe)
     {
-        int clipIndex{ GetAnimation() };
-        int frameIndex{ 0 };
-        static float animationTick{ 0 };
-
-        animation& animation{ model->skinned_meshes.animation_clips.at(clipIndex) };
-        frameIndex = static_cast<int>(animationTick * animation.sampling_rate);
-        if (frameIndex > animation.sequence.size() - 1)
-        {
-            frameIndex = 0;
-            animationTick = 0;
-        }
-        else
-        {
-            animationTick += elapsedTime;
-        }
-        animation::keyframe& keyframe{ animation.sequence.at(frameIndex) };
-
         model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &keyframe);
     }
     else
@@ -156,11 +137,9 @@ void Player::DrawDebug()
 {
     ImGui::Begin("player");
 
-    Character::DrawDebug();
+    ImGui::SliderInt("animationIndex", &currentAnimationIndex, 0, Anim_Max - 1);
 
     ImGui::DragFloat2("box2dLenght", &box2d.lenght.x);
-
-    ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
 
     // 速度関連パラメータ
     if (ImGui::TreeNode("Speed"))
@@ -405,7 +384,7 @@ void Player::TransitionIdleState()
     state = State::Idle;
 
     // 待機アニメーション再生
-    //model->PlayAnimation(Anim_Idle, true);
+    PlayAnimation(Anim_Idle, true);
 }
 
 // 待機ステート更新処理
@@ -451,7 +430,7 @@ void Player::TransitionWalkState()
 {
     state = State::Walk;
 
-    //model->PlayAnimation(Anim_Running, true);
+    PlayAnimation(Anim_Idle, true);
 }
 
 // 歩行ステート更新処理
@@ -493,6 +472,8 @@ void Player::TransitionDashState()
     isDash = true;  // ダッシュさせる
 
     dashCoolTimer = dashCoolTime;    // ダッシュクールタイムを設定
+
+    PlayAnimation(Anim_Dash, false);
 }
 
 // ダッシュステート更新処理
@@ -549,6 +530,8 @@ void Player::TransitionRunState()
 
     // 走行時の移動速度に設定
     moveSpeed = runMoveSpeed;
+
+    PlayAnimation(Anim_Run, true);
 }
 
 // 走行ステート更新処理
@@ -586,7 +569,7 @@ void Player::TransitionJumpState()
 {
     state = State::Jump;
     
-    //model->PlayAnimation(Anim_Jump, false);
+    PlayAnimation(Anim_Jump, false);
 }
 
 // ジャンプステート更新処理

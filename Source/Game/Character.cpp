@@ -115,6 +115,92 @@ void Character::UpdateInvincibleTimer(const float& elapsedTime)
 }
 
 
+void Character::PlayAnimation(const int& index, const bool& loop)
+{
+    currentAnimationIndex   = index;    // 再生するアニメーション番号を設定
+    currentAnimationSeconds = 0.0f;     // アニメーション再生時間リセット
+
+    animationLoopFlag       = loop;     // ループさせるか
+    animationEndFlag        = false;    // 再生終了フラグをリセット
+}
+
+
+void Character::UpdateAnimation(const float& elapsedTime)
+{
+    // 再生中でないなら処理しない
+    if (!IsPlayAnimation()) return;
+
+    // 最終フレーム処理(再生終了フラグが立っていれば再生終了)
+    if (animationEndFlag)
+    {
+        animationEndFlag      = false; // 終了フラグをリセット
+        currentAnimationIndex = -1;    // アニメーション番号リセット
+        return;
+    }
+
+    // アニメーション再生時間経過
+    currentAnimationSeconds += elapsedTime;
+
+    // 指定のアニメーションデータを取得
+    NO_CONST animation& animation = GetAnimation()->at(currentAnimationIndex);
+
+    // 現在のフレームを取得
+    const size_t frameIndex = static_cast<const size_t>(currentAnimationSeconds * animation.sampling_rate);
+
+    // 最後のフレームを取得
+    const size_t frameEnd = (animation.sequence.size() - 1); 
+
+    // アニメーションが再生しきっていた場合
+    if (frameIndex > frameEnd) 
+    {
+        // ループフラグが立っていれば再生時間を巻き戻す
+        if (animationLoopFlag)
+        {
+            currentAnimationSeconds = 0.0f;
+            return;
+        }
+        // ループなしなら再生終了フラグを立てる
+        else
+        {
+            animationEndFlag = true;
+            return;
+        }
+    }
+#if 0 // あきらめ
+    else if (!(&keyframe) || frameIndex < frameEnd)
+    {
+        // キーフレーム取得
+        const std::vector<animation::keyframe>& keyframes = animation.sequence;
+
+        const animation::keyframe* keyframeArr[2] = {
+            &keyframes.at(frameIndex),
+            &keyframes.at(frameIndex + 1)
+        };
+
+        // アニメーションを滑らかにさせる
+        model->skinned_meshes.blend_animations(keyframeArr, 0.01f, keyframe);
+    }
+#else
+    // アニメーションが再生しきっていなければ現在のフレームを保存
+    else
+    {
+        keyframe = animation.sequence.at(frameIndex);
+    }
+#endif
+}
+
+
+bool Character::IsPlayAnimation() const
+{
+    if (currentAnimationIndex < 0) return false;
+
+    const int animationIndexEnd = static_cast<int>(model->skinned_meshes.animation_clips.size());
+    if (currentAnimationIndex >= animationIndexEnd) return false;
+
+    return true;
+}
+
+
 // 垂直速力更新処理
 void Character::UpdateVerticalVelocity(const float& elapsedFrame)
 {

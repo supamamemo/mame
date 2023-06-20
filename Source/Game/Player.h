@@ -35,6 +35,7 @@ private: // 瞬間的に呼ばれる関数関連
     void OnDead()    override;  // 死亡したときに呼ばれる
 
 private: // ステート関数関連
+#if 1
     void TransitionIdleState();                         // 待機ステートへ遷移
     void UpdateIdleState(const float& elapsedTime);     // 待機ステート更新処理
      
@@ -52,7 +53,7 @@ private: // ステート関数関連
     
     void TransitionHipDropState();                      // ヒップドロップステートへ遷移   
     void UpdateHipDropState(const float& elapsedTime);  // ヒップドロップステート更新処理
-
+#endif
 private: // enum関連
     // ステート
     enum class State
@@ -63,6 +64,21 @@ private: // enum関連
         Run,     // 走行
         Jump,    // ジャンプ
         HipDrop, // ヒップドロップ
+    };
+
+    // アニメーション
+    enum Animation
+    {
+        Anim_Idle,      // 待機
+        Anim_Dash,      // ダッシュ（一時的な急加速）
+        Anim_Run,       // 走行
+        Anim_Break,     // ?
+        Anim_JumpInit,  // ジャンプ開始
+        Anim_Jump,      // ジャンプ
+        Anim_Fall,      // 落下
+        Anim_JumpEnd,   // 着地（ジャンプ終了）
+        Anim_HipDrop,   // ヒップドロップ
+        Anim_Max,       // アニメーション最大数
     };
 
 private: // 変数関連
@@ -92,7 +108,6 @@ private: // 変数関連
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  2;                   // 最大バウンス回数
 
-    int     animationIndex          =  0;
-
+    bool    isUpdatedAnimation      = false;                //　アニメーションが更新されたか
 };
 

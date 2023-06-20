@@ -10,7 +10,7 @@ namespace BOSS
     void IdleState::Enter()
     {
         // アニメーションセット
-        owner->SetAnimation(static_cast<int>(BossAnimation::Idle));
+        owner->SetAnimationIndex(static_cast<int>(BossAnimation::Idle));
 
         // materialColorを設定(セーフティー(青))
         owner->SetMaterialColor(DirectX::XMFLOAT4(0, 0, 1, 1));
@@ -44,7 +44,7 @@ namespace BOSS
     void FindState::Enter()
     {
         // アニメーションセット
-        owner->SetAnimation(static_cast<int>(BossAnimation::Find));
+        owner->SetAnimationIndex(static_cast<int>(BossAnimation::Find));
 
         // materialColor(見つけた(黄色))
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 1.0f));
@@ -76,7 +76,7 @@ namespace BOSS
     void AttackState::Enter()
     {
         // アニメーションセット
-        owner->SetAnimation(static_cast<int>(BossAnimation::Attack));
+        owner->SetAnimationIndex(static_cast<int>(BossAnimation::Attack));
 
         // materialColorを設定(アグレッシブ(赤))
         owner->SetMaterialColor(DirectX::XMFLOAT4(1, 0, 0, 1));
@@ -127,7 +127,7 @@ namespace BOSS
     void RecoilState::Enter()
     {
         // アニメーションセット
-        owner->SetAnimation(static_cast<int>(BossAnimation::Recoil));
+        owner->SetAnimationIndex(static_cast<int>(BossAnimation::Recoil));
 
         // materialColorを設定(紫)
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
