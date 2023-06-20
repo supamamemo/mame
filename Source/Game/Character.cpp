@@ -12,7 +12,7 @@ Character::Character()
 void Character::DrawDebug()
 {
     // ImGui描画
-    model->GetTransform()->DrawDebug();
+    GetTransform()->DrawDebug();
 
     ImGui::Begin("debugmodel");
     debugModel->GetTransform()->DrawDebug();
@@ -41,7 +41,7 @@ void Character::Turn(
     // 進行ベクトルがゼロベクトルの場合は処理する必要なし
     if (vx == 0.0f) return;
 
-    NO_CONST DirectX::XMFLOAT4 rotation = model->GetTransform()->GetRotation();
+    NO_CONST DirectX::XMFLOAT4 rotation = GetTransform()->GetRotation();
 
     turnSpeed *= elapsedTime;
 
@@ -71,7 +71,7 @@ void Character::Turn(
     // 左右判定を行うことによって左右回転を選択する
     rotation.y += (cross < 0.0f) ? -rot : rot;
     
-    model->GetTransform()->SetRotation(rotation);
+    GetTransform()->SetRotation(rotation);
 }
 
 
@@ -124,8 +124,8 @@ void Character::UpdateVerticalVelocity(const float& elapsedFrame)
 // 垂直移動更新処理
 void Character::UpdateVerticalMove(const float& elapsedTime)
 {
-    NO_CONST DirectX::XMFLOAT3 position = model->GetTransform()->GetPosition();
-    NO_CONST DirectX::XMFLOAT4 rotation = model->GetTransform()->GetRotation();
+    NO_CONST DirectX::XMFLOAT3 position = GetTransform()->GetPosition();
+    NO_CONST DirectX::XMFLOAT4 rotation = GetTransform()->GetRotation();
 
     // 垂直方向の移動量
     const float my = velocity.y * elapsedTime;
@@ -224,8 +224,8 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
         rotation.z = Mathf::Lerp(rotation.z, angleZ, 0.2f);
     }
 
-    model->GetTransform()->SetPosition(position);
-    model->GetTransform()->SetRotation(rotation);
+    GetTransform()->SetPosition(position);
+    GetTransform()->SetRotation(rotation);
 }
 
 

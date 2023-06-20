@@ -32,7 +32,7 @@ Player::Player()
     // 待機ステートへ遷移
     TransitionIdleState();
 
-    DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
     box2d = { {pos.x,pos.y},{0.5f,0.5f} };
     //aabb = { {pos.x,pos.y,pos.z},{0.5f,0.5f,0.5f} };
 }
@@ -114,7 +114,7 @@ void Player::Render(const float& elapsedTime)
 
     // Transform更新
     DirectX::XMFLOAT4X4 transform;
-    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
+    DirectX::XMStoreFloat4x4(&transform, GetTransform()->CalcWorldMatrix(0.01f));
 
     // model描画
     if (model->skinned_meshes.animation_clips.size() > 0)
