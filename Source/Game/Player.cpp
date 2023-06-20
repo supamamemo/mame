@@ -417,11 +417,9 @@ void Player::UpdateIdleState(const float& elapsedTime)
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
     if (InputJump())
     {
-        moveSpeed = defaultMoveSpeed; // 移動速度をリセット
         TransitionJumpState();
         return;
     }
-
     // 移動入力処理
     else if (InputMove(elapsedTime))
     {
