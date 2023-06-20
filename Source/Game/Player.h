@@ -77,7 +77,7 @@ private: // 変数関連
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  3;                   // 最大バウンス回数
 
-    int     animationIndex          =  0;
+    
 
 };
 

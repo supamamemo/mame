@@ -10,7 +10,8 @@ Player::Player()
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0620.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temp.fbx", true);
@@ -148,12 +149,14 @@ void Player::DrawDebug()
     
     Character::DrawDebug();
 
-    //ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
+    auto animationIndex = GetAnimation();
+    ImGui::SliderInt("animationIndex", &animationIndex, 0, 7);
+    SetAnimation(animationIndex);
 
     ImGui::DragFloat2("box2dLenght", &box2d.lenght.x);
 
 
-    ImGui::SliderInt("animationIndex", &animationIndex, 0, 2);
+    
 
     ImGui::SliderFloat("turnSpeed",      &turnSpeed,      0.0f, ToRadian(900.0f), "%.0f");  // 旋回速度
     ImGui::SliderFloat("hipDropGravity", &hipDropGravity, 0.0f, -10.0f,           "%.0f");  // ヒップドロップ時の重力

@@ -58,6 +58,7 @@ void EnemyManager::Clear()
     {
         delete enemy;
     }
+    enemies.clear();
 }
 
 // デバッグ
