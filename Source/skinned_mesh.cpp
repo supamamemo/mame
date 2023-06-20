@@ -363,6 +363,7 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
     }
 
     HRESULT hr = S_OK;
+#if 1
     D3D11_INPUT_ELEMENT_DESC input_element_desc[]
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT },
@@ -375,6 +376,29 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
     create_vs_from_cso(device, "./resources/Shader/skinned_mesh_vs.cso", vertex_shader.ReleaseAndGetAddressOf(),
         input_layout.ReleaseAndGetAddressOf(), input_element_desc, ARRAYSIZE(input_element_desc));
     create_ps_from_cso(device, "./resources/Shader/skinned_mesh_ps.cso", pixel_shader.ReleaseAndGetAddressOf());
+#else
+    // Instancing
+    {
+        // 頂点シェーダー
+        {
+            D3D11_INPUT_ELEMENT_DESC d3d_input_element_descs[] =
+            {
+                { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                { "WORLD", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+                { "WORLD", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+                { "WORLD", 2, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+                { "WORLD", 3, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+                { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+            };
+            create_vs_from_cso(device, "./resources/Shader/InstancingVS.cso", vertex_shader.ReleaseAndGetAddressOf(),
+                input_layout.ReleaseAndGetAddressOf(), d3d_input_element_descs, ARRAYSIZE(d3d_input_element_descs));
+        }
+        // ピクセルシェーダー
+        {
+            create_ps_from_cso(device, "./resources/Shader/InstancingPS.cso", pixel_shader.ReleaseAndGetAddressOf());
+        }
+    }
+#endif
 
 
     // dissolve

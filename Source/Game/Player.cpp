@@ -32,9 +32,7 @@ Player::Player()
     // 待機ステートへ遷移
     TransitionIdleState();
 
-    DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
-    box2d = { {pos.x,pos.y},{0.5f,0.5f} };
-    //aabb = { {pos.x,pos.y,pos.z},{0.5f,0.5f,0.5f} };
+    DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
 }
 
 
@@ -77,8 +75,8 @@ void Player::Update(const float& elapsedTime)
     model->GetTransform()->SetPosition(pos);
 #endif
 
-    //debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
-    //debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
+    debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
     // ステート分岐処理
     switch (state)
@@ -110,7 +108,6 @@ void Player::End()
 void Player::Render(const float& elapsedTime)
 {
     Graphics& graphics = Graphics::Instance();
-    ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
     // Transform更新
     DirectX::XMFLOAT4X4 transform;
@@ -119,38 +116,37 @@ void Player::Render(const float& elapsedTime)
     // model描画
     if (model->skinned_meshes.animation_clips.size() > 0)
     {
-        int clip_index{ GetAnimation() };
-        int frame_index{ 0 };
-        static float animation_tick{ 0 };
+        int clipIndex{ GetAnimation() };
+        int frameIndex{ 0 };
+        static float animationTick{ 0 };
 
-        animation& animation{ model->skinned_meshes.animation_clips.at(clip_index) };
-        frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
-        if (frame_index > animation.sequence.size() - 1)
+        animation& animation{ model->skinned_meshes.animation_clips.at(clipIndex) };
+        frameIndex = static_cast<int>(animationTick * animation.sampling_rate);
+        if (frameIndex > animation.sequence.size() - 1)
         {
-            frame_index = 0;
-            animation_tick = 0;
+            frameIndex = 0;
+            animationTick = 0;
         }
         else
         {
-            animation_tick += elapsedTime;
+            animationTick += elapsedTime;
         }
-        animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
+        animation::keyframe& keyframe{ animation.sequence.at(frameIndex) };
 
-        model->skinned_meshes.render(immediate_context, transform, DirectX::XMFLOAT4(1, 1, 1, 1), &keyframe);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &keyframe);
     }
     else
     {
-        model->skinned_meshes.render(immediate_context, transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
     }
 
+#if _DEBUG
     // BOUNDING_BOX
     {
         DirectX::XMFLOAT4X4 t = SetDebugModelTransform(transform);
         debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
     }
-
-    Shader* shader = graphics.GetShader();
-    shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
+#endif // _DEBUG
 }
 
 

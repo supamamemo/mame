@@ -121,12 +121,7 @@ void SceneTitle::Initialize()
             hr = graphics.GetDevice()->CreateBuffer(&buffer_desc, nullptr, scroll_constant_buffer.GetAddressOf());
             _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-            // dissolve_sprite
-            //{
-            //    buffer_desc.ByteWidth = sizeof(dissolve_constants);
-            //    hr = graphics.GetDevice()->CreateBuffer(&buffer_desc, nullptr, dissolve_constant_buffer.GetAddressOf());
-            //    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-            //}
+
         }
 
         D3D11_INPUT_ELEMENT_DESC input_element_desc[]
@@ -139,49 +134,22 @@ void SceneTitle::Initialize()
                 D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         };
 
-        //dummy_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/chip_win.png");
-        dummy_sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/ground.png");
-        
-        //dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/chip_win.png");
-        //dissolve_sprite = std::make_unique<sprite>(graphics.GetDevice(), L"./resources/ground.png");
 
-        // mask
-        //{
-        //    load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dissolve_animation.png",
-        //        mask_texture[0].GetAddressOf(), &mask_texture2dDesc);
-        //    load_texture_from_file(graphics.GetDevice(), L"./resources/mask/images.jpg",
-        //        mask_texture[1].GetAddressOf(), &mask_texture2dDesc);
-        //    load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dissolve_animation2.png",
-        //        mask_texture[2].GetAddressOf(), &mask_texture2dDesc);
-        //    load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dissolve_3.png",
-        //        mask_texture[3].GetAddressOf(), &mask_texture2dDesc);
-        //}
+        dummy_sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/ground.png");
+
+
 
         // dummy_sprite
-        if(dummy_sprite)
+        if (dummy_sprite)
         {
             // シェーダー関連
-            create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-            create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_ps.cso", dummy_sprite->GetPixelShaderAddress());
+            //create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
+            //create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_ps.cso", dummy_sprite->GetPixelShaderAddress());
 
             // UVScroll
             create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
             create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_ps.cso", dummy_sprite->GetPixelShaderAddress());
         }
-        // dissolve_sprite
-        //{
-        //    // シェーダー関連
-        //    create_vs_from_cso(graphics.GetDevice(), "sprite_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-        //    create_ps_from_cso(graphics.GetDevice(), "sprite_ps.cso", dissolve_sprite->GetPixelShaderAddress());
-
-        //    // mask
-        //    create_vs_from_cso(graphics.GetDevice(), "sprite_dissolve_vs.cso", dissolve_sprite->GetVertexShaderAddress(), dissolve_sprite->GetInputLayoutAddress(), input_element_desc, ARRAYSIZE(input_element_desc));
-        //    create_ps_from_cso(graphics.GetDevice(), "sprite_dissolve_ps.cso", dissolve_sprite->GetPixelShaderAddress());
-        //}
-
-        //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fire));
-        //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/fade.jpg");
-        //sprite_dissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/ground.png");
     }
 }
 
@@ -200,6 +168,8 @@ void SceneTitle::Begin()
 void SceneTitle::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+
+    spriteDissolve->Update();
 
     // ボタンを押したらfadeOut始まる
     if (gamePad.GetButtonDown() & GamePad::BTN_A)spriteDissolve->SetFade(true);
@@ -280,7 +250,6 @@ void SceneTitle::Render(const float& elapsedTime)
     Shader* shader = graphics.GetShader();
     shader->Begin(graphics.GetDeviceContext(), rc);
 
-    //shader->DrawDebug();
 
     // プレイヤー描画
     PlayerManager::Instance().GetPlayer()->Render(elapsedTime);

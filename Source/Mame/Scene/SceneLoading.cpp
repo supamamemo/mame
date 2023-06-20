@@ -44,6 +44,8 @@ void SceneLoading::Begin()
 // XVˆ—
 void SceneLoading::Update(const float& elapsedTime)
 {
+    spriteDissolve->Update();
+
     //spriteDissolve.fadeOut(elapsedTime);
     spriteDissolve->FadeIn(elapsedTime);
 

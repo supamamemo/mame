@@ -77,6 +77,10 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
             bgm[0]->Play(255);
         }
     }
+    if (GetAsyncKeyState('B') & 1)
+    {
+        se[1]->Play();
+    }
 
 #ifdef USE_IMGUI
 
@@ -317,7 +321,6 @@ void framework::render(float elapsed_time/*Elapsed seconds from last frame*/)
  
     // todo scenemanager
     Mame::Scene::SceneManager::Instance().Render(elapsed_time);
-
 
 
 #ifdef USE_IMGUI

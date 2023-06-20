@@ -1,4 +1,5 @@
 #include "StageManager.h"
+#include "../Common.h"
 
 // 更新処理
 void StageManager::Update(const float& elapsedTime)
@@ -10,7 +11,7 @@ void StageManager::Update(const float& elapsedTime)
 
         // 新しいstageを設定
         currentStage = nextStage;
-        nextStage = nullptr;
+        nextStage    = nullptr;
 
         // stage初期化処理
         currentStage->Initialize();
@@ -39,12 +40,8 @@ void StageManager::Render(const float& elapsedTime)
 // stageクリア
 void StageManager::Clear()
 {
-    if (currentStage != nullptr)
-    {
-        currentStage->Finalize();
-        delete currentStage;
-        currentStage = nullptr;
-    }
+    currentStage->Finalize();
+    SafeDelete(currentStage);
 }
 
 // stage切り替え

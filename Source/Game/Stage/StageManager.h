@@ -5,7 +5,7 @@
 class StageManager
 {
 private:
-    StageManager() {}
+    StageManager()  {}
     ~StageManager() {}
 
 public:
@@ -17,15 +17,14 @@ public:
 
     void Update(const float& elapsedTime);  // 更新処理
     void Render(const float& elapsedTime);  // 描画処理
-    void Clear();   // クリア
+    void Clear();                           // クリア
+  
+    void ChangeStage(Stage* stage);         // ステージ切り替え
 
-    // ステージ切り替え
-    void ChangeStage(Stage* stage);
-
-    Stage* GetCurrentStage()const { return currentStage; }
+    Stage* GetCurrentStage() const { return currentStage; }
 
 private:
     Stage* currentStage = nullptr;
-    Stage* nextStage = nullptr;
+    Stage* nextStage    = nullptr;
 };
 

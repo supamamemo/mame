@@ -59,6 +59,7 @@ int StateMachine::GetStateIndex()
 // debug—p
 void StateMachine::DrawDebug()
 {
+#if USE_IMGUI
     if (ImGui::TreeNode("stateMachine"))
     {
         ImGui::Text(currentState->GetName());
@@ -68,4 +69,5 @@ void StateMachine::DrawDebug()
 
         ImGui::TreePop();
     }
+#endif // USE_IMGUI
 }

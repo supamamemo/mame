@@ -44,8 +44,8 @@ void SceneGame::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
-    //StageManager::Instance().ChangeStage(new StagePlains);
-    StageManager::Instance().ChangeStage(new StageBoss);
+    StageManager::Instance().ChangeStage(new StagePlains);
+    //StageManager::Instance().ChangeStage(new StageBoss);
 }
 
 // I—¹‰»
@@ -63,6 +63,9 @@ void SceneGame::Begin()
 void SceneGame::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+
+    spriteDissolve->Update();
+
     if (spriteDissolve->IsFade())
     {
         switch (fadeType)

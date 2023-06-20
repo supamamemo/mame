@@ -64,7 +64,10 @@
     <FxCompile Include="Source\Shader\UVScroll_vs.hlsl">
       <Filter>mamelib\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="Source\Shader\wireframe.hlsl">
+    <FxCompile Include="Source\Shader\InstancingVS.hlsl">
+      <Filter>mamelib\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="Source\Shader\InstancingPS.hlsl">
       <Filter>mamelib\Shader</Filter>
     </FxCompile>
   </ItemGroup>
@@ -217,6 +220,15 @@
       <Filter>mamelib\Game</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\PlayerManager.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Enemy.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\EnemyCannon.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\EnemyManager.cpp">
       <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
   </ItemGroup>
@@ -392,6 +404,15 @@
     <ClInclude Include="Source\Game\PlayerManager.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Enemy.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\EnemyCannon.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\EnemyManager.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">
@@ -419,6 +440,9 @@
       <Filter>mamelib\Shader</Filter>
     </None>
     <None Include="Source\Shader\sprite.hlsli">
+      <Filter>mamelib\Shader</Filter>
+    </None>
+    <None Include="Source\Shader\Instancing.hlsli">
       <Filter>mamelib\Shader</Filter>
     </None>
   </ItemGroup>
