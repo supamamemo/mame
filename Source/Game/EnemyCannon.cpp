@@ -9,8 +9,8 @@ EnemyCannon::EnemyCannon()
 {
     Graphics& graphics = Graphics::Instance();
 
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/ketugoumap.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_cannon.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/touhu.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_cannon.fbx", true);
 
     debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
 
