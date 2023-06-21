@@ -28,6 +28,15 @@ public:
     void Render(float elapsedTime); // 描画処理
     void DrawDebug()override;
 
+    // アニメーション再生設定
+    void PlayAnimation(const int& index, const bool& loop);
+
+    // アニメーション更新処理
+    void UpdateAnimation(const float& elapsedTime);
+
+    // アニメーションが再生中かどうか
+    bool IsPlayAnimation() const;
+
 public:
     // Imgui名前被り防止のためのやつ //
     static int nameNum;

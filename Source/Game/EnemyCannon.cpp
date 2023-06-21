@@ -61,26 +61,9 @@ void EnemyCannon::Render(float elapsedTime)
     DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
 
     // model•`‰æ
-    if (model->skinned_meshes.animation_clips.size() > 0)
+    if (&keyframe)
     {
-        int clipIndex{ GetAnimationIndex() };
-        int frameIndex{ 0 };
-        static float animationTick{ 0 };
-
-        animation& animation{ model->skinned_meshes.animation_clips.at(clipIndex) };
-        frameIndex = static_cast<int>(animationTick * animation.sampling_rate);
-        if (frameIndex > animation.sequence.size() - 1)
-        {
-            frameIndex = 0;
-            animationTick = 0;
-        }
-        else
-        {
-            animationTick += elapsedTime;
-        }
-        animation::keyframe& keyframe{ animation.sequence.at(frameIndex) };
-
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &keyframe);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, &keyframe);
     }
     else
     {

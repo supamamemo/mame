@@ -99,37 +99,19 @@ void Boss::End()
 void Boss::Render(float elapsedTime)
 {
     Graphics& graphics = Graphics::Instance();
-    ID3D11DeviceContext* deviceContext = graphics.GetDeviceContext();
 
     // TransformXV
     DirectX::XMFLOAT4X4 transform;
     DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
 
     // model•`‰æ
-    if (model->skinned_meshes.animation_clips.size() > 0)
+    if (&keyframe)
     {
-        int clip_index{ 0 };
-        int frame_index{ 0 };
-        static float animation_tick{ 0 };
-
-        animation& animation{ model->skinned_meshes.animation_clips.at(clip_index) };
-        frame_index = static_cast<int>(animation_tick * animation.sampling_rate);
-        if (frame_index > animation.sequence.size() - 1)
-        {
-            frame_index = 0;
-            animation_tick = 0;
-        }
-        else
-        {
-            animation_tick += elapsedTime;
-        }
-        animation::keyframe& keyframe{ animation.sequence.at(frame_index) };
-
-        model->skinned_meshes.render(deviceContext, transform, materialColor, &keyframe);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, &keyframe);
     }
     else
     {
-        model->skinned_meshes.render(deviceContext, transform, materialColor, nullptr);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, nullptr);
     }
 
 #if _DEBUG
@@ -151,4 +133,19 @@ void Boss::DrawDebug()
     if (stateMachine)stateMachine.get()->DrawDebug();
 
     ImGui::End();
+}
+
+void Boss::PlayAnimation(const int& index, const bool& loop)
+{
+    Character::PlayAnimation(index, loop);
+}
+
+void Boss::UpdateAnimation(const float& elapsedTime)
+{
+    Character::UpdateAnimation(elapsedTime);
+}
+
+bool Boss::IsPlayAnimation() const
+{
+    return Character::IsPlayAnimation();
 }

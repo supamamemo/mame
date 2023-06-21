@@ -28,10 +28,6 @@ public:
 
 public: // 取得・設定関数関連
 
-    // アニメーション番号
-    int  GetAnimationIndex() const { return animationIndex; }
-    void SetAnimationIndex(const int& animationIndex) { this->animationIndex = animationIndex; }
-
     // アニメーションデータ取得
     std::vector<animation>* GetAnimation() const { return &model->skinned_meshes.animation_clips; };
 
@@ -137,8 +133,7 @@ protected:
     bool        animationLoopFlag       = false;    // アニメーションをループ再生するか
     bool        animationEndFlag        = false;    // アニメーションが終了したか
 
-private:
-    int         animationIndex  =   0;              // アニメーション番号
+
 
 };
 

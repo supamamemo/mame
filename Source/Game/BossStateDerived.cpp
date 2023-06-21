@@ -10,8 +10,8 @@ namespace BOSS
     void IdleState::Enter()
     {
         // アニメーションセット
-        owner->SetAnimationIndex(static_cast<int>(BossAnimation::Idle));
-
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Idle), true);
+                
         // materialColorを設定(セーフティー(青))
         owner->SetMaterialColor(DirectX::XMFLOAT4(0, 0, 1, 1));
 
@@ -22,6 +22,9 @@ namespace BOSS
     // 更新
     void IdleState::Execute(float elapsedTime)
     {
+        // アニメーション更新
+        owner->UpdateAnimation(elapsedTime);
+
         // タイマーが0になったらFindeステートへ
         if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
 
@@ -44,7 +47,7 @@ namespace BOSS
     void FindState::Enter()
     {
         // アニメーションセット
-        owner->SetAnimationIndex(static_cast<int>(BossAnimation::Find));
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Find), true);
 
         // materialColor(見つけた(黄色))
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 1.0f));
@@ -56,6 +59,9 @@ namespace BOSS
     // 更新
     void FindState::Execute(float elapsedTime)
     {
+        // アニメーション更新
+        owner->UpdateAnimation(elapsedTime);
+
         // タイマーが0になったらAttackStateへ
         if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
 
@@ -76,7 +82,7 @@ namespace BOSS
     void AttackState::Enter()
     {
         // アニメーションセット
-        owner->SetAnimationIndex(static_cast<int>(BossAnimation::Attack));
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Attack), true);
 
         // materialColorを設定(アグレッシブ(赤))
         owner->SetMaterialColor(DirectX::XMFLOAT4(1, 0, 0, 1));
@@ -92,6 +98,9 @@ namespace BOSS
     // 更新
     void AttackState::Execute(float elapsedTime)
     {
+        // アニメーション更新
+        owner->UpdateAnimation(elapsedTime);
+
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
 
         ownerPos.x += moveSpeed * elapsedTime;
@@ -127,7 +136,7 @@ namespace BOSS
     void RecoilState::Enter()
     {
         // アニメーションセット
-        owner->SetAnimationIndex(static_cast<int>(BossAnimation::Recoil));
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Recoil), true);
 
         // materialColorを設定(紫)
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
@@ -142,6 +151,9 @@ namespace BOSS
     // 更新
     void RecoilState::Execute(float elapsedTime)
     {
+        // アニメーション更新
+        owner->UpdateAnimation(elapsedTime);
+
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
         float moveSpeed = owner->GetStateMachine()->GetMoveRight() ? 2.0f : -2.0f;
         ownerPos.x += moveSpeed * elapsedTime;
