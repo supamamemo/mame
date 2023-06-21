@@ -1,6 +1,8 @@
 #pragma once
 #include "State.h"
 
+#include "CannonBallManager.h"
+
 // Ç∆ÇËÇ†Ç¶Ç∏Ç±Ç±Ç…íuÇ≠ÇØÇ«ÅABOSSÇåpè≥ÇµÇΩêÊÇ…ÇªÇÍÇºÇÍÇ…çÏÇÈÅB
 // BOSSTOUHU::STATE::Idle (ó·)
 
@@ -92,6 +94,7 @@ namespace CANNON
 {
     class IdleState : public State
     {
+    public:
         IdleState(Enemy* _cannon) : State(_cannon, "idle") {}
         ~IdleState() {}
 
@@ -102,11 +105,15 @@ namespace CANNON
 
     class AttackState : public State
     {
+    public:
         AttackState(Enemy* _cannon) :State(_cannon, "attack") {}
         ~AttackState() {};
 
         void Enter()override;
         void Execute(float elapsedTime)override;
         void Exit()override;
+
+    public:
+        CannonBallManager cannonBallManager;
     };
 }
