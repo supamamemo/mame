@@ -1,4 +1,5 @@
 #include "StageManager.h"
+#include "../Common.h"
 
 // XVˆ—
 void StageManager::Update(const float& elapsedTime)
@@ -10,7 +11,7 @@ void StageManager::Update(const float& elapsedTime)
 
         // V‚µ‚¢stage‚ðÝ’è
         currentStage = nextStage;
-        nextStage = nullptr;
+        nextStage    = nullptr;
 
         // stage‰Šú‰»ˆ—
         currentStage->Initialize();
@@ -42,8 +43,7 @@ void StageManager::Clear()
     if (currentStage != nullptr)
     {
         currentStage->Finalize();
-        delete currentStage;
-        currentStage = nullptr;
+        SafeDelete(currentStage);
     }
 }
 

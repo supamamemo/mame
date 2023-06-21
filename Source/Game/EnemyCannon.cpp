@@ -63,7 +63,7 @@ void EnemyCannon::Render(float elapsedTime)
     // model•`‰æ
     if (model->skinned_meshes.animation_clips.size() > 0)
     {
-        int clipIndex{ GetAnimation() };
+        int clipIndex{ GetAnimationIndex() };
         int frameIndex{ 0 };
         static float animationTick{ 0 };
 

@@ -3,7 +3,6 @@
 #include "../../Mame/Graphics/Graphics.h"
 
 
-
 // コンストラクタ
 StageBoss::StageBoss()
 {
@@ -12,7 +11,6 @@ StageBoss::StageBoss()
 
     // boss生成
     boss = std::make_unique<Boss>();
-
 
     // 仮
     for (std::unique_ptr<Boss>& temp : stage)
@@ -30,11 +28,11 @@ void StageBoss::Initialize()
     // boss初期化
     boss->Initialize();
 
-    stage[0]->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 0, 10));
-    stage[1]->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(4, 20, 10));
-    stage[1]->model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, DirectX::XMConvertToRadians(90), 0));
-    stage[2]->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(-5.5f, 20, 10));
-    stage[2]->model->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, DirectX::XMConvertToRadians(90), 0));
+    stage[0]->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 0, 10));
+    stage[1]->GetTransform()->SetPosition(DirectX::XMFLOAT3(4, 20, 10));
+    stage[1]->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
+    stage[2]->GetTransform()->SetPosition(DirectX::XMFLOAT3(-5.5f, 20, 10));
+    stage[2]->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
     
     //stage[1]->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 0));
 }

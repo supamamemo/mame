@@ -1,4 +1,5 @@
 #include "EnemyManager.h"
+#include "../Game/Common.h"
 
 // 更新処理
 void EnemyManager::Update(float elapsedTime)
@@ -23,7 +24,7 @@ void EnemyManager::Update(float elapsedTime)
         }
 
         // 敵の破棄処理
-        delete enemy;
+        SafeDelete(enemy);
     }
     // 破棄リストをクリア
     removes.clear();
@@ -56,9 +57,10 @@ void EnemyManager::Clear()
 {
     for (Enemy* enemy : enemies)
     {
-        delete enemy;
+        SafeDelete(enemy);
     }
     enemies.clear();
+    enemies.shrink_to_fit();    // vectorの余分なメモリを解放する関数(C++11)
 }
 
 // デバッグ

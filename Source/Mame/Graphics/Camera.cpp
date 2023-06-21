@@ -36,7 +36,7 @@
 
 void Camera::Initialize()
 {
-    transform.SetPosition({});
+    transform.SetPosition({ 0, 1.3f, -20 });
     transform.SetRotation({});
 }
 
