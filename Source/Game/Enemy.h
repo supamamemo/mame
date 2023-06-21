@@ -1,6 +1,8 @@
 #pragma once
 #include "Character.h"
 #include "StateMachine.h"
+#include "CannonBallManager.h"
+
 
 class Enemy : public Character
 {
@@ -17,21 +19,13 @@ public:
     virtual void DrawDebug() = 0;
 
 public:
-    // アニメーション再生設定
-    void PlayAnimation(const int& index, const bool& loop);
-
-    // アニメーション更新処理
-    void UpdateAnimation(const float& elapsedTime);
-
-    // アニメーションが再生中かどうか
-    bool IsPlayAnimation() const;
-
     // ステートマシン
     StateMachine* GetStateMachine()const { return stateMachine.get(); }
 
-    
+public:    
     std::unique_ptr<StateMachine> stateMachine{ nullptr };  // ステートマシン
 
+    CannonBallManager cannonBallManager = {};               // 大砲の弾マネージャー
 
 };
 

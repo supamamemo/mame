@@ -4,38 +4,31 @@
 #include <set>
 #include "CannonBall.h"
 
+
 class CannonBallManager
 {
 public:
     CannonBallManager();
     ~CannonBallManager();
 
-    // XVˆ—
-    void Update(float elapsedTime);
+    void Update(const float& elapsedTime);  // XVˆ—   
+    void Render(const float& elapsedTime);  // •`‰æˆ—
+    void DrawDebug();                       // ƒfƒoƒbƒO•`‰æˆ—
 
-    // •`‰æˆ—
-    void Render(float elapsedTime);
-
-    void DrawDebug();
+public:  
+    void Register(CannonBall* cannonBall);  // ’eŠÛ“o˜^
+    void Clear();                           // ’eŠÛ‘Síœ  
+    void Remove(CannonBall* cannonBall);    // ’eŠÛíœ
 
 public:
-    // ’eŠÛ“o˜^
-    void Register(CannonBall* cannonBall);
-
-    // ’eŠÛ‘Síœ
-    void Clear();
-
     // ’eŠÛ”æ“¾
-    int GetCannonBallCount() { return static_cast<int>(balls.size()); }
+    const int GetCannonBallCount() const { return static_cast<int>(cannonballs.size()); }
 
     // ’eŠÛæ“¾
-    CannonBall* GetCannonBall(int index) { return balls.at(index); }
-
-    // ’eŠÛíœ
-    void Remove(CannonBall* cannonBall);
+    CannonBall* GetCannonBall(const int& index) const { return cannonballs.at(index); }
 
 private:
-    std::vector<CannonBall*> balls;
-    std::set<CannonBall*> removes;
+    std::vector<CannonBall*> cannonballs    = {};
+    std::set<CannonBall*>    removes        = {};
 };
 

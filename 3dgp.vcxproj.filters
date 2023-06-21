@@ -234,7 +234,9 @@
     <ClCompile Include="Source\Game\CannonBall.cpp">
       <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\CannonBallManager.cpp" />
+    <ClCompile Include="Source\Game\CannonBallManager.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -420,7 +422,9 @@
     <ClInclude Include="Source\Game\CannonBall.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\CannonBallManager.h" />
+    <ClInclude Include="Source\Game\CannonBallManager.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">

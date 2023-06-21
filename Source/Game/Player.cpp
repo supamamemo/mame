@@ -113,9 +113,9 @@ void Player::Render(const float& elapsedTime)
     DirectX::XMStoreFloat4x4(&transform, GetTransform()->CalcWorldMatrix(0.01f));
 
     // model描画
-    if (&keyframe)
+    if (&model->keyframe)
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &keyframe);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &model->keyframe);
     }
     else
     {
@@ -137,9 +137,11 @@ void Player::DrawDebug()
 {
     ImGui::Begin("player");
 
-    ImGui::Checkbox("isDebugBlendAnimation", &isDebugBlendAnimation);
+    ImGui::Checkbox("isDebugBlendAnimation", &model->isDebugBlendAnimation);
 
-    ImGui::SliderInt("animationIndex", &currentAnimationIndex, 0, Anim_Max - 1);
+    NO_CONST int animationIndex = model->GetCurrentAnimationIndex();
+    ImGui::SliderInt("animationIndex", &animationIndex, 0, Anim_Max - 1);
+    model->SetCurrentAnimationIndex(animationIndex);
 
     ImGui::DragFloat2("box2dLenght", &box2d.lenght.x);
 
@@ -389,7 +391,7 @@ void Player::TransitionIdleState()
     state = State::Idle;
 
     // 着地アニメーションが再生されていなければ待機アニメーション再生
-    if (currentAnimationIndex != Anim_JumpEnd) PlayAnimation(Anim_Idle, true);
+    if (model->GetCurrentAnimationIndex() != Anim_JumpEnd) PlayAnimation(Anim_Idle, true);
 }
 
 // 待機ステート更新処理
@@ -540,7 +542,7 @@ void Player::TransitionRunState()
     moveSpeed = runMoveSpeed;
 
     // 着地アニメーションが再生されていなければ走行アニメーション再生
-    if (currentAnimationIndex != Anim_JumpEnd) PlayAnimation(Anim_Run, true);
+    if (model->GetCurrentAnimationIndex() != Anim_JumpEnd) PlayAnimation(Anim_Run, true);
 }
 
 // 走行ステート更新処理
