@@ -1,5 +1,6 @@
 #pragma once
 #include "Enemy.h"
+#include "CannonBallManager.h"
 
 // ‘å–C
 class EnemyCannon : public Enemy
@@ -26,5 +27,6 @@ public:
 private:
     std::string name;
 
+    CannonBallManager cannonBallManager;
 };
 

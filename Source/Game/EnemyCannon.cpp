@@ -2,6 +2,8 @@
 
 #include "../Mame/Graphics/Graphics.h"
 
+#include "BossStateDerived.h"
+
 int EnemyCannon::nameNum = 0;
 
 // コンストラクタ
@@ -15,9 +17,13 @@ EnemyCannon::EnemyCannon()
     debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
 
     // ステートマシンをセット
-    //stateMachine.reset(new StateMachine);
+    stateMachine.reset(new StateMachine);
 
-    
+    GetStateMachine()->RegisterState(new CANNON::IdleState(this));
+    GetStateMachine()->RegisterState(new CANNON::AttackState(this));
+
+    GetStateMachine()->SetState(static_cast<int>(CANNON::STATE::Idle));
+
 
     // imgui名前かぶりが起きないように...
     name = "EnemyCannon" + std::to_string(nameNum);
@@ -48,6 +54,9 @@ void EnemyCannon::Begin()
 // 更新処理
 void EnemyCannon::Update(float elapsedTime)
 {
+    // cannonBallManager
+    cannonBallManager.Update(elapsedTime);
+
     if (stateMachine)GetStateMachine()->Update(elapsedTime);
 }
 
@@ -82,6 +91,10 @@ void EnemyCannon::Render(float elapsedTime)
         debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.2f), nullptr);
     }
 #endif // _DEBUG
+
+    // cannonBallManager
+    cannonBallManager.Render(elapsedTime);
+
 }
 
 // debug用
@@ -93,6 +106,8 @@ void EnemyCannon::DrawDebug()
     model->GetTransform()->DrawDebug();
 
     if (stateMachine)GetStateMachine()->DrawDebug();
+
+    cannonBallManager.DrawDebug();
 
     ImGui::End();
 #endif // USE_IMGUI

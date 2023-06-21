@@ -5,6 +5,8 @@
 #include "../PlayerManager.h"
 #include "../Boss.h"
 
+#include "../CannonBall.h"
+
 class StageBoss : public Stage
 {
 public:
@@ -24,6 +26,5 @@ private:
 
     // ‰¼‚ÉbossƒNƒ‰ƒX‚Å•\Ž¦‚µ‚Ä‚é
     std::unique_ptr<Boss> stage[10];
-
 };
 

@@ -3,6 +3,8 @@
 
 #include "PlayerManager.h"
 
+#include "CannonBall.h"
+
 // IdleState
 namespace BOSS
 {
@@ -227,6 +229,10 @@ namespace CANNON
     void AttackState::Execute(float elapsedTime)
     {
         // todo:Ç±Ç±Ç≈íeä€Çê∂ê¨Ç∑ÇÈ
+        CannonBall* cannonBall = new CannonBall(owner->GetTransform()->GetPosition(), 1, &cannonBallManager);
+
+        // IdleStateÇ÷
+        owner->GetStateMachine()->ChangeState(static_cast<int>(CANNON::STATE::Idle));
     }
 
     // èIóπ

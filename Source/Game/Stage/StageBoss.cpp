@@ -2,7 +2,6 @@
 
 #include "../../Mame/Graphics/Graphics.h"
 
-
 // コンストラクタ
 StageBoss::StageBoss()
 {
@@ -85,6 +84,7 @@ void StageBoss::Update(const float& elapsedTime)
 
     // boss更新
     boss->Update(elapsedTime);
+
 }
 
 // Updateの後に呼ばれる処理
@@ -112,7 +112,6 @@ void StageBoss::Render(const float& elapsedTime)
     {
         temp->Render(elapsedTime);
     }
-
 }
 
 // debug用
@@ -129,7 +128,6 @@ void StageBoss::DrawDebug()
     {
         temp->DrawDebug();
     }
-
 
 #endif
 }
