@@ -3,20 +3,33 @@
 
 // Ç∆ÇËÇ†Ç¶Ç∏Ç±Ç±Ç…íuÇ≠ÇØÇ«ÅABOSSÇåpè≥ÇµÇΩêÊÇ…ÇªÇÍÇºÇÍÇ…çÏÇÈÅB
 // BOSSTOUHU::STATE::Idle (ó·)
-enum class STATE
+
+namespace BOSS
 {
-    Idle,
-    Find,
-    Attack,
-    Recoil,
-};
+    enum class STATE
+    {
+        Idle,
+        Find,
+        Attack,
+        Recoil,
+    };
+}
+
+namespace CANNON
+{
+    enum class STATE
+    {
+        Idle,
+        Attack,
+    };
+}
 
 namespace BOSS
 {
     class IdleState : public State
     {
     public:
-        IdleState(Boss* _boss) :State(_boss, "idle") {}
+        IdleState(Enemy* _boss) :State(_boss, "idle") {}
         ~IdleState() {}
 
         void Enter()override;
@@ -27,7 +40,7 @@ namespace BOSS
     class FindState : public State
     {
     public:
-        FindState(Boss* _boss) :State(_boss, "find") {}
+        FindState(Enemy* _boss) :State(_boss, "find") {}
         ~FindState() {}
 
         void Enter()override;
@@ -38,7 +51,7 @@ namespace BOSS
     class AttackState : public State
     {
     public:
-        AttackState(Boss* _boss) :State(_boss, "attack") {}
+        AttackState(Enemy* _boss) :State(_boss, "attack") {}
         ~AttackState() {}
 
         void Enter()override;
@@ -54,7 +67,7 @@ namespace BOSS
     class RecoilState : public State
     {
     public:
-        RecoilState(Boss* _boss) :State(_boss, "recoil") {}
+        RecoilState(Enemy* _boss) :State(_boss, "recoil") {}
         ~RecoilState() {}
 
         void Enter()override;
@@ -70,3 +83,30 @@ namespace BOSS
     };
 }
 
+namespace TOFU
+{
+    
+}
+
+namespace CANNON
+{
+    class IdleState : public State
+    {
+        IdleState(Enemy* _cannon) : State(_cannon, "idle") {}
+        ~IdleState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+    };
+
+    class AttackState : public State
+    {
+        AttackState(Enemy* _cannon) :State(_cannon, "attack") {}
+        ~AttackState() {};
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+    };
+}

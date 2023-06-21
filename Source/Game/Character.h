@@ -147,6 +147,5 @@ protected:
     int         currentAnimationIndex   = -1;	    // 現在のアニメーション番号
     bool        animationLoopFlag       = false;    // アニメーションをループ再生するか
     bool        animationEndFlag        = false;    // アニメーションが終了したか
-
 };
 

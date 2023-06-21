@@ -26,7 +26,7 @@ namespace BOSS
         owner->UpdateAnimation(elapsedTime);
 
         // タイマーが0になったらFindeステートへ
-        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
+        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Find));
 
         // 時間を減らす
         SubtractTime(elapsedTime);
@@ -63,7 +63,7 @@ namespace BOSS
         owner->UpdateAnimation(elapsedTime);
 
         // タイマーが0になったらAttackStateへ
-        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
+        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Attack));
 
         // 時間を減らす
         SubtractTime(elapsedTime);
@@ -110,13 +110,13 @@ namespace BOSS
         {
             ownerPos.x = 3.3f;
             owner->GetStateMachine()->SetMoveRight(false);
-            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Recoil));
+            owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));
         }
         if (ownerPos.x < -4.0f)
         {
             ownerPos.x = -4.0f;
             owner->GetStateMachine()->SetMoveRight(true);
-            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Recoil));
+            owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));
         }
 
         owner->GetTransform()->SetPosition(ownerPos);
@@ -161,11 +161,11 @@ namespace BOSS
 
         if (owner->GetStateMachine()->GetMoveRight())
         {
-            if (recoilCount > recoil)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+            if (recoilCount > recoil)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Idle));
         }
         else
         {
-            if (recoilCount < recoil)owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+            if (recoilCount < recoil)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Idle));
         }
         
         owner->GetTransform()->SetPosition(ownerPos);
@@ -175,5 +175,63 @@ namespace BOSS
     void RecoilState::Exit()
     {
         recoilCount = 0;
+    }
+}
+
+namespace TOFU
+{
+
+}
+
+// IdleState
+namespace CANNON
+{
+    // 初期化
+    void IdleState::Enter()
+    {
+        // materialColor(青)
+        owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+
+        // タイマーセット
+        SetTimer(3.0f);
+    }
+
+    // 更新
+    void IdleState::Execute(float elapsedTime)
+    {
+        // タイマーが0になったら
+        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(CANNON::STATE::Attack));
+
+        // タイマーを減らす
+        SubtractTime(elapsedTime);
+    }
+
+    // 終了
+    void IdleState::Exit()
+    {
+
+    }
+}
+
+// AttackState
+namespace CANNON
+{
+    // 初期化
+    void AttackState::Enter()
+    {
+        // materialColorを設定(攻撃(赤))
+        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+    }
+
+    // 更新   
+    void AttackState::Execute(float elapsedTime)
+    {
+        // todo:ここで弾丸を生成する
+    }
+
+    // 終了
+    void AttackState::Exit()
+    {
+
     }
 }
