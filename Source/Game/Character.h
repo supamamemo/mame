@@ -63,11 +63,12 @@ protected:
     void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
 
 protected: // アニメーション関数関連
-    // アニメーション再生設定(アニメーション番号・ループするかどうか・アニメーション再生速度・スムーズ切り替え時間（速度）)
+    // アニメーション再生設定
+    // (アニメーション番号・ループするかどうか・アニメーション再生速度・スムーズ切り替え時間（速度）)
     void PlayAnimation(
-        const int& index, 
-        const bool& loop, 
-        const float& speed = 1.0f, 
+        const int&   index, 
+        const bool&  loop, 
+        const float& speed        = 1.0f, 
         const float& blendSeconds = 1.0f
     );
 
