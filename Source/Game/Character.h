@@ -28,12 +28,16 @@ public:
 
 public: // 取得・設定関数関連
 
-    // アニメーションデータ取得
-    std::vector<animation>* GetAnimation() const { return &model->skinned_meshes.animation_clips; };
+    // デバッグ確認用
+    bool isDebugBlendAnimation = true;   // アニメーションブレンドオンオフ
 
     // これはテスト用で使ってるだけなので、、後でいらなくなるかも
     DirectX::XMFLOAT4 materialColor = { 1,1,1,1 };
     void SetMaterialColor(const DirectX::XMFLOAT4& color) { materialColor = color; }
+
+
+    // アニメーションデータ取得
+    std::vector<animation>* GetAnimation() const { return &model->skinned_meshes.animation_clips; };
 
     // トランスフォーム取得
     Transform* GetTransform() { return model->GetTransform(); }
@@ -59,8 +63,13 @@ protected:
     void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
 
 protected: // アニメーション関数関連
-    // アニメーション再生設定(アニメーション番号・ループするかどうか・アニメーション再生速度)
-    void PlayAnimation(const int& index, const bool& loop, const float& speed = 1.0f);
+    // アニメーション再生設定(アニメーション番号・ループするかどうか・アニメーション再生速度・スムーズ切り替え時間（速度）)
+    void PlayAnimation(
+        const int& index, 
+        const bool& loop, 
+        const float& speed = 1.0f, 
+        const float& blendSeconds = 1.0f
+    );
 
     // アニメーション再生速度設定（途中で再生速度を変えたいときなどに）
     void SetAnimationSpeed(const float& speed) { animationSpeed = speed; }
@@ -133,6 +142,8 @@ protected:
 protected:
     float       animationSpeed          = 1.0f;     // アニメーション再生速度
     float       currentAnimationSeconds = 0.0f;     // 現在のアニメーション再生時間
+    float       animationBlendTime      = 0.0f;
+    float       animationBlendSeconds   = 0.0f;
     int         currentAnimationIndex   = -1;	    // 現在のアニメーション番号
     bool        animationLoopFlag       = false;    // アニメーションをループ再生するか
     bool        animationEndFlag        = false;    // アニメーションが終了したか

@@ -115,7 +115,10 @@ void Character::UpdateInvincibleTimer(const float& elapsedTime)
 }
 
 
-void Character::PlayAnimation(const int& index, const bool& loop, const float& speed)
+void Character::PlayAnimation(
+    const int& index, const bool& loop, 
+    const float& speed, const float& blendSeconds
+)
 {
     currentAnimationIndex   = index;    // 再生するアニメーション番号を設定
     currentAnimationSeconds = 0.0f;     // アニメーション再生時間リセット
@@ -124,6 +127,9 @@ void Character::PlayAnimation(const int& index, const bool& loop, const float& s
     animationEndFlag        = false;    // 再生終了フラグをリセット
 
     animationSpeed          = speed;    // アニメーション再生速度
+
+    animationBlendTime      = 0.0f;
+    animationBlendSeconds   = blendSeconds;
 }
 
 void Character::UpdateAnimation(const float& elapsedTime)
@@ -152,6 +158,7 @@ void Character::UpdateAnimation(const float& elapsedTime)
     // 最後のフレームを取得
     const size_t frameEnd = (animation.sequence.size() - 1); 
 
+
     // アニメーションが再生しきっていた場合
     if (frameIndex > frameEnd) 
     {
@@ -168,27 +175,42 @@ void Character::UpdateAnimation(const float& elapsedTime)
             return;
         }
     }
-#if 0 // あきらめ
-    else if (!(&keyframe) || frameIndex < frameEnd)
+    // キーフレームが更新されていてアニメーションが再生しきっていないときはアニメーションをスムーズに切り替える
+    else if (isDebugBlendAnimation && (keyframe.nodes.size() > 0) && frameIndex < frameEnd)
     {
+        // ブレンド率の計算
+        NO_CONST float blendRate = 1.0f;
+        if (animationBlendTime < animationBlendSeconds)
+        {
+            animationBlendTime += elapsedTime;
+            if (animationBlendTime >= animationBlendSeconds)
+            {
+                animationBlendTime = animationBlendSeconds;
+            }
+            blendRate = animationBlendTime / animationBlendSeconds;
+            blendRate *= blendRate;
+        }
+
         // キーフレーム取得
         const std::vector<animation::keyframe>& keyframes = animation.sequence;
 
+        // 現在の前後のキーフレームを取得
         const animation::keyframe* keyframeArr[2] = {
-            &keyframes.at(frameIndex),
+            &keyframe,
             &keyframes.at(frameIndex + 1)
         };
 
-        // アニメーションを滑らかにさせる
-        model->skinned_meshes.blend_animations(keyframeArr, 0.01f, keyframe);
+        // アニメーションを滑らかに切り替える
+        model->skinned_meshes.blend_animations(keyframeArr, blendRate, keyframe);
+        
+        // アニメーショントランスフォーム更新
+        model->skinned_meshes.update_animation(keyframe);
     }
-#else
-    // アニメーションが再生しきっていなければ現在のフレームを保存
+    // キーフレームが一度も更新されていなくてアニメーションが再生しきっていなければ現在のフレームを保存
     else
     {
         keyframe = animation.sequence.at(frameIndex);
     }
-#endif
 }
 
 

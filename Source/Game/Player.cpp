@@ -137,6 +137,8 @@ void Player::DrawDebug()
 {
     ImGui::Begin("player");
 
+    ImGui::Checkbox("isDebugBlendAnimation", &isDebugBlendAnimation);
+
     ImGui::SliderInt("animationIndex", &currentAnimationIndex, 0, Anim_Max - 1);
 
     ImGui::DragFloat2("box2dLenght", &box2d.lenght.x);
@@ -319,6 +321,9 @@ void Player::OnLanding()
     // ジャンプ回数リセット
     jumpCount = 0;
 
+    // 着地アニメーション再生
+    PlayAnimation(Anim_JumpEnd, false, 0.5f);
+
     // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
     if (moveSpeed == runMoveSpeed)
     {
@@ -383,13 +388,16 @@ void Player::TransitionIdleState()
 {
     state = State::Idle;
 
-    // 待機アニメーション再生
-    PlayAnimation(Anim_Idle, true);
+    // 着地アニメーションが再生されていなければ待機アニメーション再生
+    if (currentAnimationIndex != Anim_JumpEnd) PlayAnimation(Anim_Idle, true);
 }
 
 // 待機ステート更新処理
 void Player::UpdateIdleState(const float& elapsedTime)
 {
+    // 着地アニメーションが終了したら待機アニメーション再生（ループしない着地アニメーションのときのみ処理が行われる）
+    if (!IsPlayAnimation()) PlayAnimation(Anim_Idle, true);
+
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
     if (InputJump())
     {
@@ -531,12 +539,16 @@ void Player::TransitionRunState()
     // 走行時の移動速度に設定
     moveSpeed = runMoveSpeed;
 
-    PlayAnimation(Anim_Run, true);
+    // 着地アニメーションが再生されていなければ走行アニメーション再生
+    if (currentAnimationIndex != Anim_JumpEnd) PlayAnimation(Anim_Run, true);
 }
 
 // 走行ステート更新処理
 void Player::UpdateRunState(const float& elapsedTime)
 {
+    // 着地アニメーションが終了したら走行アニメーション再生（ループしない着地アニメーションのときのみ処理が行われる）
+    if(!IsPlayAnimation()) PlayAnimation(Anim_Run, true);
+
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
     if (InputJump())
     {   
@@ -569,12 +581,16 @@ void Player::TransitionJumpState()
 {
     state = State::Jump;
     
-    PlayAnimation(Anim_Jump, false);
+    // ジャンプ開始アニメーション再生
+    PlayAnimation(Anim_JumpInit, false);
 }
 
 // ジャンプステート更新処理
 void Player::UpdateJumpState(const float& elapsedTime)
 {
+    // ジャンプ開始アニメーションが終了したらジャンプアニメーション再生
+    if (!IsPlayAnimation()) PlayAnimation(Anim_Jump, true);
+
     // 移動入力処理
     InputMove(elapsedTime);
 
@@ -592,7 +608,11 @@ void Player::UpdateJumpState(const float& elapsedTime)
             jumpTimer -= elapsedTime;   // ジャンプタイマー減算
         }
         // ジャンプボタンを離したらジャンプ終了
-        else jumpTimer = 0.0f;
+        else
+        {
+            jumpTimer = 0.0f;               // ジャンタイマーリセット
+            PlayAnimation(Anim_Fall, true); // 落下アニメーション再生
+        }
     }
 
     // 下方向に押されていたらヒップドロップステートへ遷移
@@ -615,6 +635,8 @@ void Player::TransitionHipDropState()
 
     gravity  = hipDropGravity;  // 落下速度を上昇
     isBounce = true;            // バウンスさせる
+
+    PlayAnimation(Anim_HipDrop, true);
 }
 
 // ヒップドロップステート更新処理
