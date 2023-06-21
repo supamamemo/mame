@@ -115,15 +115,16 @@ void Character::UpdateInvincibleTimer(const float& elapsedTime)
 }
 
 
-void Character::PlayAnimation(const int& index, const bool& loop)
+void Character::PlayAnimation(const int& index, const bool& loop, const float& speed)
 {
     currentAnimationIndex   = index;    // 再生するアニメーション番号を設定
     currentAnimationSeconds = 0.0f;     // アニメーション再生時間リセット
 
     animationLoopFlag       = loop;     // ループさせるか
     animationEndFlag        = false;    // 再生終了フラグをリセット
-}
 
+    animationSpeed          = speed;    // アニメーション再生速度
+}
 
 void Character::UpdateAnimation(const float& elapsedTime)
 {
@@ -145,7 +146,8 @@ void Character::UpdateAnimation(const float& elapsedTime)
     NO_CONST animation& animation = GetAnimation()->at(currentAnimationIndex);
 
     // 現在のフレームを取得
-    const size_t frameIndex = static_cast<const size_t>(currentAnimationSeconds * animation.sampling_rate);
+    const float  frameIndex_float = (currentAnimationSeconds * animation.sampling_rate) * animationSpeed; // 警告がじゃまなので一時的にfloat変数に格納
+    const size_t frameIndex       = static_cast<const size_t>(frameIndex_float);
 
     // 最後のフレームを取得
     const size_t frameEnd = (animation.sequence.size() - 1); 

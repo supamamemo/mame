@@ -59,8 +59,11 @@ protected:
     void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
 
 protected: // アニメーション関数関連
-    // アニメーション再生設定
-    void PlayAnimation(const int& index, const bool& loop);
+    // アニメーション再生設定(アニメーション番号・ループするかどうか・アニメーション再生速度)
+    void PlayAnimation(const int& index, const bool& loop, const float& speed = 1.0f);
+
+    // アニメーション再生速度設定（途中で再生速度を変えたいときなどに）
+    void SetAnimationSpeed(const float& speed) { animationSpeed = speed; }
 
     // アニメーション更新処理
     void UpdateAnimation(const float& elapsedTime);
@@ -128,11 +131,10 @@ protected:
     bool        isDash          =   false;          // ダッシュしているか
 
 protected:
+    float       animationSpeed          = 1.0f;     // アニメーション再生速度
     float       currentAnimationSeconds = 0.0f;     // 現在のアニメーション再生時間
     int         currentAnimationIndex   = -1;	    // 現在のアニメーション番号
     bool        animationLoopFlag       = false;    // アニメーションをループ再生するか
     bool        animationEndFlag        = false;    // アニメーションが終了したか
-
-
 };
 
