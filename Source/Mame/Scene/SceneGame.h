@@ -18,9 +18,14 @@ public:
 
     void DrawDebug()    override;
 
+
+
 public:
     // fadeOut/fadeIn用のディゾルブ
-    std::unique_ptr<SpriteDissolve> spriteDissolve;
+    std::unique_ptr<SpriteDissolve> spriteDissolve[2];
+
+    bool changeStage = false;
+    bool changeStage1 = false;
 
     // デバッグ用
     int fadeType = 1;

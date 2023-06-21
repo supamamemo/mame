@@ -12,7 +12,8 @@
 // コンストラクタ
 SceneGame::SceneGame()
 {
-    spriteDissolve = std::make_unique<SpriteDissolve>();    
+    spriteDissolve[0] = std::make_unique<SpriteDissolve>();
+    spriteDissolve[1] = std::make_unique<SpriteDissolve>(L"./resources/fade.jpg");
 }
 
 // 初期化
@@ -28,16 +29,22 @@ void SceneGame::Initialize()
     switch (fadeType)
     {
     case 0:
-        spriteDissolve->Initialize();
-        spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+        spriteDissolve[0]->Initialize();
+        spriteDissolve[0]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
         break;
     case 1:
-        spriteDissolve->Initialize();
-        spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+        spriteDissolve[0]->Initialize();
+        spriteDissolve[0]->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
         break;
     }
     
-    spriteDissolve->SetFade(true);
+    spriteDissolve[0]->SetFade(true);
+
+    //spriteDissolve[1]->Initialize();
+    //spriteDissolve[1]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+    //spriteDissolve[1]->SetFade(true);
+
+
 
     // カメラを固定値にしている
     // これまたどっかやる
@@ -57,6 +64,16 @@ void SceneGame::Finalize()
 // Updateの前に呼び出される
 void SceneGame::Begin()
 {
+    if (changeStage)
+    {
+        StageManager::Instance().ChangeStage(new StageBoss);
+        changeStage = false;
+    }
+    if (changeStage1)
+    {
+        StageManager::Instance().ChangeStage(new StagePlains);
+        changeStage1 = false;
+    }
 }
 
 // 更新処理
@@ -64,33 +81,45 @@ void SceneGame::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
-    spriteDissolve->Update();
+    spriteDissolve[0]->Update();
+    //spriteDissolve[1]->Update();
+    //if (spriteDissolve[1]->IsFade())
+    //{
+    //    spriteDissolve[1]->FadeIn(elapsedTime);
 
-    if (spriteDissolve->IsFade())
+    //    // fadeIn最後までできたら
+    //    if (spriteDissolve[1]->FadeInReady(0.0f))
+    //    {
+    //        // fadeIn判定をリセット
+    //        spriteDissolve[1]->SetFade(false);
+    //    }
+    //}
+
+    if (spriteDissolve[0]->IsFade())
     {
         switch (fadeType)
         {
         case 0:
-            spriteDissolve->FadeIn(elapsedTime);
+            spriteDissolve[0]->FadeIn(elapsedTime);
 
             // fadeIn最後までできたら
-            if (spriteDissolve->FadeInReady(0.0f))
+            if (spriteDissolve[0]->FadeInReady(0.0f))
             {
                 // fadeIn判定をリセット
-                spriteDissolve->SetFade(false);
+                spriteDissolve[0]->SetFade(false);
             }
             break;
         case 1:
-            spriteDissolve->FadeOut(elapsedTime);
+            spriteDissolve[0]->FadeOut(elapsedTime);
 
             // fadeOut最後までできたら
-            if (spriteDissolve->FadeOutReady(2.0f))
+            if (spriteDissolve[0]->FadeOutReady(2.0f))
             {
                 // シーンを切り替える
                 //Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 
                 // fadeOut判定をリセット
-                spriteDissolve->SetFade(false);
+                spriteDissolve[0]->SetFade(false);
             }
             break;
         }
@@ -135,7 +164,8 @@ void SceneGame::Render(const float& elapsedTime)
 
     // fadeOut
     {
-        spriteDissolve->Render();
+        spriteDissolve[0]->Render();
+        //spriteDissolve[1]->Render();
     }
 }
 
@@ -147,20 +177,32 @@ void SceneGame::DrawDebug()
 
     shader->DrawDebug();
 
-    spriteDissolve->DrawDebug();
+    spriteDissolve[0]->DrawDebug();
 
     ImGui::SliderInt("textureType", &textureType, 0, 11);
     if (ImGui::Button("fadeIn"))
     {
-        spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
-        spriteDissolve->SetFade(true);
+        spriteDissolve[0]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve[0]->SetFade(true);
         fadeType = 0;
     }
     if (ImGui::Button("fadeOut"))
     {
-        spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
-        spriteDissolve->SetFade(true);
+        spriteDissolve[0]->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve[0]->SetFade(true);
         fadeType = 1;
     }
+
+    //if (ImGui::Button("fade"))
+    //{
+    //    spriteDissolve[1]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
+    //    spriteDissolve[1]->SetFade(true);
+    //    fadeType = 0;
+    //}
+
+    if (ImGui::Button("stage"))
+        changeStage = true;
+    if (ImGui::Button("stageP"))
+        changeStage1 = true;
 
 }

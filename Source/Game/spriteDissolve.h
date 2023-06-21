@@ -14,6 +14,7 @@ class SpriteDissolve
 {
 public:
     SpriteDissolve();
+    SpriteDissolve(const wchar_t* filename);
     ~SpriteDissolve() {}
 
     void Initialize();

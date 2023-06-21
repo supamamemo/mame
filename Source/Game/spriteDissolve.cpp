@@ -12,6 +12,13 @@ SpriteDissolve::SpriteDissolve()
     dissolve_sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/load.png");
 }
 
+SpriteDissolve::SpriteDissolve(const wchar_t* filename)
+{
+    Graphics& graphics = Graphics::Instance();
+
+    dissolve_sprite = std::make_unique<Sprite>(graphics.GetDevice(), filename);
+}
+
 void SpriteDissolve::Initialize()
 {
     //spr_dissolve.dissolve_state = state;
