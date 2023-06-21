@@ -134,6 +134,5 @@ protected:
     bool        animationEndFlag        = false;    // アニメーションが終了したか
 
 
-
 };
 

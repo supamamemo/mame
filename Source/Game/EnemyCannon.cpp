@@ -14,6 +14,11 @@ EnemyCannon::EnemyCannon()
 
     debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
 
+    // ステートマシンをセット
+    //stateMachine.reset(new StateMachine);
+
+    
+
     // imgui名前かぶりが起きないように...
     name = "EnemyCannon" + std::to_string(nameNum);
     SetName(name.c_str());
@@ -43,7 +48,7 @@ void EnemyCannon::Begin()
 // 更新処理
 void EnemyCannon::Update(float elapsedTime)
 {
-
+    if (stateMachine)GetStateMachine()->Update(elapsedTime);
 }
 
 // Updateの後に呼ばれる
@@ -86,6 +91,8 @@ void EnemyCannon::DrawDebug()
     ImGui::Begin(GetName());
 
     model->GetTransform()->DrawDebug();
+
+    if (stateMachine)GetStateMachine()->DrawDebug();
 
     ImGui::End();
 #endif // USE_IMGUI

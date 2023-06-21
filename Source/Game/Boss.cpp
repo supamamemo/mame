@@ -21,12 +21,12 @@ Boss::Boss()
     // ステートマシーンをセット
     stateMachine.reset(new StateMachine);
 
-    stateMachine.get()->RegisterState(new BOSS::IdleState(this));
-    stateMachine.get()->RegisterState(new BOSS::FindState(this));
-    stateMachine.get()->RegisterState(new BOSS::AttackState(this));
-    stateMachine.get()->RegisterState(new BOSS::RecoilState(this));
+    GetStateMachine()->RegisterState(new BOSS::IdleState(this));
+    GetStateMachine()->RegisterState(new BOSS::FindState(this));
+    GetStateMachine()->RegisterState(new BOSS::AttackState(this));
+    GetStateMachine()->RegisterState(new BOSS::RecoilState(this));
 
-    stateMachine.get()->SetState(static_cast<int>(STATE::Idle));
+    GetStateMachine()->SetState(static_cast<int>(BOSS::STATE::Idle));
 
 
     // imgui名前かぶり起きないように...
@@ -86,8 +86,8 @@ void Boss::Update(float elapsedTime)
 
     debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
     debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
-
-    if (stateMachine)stateMachine.get()->Update(elapsedTime);
+    
+    if (stateMachine)GetStateMachine()->Update(elapsedTime);
 }
 
 // Updateの後に呼ばれる
@@ -130,22 +130,7 @@ void Boss::DrawDebug()
 
     Character::DrawDebug();
 
-    if (stateMachine)stateMachine.get()->DrawDebug();
+    if (stateMachine)GetStateMachine()->DrawDebug();
 
     ImGui::End();
-}
-
-void Boss::PlayAnimation(const int& index, const bool& loop)
-{
-    Character::PlayAnimation(index, loop);
-}
-
-void Boss::UpdateAnimation(const float& elapsedTime)
-{
-    Character::UpdateAnimation(elapsedTime);
-}
-
-bool Boss::IsPlayAnimation() const
-{
-    return Character::IsPlayAnimation();
 }

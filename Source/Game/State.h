@@ -1,11 +1,11 @@
 #pragma once
 
-class Boss;
+class Enemy;
 
 class State
 {
 public:
-    State(Boss* _boss, const char* name) :owner(_boss), name(name) {}
+    State(Enemy* _boss, const char* name) :owner(_boss), name(name) {}
     virtual ~State() {}
     // すべての継承先で実装させる必要があるため純粋仮想関数で実装
     // ステートに入った時のメソッド
@@ -26,7 +26,7 @@ private:
     float timer = 0;
 
 protected:
-    Boss* owner;
+    Enemy* owner;
     const char* name;
 };
 
