@@ -12,7 +12,8 @@ Player::Player()
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
-        model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0620_1.fbx", true);
+        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0620_1.fbx", true);
+        model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0622.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
@@ -136,6 +137,8 @@ void Player::Render(const float& elapsedTime)
 void Player::DrawDebug()
 {
     ImGui::Begin("player");
+
+    Character::DrawDebug();
 
     ImGui::Checkbox("isDebugBlendAnimation", &model->isDebugBlendAnimation);
 
@@ -273,8 +276,11 @@ const bool Player::InputMove(const float& elapsedTime)
         saveMoveVecX = moveVecX;
     }
 
-    // 旋回処理
-    Turn(elapsedTime, saveMoveVecX, turnSpeed);
+    // 旋回処理(急ブレーキアニメーション再生中は処理をしない)
+    if (model->GetCurrentAnimationIndex() != Anim_Break)
+    {
+        Turn(elapsedTime, saveMoveVecX, turnSpeed);
+    }
 
     // 進行ベクトルがゼロベクトルでない場合は入力された
     return (moveVecX != 0.0f);
@@ -323,9 +329,6 @@ void Player::OnLanding()
     // ジャンプ回数リセット
     jumpCount = 0;
 
-    // 着地アニメーション再生
-    PlayAnimation(Anim_JumpEnd, false, 0.5f);
-
     // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
     if (moveSpeed == runMoveSpeed)
     {
@@ -335,6 +338,9 @@ void Player::OnLanding()
     // 待機ステートへ遷移
     else
     {
+        // 着地アニメーション再生
+        PlayAnimation(Anim_JumpEnd, false, 0.5f, 0.5f);
+
         TransitionIdleState();
         return;
     }
@@ -413,7 +419,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
         const GamePad& gamePad = Input::Instance().GetGamePad();
         if (gamePad.GetButtonDown() & GamePad::BTN_X)
         {
-            moveSpeed = defaultMoveSpeed; // 移動速度をリセット
+            moveSpeed       = defaultMoveSpeed; // 移動速度をリセット
             TransitionDashState();
             return;
         }
@@ -426,7 +432,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
         // 移動入力だけなら歩行ステートへ遷移
         else
         {
-            moveSpeed = defaultMoveSpeed; // 移動速度をリセット
+            moveSpeed       = defaultMoveSpeed; // 移動速度をリセット
             TransitionWalkState();
             return;
         }
@@ -440,7 +446,7 @@ void Player::TransitionWalkState()
 {
     state = State::Walk;
 
-    PlayAnimation(Anim_Idle, true);
+    PlayAnimation(Anim_Walk, true);
 }
 
 // 歩行ステート更新処理
@@ -483,7 +489,7 @@ void Player::TransitionDashState()
 
     dashCoolTimer = dashCoolTime;    // ダッシュクールタイムを設定
 
-    PlayAnimation(Anim_Dash, false);
+    PlayAnimation(Anim_Dash, false, 1.0f, 0.0f);
 }
 
 // ダッシュステート更新処理
@@ -538,40 +544,68 @@ void Player::TransitionRunState()
 {
     state = State::Run;
 
-    // 走行時の移動速度に設定
-    moveSpeed = runMoveSpeed;
+    // 走行時の速度パラメータを設定
+    moveSpeed       = runMoveSpeed;
+    acceleration    = runAcceleration;
+    friction        = runFriction;
 
-    // 着地アニメーションが再生されていなければ走行アニメーション再生
-    if (model->GetCurrentAnimationIndex() != Anim_JumpEnd) PlayAnimation(Anim_Run, true);
+    // 走行用保存移動ベクトルに移動ベクトルを保存
+    if (runMoveVecX == 0.0f) runMoveVecX = moveVecX;
+
+    // 走行アニメーション再生
+    PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
 }
 
 // 走行ステート更新処理
 void Player::UpdateRunState(const float& elapsedTime)
 {
-    // 着地アニメーションが終了したら走行アニメーション再生（ループしない着地アニメーションのときのみ処理が行われる）
-    if(!IsPlayAnimation()) PlayAnimation(Anim_Run, true);
+    // ブレーキアニメーションが終わったら走行アニメーションに戻る
+    if(!IsPlayAnimation()) PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
 
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
     if (InputJump())
     {   
+        acceleration = defaultAcceleration;
+        friction     = defaultFriction;
+
+        runMoveVecX = moveVecX; // 移動ベクトル保存を更新しておく（ダッシュジャンプして着地する寸前に方向転換するとカメラ目線でラジオ体操するため）
+
         TransitionJumpState();
         return;
     }
     else if (InputMove(elapsedTime))
     {
+        // 速度が最高速度に達していて、
+        // 走行用保存移動ベクトルと現在の移動ベクトルの符号が違う場合（方向転換）はブレーキアニメーションを再生
+        const bool isPlayBreakAnimation = {
+            (velocity.x >=  runMoveSpeed * 0.8f && runMoveVecX > 0.0f && moveVecX < 0.0f) ||
+            (velocity.x <= -runMoveSpeed * 0.8f && runMoveVecX < 0.0f && moveVecX > 0.0f)
+        };
+        if (isPlayBreakAnimation)
+        {
+            PlayAnimation(Anim_Break, false, 1.75f, 0.5f);
+        }
+
         // 走行キー入力がなければ歩行ステートへ
         const GamePad& gamePad = Input::Instance().GetGamePad();
         if (!(gamePad.GetButton() & GamePad::BTN_X))
         {
-            moveSpeed = defaultMoveSpeed; // 移動速度をリセット
+            // 速度パラメータをリセット
+            moveSpeed    = defaultMoveSpeed;
+            acceleration = defaultAcceleration;
+            friction     = defaultFriction;
             TransitionWalkState();
             return;
         }
+
+        runMoveVecX = moveVecX; // 移動ベクトル保存更新
     }
     // 移動入力がなければ待機ステートへ遷移
     else
     {
         //moveSpeed = defaultMoveSpeed; // 移動速度をリセット(待機ステートでリセットするか決める)
+        acceleration = defaultAcceleration;
+        friction     = defaultFriction;
         TransitionIdleState();
         return;
     }
@@ -584,14 +618,17 @@ void Player::TransitionJumpState()
     state = State::Jump;
     
     // ジャンプ開始アニメーション再生
-    PlayAnimation(Anim_JumpInit, false);
+    PlayAnimation(Anim_JumpInit, false, 1.0f, 0.0f);
 }
 
 // ジャンプステート更新処理
 void Player::UpdateJumpState(const float& elapsedTime)
 {
     // ジャンプ開始アニメーションが終了したらジャンプアニメーション再生
-    if (!IsPlayAnimation()) PlayAnimation(Anim_Jump, true);
+    if (!IsPlayAnimation()) PlayAnimation(Anim_Jump, true, 1.25f);
+
+    // 落下し始めたら落下アニメーション再生
+    if (velocity.y < 0.0f) PlayAnimation(Anim_Fall, true);
 
     // 移動入力処理
     InputMove(elapsedTime);
@@ -612,8 +649,7 @@ void Player::UpdateJumpState(const float& elapsedTime)
         // ジャンプボタンを離したらジャンプ終了
         else
         {
-            jumpTimer = 0.0f;               // ジャンタイマーリセット
-            PlayAnimation(Anim_Fall, true); // 落下アニメーション再生
+            jumpTimer = 0.0f;           // ジャンタイマーリセット
         }
     }
 

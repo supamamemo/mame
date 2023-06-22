@@ -106,11 +106,13 @@ protected:
     float       moveVecX        =   0.0f;           // 移動ベクトルX
     float       saveMoveVecX    =   1.0f;           // 移動ベクトルを保存するベクトルX（最初は右を向かせておく）
 
-    float       acceleration    =   1.0f;           // 加速力
-    float       defaultGravity  =  -1.0f;           // 重力初期値
-    float       gravity         =   defaultGravity; // 重力
-    float       friction        =   0.5f;           // 摩擦力
-    float       airControl      =   0.3f;           // 空中制御
+    float       defaultAcceleration =   1.0f;                   // 加速力の初期値
+    float       acceleration        =   defaultAcceleration;    // 加速力
+    float       defaultGravity      =  -1.0f;                   // 重力初期値
+    float       gravity             =   defaultGravity;         // 重力
+    float       defaultFriction     =   0.5f;                   // 摩擦力の初期値
+    float       friction            =   0.5f;                   // 摩擦力
+    float       airControl          =   0.3f;                   // 空中制御
 
     float       defaultMoveSpeed =  5.0f;               // 移動速度初期値
     float       moveSpeed        =  defaultMoveSpeed;   // 移動速度(最大移動速度に代入される)

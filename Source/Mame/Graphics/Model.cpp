@@ -1,5 +1,4 @@
 #include "Model.h"
-#include "../../Game/Common.h"
 
 Model::Model(ID3D11Device* device, const char* fbx_filename, bool triangulate, float sampling_rate)
     :skinned_meshes(device, fbx_filename, triangulate, sampling_rate)
@@ -14,9 +13,11 @@ Model::Model(ID3D11Device* device, const char* fbx_filename, std::vector<std::st
 
 void Model::PlayAnimation(
     const int& index, const bool& loop,
-    const float& speed, const float& blendSeconds
-)
+    const float& speed, const float& blendSeconds)
 {
+    // 設定用のアニメーション番号が現在のアニメーション番号と同じ場合はreturn
+    if (currentAnimationIndex == index) return;
+
     currentAnimationIndex = index;    // 再生するアニメーション番号を設定
     currentAnimationSeconds = 0.0f;     // アニメーション再生時間リセット
 
@@ -28,6 +29,22 @@ void Model::PlayAnimation(
     animationBlendTime = 0.0f;
     animationBlendSeconds = blendSeconds;
 }
+
+
+void Model::UpdateBlendRate(NO_CONST float& blendRate, const float& elapsedTime)
+{
+    if (animationBlendTime < animationBlendSeconds)
+    {
+        animationBlendTime += elapsedTime;
+        if (animationBlendTime >= animationBlendSeconds)
+        {
+            animationBlendTime = animationBlendSeconds;
+        }
+        blendRate = animationBlendTime / animationBlendSeconds;
+        blendRate *= blendRate;
+    }
+}
+
 
 void Model::UpdateAnimation(const float& elapsedTime)
 {
@@ -77,16 +94,7 @@ void Model::UpdateAnimation(const float& elapsedTime)
     {
         // ブレンド率の計算
         NO_CONST float blendRate = 1.0f;
-        if (animationBlendTime < animationBlendSeconds)
-        {
-            animationBlendTime += elapsedTime;
-            if (animationBlendTime >= animationBlendSeconds)
-            {
-                animationBlendTime = animationBlendSeconds;
-            }
-            blendRate = animationBlendTime / animationBlendSeconds;
-            blendRate *= blendRate;
-        }
+        UpdateBlendRate(blendRate, elapsedTime);
 
         // キーフレーム取得
         const std::vector<animation::keyframe>& keyframes = animation.sequence;

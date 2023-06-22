@@ -72,12 +72,13 @@ private: // enum関連
         Anim_Idle,      // 待機
         Anim_Dash,      // ダッシュ（一時的な急加速）
         Anim_Run,       // 走行
-        Anim_Break,     // ?
+        Anim_Break,     // ブレーキ
         Anim_JumpInit,  // ジャンプ開始
         Anim_Jump,      // ジャンプ
         Anim_Fall,      // 落下
         Anim_JumpEnd,   // 着地（ジャンプ終了）
         Anim_HipDrop,   // ヒップドロップ
+        Anim_Walk,      // 歩行
         Anim_Max,       // アニメーション最大数
     };
 
@@ -96,6 +97,9 @@ private: // 変数関連
     float   dashCoolTimer           =  dashCoolTime;        // ダッシュを連発されないようクールタイムを設定
 
     float   runMoveSpeed            =  15.0f;               // 走行時の移動速度(moveSpeedに代入する)
+    float   runAcceleration         =  0.5f;                // 走行時の加速力
+    float   runFriction             =  0.1f;                // 走行時の摩擦力
+    float   runMoveVecX             =  0.0f;
 
     float   defaultBounceSpeedX     =  15.0f;               // バウンスX速度初期値
     float   defaultBounceSpeedY     =  10.0f;               // バウンスY速度初期値
