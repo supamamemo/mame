@@ -1,4 +1,5 @@
 #include "CannonBallManager.h"
+#include "Common.h"
 
 // ÉRÉìÉXÉgÉâÉNÉ^
 CannonBallManager::CannonBallManager()
@@ -12,31 +13,31 @@ CannonBallManager::~CannonBallManager()
 }
 
 // çXêVèàóù
-void CannonBallManager::Update(float elapsedTime)
+void CannonBallManager::Update(const float& elapsedTime)
 {
-    for (auto& cannonBall : balls)
+    for (CannonBall*& cannonBall : cannonballs)
     {
         cannonBall->Update(elapsedTime);
     }
 
     for (CannonBall* cannonBall : removes)
     {
-        std::vector<CannonBall*>::iterator it = std::find(balls.begin(), balls.end(), cannonBall);
+        std::vector<CannonBall*>::iterator it = std::find(cannonballs.begin(), cannonballs.end(), cannonBall);
 
-        if (it != balls.end())
+        if (it != cannonballs.end())
         {
-            balls.erase(it);
+            cannonballs.erase(it);
         }
 
-        delete cannonBall;
+        SafeDelete(cannonBall);
     }
     removes.clear();
 }
 
 // ï`âÊèàóù
-void CannonBallManager::Render(float elapsedTime)
+void CannonBallManager::Render(const float& elapsedTime)
 {
-    for (auto& cannonBall : balls)
+    for (CannonBall*& cannonBall : cannonballs)
     {
         cannonBall->Render(elapsedTime);
     }
@@ -44,7 +45,7 @@ void CannonBallManager::Render(float elapsedTime)
 
 void CannonBallManager::DrawDebug()
 {
-    for (auto& cannonBall : balls)
+    for (CannonBall*& cannonBall : cannonballs)
     {
         cannonBall->DrawDebug();
     }
@@ -53,16 +54,18 @@ void CannonBallManager::DrawDebug()
 // íeä€ìoò^
 void CannonBallManager::Register(CannonBall* cannonBall)
 {
-    balls.emplace_back(cannonBall);
+    cannonballs.emplace_back(cannonBall);
 }
 
 // íeä€ëSçÌèú
 void CannonBallManager::Clear()
 {
-    for (auto& cannonBall : balls)
+    for (CannonBall*& cannonBall : cannonballs)
     {
-        delete cannonBall;
+        SafeDelete(cannonBall);
     }
+    cannonballs.clear();
+    cannonballs.shrink_to_fit();
 }
 
 // íeä€çÌèú

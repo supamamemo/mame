@@ -1,12 +1,17 @@
 #pragma once
+
 #include "Character.h"
 
+// 前方宣言（相互インクルードしないようにする）
 class CannonBallManager;
 
 class CannonBall : public Character
 {
 public:
-    CannonBall(DirectX::XMFLOAT3 newPosition, float directionZ, CannonBallManager* manager);
+    CannonBall(
+        NO_CONST DirectX::XMFLOAT3 newPosition, 
+        const float& directionZ, 
+        NO_CONST CannonBallManager* manager);
     ~CannonBall();
 
     void Initialize();                      // 初期化
@@ -25,15 +30,15 @@ public:
     void SetName(const char* n) { name = n; }
     // Imgui名前被り防止のためのやつ //    
 
-
     void Destroy();
 
-    CannonBallManager* manager = nullptr;
-
 private:
-    std::string name;   // Imgui用
+    CannonBallManager* cannonBallManager = nullptr;
 
-    int directionZ = 0;
-    float offsetZ = 3;
+    std::string name    = {};   // Imgui用
+
+    float directionZ    = 0.0f;
+    float offsetZ       = 3.0f;
+
 };
 

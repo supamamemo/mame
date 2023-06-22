@@ -7,15 +7,15 @@ class EnemyCannon : public Enemy
 {
 public:
     EnemyCannon();
-    ~EnemyCannon()override;
+    ~EnemyCannon() override;
 
-    void Initialize()override;              // 初期化
-    void Finalize()override;                // 終了化
-    void Begin()override;                   // 毎フレーム一番最初に呼ばれる
-    void Update(float elapsedTime)override; // 更新処理
-    void End()override;                     // 毎フレーム一番最後に呼ばれる
-    void Render(float elapsedTime)override; // 描画処理
-    void DrawDebug()override;
+    void Initialize()               override; // 初期化
+    void Finalize()                 override; // 終了化
+    void Begin()                    override; // 毎フレーム一番最初に呼ばれる
+    void Update(float elapsedTime)  override; // 更新処理
+    void End()                      override; // 毎フレーム一番最後に呼ばれる
+    void Render(float elapsedTime)  override; // 描画処理
+    void DrawDebug()                override;
 
 public:
     // Imgui名前被り防止のためのやつ //
@@ -25,8 +25,5 @@ public:
     // Imgui名前被り防止のためのやつ //
 
 private:
-    std::string name;
-
-    CannonBallManager cannonBallManager;
-};
+    std::string name = {};};
 

@@ -1,8 +1,8 @@
 #include "CannonBall.h"
+#include "CannonBallManager.h"
 
 #include "../Mame/Graphics/Graphics.h"
 
-#include "CannonBallManager.h"
 
 int CannonBall::nameNum = 0;
 
@@ -11,11 +11,14 @@ int CannonBall::nameNum = 0;
 /// </summary>
 /// <param name="newPosition">‘å–C‚ÌˆÊ’u</param>
 /// <param name="directionZ">–C’e‚Ì‚·‚·‚Þ•ûŒüZ</param>
-CannonBall::CannonBall(DirectX::XMFLOAT3 newPosition, float directionZ, CannonBallManager* manager)
-    :manager(manager),
-    directionZ(directionZ)
+CannonBall::CannonBall(
+    NO_CONST DirectX::XMFLOAT3 newPosition, 
+    const float& directionZ, 
+    NO_CONST CannonBallManager* manager)
+    : cannonBallManager(manager)
+    , directionZ(directionZ)
 {
-    manager->Register(this);
+    cannonBallManager->Register(this);
 
     Graphics& graphics = Graphics::Instance();
 
@@ -63,7 +66,7 @@ void CannonBall::Update(const float& elapsedTime)
     float speed = (directionZ > 0) ? moveSpeed * elapsedTime : -moveSpeed * elapsedTime;
 
     DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
-    pos.z += speed;
+    pos.x += speed;
     GetTransform()->SetPosition(pos);
 }
 
@@ -82,9 +85,9 @@ void CannonBall::Render(const float& elapsedTime)
     DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
 
     // model•`‰æ
-    if (&keyframe)
+    if (&model->keyframe)
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), &keyframe);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), &model->keyframe);
     }
     else
     {
@@ -115,5 +118,5 @@ void CannonBall::DrawDebug()
 // ”jŠü
 void CannonBall::Destroy()
 {
-    manager->Remove(this);
+    cannonBallManager->Remove(this);
 }

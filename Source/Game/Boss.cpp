@@ -83,8 +83,8 @@ void Boss::Update(float elapsedTime)
 
     debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
     debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
-    
-    if (stateMachine)GetStateMachine()->Update(elapsedTime);
+
+    if (stateMachine) GetStateMachine()->Update(elapsedTime);
 }
 
 // Update‚ÌŒã‚ÉŒÄ‚Î‚ê‚é
@@ -102,9 +102,9 @@ void Boss::Render(float elapsedTime)
     DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
 
     // model•`‰æ
-    if (&keyframe)
+    if (&model->keyframe)
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, &keyframe);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, &model->keyframe);
     }
     else
     {
