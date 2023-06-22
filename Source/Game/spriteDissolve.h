@@ -3,7 +3,6 @@
 #include "../sprite.h"
 #include <memory>
 
-
 enum class Dissolve
 {
     Fire,
