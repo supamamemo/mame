@@ -229,7 +229,7 @@ namespace CANNON
     void AttackState::Execute(float elapsedTime)
     {
         // todo:‚±‚±‚Å’eŠÛ‚ð¶¬‚·‚é
-        //CannonBall* cannonBall = new CannonBall(owner->GetTransform()->GetPosition(), -1, &owner->cannonBallManager);
+        CannonBall* cannonBall = new CannonBall(owner->GetTransform()->GetPosition(), -1, &owner->cannonBallManager);
 
         // IdleState‚Ö
         owner->GetStateMachine()->ChangeState(static_cast<int>(CANNON::STATE::Idle));
