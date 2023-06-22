@@ -40,5 +40,6 @@ private:
     float directionZ    = 0.0f;
     float offsetZ       = 3.0f;
 
+    float lifeTimer     = 1.0f; // 寿命タイマー
 };
 

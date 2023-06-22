@@ -598,7 +598,7 @@ void Player::UpdateRunState(const float& elapsedTime)
             return;
         }
 
-        runMoveVecX = moveVecX; // 移動ベクトル保存更新
+        runMoveVecX = moveVecX; // 保存移動ベクトル更新
     }
     // 移動入力がなければ待機ステートへ遷移
     else

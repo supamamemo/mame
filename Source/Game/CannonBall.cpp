@@ -63,6 +63,15 @@ void CannonBall::Begin()
 // XVˆ—
 void CannonBall::Update(const float& elapsedTime)
 {
+    // õ–½ˆ—
+    lifeTimer -= elapsedTime;
+    if (lifeTimer <= 0)
+    {
+        // ©•ª‚ğÁ‹
+        Destroy();
+        return;
+    }
+
     float speed = (directionZ > 0) ? moveSpeed * elapsedTime : -moveSpeed * elapsedTime;
 
     DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
