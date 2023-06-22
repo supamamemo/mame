@@ -11,7 +11,7 @@ StagePlains::StagePlains()
 
     // エネミー初期化
     EnemyCannon* cannon = new EnemyCannon();
-    cannon->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f));
+    cannon->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 20.0f));
     EnemyManager::Instance().Register(cannon);
 
     // 草ブロック生成
