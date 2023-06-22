@@ -7,6 +7,8 @@
 #include "../Transform.h"
 #include "../../../Source/skinned_mesh.h"
 
+#include "../../Game/Common.h"
+
 class Model
 {
 public:
@@ -39,6 +41,9 @@ public: // アニメーション関数関連
         const float& speed        = 1.0f,
         const float& blendSeconds = 1.0f
     );
+
+    // ブレンド率の計算更新処理
+    void UpdateBlendRate(NO_CONST float& blendRate, const float& elapsedTime);
 
     // アニメーション更新処理
     void UpdateAnimation(const float& elapsedTime);
