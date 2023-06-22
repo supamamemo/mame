@@ -87,8 +87,6 @@ private: // 変数関連
 
     State   state                   = State::Idle;          // 現在のステート
 
-    float   hipDropGravity          = -3.0f;                // ヒップドロップ時の重力
-
     float   dashAcceleration        =  30.0f;               // ダッシュ時のX速度
     float   defaultDashTime         =  0.1f;                // ダッシュ時間初期値
     float   dashTimer               =  defaultDashTime;     // ダッシュタイマー(ダッシュ時の操作制限時間を管理する)
@@ -99,7 +97,12 @@ private: // 変数関連
     float   runMoveSpeed            =  15.0f;               // 走行時の移動速度(moveSpeedに代入する)
     float   runAcceleration         =  0.5f;                // 走行時の加速力
     float   runFriction             =  0.1f;                // 走行時の摩擦力
-    float   runMoveVecX             =  0.0f;
+    float   runMoveVecX             =  0.0f;                // moveVecXを保存する（ブレーキアニメ―ションのときに使う）
+
+    float   jumpedPositionY         =  0.0f;                // ジャンプ開始時の位置を保存する
+
+    float   hipDropGravity          = -3.0f;                // ヒップドロップ時の重力
+    float   needHipDropHeight       =  3.0f;                // ヒップドロップに必要な高さ
 
     float   defaultBounceSpeedX     =  15.0f;               // バウンスX速度初期値
     float   defaultBounceSpeedY     =  10.0f;               // バウンスY速度初期値
@@ -112,6 +115,6 @@ private: // 変数関連
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  2;                   // 最大バウンス回数
 
-    bool    isUpdatedAnimation      = false;                //　アニメーションが更新されたか
+    bool    isUpdatedAnimation      = false;                // アニメーションが更新されたか
 };
 

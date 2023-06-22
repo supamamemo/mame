@@ -1,5 +1,6 @@
 #include "Collision.h"
 
+#if 0
 #define ADJUST      (0.125f)
 
 
@@ -12,8 +13,8 @@ bool Collision::IntersectSphereVsSphere(
     // A¨B‚Ì’PˆÊƒxƒNƒgƒ‹‚ðŽZo
     const DirectX::XMVECTOR PositionA = DirectX::XMLoadFloat3(&positionA);
     const DirectX::XMVECTOR PositionB = DirectX::XMLoadFloat3(&positionB);
-    const DirectX::XMVECTOR Vec       = DirectX::XMVectorSubtract(PositionB, PositionA);
-    const DirectX::XMVECTOR LengthSq  = DirectX::XMVector3LengthSq(Vec);
+    const DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(PositionB, PositionA);
+    const DirectX::XMVECTOR LengthSq = DirectX::XMVector3LengthSq(Vec);
     float lengthSq = DirectX::XMVectorGetX(LengthSq);
 
     // ‹——£”»’è
@@ -22,28 +23,28 @@ bool Collision::IntersectSphereVsSphere(
     if (lengthSq > (range * range)) return false; // ‹——£‚æ‚èAB”¼Œa‚ª¬‚³‚¯‚ê‚Î‚ß‚èž‚ñ‚Å‚¢‚È‚¢
 
     // A‚ªB‚ð‰Ÿ‚µo‚·
-    NO_CONST DirectX::XMVECTOR Vec_n        = DirectX::XMVector3Normalize(Vec); // ³‹K‰»
-                               Vec_n        = DirectX::XMVectorScale(Vec_n, range);
+    NO_CONST DirectX::XMVECTOR Vec_n = DirectX::XMVector3Normalize(Vec); // ³‹K‰»
+    Vec_n = DirectX::XMVectorScale(Vec_n, range);
     const    DirectX::XMVECTOR OutPositionB = DirectX::XMVectorAdd(PositionA, Vec);
     DirectX::XMStoreFloat3(&outPositionB, OutPositionB);
- 
+
     return true;
 }
 
 
 bool Collision::IntersectCylinderVsCylinder(
-    const DirectX::XMFLOAT3& positionA, 
-    const float& radiusA, 
-    const float& heightA, 
-    const DirectX::XMFLOAT3& positionB, 
-    const float& radiusB, 
-    const float& heightB, 
+    const DirectX::XMFLOAT3& positionA,
+    const float& radiusA,
+    const float& heightA,
+    const DirectX::XMFLOAT3& positionB,
+    const float& radiusB,
+    const float& heightB,
     DirectX::XMFLOAT3& outPositionB)
 {
     // A‚Ì‘«Œ³‚ªB‚Ì“ª‚æ‚èã‚©AA‚Ì“ª‚ªB‚Ì‘«Œ³‚æ‚è‰º‚È‚ç“–‚½‚Á‚Ä‚¢‚È‚¢
     if (positionA.y > positionB.y + heightB) return false;
     if (positionA.y + heightA < positionB.y) return false;
-    
+
 
     // XZ•½–Ê‚Å‚Ì”ÍˆÍƒ`ƒFƒbƒN
     NO_CONST float vx = positionB.x - positionA.x;
@@ -60,34 +61,34 @@ bool Collision::IntersectCylinderVsCylinder(
     outPositionB.x = positionA.x + (vx * range);
     outPositionB.y = positionB.y; // ¦A‚Å‚Í‚È‚­B
     outPositionB.z = positionA.z + (vz * range);
-    
+
     return true;
 }
 
 
 bool Collision::IntersectSphereVsCylinder(
-    const DirectX::XMFLOAT3& spherePosition, 
-    const float& sphereRadius, 
-    const DirectX::XMFLOAT3& cylinderPosition, 
-    const float& cylinderRadius, 
-    const float& cylinderHeight, 
+    const DirectX::XMFLOAT3& spherePosition,
+    const float& sphereRadius,
+    const DirectX::XMFLOAT3& cylinderPosition,
+    const float& cylinderRadius,
+    const float& cylinderHeight,
     DirectX::XMFLOAT3& outCylinderPosition)
 {
     // ’e‚Ì‘«Œ³‚ª‰~’Œ‚Ì“ª‚æ‚èã‚©A’e‚Ì“ª‚ª‰~’Œ‚Ì‘«Œ³‚æ‚è‰º‚È‚ç“–‚½‚Á‚Ä‚¢‚È‚¢
-    const float sphereDown   = spherePosition.y - sphereRadius;
-    const float sphereUp     = spherePosition.y + sphereRadius;
-    const float cylinderUp   = cylinderPosition.y + cylinderHeight;
+    const float sphereDown = spherePosition.y - sphereRadius;
+    const float sphereUp = spherePosition.y + sphereRadius;
+    const float cylinderUp = cylinderPosition.y + cylinderHeight;
     const float cylinderDown = cylinderPosition.y;
 
-    if (sphereDown > cylinderUp  ) return false;
-    if (sphereUp   < cylinderDown) return false;
+    if (sphereDown > cylinderUp) return false;
+    if (sphereUp < cylinderDown) return false;
 
 
     // XZ•½–Ê‚Å‚Ì”ÍˆÍƒ`ƒFƒbƒN
     NO_CONST float vx = cylinderPosition.x - spherePosition.x;
     NO_CONST float vz = cylinderPosition.z - spherePosition.z;
     const float range = sphereRadius + cylinderRadius;
-    const float dist  = sqrtf(vx * vx + vz * vz);
+    const float dist = sqrtf(vx * vx + vz * vz);
 
     if (dist > range) return false;
 
@@ -248,26 +249,25 @@ bool Collision::IntersectSphereVsCylinder(
 
 bool Collision::IntersectAABBVsAABB(
     AABB* aabb1, AABB* aabb2,
-    DirectX::XMFLOAT3& resultPos
-)
+    DirectX::XMFLOAT3& resultPos)
 {
-    const float aabb1Right  = aabb1->center.x + aabb1->range.x;
-    const float aabb1Left   = aabb1->center.x - aabb1->range.x;
-    const float aabb1Top    = aabb1->center.y + aabb1->range.y;
+    const float aabb1Right = aabb1->center.x + aabb1->range.x;
+    const float aabb1Left = aabb1->center.x - aabb1->range.x;
+    const float aabb1Top = aabb1->center.y + aabb1->range.y;
     const float aabb1Bottom = aabb1->center.y - aabb1->range.y;
 
-    const float aabb2Right  = aabb2->center.x + aabb2->range.x;
-    const float aabb2Left   = aabb2->center.x - aabb2->range.x;
-    const float aabb2Top    = aabb2->center.y + aabb2->range.y;
+    const float aabb2Right = aabb2->center.x + aabb2->range.x;
+    const float aabb2Left = aabb2->center.x - aabb2->range.x;
+    const float aabb2Top = aabb2->center.y + aabb2->range.y;
     const float aabb2Bottom = aabb2->center.y - aabb2->range.y;
 
     // “–‚½‚Á‚Ä‚¢‚È‚¢
-    if (aabb1Right  < aabb2Left)   return false;
-    if (aabb1Left   > aabb2Right)  return false;
-    if (aabb1Top    < aabb2Bottom) return false;
+    if (aabb1Right < aabb2Left)   return false;
+    if (aabb1Left > aabb2Right)  return false;
+    if (aabb1Top < aabb2Bottom) return false;
     if (aabb1Bottom > aabb2Top)    return false;
 
-    
+
     if (aabb1Right > aabb2Left || aabb1Left < aabb2Right)
     {
         if (aabb1Right > aabb2Right)
@@ -286,3 +286,5 @@ bool Collision::IntersectAABBVsAABB(
 
     return true;
 }
+
+#endif

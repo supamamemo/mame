@@ -146,7 +146,7 @@ void Player::DrawDebug()
     ImGui::SliderInt("animationIndex", &animationIndex, 0, Anim_Max - 1);
     model->SetCurrentAnimationIndex(animationIndex);
 
-    ImGui::DragFloat2("box2dLenght", &box2d.lenght.x);
+    //ImGui::DragFloat2("box2dLenght", &box2d.lenght.x);
 
     // 速度関連パラメータ
     if (ImGui::TreeNode("Speed"))
@@ -616,6 +616,9 @@ void Player::UpdateRunState(const float& elapsedTime)
 void Player::TransitionJumpState()
 {
     state = State::Jump;
+
+    // ジャンプした位置を保存
+    jumpedPositionY = GetTransform()->GetPosition().y;
     
     // ジャンプ開始アニメーション再生
     PlayAnimation(Anim_JumpInit, false, 1.0f, 0.0f);
@@ -653,11 +656,18 @@ void Player::UpdateJumpState(const float& elapsedTime)
         }
     }
 
-    // 下方向に押されていたらヒップドロップステートへ遷移
+    // 下方向に押されていたら
     if (GetMoveVecY() < 0.0f)
-    {
-        TransitionHipDropState();
-        return;
+    {      
+        // ジャンプ開始時のY位置と現在のY位置からジャンプした高さを算出
+        const float jumpHeight = GetTransform()->GetPosition().y - jumpedPositionY;
+
+        // ヒップドロップに必要な距離(高さ)に達していたらヒップドロップステートへ遷移
+        if (jumpHeight >= needHipDropHeight)
+        {
+            TransitionHipDropState();
+            return;
+        }
     }
 }
 

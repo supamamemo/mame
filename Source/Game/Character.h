@@ -93,8 +93,7 @@ public:
     std::unique_ptr<Model>  model       = nullptr;
     std::unique_ptr<Model>  debugModel  = nullptr;
 
-    // AABB                    aabb  = {};
-    Box2D                   box2d       = {};
+    Collision::Box3D        box3d       = {};
     
     std::unique_ptr<GeometricPrimitive> geometricPrimitive = nullptr;
 
