@@ -13,7 +13,7 @@ Player::Player()
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/test.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/enemy_001Ver10.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
-        //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0620_1.fbx", true);
+
         model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0622.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/jump.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/idletest.fbx", true);
