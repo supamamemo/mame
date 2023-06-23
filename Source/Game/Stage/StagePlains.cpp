@@ -1,5 +1,6 @@
 #include "StagePlains.h"
 
+#include "../../Mame/Graphics/Camera.h"
 #include "../EnemyManager.h"
 #include "../EnemyCannon.h"
 
@@ -50,6 +51,16 @@ void StagePlains::Initialize()
         block->Initialize(DirectX::XMFLOAT3(0,0,0));
         temp++;
     }
+
+    grassBlock[0].get()->model->GetTransform()->SetPosition({ 9.0f, 0.0f, 8.0f });
+    grassBlock[1].get()->model->GetTransform()->SetPosition({ 31.0f, 0.0f, 8.0f });
+    grassBlock[2].get()->model->GetTransform()->SetPosition({ 9.0f, 0.0f, 10.0f });
+    grassBlock[3].get()->model->GetTransform()->SetPosition({ 31.0f, 0.0f, 10.0f });
+    grassBlock[4].get()->model->GetTransform()->SetPosition({ 9.0f, 0.0f, 12.0f });
+    grassBlock[5].get()->model->GetTransform()->SetPosition({ 31.0f, 0.0f, 12.0f });
+    Camera& camera = Camera::Instance();
+    camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 8, -12));
+    camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0, 0, 0));
 }
 
 // I—¹‰»
@@ -81,11 +92,7 @@ void StagePlains::Begin()
     }
 
 
-    grassBlock[0].get()->model->GetTransform()->SetPosition({ 7.0f, 0.0f, 10.0f });
-    grassBlock[1].get()->model->GetTransform()->SetPosition({ 7.0f, 0.0f, 12.0f });
-    grassBlock[2].get()->model->GetTransform()->SetPosition({ 7.0f, 0.0f, 14.0f });
-    grassBlock[3].get()->model->GetTransform()->SetPosition({ 7.0f, 0.0f, 8.0f });
-    grassBlock[4].get()->model->GetTransform()->SetPosition({ 7.0f, 0.0f, 6.0f });
+
 
 }
 
