@@ -127,7 +127,7 @@ void SceneGame::Update(const float& elapsedTime)
 
     if (gamePad.GetButtonDown() & GamePad::BTN_A)
     {
-        Mame::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
+        //Mame::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
     }
 
     // stageçXêV

@@ -36,9 +36,88 @@
 
 void Camera::Initialize()
 {
-    transform.SetPosition({ 0, 1.3f, -20 });
+    transform.SetPosition({ 0, 1.3f, -30 });
     transform.SetRotation({});
 }
+
+void Camera::Update(float elapsedTime)
+{
+    DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
+    DirectX::XMFLOAT4 rot = GetTransform()->GetRotation();
+
+    float r = 24;
+    float move = 8;
+
+    switch (state)
+    {
+    case 0:
+        pos.x += move * elapsedTime;
+        pos.z += move * elapsedTime;
+
+        rot.y -= DirectX::XMConvertToRadians(r) * elapsedTime;
+
+        if (rot.y <= DirectX::XMConvertToRadians(-90))rot.y = DirectX::XMConvertToRadians(-90);
+        if (pos.x >= 30.0f)
+        {
+            pos.x = 30.0f;
+            pos.z = 0.0f;
+            rot.y = DirectX::XMConvertToRadians(-90);
+            state = 1;
+        }
+
+        break;
+    case 1:
+        pos.x -= move * elapsedTime;
+        pos.z += move * elapsedTime;
+
+        rot.y -= DirectX::XMConvertToRadians(r) * elapsedTime;
+
+        if (rot.y <= DirectX::XMConvertToRadians(-180))rot.y = DirectX::XMConvertToRadians(-180);
+        if (pos.x <= 0.0f)
+        {
+            pos.x = 0.0f;
+            pos.z = 30.0f;
+            rot.y = DirectX::XMConvertToRadians(-180);
+            state = 2;
+        }
+        break;
+    case 2:
+        pos.x -= move * elapsedTime;
+        pos.z -= move * elapsedTime;
+
+        rot.y -= DirectX::XMConvertToRadians(r) * elapsedTime;
+
+        if (rot.y <= DirectX::XMConvertToRadians(-270))rot.y = DirectX::XMConvertToRadians(-270);
+        if (pos.x <= -30.0f)
+        {
+            pos.x = -30.0f;
+            pos.z = 0.0f;
+            rot.y = DirectX::XMConvertToRadians(-270);
+            state = 3;
+        }
+        break;
+    case 3:
+        pos.x += move * elapsedTime;
+        pos.z -= move * elapsedTime;
+
+        rot.y -= DirectX::XMConvertToRadians(r) * elapsedTime;
+
+        if (rot.y <= DirectX::XMConvertToRadians(-360))rot.y = DirectX::XMConvertToRadians(-360);
+        if (pos.x >= 0.0f)
+        {
+            pos.x = 0.0f;
+            pos.z = -30.0f;
+            rot.y = DirectX::XMConvertToRadians(0);
+            state = 0;
+        }
+        break;
+    }
+
+    GetTransform()->SetPosition(pos);
+    GetTransform()->SetRotation(rot);
+
+}
+
 
 void Camera::SetPerspectiveFov(ID3D11DeviceContext* dc)
 {

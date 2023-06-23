@@ -28,13 +28,42 @@ StagePlains::StagePlains()
     //grassBlock[3] = std::make_unique<GrassBlock>("./resources/temporary/assets_cannon.fbx");
     //grassBlock[4] = std::make_unique<GrassBlock>("./resources/temporary/assets_cannon_bullet.fbx");
     //grassBlock[5] = std::make_unique<GrassBlock>("./resources/temporary/assets_flag.fbx");
-    grassBlock[0] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
-    grassBlock[1] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
-    grassBlock[2] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
-    grassBlock[3] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
-    grassBlock[4] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
-    grassBlock[5] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
-    grassBlock[6] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
+    //grassBlock[0] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
+    //grassBlock[1] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
+    //grassBlock[2] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
+    //grassBlock[3] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
+    //grassBlock[4] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
+    //grassBlock[5] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
+    //grassBlock[6] = std::make_unique<GrassBlock>("./resources/temporary/assets_ground.fbx");
+
+    grassBlock[0] = std::make_unique<GrassBlock>("./resources/stage/1.fbx");
+    grassBlock[1] = std::make_unique<GrassBlock>("./resources/stage/2.fbx");
+    grassBlock[2] = std::make_unique<GrassBlock>("./resources/stage/3.fbx");
+    grassBlock[3] = std::make_unique<GrassBlock>("./resources/stage/4.fbx");
+    grassBlock[4] = std::make_unique<GrassBlock>("./resources/stage/5.fbx");
+    grassBlock[5] = std::make_unique<GrassBlock>("./resources/stage/6.fbx");
+    grassBlock[6] = std::make_unique<GrassBlock>("./resources/stage/7.fbx");
+    grassBlock[7] = std::make_unique<GrassBlock>("./resources/stage/8.fbx");
+    grassBlock[8] = std::make_unique<GrassBlock>("./resources/stage/9.fbx");
+    grassBlock[9] = std::make_unique<GrassBlock>("./resources/stage/10.fbx");
+    grassBlock[10] = std::make_unique<GrassBlock>("./resources/stage/11.fbx");
+    grassBlock[11] = std::make_unique<GrassBlock>("./resources/stage/12.fbx");
+    grassBlock[12] = std::make_unique<GrassBlock>("./resources/stage/13.fbx");
+    grassBlock[13] = std::make_unique<GrassBlock>("./resources/stage/14.fbx");
+    grassBlock[14] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    grassBlock[15] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    grassBlock[16] = std::make_unique<GrassBlock>("./resources/stage/16.fbx");
+    grassBlock[17] = std::make_unique<GrassBlock>("./resources/stage/17.fbx");
+    grassBlock[18] = std::make_unique<GrassBlock>("./resources/stage/18.fbx");
+    grassBlock[19] = std::make_unique<GrassBlock>("./resources/stage/19.fbx");
+    grassBlock[20] = std::make_unique<GrassBlock>("./resources/stage/20.fbx");
+    grassBlock[21] = std::make_unique<GrassBlock>("./resources/stage/21.fbx");
+    grassBlock[22] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    grassBlock[23] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    grassBlock[24] = std::make_unique<GrassBlock>("./resources/stage/22.fbx");
+    grassBlock[25] = std::make_unique<GrassBlock>("./resources/stage/23.fbx");
+    
+
 #endif
 }
 
@@ -48,16 +77,41 @@ void StagePlains::Initialize()
     int temp = 0;
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
     {        
-        block->Initialize(DirectX::XMFLOAT3(0,0,0));
+        block->Initialize(DirectX::XMFLOAT3(0,0,20));
         temp++;
     }
 
-    grassBlock[0].get()->model->GetTransform()->SetPosition({ 9.0f, 0.0f, 8.0f });
-    grassBlock[1].get()->model->GetTransform()->SetPosition({ 31.0f, 0.0f, 8.0f });
-    grassBlock[2].get()->model->GetTransform()->SetPosition({ 9.0f, 0.0f, 10.0f });
-    grassBlock[3].get()->model->GetTransform()->SetPosition({ 31.0f, 0.0f, 10.0f });
-    grassBlock[4].get()->model->GetTransform()->SetPosition({ 9.0f, 0.0f, 12.0f });
-    grassBlock[5].get()->model->GetTransform()->SetPosition({ 31.0f, 0.0f, 12.0f });
+
+    // ‚±‚±‚Å’n–Ê‚ð•À‚×‚Ä‚¢‚Ü‚·
+    {
+        grassBlock[0].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f));
+        grassBlock[1].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(7.0f, 1.5f, 10.0f));
+        grassBlock[2].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.65f, 1.5f, 10.0f));
+        grassBlock[3].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(18.0f, 0.0f, 10.0f));
+        grassBlock[4].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(33.0f, 0.0f, 10.0f));
+        grassBlock[5].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(33.0f, 1.5f, 10.0f));
+        grassBlock[6].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(52.0f, 0.0f, 10.0f));
+        grassBlock[7].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(58.0f, 0.0f, 10.0f));
+        grassBlock[8].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(63.0f, 0.0f, 10.0f));
+        grassBlock[9].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(68.0f, 0.0f, 10.0f));
+        grassBlock[10].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(82.0f, 0.0f, 10.0f));
+        grassBlock[11].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(86.0f, 1.8f, 10.0f));
+        grassBlock[12].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(90.7f, 1.8f, 10.0f));
+        grassBlock[13].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(95.0f, 0.0f, 10.0f));
+        grassBlock[14].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(99.0f, 6.0f, 10.0f));
+        grassBlock[15].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(102.0f, 7.0f, 10.0f));
+        grassBlock[16].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(105.0f, 0.0f, 10.0f));
+        grassBlock[17].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(116.0f, 0.0f, 10.0f));
+        grassBlock[18].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(118.99f, 3.46f, 10.0f));
+        grassBlock[19].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(121.25f, 3.46f, 10.0f));
+        grassBlock[20].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(151.0f, 0.0f, 10.0f));
+        grassBlock[21].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(131.06f, 1.6f, 10.0f));
+        grassBlock[22].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(138.0f, 4.0f, 10.0f));
+        grassBlock[23].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(141.0f, 5.0f, 10.0f));
+        grassBlock[24].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(146.0f, 1.6f, 10.0f));
+        grassBlock[25].get()->model->GetTransform()->SetPosition(DirectX::XMFLOAT3(149.3f, 1.6f, 10.0f));
+    }
+
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 8, -12));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0, 0, 0));

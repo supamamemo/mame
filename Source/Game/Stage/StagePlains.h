@@ -21,6 +21,6 @@ public:
     void DrawDebug() override;
 
 private:
-    std::unique_ptr<GrassBlock> grassBlock[7];
+    std::unique_ptr<GrassBlock> grassBlock[26];
 };
 

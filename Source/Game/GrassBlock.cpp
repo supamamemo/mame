@@ -79,6 +79,12 @@ void GrassBlock::Render(float elapsedTime)
 
     // model描画(アニメーションなし想定)
     model->skinned_meshes.render(deviceContext, transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
+
+    // BOUNDING_BOX
+    {
+        DirectX::XMFLOAT4X4 t = SetDebugModelTransform(transform);
+        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.4f), nullptr);
+    }    
 }
 
 //debug用

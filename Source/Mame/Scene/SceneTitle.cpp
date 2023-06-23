@@ -11,6 +11,7 @@
 
 // todo: 後で消す
 #define FADE 1
+#define MAME 0
 
 // コンストラクタ
 SceneTitle::SceneTitle()
@@ -19,6 +20,15 @@ SceneTitle::SceneTitle()
 
     // player生成
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+    // title model
+    {
+#if MAME
+        Graphics& graphics = Graphics::Instance();
+        castelModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
+        groundModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/ground.fbx", true);
+#endif
+    }
 }
 
 // 初期化
@@ -40,6 +50,15 @@ void SceneTitle::Initialize()
     spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
 #endif
 
+    // title model
+    {
+#if MAME
+        castelModel->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
+        groundModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(4.0f, -1.0f, -36.0f));
+        groundModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 1.0f, 0.5f));
+        groundModel->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(-90), 0, 0));
+#endif
+    }
 
     // プレイヤー初期化
     PlayerManager::Instance().GetPlayer()->Initialize();
@@ -135,7 +154,7 @@ void SceneTitle::Initialize()
         };
 
 
-        dummy_sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/ground.png");
+        //dummy_sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/ground.png");
 
 
 
@@ -168,6 +187,12 @@ void SceneTitle::Begin()
 void SceneTitle::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+
+    // camera
+#if MAME
+    Camera& camera = Camera::Instance();
+    camera.Update(elapsedTime);
+#endif
 
     spriteDissolve->Update();
 
@@ -291,6 +316,19 @@ void SceneTitle::Render(const float& elapsedTime)
 
 #endif
 
+    // title model
+    {
+#if MAME
+        DirectX::XMMATRIX WORLD = castelModel->GetTransform()->CalcWorldMatrix(0.01f);
+        DirectX::XMFLOAT4X4 world = {};
+        DirectX::XMStoreFloat4x4(&world, WORLD);
+        castelModel->skinned_meshes.render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
+        WORLD = groundModel->GetTransform()->CalcWorldMatrix(0.01f);
+        DirectX::XMStoreFloat4x4(&world, WORLD);
+        groundModel->skinned_meshes.render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
+#endif
+    }
+
     // fadeOut
     {
         spriteDissolve->Render();
@@ -347,5 +385,18 @@ void SceneTitle::DrawDebug()
 
     //sprite_dissolve.DrawDebug(L"./resources/ground.png");
     //sprite_dissolve->DrawDebug();
+
+    // title model
+    {
+#if MAME
+        ImGui::Begin("castelModel");
+        castelModel->GetTransform()->DrawDebug();
+        ImGui::End();
+        ImGui::Begin("groundModel");
+        groundModel->GetTransform()->DrawDebug();
+        ImGui::End();
+#endif
+    }
+
 #endif
 }

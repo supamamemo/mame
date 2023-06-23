@@ -22,7 +22,9 @@ public:
     }
 
 
+
     void Initialize();
+    void Update(float elapsedTime);
 
     void SetPerspectiveFov(ID3D11DeviceContext* dc);
     //void SetPerspectiveFov(ID3D11DeviceContext* dc, float fovY, float aspect, float nearZ, float farZ);
@@ -52,6 +54,9 @@ private:
 
     DirectX::XMMATRIX P{};
     DirectX::XMMATRIX V{};
+
+    // ‰¼
+    int state = 0;
 
 };
 
