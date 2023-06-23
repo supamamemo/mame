@@ -10,11 +10,9 @@ Character::Character()
 
     debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
 
-    // 当たり判定サイズ設定
-    //debugModel->skinned_meshes.boundingBox[0] = {};
-    //debugModel->skinned_meshes.boundingBox[1] = {};    
-    //debugModel->skinned_meshes.boundingBox[0] -= 0.8f;
-    //debugModel->skinned_meshes.boundingBox[1] += 0.8f;
+    // 当たり判定サイズ設定   
+    debugModel->skinned_meshes.boundingBox[0] = { -0.5f, -0.5f, -0.5f };
+    debugModel->skinned_meshes.boundingBox[1] = {  0.5f,  0.5f,  0.5f };
 }
 
 void Character::DrawDebug()
