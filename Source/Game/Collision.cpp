@@ -347,6 +347,7 @@ bool Collision::IntersectBox3DVsBox3D(const Box3D& box1, const Box3D& box2, NO_C
     return true;    // Õ“Ë‚µ‚Ä‚¢‚é
 #endif
 
+#if 0 // SORRY
     if (box1.max.x < box2.min.x || box1.min.x > box2.max.x)
         return false; // x²•ûŒü‚Å‚ÌÕ“Ë‚È‚µ
 
@@ -403,4 +404,7 @@ bool Collision::IntersectBox3DVsBox3D(const Box3D& box1, const Box3D& box2, NO_C
     //    outBoxPosition.min.z = outBoxPosition.max.z;
 
     return true;  // 3²•ûŒü‚Å‚ÌÕ“Ë‚ ‚è
+#endif
+
+    return false;
 }

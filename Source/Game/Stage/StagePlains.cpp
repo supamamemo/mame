@@ -169,6 +169,7 @@ void StagePlains::Update(const float& elapsedTime)
         block->Update();
     }
 
+#if 0 // SORRY
     const Collision::Box3D box1 = {
         PlayerManager::Instance().GetPlayer()->model->skinned_meshes.boundingBox[0],
         PlayerManager::Instance().GetPlayer()->model->skinned_meshes.boundingBox[1]
@@ -185,7 +186,7 @@ void StagePlains::Update(const float& elapsedTime)
         PlayerManager::Instance().GetPlayer()->model->skinned_meshes.boundingBox[0] = outPosition.min;
         PlayerManager::Instance().GetPlayer()->model->skinned_meshes.boundingBox[1] = outPosition.max;
     }
-
+#endif
 }
 
 // Update‚ÌŒã‚ÉŒÄ‚Î‚ê‚éˆ—
