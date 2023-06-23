@@ -13,8 +13,8 @@ EnemyCannon::EnemyCannon()
 
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/touhu.fbx", true);
     model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_cannon.fbx", true);
-
-    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_flag.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0622.fbx", true);
 
     // ステートマシンをセット
     stateMachine.reset(new StateMachine);
@@ -58,6 +58,9 @@ void EnemyCannon::Update(float elapsedTime)
     cannonBallManager.Update(elapsedTime);
 
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
+
+    // デバッグモデルの位置更新
+    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
 }
 
 // Updateの後に呼ばれる
@@ -87,8 +90,16 @@ void EnemyCannon::Render(float elapsedTime)
 #if _DEBUG
     // BOUNDING_BOX
     {
-        DirectX::XMFLOAT4X4 t = SetDebugModelTransform(transform);
-        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.2f), nullptr);
+        DirectX::XMFLOAT4X4 debugTransform = {};
+
+        // ワールド行列の取得とスケール調整
+        DirectX::XMStoreFloat4x4(&debugTransform, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
+
+        // ワールド行列設定
+        debugTransform = SetDebugModelTransform(debugTransform);
+
+        // 描画
+        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
     }
 #endif // _DEBUG
 

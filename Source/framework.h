@@ -245,7 +245,7 @@ private:
 		float dx = 100, dy = 100;		// 短形の左上の座標(スクリーン座標系)
 		float dw = 100, dh = 100;		// 短形のサイズ(スクリーン座標系)
 		float r = 1, g = 1, b = 1, a = 1;	// 色
-		float angle;		// 角度
+		float angle = 0.0f;		// 角度
 		int state = 0;
 
 		// geometricprimitive

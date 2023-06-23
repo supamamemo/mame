@@ -24,6 +24,9 @@ private: // 入力処理関数関連
     const bool  InputMove(const float& elapsedTime); // 移動入力処理   
     const bool  InputJump();                         // ジャンプ入力処理
 
+private: // 衝突判定関数関連       
+    void CollisionPlayerVsEnemies();    // プレイヤーとエネミーの衝突判定
+
 private: // 更新処理関数関連
     void  UpdateDashCoolTimer(const float& elapsedTime); // ダッシュクールタイム更新処理
 

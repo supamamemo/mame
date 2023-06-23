@@ -288,3 +288,60 @@ bool Collision::IntersectAABBVsAABB(
 }
 
 #endif
+
+
+bool Collision::IntersectBox3DVsBox3D(const Box3D& box1, const Box3D& box2, NO_CONST Box3D& outBoxPosition)
+{
+    // X軸方向の衝突判定
+    {
+        const float box1Right   = (box1.max.x + box1.position.x);
+        const float box1Left    = (box1.min.x + box1.position.x);    
+        const float box2Right   = (box2.max.x + box2.position.x);
+        const float box2Left    = (box2.min.x + box2.position.x);
+
+        const bool isHitX = (box1Right > box2Left && box1Left < box2Right);
+
+        if (!isHitX) return false;  // X軸方向での衝突なし
+    }
+
+    // Y軸方向の衝突判定
+    //{
+    //    const float box1Up      = box1.max.y + box1.position.y;
+    //    const float box1Bottom  = box1.min.y + box1.position.y;
+    //    const float box2Up      = box2.max.y + box2.position.y;
+    //    const float box2Bottom  = box2.min.y + box2.position.y;
+
+    //    const bool isHitY = (box1Up > box2Bottom && box1Bottom < box2Up);
+
+    //    if (!isHitY) return false;  // Y軸方向での衝突なし
+    //}
+
+    //// Z軸方向の衝突判定
+    //{
+    //    const float box1Back    = box1.max.z + box1.position.z;
+    //    const float box1Front   = box1.min.z + box1.position.z;
+    //    const float box2Back    = box2.max.z + box2.position.z;
+    //    const float box2Front   = box2.min.z + box2.position.z;
+
+    //    const bool isHitZ = (box1Back > box2Front && box1Front < box2Back);
+
+    //    if (!isHitZ) return false;  // Z軸方向での衝突なし
+    //}
+
+    // 衝突している範囲を計算
+    {
+        // (std::max)：右が左より"大きければ"右を代入、そうでなければ左を代入
+        // (std::min)：右が左より"小さければ"右を代入、そうでなければ左を代入     
+        
+        //outBoxPosition.min.x = (std::max)(box1.min.x, box2.min.x);
+        //outBoxPosition.max.x = (std::min)(box1.max.x, box2.max.x);
+
+        //outBoxPosition.min.y = (std::max)(box1.min.y, box2.min.y);
+        //outBoxPosition.max.y = (std::min)(box1.max.y, box2.max.y);
+
+        //outBoxPosition.min.z = (std::max)(box1.min.z, box2.min.z);
+        //outBoxPosition.max.z = (std::min)(box1.max.z, box2.max.z);
+    }
+
+    return true;    // 衝突している
+}
