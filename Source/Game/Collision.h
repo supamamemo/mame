@@ -96,7 +96,11 @@ public:
 #endif
 
     // Box3D“¯m‚ÌŒğ·”»’è
-    void IntersectBox3DVsBox3D(Box3D box1, Box3D box2);
+    static bool IntersectBox3DVsBox3D(
+        const    Box3D& box1, 
+        const    Box3D& box2, 
+        NO_CONST Box3D& outBoxPosition
+    );
 
 };
 

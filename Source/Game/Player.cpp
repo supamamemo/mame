@@ -2,6 +2,7 @@
 #include "../Mame/Graphics/Graphics.h"
 #include "../Mame/Input/Input.h"
 #include "OperatorXMFLOAT3.h"
+#include "EnemyManager.h"
 
 Player::Player()
 {
@@ -29,7 +30,7 @@ Player::Player()
     // 待機ステートへ遷移
     TransitionIdleState();
 
-    DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
+    //DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
 }
 
 
@@ -43,8 +44,6 @@ void Player::Initialize()
     GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
     GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
-
-    debugModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
 }
 
 
@@ -71,10 +70,6 @@ void Player::Update(const float& elapsedTime)
     }
     model->GetTransform()->SetPosition(pos);
 #endif
-
-    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
-    debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
-
     // ステート分岐処理
     switch (state)
     {
@@ -89,6 +84,9 @@ void Player::Update(const float& elapsedTime)
     // 速力更新処理
     UpdateVelocity(elapsedTime);
 
+    // プレイヤーと敵の衝突判定
+    CollisionPlayerVsEnemies();
+
     // 無敵時間更新
     UpdateInvincibleTimer(elapsedTime);
 
@@ -97,6 +95,9 @@ void Player::Update(const float& elapsedTime)
 
     // アニメーション更新
     UpdateAnimation(elapsedTime);
+
+    // デバッグモデルの位置更新
+    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
 }
 
 
@@ -109,9 +110,9 @@ void Player::Render(const float& elapsedTime)
 {
     Graphics& graphics = Graphics::Instance();
 
-    // Transform更新
+    // world行列更新
     DirectX::XMFLOAT4X4 transform;
-    DirectX::XMStoreFloat4x4(&transform, GetTransform()->CalcWorldMatrix(0.01f));
+    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
 
     // model描画
     if (&model->keyframe)
@@ -126,8 +127,16 @@ void Player::Render(const float& elapsedTime)
 #if _DEBUG
     // BOUNDING_BOX
     {
-        DirectX::XMFLOAT4X4 t = SetDebugModelTransform(transform);
-        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
+        DirectX::XMFLOAT4X4 debugTransform = {};
+
+        // ワールド行列の取得とスケール調整
+        DirectX::XMStoreFloat4x4(&debugTransform, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
+
+        // ワールド行列設定
+        debugTransform = SetDebugModelTransform(debugTransform);
+
+        // 描画
+        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
     }
 #endif // _DEBUG
 }
@@ -310,6 +319,80 @@ const bool Player::InputJump()
     }
 
     return false;
+}
+
+
+void Player::CollisionPlayerVsEnemies()
+{
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    const int     enemyCount   = enemyManager.GetEnemyCount();
+
+    bool isHit = false;
+
+    for (int i = 0; i < enemyCount; ++i)
+    {
+        Enemy* enemy = enemyManager.GetEnemy(i);
+
+        // 衝突判定
+        const Collision::Box3D box1 = { 
+            //debugModel->GetTransform()->GetPosition(),
+            //debugModel->skinned_meshes.boundingBox[0], // min
+            //debugModel->skinned_meshes.boundingBox[1], // max
+            debugModel->GetTransform()->GetPosition(),
+            debugModel->skinned_meshes.boundingBox[0], // min
+            debugModel->skinned_meshes.boundingBox[1], // max
+        };        
+
+        const Collision::Box3D box2 = { 
+/*            enemy->debugModel->GetTransform()->GetPosition(),
+            enemy->debugModel->skinned_meshes.boundingBox[0],
+            enemy->debugModel->skinned_meshes.boundingBox[1],    */        
+            enemy->debugModel->GetTransform()->GetPosition(),
+            enemy->debugModel->skinned_meshes.boundingBox[0],
+            enemy->debugModel->skinned_meshes.boundingBox[1],
+        };
+
+        NO_CONST Collision::Box3D outPosition = {};
+
+        if (Collision::IntersectBox3DVsBox3D(box1, box2, outPosition))
+        {
+            isHit = true;
+            // AABB1を押し出す
+            //if (outPosition.max.x - outPosition.min.x < outPosition.max.y - outPosition.min.y)
+            //{
+            //    if (outPosition.max.x - box1.min.x < box1.max.x - outPosition.min.x)
+            //    {
+            //        box1.max.x = outPosition.min.x;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.min.x, 0, 0));
+            //    }
+            //    else
+            //    {
+            //        box1.min.x = outPosition.max.x;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.max.x, 0, 0));
+            //    }
+            //}
+            //else
+            //{
+            //    if (outPosition.max.y - box1.min.y < box1.max.y - outPosition.min.y)
+            //    {
+            //        //box1.max.y = outPosition.min.y;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.min.y, 0));
+            //    }
+            //    else
+            //    {
+            //        //box1.min.y = outPosition.max.y;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.max.y, 0));
+            //    }
+            //}
+            //if (outPosition.max.z - box1.min.z < box1.max.z - outPosition.min.z)
+            //    box1.max.z = outPosition.min.z;
+            //else
+            //    box1.min.z = outPosition.max.z;   
+        }
+    }
+    ImGui::Begin("isHit");
+    ImGui::Checkbox("isHit", &isHit);
+    ImGui::End();
 }
 
 
