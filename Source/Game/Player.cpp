@@ -338,7 +338,7 @@ void Player::CollisionPlayerVsEnemies()
             //debugModel->GetTransform()->GetPosition(),
             //debugModel->skinned_meshes.boundingBox[0], // min
             //debugModel->skinned_meshes.boundingBox[1], // max
-            debugModel->GetTransform()->GetPosition(),
+            //debugModel->GetTransform()->GetPosition(),
             debugModel->skinned_meshes.boundingBox[0], // min
             debugModel->skinned_meshes.boundingBox[1], // max
         };        
@@ -347,7 +347,7 @@ void Player::CollisionPlayerVsEnemies()
 /*            enemy->debugModel->GetTransform()->GetPosition(),
             enemy->debugModel->skinned_meshes.boundingBox[0],
             enemy->debugModel->skinned_meshes.boundingBox[1],    */        
-            enemy->debugModel->GetTransform()->GetPosition(),
+            //enemy->debugModel->GetTransform()->GetPosition(),
             enemy->debugModel->skinned_meshes.boundingBox[0],
             enemy->debugModel->skinned_meshes.boundingBox[1],
         };

@@ -30,7 +30,7 @@ public:
 
     struct Box3D
     {
-        DirectX::XMFLOAT3 position = {};
+        //DirectX::XMFLOAT3 position = {};
         //DirectX::XMFLOAT3 lenght    = {};
         DirectX::XMFLOAT3 min = {};
         DirectX::XMFLOAT3 max = {};

@@ -95,7 +95,7 @@ public:
 
     Collision::Box3D        box3d       = {};
     
-    std::unique_ptr<GeometricPrimitive> geometricPrimitive = nullptr;
+    
 
 protected:
     DirectX::XMFLOAT3 velocity  =   { 0,0,0 };      // ‘¬“x

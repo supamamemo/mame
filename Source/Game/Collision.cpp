@@ -292,6 +292,7 @@ bool Collision::IntersectAABBVsAABB(
 
 bool Collision::IntersectBox3DVsBox3D(const Box3D& box1, const Box3D& box2, NO_CONST Box3D& outBoxPosition)
 {
+#if 0
     // X²•ûŒü‚ÌÕ“Ë”»’è
     {
         const float box1Right   = (box1.max.x + box1.position.x);
@@ -344,4 +345,62 @@ bool Collision::IntersectBox3DVsBox3D(const Box3D& box1, const Box3D& box2, NO_C
     }
 
     return true;    // Õ“Ë‚µ‚Ä‚¢‚é
+#endif
+
+    if (box1.max.x < box2.min.x || box1.min.x > box2.max.x)
+        return false; // x²•ûŒü‚Å‚ÌÕ“Ë‚È‚µ
+
+    if (box1.max.y < box2.min.y || box1.min.y > box2.max.y)
+        return false; // y²•ûŒü‚Å‚ÌÕ“Ë‚È‚µ
+
+    if (box1.max.z < box2.min.z || box1.min.z > box2.max.z)
+        return false; // z²•ûŒü‚Å‚ÌÕ“Ë‚È‚µ
+
+    // Õ“Ë‚µ‚Ä‚¢‚é”ÍˆÍ‚ğŒvZ
+    outBoxPosition.min.x = (std::max)(box1.min.x, box2.min.x);
+    outBoxPosition.max.x = (std::min)(box1.max.x, box2.max.x);
+    outBoxPosition.min.y = (std::max)(box1.min.y, box2.min.y);
+    outBoxPosition.max.y = (std::min)(box1.max.y, box2.max.y);
+    outBoxPosition.min.z = (std::max)(box1.min.z, box2.min.z);
+    outBoxPosition.max.z = (std::min)(box1.max.z, box2.max.z);
+
+    // AABB1‚ğ‰Ÿ‚µo‚·
+    if (outBoxPosition.max.x - outBoxPosition.min.x < outBoxPosition.max.y - outBoxPosition.min.y) {
+        if (outBoxPosition.max.x - box1.min.x < box1.max.x - outBoxPosition.min.x)
+            outBoxPosition.max.x = outBoxPosition.min.x;
+        else
+            outBoxPosition.min.x = outBoxPosition.max.x;
+    }
+    else {
+        if (outBoxPosition.max.y - box1.min.y < box1.max.y - outBoxPosition.min.y)
+            outBoxPosition.max.y = outBoxPosition.min.y;
+        else
+            outBoxPosition.min.y = outBoxPosition.max.y;
+    }
+
+    if (outBoxPosition.max.z - box1.min.z < box1.max.z - outBoxPosition.min.z)
+        outBoxPosition.max.z = outBoxPosition.min.z;
+    else
+        outBoxPosition.min.z = outBoxPosition.max.z;
+
+    //// AABB2‚ğ‰Ÿ‚µo‚·
+    //if (outBoxPosition.max.x - outBoxPosition.min.x < outBoxPosition.max.y - outBoxPosition.min.y) {
+    //    if (outBoxPosition.max.x - box2.min.x < box2.max.x - outBoxPosition.min.x)
+    //        outBoxPosition.max.x = outBoxPosition.min.x;
+    //    else
+    //        outBoxPosition.min.x = outBoxPosition.max.x;
+    //}
+    //else {
+    //    if (outBoxPosition.max.y - box2.min.y < box2.max.y - outBoxPosition.min.y)
+    //        outBoxPosition.max.y = outBoxPosition.min.y;
+    //    else
+    //        outBoxPosition.min.y = outBoxPosition.max.y;
+    //}
+
+    //if (outBoxPosition.max.z - box2.min.z < box2.max.z - outBoxPosition.min.z)
+    //    outBoxPosition.max.z = outBoxPosition.min.z;
+    //else
+    //    outBoxPosition.min.z = outBoxPosition.max.z;
+
+    return true;  // 3²•ûŒü‚Å‚ÌÕ“Ë‚ ‚è
 }

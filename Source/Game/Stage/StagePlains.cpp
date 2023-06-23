@@ -168,6 +168,24 @@ void StagePlains::Update(const float& elapsedTime)
     {
         block->Update();
     }
+
+    const Collision::Box3D box1 = {
+        PlayerManager::Instance().GetPlayer()->model->skinned_meshes.boundingBox[0],
+        PlayerManager::Instance().GetPlayer()->model->skinned_meshes.boundingBox[1]
+    };
+    const Collision::Box3D box2 = {
+        grassBlock[0]->model->skinned_meshes.boundingBox[0],
+        grassBlock[0]->model->skinned_meshes.boundingBox[1],
+    };
+
+    NO_CONST Collision::Box3D outPosition = {};
+
+    if (Collision::IntersectBox3DVsBox3D(box1, box2, outPosition))
+    {
+        PlayerManager::Instance().GetPlayer()->model->skinned_meshes.boundingBox[0] = outPosition.min;
+        PlayerManager::Instance().GetPlayer()->model->skinned_meshes.boundingBox[1] = outPosition.max;
+    }
+
 }
 
 // Update‚ÌŒã‚ÉŒÄ‚Î‚ê‚éˆ—
