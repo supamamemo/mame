@@ -60,16 +60,6 @@ void Player::Begin()
 
 void Player::Update(const float& elapsedTime)
 {  
-#if 0
-    // GamePad取得
-    GamePad& gamePad = Input::Instance().GetGamePad();
-    DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
-    if (gamePad.GetButton() & GamePad::BTN_B)
-    {
-        pos.x += 0.01f;
-    }
-    model->GetTransform()->SetPosition(pos);
-#endif
     // ステート分岐処理
     switch (state)
     {
@@ -83,6 +73,9 @@ void Player::Update(const float& elapsedTime)
 
     // 速力更新処理
     UpdateVelocity(elapsedTime);
+
+    // AABB更新処理
+    UpdateAABB(elapsedTime);
 
     // プレイヤーと敵の衝突判定
     CollisionPlayerVsEnemies();
@@ -108,37 +101,8 @@ void Player::End()
 
 void Player::Render(const float& elapsedTime)
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // world行列更新
-    DirectX::XMFLOAT4X4 transform;
-    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
-
-    // model描画
-    if (&model->keyframe)
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &model->keyframe);
-    }
-    else
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
-    }
-
-#if _DEBUG
-    // BOUNDING_BOX
-    {
-        DirectX::XMFLOAT4X4 debugTransform = {};
-
-        // ワールド行列の取得とスケール調整
-        DirectX::XMStoreFloat4x4(&debugTransform, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
-
-        // ワールド行列設定
-        debugTransform = SetDebugModelTransform(debugTransform);
-
-        // 描画
-        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
-    }
-#endif // _DEBUG
+    // 共通の描画処理
+    Character::Render(elapsedTime);
 }
 
 
@@ -333,28 +297,8 @@ void Player::CollisionPlayerVsEnemies()
     {
         Enemy* enemy = enemyManager.GetEnemy(i);
 
-        // 衝突判定
-        const Collision::Box3D box1 = { 
-            //debugModel->GetTransform()->GetPosition(),
-            //debugModel->skinned_meshes.boundingBox[0], // min
-            //debugModel->skinned_meshes.boundingBox[1], // max
-            debugModel->GetTransform()->GetPosition(),
-            debugModel->skinned_meshes.boundingBox[0], // min
-            debugModel->skinned_meshes.boundingBox[1], // max
-        };        
-
-        const Collision::Box3D box2 = { 
-/*            enemy->debugModel->GetTransform()->GetPosition(),
-            enemy->debugModel->skinned_meshes.boundingBox[0],
-            enemy->debugModel->skinned_meshes.boundingBox[1],    */        
-            enemy->debugModel->GetTransform()->GetPosition(),
-            enemy->debugModel->skinned_meshes.boundingBox[0],
-            enemy->debugModel->skinned_meshes.boundingBox[1],
-        };
-
-        NO_CONST Collision::Box3D outPosition = {};
-
-        if (Collision::IntersectBox3DVsBox3D(box1, box2, outPosition))
+        NO_CONST Collision::AABB outPosition = {};
+        if (Collision::IntersectAABBVsAABB(this->aabb, enemy->aabb, outPosition))
         {
             isHit = true;
             // AABB1を押し出す
@@ -390,9 +334,11 @@ void Player::CollisionPlayerVsEnemies()
             //    box1.min.z = outPosition.max.z;   
         }
     }
+#if _DEBUG
     ImGui::Begin("isHit");
     ImGui::Checkbox("isHit", &isHit);
     ImGui::End();
+#endif
 }
 
 

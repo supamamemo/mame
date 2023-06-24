@@ -250,6 +250,9 @@ void SceneTitle::Render(const float& elapsedTime)
     Shader* shader = graphics.GetShader();
     shader->Begin(graphics.GetDeviceContext(), rc);
 
+#if 0
+    immediate_context->RSSetState(rasterizerState.Get());
+#endif
 
     // ƒvƒŒƒCƒ„[•`‰æ
     PlayerManager::Instance().GetPlayer()->Render(elapsedTime);

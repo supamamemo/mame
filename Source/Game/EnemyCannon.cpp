@@ -59,6 +59,9 @@ void EnemyCannon::Update(float elapsedTime)
 
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
 
+    // AABB更新処理
+    UpdateAABB(elapsedTime);
+
     // デバッグモデルの位置更新
     debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
 }
@@ -71,37 +74,8 @@ void EnemyCannon::End()
 // 描画処理
 void EnemyCannon::Render(float elapsedTime)
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // Transform更新
-    DirectX::XMFLOAT4X4 transform;
-    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
-
-    // model描画
-    if (&model->keyframe)
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, &model->keyframe);
-    }
-    else
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
-    }
-
-#if _DEBUG
-    // BOUNDING_BOX
-    {
-        DirectX::XMFLOAT4X4 debugTransform = {};
-
-        // ワールド行列の取得とスケール調整
-        DirectX::XMStoreFloat4x4(&debugTransform, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
-
-        // ワールド行列設定
-        debugTransform = SetDebugModelTransform(debugTransform);
-
-        // 描画
-        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
-    }
-#endif // _DEBUG
+    // 共通の描画処理
+    Character::Render(elapsedTime);
 
     // cannonBallManager
     cannonBallManager.Render(elapsedTime);

@@ -4,6 +4,7 @@
 
 #include <wrl.h>
 
+#include "./Game/Common.h"
 
 class GeometricPrimitive
 {
@@ -37,7 +38,21 @@ public:
         const DirectX::XMFLOAT4X4& world, const DirectX::XMFLOAT4& material_color);
 
 protected:
-    void create_com_buffers(ID3D11Device* device, vertex* vertices, size_t vertex_count,
-        uint32_t* indices, size_t index_count);
+    void create_com_buffers(
+        ID3D11Device* device,
+        const vertex* vertices, const size_t& vertex_count,
+        const uint32_t* indices, const size_t& index_count
+    );
 };
 
+
+// AABB（当たり判定確認用）
+class GeometricAABB : public GeometricPrimitive
+{
+public:
+    GeometricAABB(
+        NO_CONST ID3D11Device* device,
+        const DirectX::XMFLOAT3& min,
+        const DirectX::XMFLOAT3& max
+    );
+};

@@ -290,14 +290,16 @@ bool Collision::IntersectAABBVsAABB(
 #endif
 
 
-bool Collision::IntersectBox3DVsBox3D(const Box3D& box1, const Box3D& box2, NO_CONST Box3D& outBoxPosition)
+bool Collision::IntersectAABBVsAABB(
+    const AABB& aabb1, const AABB& aabb2, 
+    NO_CONST AABB& outAABBPosition)
 {
     // XŽ²•ûŒü‚ÌÕ“Ë”»’è
     {
-        const float box1Right   = (box1.max.x + box1.position.x);
-        const float box1Left    = (box1.min.x + box1.position.x);    
-        const float box2Right   = (box2.max.x + box2.position.x);
-        const float box2Left    = (box2.min.x + box2.position.x);
+        const float box1Right   = (aabb1.max.x + aabb1.position.x);
+        const float box1Left    = (aabb1.min.x + aabb1.position.x);    
+        const float box2Right   = (aabb2.max.x + aabb2.position.x);
+        const float box2Left    = (aabb2.min.x + aabb2.position.x);
 
         const bool isHitX = (box1Right > box2Left && box1Left < box2Right);
 

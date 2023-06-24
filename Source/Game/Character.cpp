@@ -3,6 +3,7 @@
 #include "Mathf.h"
 #include "../Mame/Graphics/Graphics.h"
 #include "OperatorXMFLOAT3.h"
+#include "../misc.h"
 
 Character::Character()
 {
@@ -11,9 +12,125 @@ Character::Character()
     debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
 
     // 当たり判定サイズ設定   
-    debugModel->skinned_meshes.boundingBox[0] = { -0.5f, -0.5f, -0.5f };
-    debugModel->skinned_meshes.boundingBox[1] = {  0.5f,  0.5f,  0.5f };
+    {
+        //debugModel->skinned_meshes.boundingBox[0] = { -0.5f, -0.5f, -0.5f };
+        //debugModel->skinned_meshes.boundingBox[1] = {  0.5f,  0.5f,  0.5f };
+        aabb.min.x = -40.0f;
+        aabb.min.y =  0.0f;
+        aabb.min.z = -40.0f;
+
+        aabb.max.x =  40.0f;
+        aabb.max.y =  80.0f;
+        aabb.max.z =  40.0f;
+    }
+
+    geometricAABB_ = std::make_unique<GeometricAABB>(graphics.GetDevice(), aabb.min, aabb.max);
 }
+
+
+void Character::Render(const float& /*elapsedTime*/)
+{
+    Graphics& graphics = Graphics::Instance();
+
+    // world行列更新
+    NO_CONST DirectX::XMFLOAT4X4 transform = {};
+    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
+
+    // model描画
+    if (&model->keyframe)
+    {
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &model->keyframe);
+    }
+    else
+    {
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
+    }
+
+
+#if _DEBUG
+
+#if 0
+    DirectX::XMFLOAT4X4 debugTransform = {};
+
+    // ワールド行列の取得とスケール調整
+    DirectX::XMStoreFloat4x4(&debugTransform, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
+
+    // ワールド行列設定
+    debugTransform = SetDebugModelTransform(debugTransform);
+
+    // 描画
+    debugModel->skinned_meshes.render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
+#endif
+
+    // ワイヤーフレームにしようとしたがステージの色が真っ黒になっておかしくなってしまう
+    // 不透明度を下げれば一応機能的に使えるので放置
+#if 0
+    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizer_state = nullptr;
+    
+    // ラスタライザステート作成
+    NO_CONST HRESULT hr = {};
+    NO_CONST D3D11_RASTERIZER_DESC rasterizer_desc = {};
+    //rasterizer_desc.FillMode                = D3D11_FILL_WIREFRAME; // 塗りつぶし
+    rasterizer_desc.FillMode                = D3D11_FILL_SOLID; // 塗りつぶし
+    rasterizer_desc.CullMode                = D3D11_CULL_BACK;	    // 背面カリング（裏面を描画しない）
+    rasterizer_desc.FrontCounterClockwise   = FALSE;			    // 三角形をを反時計回り（裏側）にするか
+    rasterizer_desc.DepthBias               = 0;	                // 指定されたピクセルに追加された深度値
+    rasterizer_desc.DepthBiasClamp          = 0;	                // ピクセルの最大深度バイアス
+    rasterizer_desc.SlopeScaledDepthBias    = 0;	                // 指定されたピクセルの傾きのスカラー
+    rasterizer_desc.DepthClipEnable         = TRUE;	                // 距離によるクリッピングを行うかのフラグ
+    rasterizer_desc.ScissorEnable           = FALSE;                // シザー矩形カリングを行うかのフラグ
+    rasterizer_desc.MultisampleEnable       = FALSE;                // マルチサンプリングアンチエイリアス(略称：MSAA)のレンダーターゲットを使用している時、四辺形ラインアンチエイリアスを行うか、アルファラインアンチエイリアスを行うかを決めるフラグ
+    rasterizer_desc.AntialiasedLineEnable   = FALSE;                // MSAAのレンダーターゲットを使用している時、線分描画でMultisampleEnableがfalseのとき、アンチエイリアスを有効にします
+    hr = graphics.GetDevice()->CreateRasterizerState(&rasterizer_desc, rasterizer_state.GetAddressOf());
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+    // ラスタライザステート設定(ワイヤーフレーム)
+    graphics.GetDeviceContext()->RSSetState(rasterizer_state.Get());
+
+    // 回転なしワールド行列の作成
+    NO_CONST  DirectX::XMFLOAT4X4 noRotationTransform = {};
+    {
+        const DirectX::XMFLOAT3& scale = GetTransform()->GetScale();
+        const DirectX::XMFLOAT3& position = GetTransform()->GetPosition();
+        const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) * DirectX::XMMatrixScaling(0.01f, 0.01f, 0.01f);
+        const DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+        DirectX::XMStoreFloat4x4(&noRotationTransform, S * T);
+    }
+
+    const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.5f };
+    // AABB描画
+    geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
+
+    // ラスタライザステート再設定(リセットがしたかった)
+    ///rasterizer_desc.FillMode = D3D11_FILL_SOLID;	// 塗りつぶし
+    ///hr = graphics.GetDevice()->CreateRasterizerState(&rasterizer_desc, rasterizer_state.GetAddressOf());
+    ///_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+    ////graphics.GetDeviceContext()->RSSetState(rasterizer_state.Get());
+    graphics.GetDeviceContext()->RSSetState(nullptr);
+
+#else
+        // 回転なしワールド行列の作成
+    NO_CONST  DirectX::XMFLOAT4X4 noRotationTransform = {};
+    {
+        const DirectX::XMFLOAT3& scale = GetTransform()->GetScale();
+        const DirectX::XMFLOAT3& position = aabb.position;
+        const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) * DirectX::XMMatrixScaling(0.01f, 0.01f, 0.01f);
+        const DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+        DirectX::XMStoreFloat4x4(&noRotationTransform, S * T);
+    }
+
+    // カラー設定
+    const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.2f };
+
+    // AABB描画
+    geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
+
+#endif
+
+
+#endif // _DEBUG
+}
+
 
 void Character::DrawDebug()
 {
@@ -24,6 +141,7 @@ void Character::DrawDebug()
     debugModel->GetTransform()->DrawDebug();
     ImGui::End();
 }
+
 
 // 移動処理
 void Character::Move(
@@ -106,6 +224,12 @@ void Character::UpdateVelocity(const float& elapsedTime)
 
     // 水平移動更新処理
     UpdateHorizontalMove(elapsedTime);
+}
+
+
+void Character::UpdateAABB(const float& /*elapsedTime*/)
+{
+    aabb.position = GetTransform()->GetPosition();
 }
 
 
