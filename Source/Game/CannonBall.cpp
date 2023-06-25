@@ -77,6 +77,8 @@ void CannonBall::Update(const float& elapsedTime)
     DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
     pos.z += speed;
     GetTransform()->SetPosition(pos);
+
+    UpdateAABB(elapsedTime);    // AABBXVˆ—
 }
 
 // Update‚ÌŒã‚ÉŒÄ‚Î‚ê‚é
@@ -87,29 +89,7 @@ void CannonBall::End()
 // •`‰æˆ—
 void CannonBall::Render(const float& elapsedTime)
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // TransformXV
-    DirectX::XMFLOAT4X4 transform;
-    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
-
-    // model•`‰æ
-    if (&model->keyframe)
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), &model->keyframe);
-    }
-    else
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
-    }
-
-#if _DEBUG
-    // BOUNDING_BOX
-    {
-        DirectX::XMFLOAT4X4 t = SetDebugModelTransform(transform);
-        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.2f), nullptr);
-    }
-#endif // _DEBUG
+    Character::Render(elapsedTime);
 }
 
 // imgui

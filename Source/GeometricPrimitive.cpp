@@ -1,13 +1,13 @@
-#include "GeometricPrimitive.h"
+Ôªø#include "GeometricPrimitive.h"
 #include "shader.h"
 #include "misc.h"
 
 
 
-// ÉRÉìÉXÉgÉâÉNÉ^
+// „Ç≥„É≥„Çπ„Éà„É©„ÇØ„Çø
 GeometricPrimitive::GeometricPrimitive(ID3D11Device* device)
 {
-    // ãÖëÃ
+    // ÁêÉ‰Ωì
 #if 0
     vertex vertices[24]
     {
@@ -30,7 +30,7 @@ GeometricPrimitive::GeometricPrimitive(ID3D11Device* device)
 #endif
 
 
-    // ê≥ï˚å`
+    // Ê≠£ÊñπÂΩ¢
 #if 1
     DirectX::XMFLOAT3 position[]
     {
@@ -88,9 +88,9 @@ GeometricPrimitive::GeometricPrimitive(ID3D11Device* device)
 #endif
 
     };
-    // ÉTÉCÉYÇ™1.0ÇÃê≥óßï˚ëÃÉfÅ[É^ÇçÏê¨Ç∑ÇÈ(èdêSÇå¥ì_Ç…Ç∑ÇÈ)ÅBê≥óßï˚ëÃÇÃÉRÉìÉgÉçÅ[ÉãÉ|ÉCÉìÉgêîÇÕ8å¬ÅA
-    // 1Ç¬ÇÃÉRÉìÉgÉçÅ[ÉãÉ|ÉCÉìÉgÇÃà íuÇ…ÇÕñ@ê¸ÇÃå¸Ç´Ç™à·Ç§í∏ì_Ç™3å¬Ç†ÇÈÇÃÇ≈í∏ì_èÓïÒÇÃëçêîÇÕ8x3=24å¬
-    // í∏ì_èÓïÒîzóÒ(vertices)Ç…Ç∑Ç◊Çƒí∏ì_ÇÃà íuÅEñ@ê¸èÍÇäiî[Ç∑ÇÈÅB
+    // „Çµ„Ç§„Ç∫„Åå1.0„ÅÆÊ≠£Á´ãÊñπ‰Ωì„Éá„Éº„Çø„Çí‰ΩúÊàê„Åô„Çã(ÈáçÂøÉ„ÇíÂéüÁÇπ„Å´„Åô„Çã)„ÄÇÊ≠£Á´ãÊñπ‰Ωì„ÅÆ„Ç≥„É≥„Éà„É≠„Éº„É´„Éù„Ç§„É≥„ÉàÊï∞„ÅØ8ÂÄã„ÄÅ
+    // 1„Å§„ÅÆ„Ç≥„É≥„Éà„É≠„Éº„É´„Éù„Ç§„É≥„Éà„ÅÆ‰ΩçÁΩÆ„Å´„ÅØÊ≥ïÁ∑ö„ÅÆÂêë„Åç„ÅåÈÅï„ÅÜÈ†ÇÁÇπ„Åå3ÂÄã„ÅÇ„Çã„ÅÆ„ÅßÈ†ÇÁÇπÊÉÖÂ†±„ÅÆÁ∑èÊï∞„ÅØ8x3=24ÂÄã
+    // È†ÇÁÇπÊÉÖÂ†±ÈÖçÂàó(vertices)„Å´„Åô„Åπ„Å¶È†ÇÁÇπ„ÅÆ‰ΩçÁΩÆ„ÉªÊ≥ïÁ∑öÂ†¥„ÇíÊ†ºÁ¥ç„Åô„Çã„ÄÇ
 
     uint32_t indices[36]
     {
@@ -115,12 +115,12 @@ GeometricPrimitive::GeometricPrimitive(ID3D11Device* device)
         20,22,21
 #endif
     };
-    // ê≥óßï˚ëÃÇÕ6ñ éùÇøÅA1Ç¬ÇÃñ ÇÕ2Ç¬ÇÃéOäpå`É|ÉäÉSÉìÇ≈ç\ê¨Ç≥ÇÍÇÈÇÃÇ≈éOäpå`É|ÉäÉSÉìÇÃëçêîÇÕ6x2=12å¬ÅA
-    // ê≥óßï˚ëÃÇï`âÊÇ∑ÇÈÇΩÇﬂÇ…12âÒÇÃéOäpå`É|ÉäÉSÉìï`âÊÇ™ïKóvÅAÇÊÇ¡ÇƒéQè∆Ç≥ÇÍÇÈí∏ì_èÓïÒÇÕ12x3=36âÒÅA
-    // éOäpå`É|ÉäÉSÉìÇ™éQè∆Ç∑ÇÈí∏ì_èÓïÒÇÃÉCÉìÉfÉbÉNÉXÅií∏ì_î‘çÜÅjÇbÇ¡ómâÊèáÇ…îzóÒÅiindicesÅjÇ…äiî[Ç∑ÇÈÅB
-    // éûåvâÒÇËÇ™ï\ñ Ç…Ç»ÇÈÇÊÇ§Ç…äiî[Ç∑ÇÈÇ±Ç∆ÅB
+    // Ê≠£Á´ãÊñπ‰Ωì„ÅØ6Èù¢ÊåÅ„Å°„ÄÅ1„Å§„ÅÆÈù¢„ÅØ2„Å§„ÅÆ‰∏âËßíÂΩ¢„Éù„É™„Ç¥„É≥„ÅßÊßãÊàê„Åï„Çå„Çã„ÅÆ„Åß‰∏âËßíÂΩ¢„Éù„É™„Ç¥„É≥„ÅÆÁ∑èÊï∞„ÅØ6x2=12ÂÄã„ÄÅ
+    // Ê≠£Á´ãÊñπ‰Ωì„ÇíÊèèÁîª„Åô„Çã„Åü„ÇÅ„Å´12Âõû„ÅÆ‰∏âËßíÂΩ¢„Éù„É™„Ç¥„É≥ÊèèÁîª„ÅåÂøÖË¶Å„ÄÅ„Çà„Å£„Å¶ÂèÇÁÖß„Åï„Çå„ÇãÈ†ÇÁÇπÊÉÖÂ†±„ÅØ12x3=36Âõû„ÄÅ
+    // ‰∏âËßíÂΩ¢„Éù„É™„Ç¥„É≥„ÅåÂèÇÁÖß„Åô„ÇãÈ†ÇÁÇπÊÉÖÂ†±„ÅÆ„Ç§„É≥„Éá„ÉÉ„ÇØ„ÇπÔºàÈ†ÇÁÇπÁï™Âè∑Ôºâ„Çíb„Å£Ê¥ãÁîªÈ†Ü„Å´ÈÖçÂàóÔºàindicesÔºâ„Å´Ê†ºÁ¥ç„Åô„Çã„ÄÇ
+    // ÊôÇË®àÂõû„Çä„ÅåË°®Èù¢„Å´„Å™„Çã„Çà„ÅÜ„Å´Ê†ºÁ¥ç„Åô„Çã„Åì„Å®„ÄÇ
 
-    // ê≥ï˚å`
+    // Ê≠£ÊñπÂΩ¢
     create_com_buffers(device, vertices, 24, indices, 36);
 #endif
 
@@ -274,7 +274,7 @@ void GeometricPrimitive::render(ID3D11DeviceContext* immediate_context, const Di
     immediate_context->IASetInputLayout(input_layout.Get());
 
 
-    // ÉVÉFÅ[É_Å[ä÷òA
+    // „Ç∑„Çß„Éº„ÉÄ„ÉºÈñ¢ÈÄ£
     immediate_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
     immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
 
@@ -290,7 +290,10 @@ void GeometricPrimitive::render(ID3D11DeviceContext* immediate_context, const Di
 }
 
 
-void GeometricPrimitive::create_com_buffers(ID3D11Device* device, vertex* vertices, size_t vertex_count, uint32_t* indices, size_t index_count)
+void GeometricPrimitive::create_com_buffers(
+    ID3D11Device* device,
+    const vertex* vertices, const size_t& vertex_count,
+    const uint32_t* indices, const size_t& index_count)
 {
     HRESULT hr{ S_OK };
 
@@ -337,4 +340,70 @@ void GeometricPrimitive::create_com_buffers(ID3D11Device* device, vertex* vertic
     //subresource_data.pSysMem = indices;
     //hr = device->CreateBuffer(&buffer_desc, &subresource_data, index_buffer.ReleaseAndGetAddressOf());
     //_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+}
+
+
+GeometricAABB::GeometricAABB(
+    NO_CONST ID3D11Device* device,
+    const DirectX::XMFLOAT3& min,
+    const DirectX::XMFLOAT3& max)
+    : GeometricPrimitive(device)
+{
+    const size_t vertexCount = 24;
+    const size_t indexCount = 36;
+
+    const vertex vertices[vertexCount] = {
+        // top
+        { { min.x, max.y, max.z }, {  0.0f,  1.0f,  0.0f } }, // 0
+        { { max.x, max.y, max.z }, {  0.0f,  1.0f,  0.0f } }, // 1
+        { { min.x, max.y, min.z }, {  0.0f,  1.0f,  0.0f } }, // 2
+        { { max.x, max.y, min.z }, {  0.0f,  1.0f,  0.0f } }, // 3
+        // bottom                                    
+        { { min.x, min.y, min.z }, {  0.0f, -1.0f,  0.0f } }, // 4
+        { { max.x, min.y, min.z }, {  0.0f, -1.0f,  0.0f } }, // 5
+        { { min.x, min.y, max.z }, {  0.0f, -1.0f,  0.0f } }, // 6
+        { { max.x, min.y, max.z }, {  0.0f, -1.0f,  0.0f } }, // 7
+        // front                                          
+        { { min.x, max.y, min.z }, {  0.0f,  0.0f, -1.0f } }, // 8
+        { { max.x, max.y, min.z }, {  0.0f,  0.0f, -1.0f } }, // 9
+        { { min.x, min.y, min.z }, {  0.0f,  0.0f, -1.0f } }, // 10
+        { { max.x, min.y, min.z }, {  0.0f,  0.0f, -1.0f } }, // 11
+        // back                                            
+        { { max.x, max.y, max.z }, {  0.0f,  0.0f,  1.0f } }, // 12
+        { { min.x, max.y, max.z }, {  0.0f,  0.0f,  1.0f } }, // 13
+        { { max.x, min.y, max.z }, {  0.0f,  0.0f,  1.0f } }, // 14
+        { { min.x, min.y, max.z }, {  0.0f,  0.0f,  1.0f } }, // 15
+        // left                                          
+        { { min.x, max.y, max.z }, { -1.0f,  0.0f,  0.0f } }, // 16
+        { { min.x, max.y, min.z }, { -1.0f,  0.0f,  0.0f } }, // 17
+        { { min.x, min.y, max.z }, { -1.0f,  0.0f,  0.0f } }, // 18
+        { { min.x, min.y, min.z }, { -1.0f,  0.0f,  0.0f } }, // 19
+        // right                                           
+        { { max.x, max.y, min.z }, {  1.0f,  0.0f,  0.0f } }, // 20
+        { { max.x, max.y, max.z }, {  1.0f,  0.0f,  0.0f } }, // 21
+        { { max.x, min.y, min.z }, {  1.0f,  0.0f,  0.0f } }, // 22
+        { { max.x, min.y, max.z }, {  1.0f,  0.0f,  0.0f } }, // 23
+    };
+
+    const uint32_t indices[indexCount] = {
+        // 0------1    „Éª-----„Éª         „Éª
+        // |    Ôºè|         Ôºè            |
+        // | Ôºè   |       Ôºè              |
+        // 2------3     ‚Üô         ‚Üê-----„Éª
+
+        // top
+        0, 1, 2, 1, 3, 2,
+        // bottom
+        4, 5, 6, 5, 7, 6,
+        // front
+        8, 9, 10, 9, 11, 10,
+        // back
+        12, 13, 14, 13, 15, 14,
+        // left
+        16, 17, 18, 17, 19, 18,
+        // right
+        20, 21, 22, 21, 23, 22
+    };
+
+    create_com_buffers(device, vertices, vertexCount, indices, indexCount);
 }

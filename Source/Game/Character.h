@@ -24,7 +24,9 @@ public:
     Character();
     virtual ~Character() {}
 
-    virtual void DrawDebug();   // デバッグ描画
+    virtual void Render(const float& elapsedTime); // 描画処理
+
+    virtual void DrawDebug();           // デバッグ描画
 
 public: // 取得・設定関数関連
     // これはテスト用で使ってるだけなので、、後でいらなくなるかも
@@ -37,6 +39,7 @@ public: // 取得・設定関数関連
     DirectX::XMFLOAT4X4 SetDebugModelTransform(DirectX::XMFLOAT4X4 transform);
 
 public: // アニメーション処理関数関連（ショートカット関数）
+
     // アニメーション再生設定
     // (アニメーション番号・ループするかどうか・アニメーション再生速度・スムーズ切り替え時間（速度）)
     void PlayAnimation(
@@ -73,6 +76,7 @@ protected:
 
 protected:
     void UpdateVelocity(const float& elapsedTime);          // 速力処理更新処理
+    void UpdateAABB(const float& elapsedTime);              // AABB更新処理
     void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
 
 protected:
@@ -93,9 +97,9 @@ public:
     std::unique_ptr<Model>  model       = nullptr;
     std::unique_ptr<Model>  debugModel  = nullptr;
 
-    Collision::Box3D        box3d       = {};
-    
-    
+
+    Collision::AABB aabb = {};  
+    std::unique_ptr<GeometricPrimitive> geometricAABB_ = nullptr;
 
 protected:
     DirectX::XMFLOAT3 velocity  =   { 0,0,0 };      // 速度

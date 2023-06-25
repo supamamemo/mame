@@ -28,7 +28,7 @@ public:
     //};
 #endif
 
-    struct Box3D
+    struct AABB
     {
         //DirectX::XMFLOAT3 position = {};
         //DirectX::XMFLOAT3 lenght    = {};
@@ -96,10 +96,10 @@ public:
 #endif
 
     // Box3DìØémÇÃåç∑îªíË
-    static bool IntersectBox3DVsBox3D(
-        const    Box3D& box1, 
-        const    Box3D& box2, 
-        NO_CONST Box3D& outBoxPosition
+    static bool IntersectAABBVsAABB(
+        const    AABB& aabb1, 
+        const    AABB& aabb2, 
+        NO_CONST AABB& outAABBPosition
     );
 
 };

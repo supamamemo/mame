@@ -4,6 +4,8 @@
 
 #include "BossStateDerived.h"
 
+#include "PlayerManager.h"
+
 int EnemyCannon::nameNum = 0;
 
 // コンストラクタ
@@ -59,6 +61,11 @@ void EnemyCannon::Update(float elapsedTime)
 
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
 
+    // AABB更新処理
+    UpdateAABB(elapsedTime);
+
+    CollisionCannonBallVsPlayer(); // エネミー弾丸とプレイヤーの衝突処理
+
     // デバッグモデルの位置更新
     debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
 }
@@ -71,37 +78,8 @@ void EnemyCannon::End()
 // 描画処理
 void EnemyCannon::Render(float elapsedTime)
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // Transform更新
-    DirectX::XMFLOAT4X4 transform;
-    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
-
-    // model描画
-    if (&model->keyframe)
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, &model->keyframe);
-    }
-    else
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
-    }
-
-#if _DEBUG
-    // BOUNDING_BOX
-    {
-        DirectX::XMFLOAT4X4 debugTransform = {};
-
-        // ワールド行列の取得とスケール調整
-        DirectX::XMStoreFloat4x4(&debugTransform, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
-
-        // ワールド行列設定
-        debugTransform = SetDebugModelTransform(debugTransform);
-
-        // 描画
-        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
-    }
-#endif // _DEBUG
+    // 共通の描画処理
+    Character::Render(elapsedTime);
 
     // cannonBallManager
     cannonBallManager.Render(elapsedTime);
@@ -122,4 +100,60 @@ void EnemyCannon::DrawDebug()
 
     ImGui::End();
 #endif // USE_IMGUI
+}
+
+
+void EnemyCannon::CollisionCannonBallVsPlayer()
+{
+    const int cannonBallCount = cannonBallManager.GetCannonBallCount();
+
+    bool isHit = false;
+
+    for (int i = 0; i < cannonBallCount; ++i)
+    {
+        CannonBall* cannonBall = cannonBallManager.GetCannonBall(i);
+
+        NO_CONST Collision::AABB outPosition = {};
+        const Collision::AABB& playerAABB = PlayerManager::Instance().GetPlayer()->aabb;
+        if (Collision::IntersectAABBVsAABB(cannonBall->aabb, playerAABB, outPosition))
+        {
+            isHit = true;
+            // AABB1を押し出す
+            //if (outPosition.max.x - outPosition.min.x < outPosition.max.y - outPosition.min.y)
+            //{
+            //    if (outPosition.max.x - box1.min.x < box1.max.x - outPosition.min.x)
+            //    {
+            //        box1.max.x = outPosition.min.x;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.min.x, 0, 0));
+            //    }
+            //    else
+            //    {
+            //        box1.min.x = outPosition.max.x;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.max.x, 0, 0));
+            //    }
+            //}
+            //else
+            //{
+            //    if (outPosition.max.y - box1.min.y < box1.max.y - outPosition.min.y)
+            //    {
+            //        //box1.max.y = outPosition.min.y;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.min.y, 0));
+            //    }
+            //    else
+            //    {
+            //        //box1.min.y = outPosition.max.y;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.max.y, 0));
+            //    }
+            //}
+            //if (outPosition.max.z - box1.min.z < box1.max.z - outPosition.min.z)
+            //    box1.max.z = outPosition.min.z;
+            //else
+            //    box1.min.z = outPosition.max.z;   
+        }
+    }
+#if _DEBUG
+    ImGui::Begin("isPlayerHit");
+    ImGui::Checkbox("isPlayerHit", &isHit);
+    ImGui::End();
+#endif
 }

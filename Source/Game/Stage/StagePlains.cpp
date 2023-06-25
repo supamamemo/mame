@@ -11,12 +11,12 @@ StagePlains::StagePlains()
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 
     // エネミー初期化
-    //EnemyCannon* cannon = new EnemyCannon();
-    //cannon->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 20.0f));
-    //EnemyManager::Instance().Register(cannon);
+    EnemyCannon* cannon = new EnemyCannon();
+    cannon->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 20.0f));
+    EnemyManager::Instance().Register(cannon);
 
     EnemyCannon* cannon2 = new EnemyCannon();
-    cannon2->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f));
+    cannon2->GetTransform()->SetPosition(DirectX::XMFLOAT3(-5.0f, 0.0f, 10.0f));
     EnemyManager::Instance().Register(cannon2);
 
     // 草ブロック生成
