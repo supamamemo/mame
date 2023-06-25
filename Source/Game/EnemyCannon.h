@@ -17,6 +17,9 @@ public:
     void Render(float elapsedTime)  override; // 描画処理
     void DrawDebug()                override;
 
+private:
+    void CollisionCannonBallVsPlayer(); // エネミー弾丸とプレイヤーの衝突判定
+
 public:
     // Imgui名前被り防止のためのやつ //
     static int nameNum;

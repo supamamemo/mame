@@ -3,6 +3,7 @@
 #include "../Mame/Input/Input.h"
 #include "OperatorXMFLOAT3.h"
 #include "EnemyManager.h"
+#include "CannonBallManager.h"
 
 Player::Player()
 {
@@ -335,8 +336,8 @@ void Player::CollisionPlayerVsEnemies()
         }
     }
 #if _DEBUG
-    ImGui::Begin("isHit");
-    ImGui::Checkbox("isHit", &isHit);
+    ImGui::Begin("isEnemyHit");
+    ImGui::Checkbox("isEnemyHit", &isHit);
     ImGui::End();
 #endif
 }

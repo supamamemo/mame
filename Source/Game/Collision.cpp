@@ -296,10 +296,11 @@ bool Collision::IntersectAABBVsAABB(
 {
     // X軸方向の衝突判定
     {
-        const float box1Right   = (aabb1.max.x + aabb1.position.x);
-        const float box1Left    = (aabb1.min.x + aabb1.position.x);    
-        const float box2Right   = (aabb2.max.x + aabb2.position.x);
-        const float box2Left    = (aabb2.min.x + aabb2.position.x);
+        // 大きさをモデルと同じ0.01fに調整
+        const float box1Right   = (aabb1.max.x * 0.01f + aabb1.position.x);
+        const float box1Left    = (aabb1.min.x * 0.01f + aabb1.position.x);    
+        const float box2Right   = (aabb2.max.x * 0.01f + aabb2.position.x);
+        const float box2Left    = (aabb2.min.x * 0.01f + aabb2.position.x);
 
         const bool isHitX = (box1Right > box2Left && box1Left < box2Right);
 
@@ -307,28 +308,30 @@ bool Collision::IntersectAABBVsAABB(
     }
 
     // Y軸方向の衝突判定
-    //{
-    //    const float box1Up      = box1.max.y + box1.position.y;
-    //    const float box1Bottom  = box1.min.y + box1.position.y;
-    //    const float box2Up      = box2.max.y + box2.position.y;
-    //    const float box2Bottom  = box2.min.y + box2.position.y;
+    {
+        // 大きさをモデルと同じ0.01fに調整
+        const float box1Up      = aabb1.max.y * 0.01f + aabb1.position.y;
+        const float box1Bottom  = aabb1.min.y * 0.01f + aabb1.position.y;
+        const float box2Up      = aabb2.max.y * 0.01f + aabb2.position.y;
+        const float box2Bottom  = aabb2.min.y * 0.01f + aabb2.position.y;
 
-    //    const bool isHitY = (box1Up > box2Bottom && box1Bottom < box2Up);
+        const bool isHitY = (box1Up > box2Bottom && box1Bottom < box2Up);
 
-    //    if (!isHitY) return false;  // Y軸方向での衝突なし
-    //}
+        if (!isHitY) return false;  // Y軸方向での衝突なし
+    }
 
-    //// Z軸方向の衝突判定
-    //{
-    //    const float box1Back    = box1.max.z + box1.position.z;
-    //    const float box1Front   = box1.min.z + box1.position.z;
-    //    const float box2Back    = box2.max.z + box2.position.z;
-    //    const float box2Front   = box2.min.z + box2.position.z;
+    // Z軸方向の衝突判定
+    {
+        // 大きさをモデルと同じ0.01fに調整
+        const float box1Back    = aabb1.max.z * 0.01f + aabb1.position.z;
+        const float box1Front   = aabb1.min.z * 0.01f + aabb1.position.z;
+        const float box2Back    = aabb2.max.z * 0.01f + aabb2.position.z;
+        const float box2Front   = aabb2.min.z * 0.01f + aabb2.position.z;
 
-    //    const bool isHitZ = (box1Back > box2Front && box1Front < box2Back);
+        const bool isHitZ = (box1Back > box2Front && box1Front < box2Back);
 
-    //    if (!isHitZ) return false;  // Z軸方向での衝突なし
-    //}
+        if (!isHitZ) return false;  // Z軸方向での衝突なし
+    }
 
     // 衝突している範囲を計算
     {

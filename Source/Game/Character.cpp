@@ -49,6 +49,7 @@ void Character::Render(const float& /*elapsedTime*/)
 
 #if _DEBUG
 
+    // デバッグモデルでの描画
 #if 0
     DirectX::XMFLOAT4X4 debugTransform = {};
 
@@ -62,8 +63,7 @@ void Character::Render(const float& /*elapsedTime*/)
     debugModel->skinned_meshes.render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
 #endif
 
-    // ワイヤーフレームにしようとしたがステージの色が真っ黒になっておかしくなってしまう
-    // 不透明度を下げれば一応機能的に使えるので放置
+    // ラスタライザステート作成・設定
 #if 0
     Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizer_state = nullptr;
     
@@ -72,8 +72,13 @@ void Character::Render(const float& /*elapsedTime*/)
     NO_CONST D3D11_RASTERIZER_DESC rasterizer_desc = {};
     //rasterizer_desc.FillMode                = D3D11_FILL_WIREFRAME; // 塗りつぶし
     rasterizer_desc.FillMode                = D3D11_FILL_SOLID; // 塗りつぶし
-    rasterizer_desc.CullMode                = D3D11_CULL_BACK;	    // 背面カリング（裏面を描画しない）
-    rasterizer_desc.FrontCounterClockwise   = FALSE;			    // 三角形をを反時計回り（裏側）にするか
+    //rasterizer_desc.CullMode                = D3D11_CULL_BACK;	    // 背面カリング（裏面を描画しない）
+    rasterizer_desc.CullMode                = D3D11_CULL_NONE;	    // カリングなし
+
+    // ?
+    //rasterizer_desc.FrontCounterClockwise   = FALSE;			    // 三角形をを反時計回り（裏側）にするか
+    rasterizer_desc.FrontCounterClockwise   = TRUE;			    // 三角形をを反時計回り（裏側）にするか
+
     rasterizer_desc.DepthBias               = 0;	                // 指定されたピクセルに追加された深度値
     rasterizer_desc.DepthBiasClamp          = 0;	                // ピクセルの最大深度バイアス
     rasterizer_desc.SlopeScaledDepthBias    = 0;	                // 指定されたピクセルの傾きのスカラー
@@ -87,46 +92,38 @@ void Character::Render(const float& /*elapsedTime*/)
     // ラスタライザステート設定(ワイヤーフレーム)
     graphics.GetDeviceContext()->RSSetState(rasterizer_state.Get());
 
+#else
+    // RS番号
+    {
+        // 0 ソリッド・後ろカリング
+        // 1 ワイヤーフレーム・後ろカリング
+        // 2 ワイヤーフレーム・カリングなし
+        // 3 ソリッド・カリングなし
+    }
+
+    // ラスタライザ設定(ソリッド・カリングなし)
+    graphics.GetShader()->SetState(graphics.GetDeviceContext(), 3, 0, 0);
+
+#endif
+
     // 回転なしワールド行列の作成
     NO_CONST  DirectX::XMFLOAT4X4 noRotationTransform = {};
     {
-        const DirectX::XMFLOAT3& scale = GetTransform()->GetScale();
-        const DirectX::XMFLOAT3& position = GetTransform()->GetPosition();
-        const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) * DirectX::XMMatrixScaling(0.01f, 0.01f, 0.01f);
-        const DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-        DirectX::XMStoreFloat4x4(&noRotationTransform, S * T);
-    }
-
-    const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.5f };
-    // AABB描画
-    geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
-
-    // ラスタライザステート再設定(リセットがしたかった)
-    ///rasterizer_desc.FillMode = D3D11_FILL_SOLID;	// 塗りつぶし
-    ///hr = graphics.GetDevice()->CreateRasterizerState(&rasterizer_desc, rasterizer_state.GetAddressOf());
-    ///_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-    ////graphics.GetDeviceContext()->RSSetState(rasterizer_state.Get());
-    graphics.GetDeviceContext()->RSSetState(nullptr);
-
-#else
-        // 回転なしワールド行列の作成
-    NO_CONST  DirectX::XMFLOAT4X4 noRotationTransform = {};
-    {
-        const DirectX::XMFLOAT3& scale = GetTransform()->GetScale();
-        const DirectX::XMFLOAT3& position = aabb.position;
+        const DirectX::XMFLOAT3& scale      = GetTransform()->GetScale();
+        const DirectX::XMFLOAT3& position   = GetTransform()->GetPosition();
         const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) * DirectX::XMMatrixScaling(0.01f, 0.01f, 0.01f);
         const DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
         DirectX::XMStoreFloat4x4(&noRotationTransform, S * T);
     }
 
     // カラー設定
-    const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.2f };
-
+    const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.4f };
+    
     // AABB描画
     geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
 
-#endif
-
+    // ラスタライザ再設定(ソリッド・後ろカリング)
+    graphics.GetShader()->SetState(graphics.GetDeviceContext(), 0, 0, 0);
 
 #endif // _DEBUG
 }

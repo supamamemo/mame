@@ -4,6 +4,8 @@
 
 #include "BossStateDerived.h"
 
+#include "PlayerManager.h"
+
 int EnemyCannon::nameNum = 0;
 
 // コンストラクタ
@@ -62,6 +64,8 @@ void EnemyCannon::Update(float elapsedTime)
     // AABB更新処理
     UpdateAABB(elapsedTime);
 
+    CollisionCannonBallVsPlayer(); // エネミー弾丸とプレイヤーの衝突処理
+
     // デバッグモデルの位置更新
     debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
 }
@@ -96,4 +100,60 @@ void EnemyCannon::DrawDebug()
 
     ImGui::End();
 #endif // USE_IMGUI
+}
+
+
+void EnemyCannon::CollisionCannonBallVsPlayer()
+{
+    const int cannonBallCount = cannonBallManager.GetCannonBallCount();
+
+    bool isHit = false;
+
+    for (int i = 0; i < cannonBallCount; ++i)
+    {
+        CannonBall* cannonBall = cannonBallManager.GetCannonBall(i);
+
+        NO_CONST Collision::AABB outPosition = {};
+        const Collision::AABB& playerAABB = PlayerManager::Instance().GetPlayer()->aabb;
+        if (Collision::IntersectAABBVsAABB(cannonBall->aabb, playerAABB, outPosition))
+        {
+            isHit = true;
+            // AABB1を押し出す
+            //if (outPosition.max.x - outPosition.min.x < outPosition.max.y - outPosition.min.y)
+            //{
+            //    if (outPosition.max.x - box1.min.x < box1.max.x - outPosition.min.x)
+            //    {
+            //        box1.max.x = outPosition.min.x;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.min.x, 0, 0));
+            //    }
+            //    else
+            //    {
+            //        box1.min.x = outPosition.max.x;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.max.x, 0, 0));
+            //    }
+            //}
+            //else
+            //{
+            //    if (outPosition.max.y - box1.min.y < box1.max.y - outPosition.min.y)
+            //    {
+            //        //box1.max.y = outPosition.min.y;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.min.y, 0));
+            //    }
+            //    else
+            //    {
+            //        //box1.min.y = outPosition.max.y;
+            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.max.y, 0));
+            //    }
+            //}
+            //if (outPosition.max.z - box1.min.z < box1.max.z - outPosition.min.z)
+            //    box1.max.z = outPosition.min.z;
+            //else
+            //    box1.min.z = outPosition.max.z;   
+        }
+    }
+#if _DEBUG
+    ImGui::Begin("isPlayerHit");
+    ImGui::Checkbox("isPlayerHit", &isHit);
+    ImGui::End();
+#endif
 }
