@@ -56,9 +56,6 @@ namespace BOSS
 
         // タイマーをセット
         SetTimer(1.0f);
-
-        // 回転速度設定
-        SetRotationSpeed(3.0f);
     }
 
     // 更新
@@ -68,7 +65,7 @@ namespace BOSS
         owner->UpdateAnimation(elapsedTime);
 
         // タイマーが0になったらAttackStateへ
-        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::ROTATE));
+        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Rotate));
 
         // 時間を減らす
         SubtractTime(elapsedTime);
@@ -87,22 +84,51 @@ namespace BOSS
     void RotateState::Enter()
     {
         // materialColor(回転(緑))
-        owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
+
+        // 回転速度設定
+        SetRotationSpeed(3.0f);
 
         // プレイヤーがどっちにいるのか
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
-        float rot = playerPos.x > ownerPos.x ? 90.0f : -90.0f;
-
-        owner->GetStateMachine()->SetMoveRight(true);
+        rotate = playerPos.x > ownerPos.x ? 90.0f : 270.0f;
     }
 
     // 更新
     void RotateState::Execute(float elapsedTime)
     {
         // プレイヤーの方向に向くように回転する
+        {
+            DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
+            // 90度の場合
+            if (rotate == 90.0f)
+            {
+                // 回転
+                rotation.y -= GetRotationSpeed() * elapsedTime;
+                
+                // 回転終わったらAttackStateへ
+                if (DirectX::XMConvertToRadians(rotate) >= rotation.y)
+                {
+                    rotation.y = DirectX::XMConvertToRadians(90.0f);
+                    owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
+                }
+            }
+            // -90度の場合
+            else
+            {
+                // 回転
+                rotation.y += GetRotationSpeed() * elapsedTime;
 
-        DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
+                // 回転終わったらAttackStateへ
+                if (DirectX::XMConvertToRadians(rotate) <= rotation.y)
+                {
+                    rotation.y = DirectX::XMConvertToRadians(270.0f);
+                    owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
+                }
+            }
+            owner->GetTransform()->SetRotation(rotation);
+        }
     }
 
     // 終了

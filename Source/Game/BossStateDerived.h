@@ -11,7 +11,7 @@ namespace BOSS
     {
         Idle,
         Find,
-        ROTATE,
+        Rotate,
         Attack,
         Recoil,
     };
@@ -59,6 +59,9 @@ namespace BOSS
         void Enter()override;
         void Execute(float elapsedTime)override;
         void Exit()override;
+
+    private:
+        float rotate = 0.0f;
     };
 
     class AttackState : public State

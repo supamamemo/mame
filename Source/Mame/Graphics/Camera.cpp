@@ -2,37 +2,7 @@
 
 #include "../Input/Input.h"
 
-//// 透視投影
-//void Camera::Update(ID3D11DeviceContext* dc, DirectX::XMFLOAT3 eye, DirectX::XMFLOAT3 focus, DirectX::XMFLOAT3 up, ID3D11Buffer* CbSceneBuffer)
-//{
-//    //D3D11_VIEWPORT viewport{};
-//    //UINT unm_viewports{ 1 };
-//    //dc->RSGetViewports(&unm_viewports, &viewport);
-//
-//    //float aspect_ratio{ viewport.Width / viewport.Height };
-//    //DirectX::XMMATRIX P{ DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(30),aspect_ratio,0.1f,100.0f) };
-//
-//    //Eye = DirectX::XMLoadFloat3(&eye);
-//    //Focus = DirectX::XMLoadFloat3(&focus);
-//    //Up = DirectX::XMLoadFloat3(&up);
-//    //V = DirectX::XMMatrixLookAtLH(Eye, Focus, Up);
-//
-//    //CbScene data{};
-//    //DirectX::XMStoreFloat4x4(&data.viewProjection, V * P);
-//    //data.lightDirection = { 0,0,1,0 };
-//    //data.camera_position = { 0,0,1,0 };
-//
-//    //dc->UpdateSubresource(CbSceneBuffer, 0, 0, &data, 0, 0);
-//    //dc->VSSetConstantBuffers(1, 1, &CbSceneBuffer);
-//    //dc->PSSetConstantBuffers(1, 1, &CbSceneBuffer);
-//
-//}
-//
-//// 平行投影
-//void Camera::Update(ID3D11DeviceContext* dc, DirectX::XMFLOAT3 eye, DirectX::XMFLOAT3 focus, DirectX::XMFLOAT3 up, float viewWidth, float viewHeight, float nearZ, float farZ)
-//{
-//}
-
+#include "../../Game/PlayerManager.h"
 
 void Camera::Initialize()
 {
@@ -41,6 +11,18 @@ void Camera::Initialize()
 }
 
 void Camera::Update(float elapsedTime)
+{
+    // プレイヤーのxにカメラのxをあわせる
+    {
+        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+        DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
+
+        cameraPos.x = playerPos.x;
+        GetTransform()->SetPosition(cameraPos);
+    }
+}
+
+void Camera::UpdateTitle(float elapsedTime)
 {
     DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
     DirectX::XMFLOAT4 rot = GetTransform()->GetRotation();
@@ -115,7 +97,6 @@ void Camera::Update(float elapsedTime)
 
     GetTransform()->SetPosition(pos);
     GetTransform()->SetRotation(rot);
-
 }
 
 

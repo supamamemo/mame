@@ -165,6 +165,9 @@ void StagePlains::Update(const float& elapsedTime)
         block->Update();
     }
 
+    Camera& camera = Camera::Instance();
+    camera.Update(elapsedTime);
+
 #if 0 // SORRY
     const Collision::Box3D box1 = {
         PlayerManager::Instance().GetPlayer()->model->skinned_meshes.boundingBox[0],
@@ -218,8 +221,7 @@ void StagePlains::Render(const float& elapsedTime)
         float vecX = DirectX::XMVectorGetX(vec);
         vecX = (vecX > 0) ? vecX : -vecX;
 
-        if(vecX<20.0f)
-            block->Render(elapsedTime);
+        if (vecX < 40.0f)block->Render(elapsedTime);
     }
 }
 
