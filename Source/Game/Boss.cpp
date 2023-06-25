@@ -11,7 +11,8 @@ Boss::Boss()
 {
     Graphics& graphics = Graphics::Instance();
 
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_block.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/chef.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_block.fbx", true);
     DirectX::XMFLOAT3 pos1 = model->GetTransform()->GetPosition();
 
 
@@ -20,6 +21,7 @@ Boss::Boss()
 
     GetStateMachine()->RegisterState(new BOSS::IdleState(this));
     GetStateMachine()->RegisterState(new BOSS::FindState(this));
+    GetStateMachine()->RegisterState(new BOSS::RotateState(this));
     GetStateMachine()->RegisterState(new BOSS::AttackState(this));
     GetStateMachine()->RegisterState(new BOSS::RecoilState(this));
 

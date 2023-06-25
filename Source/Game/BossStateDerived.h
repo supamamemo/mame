@@ -11,6 +11,7 @@ namespace BOSS
     {
         Idle,
         Find,
+        ROTATE,
         Attack,
         Recoil,
     };
@@ -49,6 +50,17 @@ namespace BOSS
         void Exit()override;
     };
 
+    class RotateState : public State
+    {
+    public:
+        RotateState(Enemy* _boss) :State(_boss, "rotate") {}
+        ~RotateState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+    };
+
     class AttackState : public State
     {
     public:
@@ -60,9 +72,8 @@ namespace BOSS
         void Exit()override;
 
     private:
-        float moveSpeed = 0;
-
         bool moveLeft = true;
+        float speed = 5.0f;
     };
 
     class RecoilState : public State
@@ -81,6 +92,7 @@ namespace BOSS
     private:
         float recoil = 0;       // îΩìÆãóó£
         float recoilCount = 0;  // ç°Ç«ÇÍÇæÇØîΩìÆÇ≈îÚÇÒÇ≈Ç¢ÇÈÇ©
+        float speed = 2.0f;
     };
 }
 

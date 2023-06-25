@@ -67,6 +67,12 @@ void StateMachine::DrawDebug()
         float temp = currentState->GetTimer();
         ImGui::DragFloat("time", &temp);
 
+        float moveSpeed = currentState->GetMoveSpeed();
+        ImGui::DragFloat("moveSpeed", &moveSpeed);
+
+        float rotSpeed = currentState->GetRotationSpeed();
+        ImGui::DragFloat("rotationSpeed", &rotSpeed);
+
         ImGui::TreePop();
     }
 #endif // USE_IMGUI

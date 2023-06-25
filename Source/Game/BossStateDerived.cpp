@@ -55,7 +55,10 @@ namespace BOSS
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 1.0f));
 
         // タイマーをセット
-        SetTimer(2.0f);
+        SetTimer(1.0f);
+
+        // 回転速度設定
+        SetRotationSpeed(3.0f);
     }
 
     // 更新
@@ -65,7 +68,7 @@ namespace BOSS
         owner->UpdateAnimation(elapsedTime);
 
         // タイマーが0になったらAttackStateへ
-        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Attack));
+        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::ROTATE));
 
         // 時間を減らす
         SubtractTime(elapsedTime);
@@ -73,6 +76,37 @@ namespace BOSS
 
     // 終了
     void FindState::Exit()
+    {
+    }
+}
+
+// RotateState
+namespace BOSS
+{
+    // 初期化
+    void RotateState::Enter()
+    {
+        // materialColor(回転(緑))
+        owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.0f));
+
+        // プレイヤーがどっちにいるのか
+        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
+        DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
+        float rot = playerPos.x > ownerPos.x ? 90.0f : -90.0f;
+
+        owner->GetStateMachine()->SetMoveRight(true);
+    }
+
+    // 更新
+    void RotateState::Execute(float elapsedTime)
+    {
+        // プレイヤーの方向に向くように回転する
+
+        DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
+    }
+
+    // 終了
+    void RotateState::Exit()
     {
     }
 }
@@ -94,7 +128,9 @@ namespace BOSS
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
 
         // 左右判定
-        moveSpeed = playerPos.x > ownerPos.x ? 3.0f : -3.0f;
+        SetMoveSpeed(playerPos.x > ownerPos.x ? speed : -speed);
+        float rot = playerPos.x > ownerPos.x ? 90.0f : -90.0f;
+        owner->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(rot), 0.0f, 0.0f));
     }
 
     // 更新
@@ -105,18 +141,18 @@ namespace BOSS
 
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
 
-        ownerPos.x += moveSpeed * elapsedTime;
+        ownerPos.x += GetMoveSpeed() * elapsedTime;
 
         // 壁にぶつかったらIdleステートへ
-        if (ownerPos.x > 3.3f)
+        if (ownerPos.x > 9.0f)
         {
-            ownerPos.x = 3.3f;
+            ownerPos.x = 9.0f;
             owner->GetStateMachine()->SetMoveRight(false);
             owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));
         }
-        if (ownerPos.x < -4.0f)
+        if (ownerPos.x < -9.0f)
         {
-            ownerPos.x = -4.0f;
+            ownerPos.x = -9.0f;
             owner->GetStateMachine()->SetMoveRight(true);
             owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));
         }
@@ -157,9 +193,9 @@ namespace BOSS
         owner->UpdateAnimation(elapsedTime);
 
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
-        float moveSpeed = owner->GetStateMachine()->GetMoveRight() ? 2.0f : -2.0f;
-        ownerPos.x += moveSpeed * elapsedTime;
-        recoilCount += moveSpeed * elapsedTime;
+        SetMoveSpeed(owner->GetStateMachine()->GetMoveRight() ? speed : -speed);
+        ownerPos.x += GetMoveSpeed() * elapsedTime;
+        recoilCount += GetMoveSpeed() * elapsedTime;
 
         if (owner->GetStateMachine()->GetMoveRight())
         {

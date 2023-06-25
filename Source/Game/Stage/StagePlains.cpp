@@ -117,7 +117,7 @@ void StagePlains::Initialize()
     }
 
     Camera& camera = Camera::Instance();
-    camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 8, -12));
+    camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 10, -12));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0, 0, 0));
 }
 
@@ -148,10 +148,6 @@ void StagePlains::Begin()
     {
         block->Begin();
     }
-
-
-
-
 }
 
 // 更新処理
@@ -214,7 +210,16 @@ void StagePlains::Render(const float& elapsedTime)
     // 草ブロック
     for (std::unique_ptr<GrassBlock>& block : grassBlock)
     {
-        block->Render(elapsedTime);
+        // DrawCollを少なくするためにplayerから近いものだけ描画する
+        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+        DirectX::XMFLOAT3 blockPos = block.get()->model->GetTransform()->GetPosition();
+
+        DirectX::XMVECTOR vec = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&playerPos), DirectX::XMLoadFloat3(&blockPos));
+        float vecX = DirectX::XMVectorGetX(vec);
+        vecX = (vecX > 0) ? vecX : -vecX;
+
+        if(vecX<20.0f)
+            block->Render(elapsedTime);
     }
 }
 

@@ -16,14 +16,22 @@ public:
     virtual void Exit() = 0;
     
 public:
+    const char* GetName() { return name; }
     void SetTimer(float time) { timer = time; }
     float GetTimer() const { return timer; }
     void SubtractTime(float time) { timer -= time; }
 
-    const char* GetName() { return name; }
+
+    void SetMoveSpeed(float speed) { moveSpeed = speed; }
+    float GetMoveSpeed() { return moveSpeed; }
+    void SetRotationSpeed(float rotSpeed) { rotationSpeed = rotSpeed; }
+    float GetRotationSpeed() { return rotationSpeed; }
 
 private:
     float timer = 0;
+    
+    float moveSpeed = 0.0f;     // ˆÚ“®‘¬“x
+    float rotationSpeed = 0.0f; // ‰ñ“]‘¬“x
 
 protected:
     Enemy* owner;

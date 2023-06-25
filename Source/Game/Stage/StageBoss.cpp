@@ -27,13 +27,16 @@ void StageBoss::Initialize()
     // boss‰Šú‰»
     boss->Initialize();
 
-    stage[0]->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 0, 10));
-    stage[1]->GetTransform()->SetPosition(DirectX::XMFLOAT3(4, 20, 10));
+    stage[0]->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 1, 10));
+    stage[0]->GetTransform()->SetScale(DirectX::XMFLOAT3(4.0f, 1.0f, 1.0f));
+    stage[1]->GetTransform()->SetPosition(DirectX::XMFLOAT3(-11, 20, 10));
     stage[1]->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
-    stage[2]->GetTransform()->SetPosition(DirectX::XMFLOAT3(-5.5f, 20, 10));
+    stage[2]->GetTransform()->SetPosition(DirectX::XMFLOAT3(9.5f, 20, 10));
     stage[2]->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
     
-    //stage[1]->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 0));
+    Camera& camera = Camera::Instance();
+    camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
+    camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0.0f, 0.0f, 0.0f));
 }
 
 // I—¹‰»
@@ -84,7 +87,6 @@ void StageBoss::Update(const float& elapsedTime)
 
     // bossXV
     boss->Update(elapsedTime);
-
 }
 
 // Update‚ÌŒã‚ÉŒÄ‚Î‚ê‚éˆ—
