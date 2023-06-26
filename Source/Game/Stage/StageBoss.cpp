@@ -16,6 +16,9 @@ StageBoss::StageBoss()
     {
         temp = std::make_unique<Boss>("./resources/temporary/assets_ground.fbx");
     }
+
+    // tofu
+    tofu = std::make_unique<EnemyTofu>();
 }
 
 // 初期化
@@ -37,6 +40,11 @@ void StageBoss::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0.0f, 0.0f, 0.0f));
+
+
+    //tofu
+    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(5.0f, 0.0f, 20.0f));
+    tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
 }
 
 // 終了化
@@ -87,6 +95,9 @@ void StageBoss::Update(const float& elapsedTime)
 
     // boss更新
     boss->Update(elapsedTime);
+
+    // tofu
+    tofu->Update(elapsedTime);
 }
 
 // Updateの後に呼ばれる処理
@@ -114,6 +125,9 @@ void StageBoss::Render(const float& elapsedTime)
     {
         temp->Render(elapsedTime);
     }
+
+    // tofu
+    tofu->Render(elapsedTime);
 }
 
 // debug用
@@ -131,5 +145,7 @@ void StageBoss::DrawDebug()
         temp->DrawDebug();
     }
 
+
+    tofu->DrawDebug();
 #endif
 }

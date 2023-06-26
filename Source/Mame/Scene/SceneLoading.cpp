@@ -17,8 +17,8 @@ void SceneLoading::Initialize()
     //spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/load.png");
     //spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/fade.jpg");
     
-    //spriteDissolve.SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
-    spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+    spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
+    //spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
 
     // スレッド開始
     thread = new std::thread(LoadingThread, this);
@@ -47,16 +47,19 @@ void SceneLoading::Update(const float& elapsedTime)
     spriteDissolve->Update();
 
     //spriteDissolve.fadeOut(elapsedTime);
-    spriteDissolve->FadeIn(elapsedTime);
+    //spriteDissolve->FadeIn(elapsedTime);
 
-    // 次のシーンの準備が完了したらシーンを切り替える
-    if (nextScene->IsReady() &&
-        spriteDissolve->FadeInReady(0.0f))
-        //spriteDissolve.fadeOutReady(1.5f))
-    {
+    if (nextScene->IsReady())
         Mame::Scene::SceneManager::Instance().ChangeScene(nextScene);
-        return;
-    }
+
+    //// 次のシーンの準備が完了したらシーンを切り替える
+    //if (nextScene->IsReady() &&
+    //    spriteDissolve->FadeInReady(0.0f))
+    //    //spriteDissolve.fadeOutReady(1.5f))
+    //{
+    //    Mame::Scene::SceneManager::Instance().ChangeScene(nextScene);
+    //    return;
+    //}
 }
 
 // Updateの後に呼ばれる

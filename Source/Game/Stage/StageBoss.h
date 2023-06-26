@@ -7,6 +7,8 @@
 
 #include "../CannonBall.h"
 
+#include "../EnemyTofu.h"
+
 class StageBoss : public Stage
 {
 public:
@@ -26,5 +28,7 @@ private:
 
     // ‰¼‚ÉbossƒNƒ‰ƒX‚Å•\Ž¦‚µ‚Ä‚é
     std::unique_ptr<Boss> stage[3];
+
+    std::unique_ptr<EnemyTofu> tofu;
 };
 

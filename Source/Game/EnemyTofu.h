@@ -1,13 +1,12 @@
 #pragma once
 #include "Enemy.h"
-#include "CannonBallManager.h"
 
-// 大砲
-class EnemyCannon : public Enemy
+// 豆腐君
+class EnemyTofu : public Enemy
 {
 public:
-    EnemyCannon();
-    ~EnemyCannon() override;
+    EnemyTofu();
+    ~EnemyTofu()override;
 
     void Initialize()               override; // 初期化
     void Finalize()                 override; // 終了化
@@ -16,9 +15,6 @@ public:
     void End()                      override; // 毎フレーム一番最後に呼ばれる
     void Render(float elapsedTime)  override; // 描画処理
     void DrawDebug()                override;
-
-private:
-    void CollisionCannonBallVsPlayer(); // エネミー弾丸とプレイヤーの衝突判定
 
 public:
     // Imgui名前被り防止のためのやつ //

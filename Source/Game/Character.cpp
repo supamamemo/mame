@@ -226,7 +226,7 @@ void Character::UpdateVelocity(const float& elapsedTime)
 
 void Character::UpdateAABB(const float& /*elapsedTime*/)
 {
-    aabb.position = GetTransform()->GetPosition();
+    //aabb.position = GetTransform()->GetPosition();
 }
 
 

@@ -27,5 +27,10 @@ public:
 
     CannonBallManager cannonBallManager = {};               // 大砲の弾マネージャー
 
+public:
+    void SetMoveRight(bool r) { moveRight = r; }
+    bool GetMoveRight() { return moveRight; }
+private:
+    bool moveRight = true;      // 右に進むかどうか
 };
 

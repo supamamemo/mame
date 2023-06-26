@@ -237,6 +237,9 @@
     <ClCompile Include="Source\Game\CannonBallManager.cpp">
       <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\EnemyTofu.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -423,6 +426,9 @@
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\CannonBallManager.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\EnemyTofu.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
   </ItemGroup>
