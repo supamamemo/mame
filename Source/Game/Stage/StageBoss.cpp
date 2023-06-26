@@ -2,6 +2,8 @@
 
 #include "../../Mame/Graphics/Graphics.h"
 
+#include "../EnemyManager.h"
+
 // コンストラクタ
 StageBoss::StageBoss()
 {
@@ -9,7 +11,10 @@ StageBoss::StageBoss()
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 
     // boss生成
-    boss = std::make_unique<Boss>();
+    //boss = std::make_unique<Boss>();
+    Boss* boss = new Boss();
+    //cannon->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 20.0f));
+    EnemyManager::Instance().Register(boss);
 
     // 仮
     for (std::unique_ptr<Boss>& temp : stage)
@@ -22,10 +27,11 @@ StageBoss::StageBoss()
 void StageBoss::Initialize()
 {
     // player初期化
-    PlayerManager::Instance().GetPlayer()->Initialize();
+    PlayerManager::Instance().Initialize();
 
     // boss初期化
-    boss->Initialize();
+    //boss->Initialize();
+    EnemyManager::Instance().Initialize();
 
     stage[0]->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 1, 10));
     stage[0]->GetTransform()->SetScale(DirectX::XMFLOAT3(4.0f, 1.0f, 1.0f));
@@ -43,20 +49,22 @@ void StageBoss::Initialize()
 void StageBoss::Finalize()
 {
     // player終了化
-    PlayerManager::Instance().GetPlayer()->Finalize();
+    PlayerManager::Instance().Finalize();
 
     // boss終了化
-    boss->Finalize();
+    //boss->Finalize();
+    EnemyManager::Instance().Finalize();
 }
 
 // Updateの前に呼ばれる
 void StageBoss::Begin()
 {
     // player
-    PlayerManager::Instance().GetPlayer()->Begin();
+    PlayerManager::Instance().Begin();
 
     // boss
-    boss->Begin();
+    //boss->Begin();
+    EnemyManager::Instance().Begin();
 }
 
 // 更新処理
@@ -86,27 +94,30 @@ void StageBoss::Update(const float& elapsedTime)
     playerManager.GetPlayer()->Update(elapsedTime);
 
     // boss更新
-    boss->Update(elapsedTime);
+    //boss->Update(elapsedTime);
+    EnemyManager::Instance().Update(elapsedTime);
 }
 
 // Updateの後に呼ばれる処理
 void StageBoss::End()
 {
     // player
-    PlayerManager::Instance().GetPlayer()->End();
+    PlayerManager::Instance().End();
 
     // boss
-    boss->End();
+    //boss->End();
+    EnemyManager::Instance().End();
 }
 
 // 描画処理
 void StageBoss::Render(const float& elapsedTime)
 {
     // player描画
-    PlayerManager::Instance().GetPlayer()->Render(elapsedTime);
+    PlayerManager::Instance().Render(elapsedTime);
 
     // boss描画
-    boss->Render(elapsedTime);
+    //boss->Render(elapsedTime);
+    EnemyManager::Instance().Render(elapsedTime);
 
 
     // 仮
@@ -121,10 +132,11 @@ void StageBoss::DrawDebug()
 {
 #ifdef USE_IMGUI
     // player
-    PlayerManager::Instance().GetPlayer()->DrawDebug();
+    PlayerManager::Instance().DrawDebug();
 
     // boss
-    boss->DrawDebug();
+    //boss->DrawDebug();
+    EnemyManager::Instance().DrawDebug();
 
     for (std::unique_ptr<Boss>& temp : stage)
     {

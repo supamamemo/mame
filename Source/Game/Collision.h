@@ -30,10 +30,9 @@ public:
 
     struct AABB
     {
-        //DirectX::XMFLOAT3 position = {};
-        //DirectX::XMFLOAT3 lenght    = {};
         DirectX::XMFLOAT3 min = {};
         DirectX::XMFLOAT3 max = {};
+        //DirectX::XMFLOAT3 lenght    = {};
 
         // lenghtは半径的な奴。
         // キューブの長さの半分
@@ -99,7 +98,7 @@ public:
     static bool IntersectAABBVsAABB(
         const    AABB& aabb1, 
         const    AABB& aabb2, 
-        NO_CONST AABB& outAABBPosition
+        NO_CONST DirectX::XMFLOAT3& pushVec
     );
 
 };

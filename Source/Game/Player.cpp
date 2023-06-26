@@ -76,7 +76,7 @@ void Player::Update(const float& elapsedTime)
     UpdateVelocity(elapsedTime);
 
     // AABB更新処理
-    UpdateAABB(elapsedTime);
+    UpdateAABB();
 
     // プレイヤーと敵の衝突判定
     CollisionPlayerVsEnemies();
@@ -89,9 +89,6 @@ void Player::Update(const float& elapsedTime)
 
     // アニメーション更新
     UpdateAnimation(elapsedTime);
-
-    // デバッグモデルの位置更新
-    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
 }
 
 
@@ -298,68 +295,52 @@ void Player::CollisionPlayerVsEnemies()
     {
         Enemy* enemy = enemyManager.GetEnemy(i);
 
-//
-//        // 衝突判定
-//        const Collision::Box3D box1 = { 
-//            //debugModel->GetTransform()->GetPosition(),
-//            //debugModel->skinned_meshes.boundingBox[0], // min
-//            //debugModel->skinned_meshes.boundingBox[1], // max
-//            //debugModel->GetTransform()->GetPosition(),
-//            debugModel->skinned_meshes.boundingBox[0], // min
-//            debugModel->skinned_meshes.boundingBox[1], // max
-//        };        
-//
-//        const Collision::Box3D box2 = { 
-///*            enemy->debugModel->GetTransform()->GetPosition(),
-//            enemy->debugModel->skinned_meshes.boundingBox[0],
-//            enemy->debugModel->skinned_meshes.boundingBox[1],    */        
-//            //enemy->debugModel->GetTransform()->GetPosition(),
-//            enemy->debugModel->skinned_meshes.boundingBox[0],
-//            enemy->debugModel->skinned_meshes.boundingBox[1],
-//        };
-//
-//        NO_CONST Collision::Box3D outPosition = {};
-//
-//        if (Collision::IntersectBox3DVsBox3D(box1, box2, outPosition))
-
-        NO_CONST Collision::AABB outPosition = {};
-        if (Collision::IntersectAABBVsAABB(this->aabb, enemy->aabb, outPosition))
-
+        NO_CONST DirectX::XMFLOAT3 pushVec = {};
+        if (Collision::IntersectAABBVsAABB(aabb_, enemy->aabb_, pushVec))
         {
             isHit = true;
-            // AABB1を押し出す
-            //if (outPosition.max.x - outPosition.min.x < outPosition.max.y - outPosition.min.y)
+
+            const DirectX::XMFLOAT3 playerCenter = GetTransform()->GetPosition();
+            const DirectX::XMFLOAT3 enemyCenter = enemy->GetTransform()->GetPosition();
+            
+            const DirectX::XMFLOAT3 vec = enemyCenter - playerCenter;
+
+            // 重なりを求める
+            const DirectX::XMFLOAT3 overlap = XMFloat3Abs(playerCenter - enemyCenter) * 0.05f;
+
+            // 重なりの各軸成分を比較して最小値を求める
+            const float minOverlap = (std::min)(overlap.x, overlap.y);
+
+            NO_CONST float direction   = 0.0f;
+            NO_CONST float penetration = 0.0f;
+
+            //if (minOverlap == overlap.x)
             //{
-            //    if (outPosition.max.x - box1.min.x < box1.max.x - outPosition.min.x)
-            //    {
-            //        box1.max.x = outPosition.min.x;
-            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.min.x, 0, 0));
-            //    }
-            //    else
-            //    {
-            //        box1.min.x = outPosition.max.x;
-            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.max.x, 0, 0));
-            //    }
+                direction   = (vec.x > 0.0f) ? -1.0f : 1.0f;
+                penetration = overlap.x;
+                //a.position.x += direction * penetration;
+                //GetTransform()->AddPosition(DirectX::XMFLOAT3(direction * penetration, 0, 0));
+                GetTransform()->AddPosition(overlap);
+                velocity = {};
+
             //}
-            //else
+            //else if (minOverlap == overlap.y)
             //{
-            //    if (outPosition.max.y - box1.min.y < box1.max.y - outPosition.min.y)
-            //    {
-            //        //box1.max.y = outPosition.min.y;
-            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.min.y, 0));
-            //    }
-            //    else
-            //    {
-            //        //box1.min.y = outPosition.max.y;
-            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.max.y, 0));
-            //    }
+            //    direction   = (vec.y > 0.0f) ? -1.0f : 1.0f;
+            //    penetration = overlap.y;
+            //    //a.position.y += direction * penetration;
+            //    GetTransform()->AddPosition(DirectX::XMFLOAT3(0, direction * penetration, 0));
+            //    velocity = {};
+
             //}
-            //if (outPosition.max.z - box1.min.z < box1.max.z - outPosition.min.z)
-            //    box1.max.z = outPosition.min.z;
-            //else
-            //    box1.min.z = outPosition.max.z;   
+
+
+            // 押し戻し後のAABBの最小座標と最大座標を更新
+            UpdateAABB();
+            
         }
     }
+
 #if _DEBUG
     ImGui::Begin("isEnemyHit");
     ImGui::Checkbox("isEnemyHit", &isHit);

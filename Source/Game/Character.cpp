@@ -9,22 +9,17 @@ Character::Character()
 {
     Graphics& graphics = Graphics::Instance();
 
-    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
-
     // 当たり判定サイズ設定   
     {
-        //debugModel->skinned_meshes.boundingBox[0] = { -0.5f, -0.5f, -0.5f };
-        //debugModel->skinned_meshes.boundingBox[1] = {  0.5f,  0.5f,  0.5f };
-        aabb.min.x = -40.0f;
-        aabb.min.y =  0.0f;
-        aabb.min.z = -40.0f;
-
-        aabb.max.x =  40.0f;
-        aabb.max.y =  80.0f;
-        aabb.max.z =  40.0f;
+        //defaultMin.x = -0.4f;
+        //defaultMin.y =  0.0f;
+        //defaultMin.z = -0.4f;
+        //defaultMax.x =  0.4f;
+        //defaultMax.y =  0.8f;
+        //defaultMax.z =  0.4f;
     }
 
-    geometricAABB_ = std::make_unique<GeometricAABB>(graphics.GetDevice(), aabb.min, aabb.max);
+    geometricAABB_ = std::make_unique<GeometricAABB>(graphics.GetDevice(), defaultMin_, defaultMax_);
 }
 
 
@@ -105,19 +100,18 @@ void Character::Render(const float& /*elapsedTime*/)
     graphics.GetShader()->SetState(graphics.GetDeviceContext(), 3, 0, 0);
 
 #endif
-
     // 回転なしワールド行列の作成
     NO_CONST  DirectX::XMFLOAT4X4 noRotationTransform = {};
     {
-        const DirectX::XMFLOAT3& scale      = GetTransform()->GetScale();
+        const DirectX::XMFLOAT3  scale      = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
         const DirectX::XMFLOAT3& position   = GetTransform()->GetPosition();
-        const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) * DirectX::XMMatrixScaling(0.01f, 0.01f, 0.01f);
+        const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
         const DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
         DirectX::XMStoreFloat4x4(&noRotationTransform, S * T);
     }
 
     // カラー設定
-    const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.4f };
+    //const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.4f };
     
     // AABB描画
     geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
@@ -133,10 +127,6 @@ void Character::DrawDebug()
 {
     // ImGui描画
     GetTransform()->DrawDebug();
-
-    ImGui::Begin("debugmodel");
-    debugModel->GetTransform()->DrawDebug();
-    ImGui::End();
 }
 
 
@@ -224,9 +214,13 @@ void Character::UpdateVelocity(const float& elapsedTime)
 }
 
 
-void Character::UpdateAABB(const float& /*elapsedTime*/)
+// AABB更新処理
+void Character::UpdateAABB()
 {
-    aabb.position = GetTransform()->GetPosition();
+    const DirectX::XMFLOAT3 position = GetTransform()->GetPosition();
+
+    aabb_.min = position - ((defaultMax_ - defaultMin_) * 0.5f);
+    aabb_.max = position + ((defaultMax_ - defaultMin_) * 0.5f);
 }
 
 
@@ -306,7 +300,7 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
             velocity.y = 0.0f;
         }
 #else 1
-        if (end.y <= 0.0f)
+        if (end.y <= 1.0f)
         {
             // バウンス中は跳ねさせる
             if (isBounce)
@@ -315,7 +309,7 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
             }
             else
             {
-                position.y = 0.0f;
+                position.y = 1.0f;
 
                 // 着地した
                 if (!isGround) OnLanding();
@@ -505,56 +499,14 @@ void Character::UpdateHorizontalMove(const float& elapsedTime)
     model->GetTransform()->SetPosition(position);
 }
 
-DirectX::XMFLOAT4X4 Character::SetDebugModelTransform(DirectX::XMFLOAT4X4 transoform)
+
+void Character::ResetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max)
 {
-    // 0: Target model
-    // 1: Bounding box model
-//    DirectX::XMFLOAT3 dimensions[] = {
-//#if 1
-//            {
-//                model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x,
-//                model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y,
-//                model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z,
-//            },
-//#else
-//            { 100.0f, 150.0f, 60.0f },
-//#endif
-//            {
-//                debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x,
-//                debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y,
-//                debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z,
-//            },
-//    };
-//    DirectX::XMFLOAT3 centers[] = {
-//        {
-//            model->skinned_meshes.boundingBox[0].x + (model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x) * 0.5f,
-//            model->skinned_meshes.boundingBox[0].y + (model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y) * 0.5f,
-//            model->skinned_meshes.boundingBox[0].z + (model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z) * 0.5f,
-//        },
-//        {
-//            debugModel->skinned_meshes.boundingBox[0].x + (debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x) * 0.5f,
-//            debugModel->skinned_meshes.boundingBox[0].y + (debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y) * 0.5f,
-//            debugModel->skinned_meshes.boundingBox[0].z + (debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z) * 0.5f,
-//        },
-//    };
+    // min・maxの再設定
+    defaultMin_ = min;
+    defaultMax_ = max;
 
-    // minからmaxまでの大きさ(長さ？)を求める
-    // (max - min) = (max - (-min)) = (max + (+min))
-    NO_CONST DirectX::XMFLOAT3 min       = debugModel->skinned_meshes.boundingBox[0];
-    NO_CONST DirectX::XMFLOAT3 max       = debugModel->skinned_meshes.boundingBox[1];
-    const    DirectX::XMFLOAT3 dimension = max - min;
-    const    DirectX::XMMATRIX S         = DirectX::XMMatrixScaling(dimension.x, dimension.y, dimension.z);
-
-    //DirectX::XMMATRIX S = DirectX::XMMatrixScaling(dimensions[0].x / dimensions[1].x, dimensions[0].y / dimensions[1].y, dimensions[0].z / dimensions[1].z);
-    //DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(centers[0].x - centers[1].x, centers[0].y - centers[1].y, centers[0].z - centers[1].z);
-
-    const DirectX::XMFLOAT3& position = debugModel->GetTransform()->GetPosition();
-    const DirectX::XMMATRIX  T        = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-
-    //
-    DirectX::XMFLOAT4X4 world = {};
-    //DirectX::XMStoreFloat4x4(&world, S * DirectX::XMLoadFloat4x4(&transoform));
-    DirectX::XMStoreFloat4x4(&world, S * T);
-
-    return world;
+    // 当たり判定のAABB描画を再設定
+    ID3D11Device* device = Graphics::Instance().GetDevice();
+    geometricAABB_ = std::make_unique<GeometricAABB>(device, defaultMin_, defaultMax_);
 }

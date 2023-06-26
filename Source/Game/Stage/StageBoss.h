@@ -22,7 +22,7 @@ public:
     void DrawDebug()                      override;  // デバッグ描画
 
 private:
-    std::unique_ptr<Boss> boss;
+    //std::unique_ptr<Boss> boss;
 
     // 仮にbossクラスで表示してる
     std::unique_ptr<Boss> stage[3];
