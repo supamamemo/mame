@@ -17,6 +17,9 @@ StageBoss::StageBoss()
         temp = std::make_unique<Boss>("./resources/temporary/assets_ground.fbx");
     }
 
+    // îwåiâº
+    back = std::make_unique<Boss>("./resources/back.fbx");
+
     // tofu
     tofu = std::make_unique<EnemyTofu>();
 }
@@ -43,8 +46,13 @@ void StageBoss::Initialize()
 
 
     //tofu
-    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(5.0f, 0.0f, 20.0f));
+    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(5.0f, 1.0f, 10.0f));
     tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
+
+    // îwåiâº
+    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.0f, 20.0f));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 8.0f, 13.0f));
+    back->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(-90), 0.0f, 0.0f));
 }
 
 // èIóπâª
@@ -126,6 +134,9 @@ void StageBoss::Render(const float& elapsedTime)
         temp->Render(elapsedTime);
     }
 
+    // îwåiâº
+    back->Render(elapsedTime);
+
     // tofu
     tofu->Render(elapsedTime);
 }
@@ -145,6 +156,8 @@ void StageBoss::DrawDebug()
         temp->DrawDebug();
     }
 
+    // îwåiâº
+    back->DrawDebug();
 
     tofu->DrawDebug();
 #endif

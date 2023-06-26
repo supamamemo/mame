@@ -53,6 +53,7 @@ void EnemyTofu::Begin()
 // 更新処理
 void EnemyTofu::Update(float elapsedTime)
 {
+    // ステート更新
     if (stateMachine)GetStateMachine()->Update(elapsedTime);
 }
 

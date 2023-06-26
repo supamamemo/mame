@@ -431,6 +431,7 @@
     <ClInclude Include="Source\Game\EnemyTofu.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">
@@ -504,5 +505,13 @@
     <Filter Include="mamelib\default\header">
       <UniqueIdentifier>{ada19734-b849-4665-854d-179eaefb2961}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="3dgp.rc" />
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
+    <Image Include="icon1.ico" />
   </ItemGroup>
 </Project>
