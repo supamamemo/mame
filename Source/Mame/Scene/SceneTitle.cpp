@@ -175,7 +175,7 @@ void SceneTitle::Initialize()
 // I—¹‰»
 void SceneTitle::Finalize()
 {
-    PlayerManager::Instance().GetPlayer()->Finalize();
+    PlayerManager::Instance().Finalize();
 }
 
 // –ˆƒtƒŒ[ƒ€ˆê”ÔÅ‰‚ÉŒÄ‚Î‚ê‚é

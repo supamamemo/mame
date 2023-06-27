@@ -22,17 +22,20 @@ Player::Player()
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temp.fbx", true);
     }
-
-    //geometricPrimitive = std::make_unique<GeometricPrimitive>(graphics.GetDevice());
     
-    create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
+    // create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
 
     //sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/load.png");
 
+    //create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
+
+    DirectX::XMFLOAT3 min = { -0.4f, -0.0f, -0.4f }; // 符号ミスに注意
+    DirectX::XMFLOAT3 max = { +0.4f, +1.0f, +0.4f };
+    ResetAABB(min, max);
+    UpdateAABB();
+
     // 待機ステートへ遷移
     TransitionIdleState();
-
-    //DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
 }
 
 
@@ -43,7 +46,7 @@ Player::~Player()
 
 void Player::Initialize()
 {
-    GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
+    GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 20, 0));
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
     GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
 }
@@ -73,11 +76,11 @@ void Player::Update(const float& elapsedTime)
     case State::HipDrop: UpdateHipDropState(elapsedTime); break;
     }
 
+    // AABB更新処理
+    UpdateAABB();
+
     // 速力更新処理
     UpdateVelocity(elapsedTime);
-
-    // AABB更新処理
-    UpdateAABB(elapsedTime);
 
     // プレイヤーと敵の衝突判定
     CollisionPlayerVsEnemies();
@@ -90,9 +93,6 @@ void Player::Update(const float& elapsedTime)
 
     // アニメーション更新
     UpdateAnimation(elapsedTime);
-
-    // デバッグモデルの位置更新
-    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
 }
 
 
@@ -299,68 +299,28 @@ void Player::CollisionPlayerVsEnemies()
     {
         Enemy* enemy = enemyManager.GetEnemy(i);
 
-//
-//        // 衝突判定
-//        const Collision::Box3D box1 = { 
-//            //debugModel->GetTransform()->GetPosition(),
-//            //debugModel->skinned_meshes.boundingBox[0], // min
-//            //debugModel->skinned_meshes.boundingBox[1], // max
-//            //debugModel->GetTransform()->GetPosition(),
-//            debugModel->skinned_meshes.boundingBox[0], // min
-//            debugModel->skinned_meshes.boundingBox[1], // max
-//        };        
-//
-//        const Collision::Box3D box2 = { 
-///*            enemy->debugModel->GetTransform()->GetPosition(),
-//            enemy->debugModel->skinned_meshes.boundingBox[0],
-//            enemy->debugModel->skinned_meshes.boundingBox[1],    */        
-//            //enemy->debugModel->GetTransform()->GetPosition(),
-//            enemy->debugModel->skinned_meshes.boundingBox[0],
-//            enemy->debugModel->skinned_meshes.boundingBox[1],
-//        };
-//
-//        NO_CONST Collision::Box3D outPosition = {};
-//
-//        if (Collision::IntersectBox3DVsBox3D(box1, box2, outPosition))
-
-        NO_CONST Collision::AABB outPosition = {};
-        if (Collision::IntersectAABBVsAABB(this->aabb, enemy->aabb, outPosition))
-
+        NO_CONST DirectX::XMFLOAT3 pushVec = {};
+        if (Collision::IntersectAABBVsAABB(aabb_, enemy->aabb_, pushVec))
         {
             isHit = true;
-            // AABB1を押し出す
-            //if (outPosition.max.x - outPosition.min.x < outPosition.max.y - outPosition.min.y)
+
+            //// プレイヤーの足元がエネミーの頭より下にめり込んでいたら修正する
+            //if (aabb_.min.y < enemy->aabb_.max.y)
             //{
-            //    if (outPosition.max.x - box1.min.x < box1.max.x - outPosition.min.x)
-            //    {
-            //        box1.max.x = outPosition.min.x;
-            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.min.x, 0, 0));
-            //    }
-            //    else
-            //    {
-            //        box1.min.x = outPosition.max.x;
-            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(outPosition.max.x, 0, 0));
-            //    }
+            //    // Y軸に重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
+            //    const float overlapY = fabsf(enemy->aabb_.max.y) - fabsf(aabb_.min.y);
+
+            //    GetTransform()->AddPositionY(overlapY); // 重なっている分だけ押し戻す
+            //    velocity.y = 0.0f;                      // Y速度をリセット
+
+
+            //    // 押し戻し後のAABBの最小座標と最大座標を更新
+            //    UpdateAABB();
             //}
-            //else
-            //{
-            //    if (outPosition.max.y - box1.min.y < box1.max.y - outPosition.min.y)
-            //    {
-            //        //box1.max.y = outPosition.min.y;
-            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.min.y, 0));
-            //    }
-            //    else
-            //    {
-            //        //box1.min.y = outPosition.max.y;
-            //        GetTransform()->AddPosition(DirectX::XMFLOAT3(0, outPosition.max.y, 0));
-            //    }
-            //}
-            //if (outPosition.max.z - box1.min.z < box1.max.z - outPosition.min.z)
-            //    box1.max.z = outPosition.min.z;
-            //else
-            //    box1.min.z = outPosition.max.z;   
+            
         }
     }
+
 #if _DEBUG
     ImGui::Begin("isEnemyHit");
     ImGui::Checkbox("isEnemyHit", &isHit);

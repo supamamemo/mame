@@ -224,6 +224,9 @@
     <ClCompile Include="Source\Game\Stage\StageManager.cpp" />
     <ClCompile Include="Source\Game\Stage\StagePlains.cpp" />
     <ClCompile Include="Source\Game\StateMachine.cpp" />
+    <ClCompile Include="Source\Game\Terrain\Terrain.cpp" />
+    <ClCompile Include="Source\Game\Terrain\TerrainBoss.cpp" />
+    <ClCompile Include="Source\Game\Terrain\TerrainManager.cpp" />
     <ClCompile Include="Source\GeometricPrimitive.cpp" />
     <ClCompile Include="Source\gltf_model.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -286,6 +289,9 @@
     <ClInclude Include="Source\Game\Stage\StagePlains.h" />
     <ClInclude Include="Source\Game\State.h" />
     <ClInclude Include="Source\Game\StateMachine.h" />
+    <ClInclude Include="Source\Game\Terrain\Terrain.h" />
+    <ClInclude Include="Source\Game\Terrain\TerrainBoss.h" />
+    <ClInclude Include="Source\Game\Terrain\TerrainManager.h" />
     <ClInclude Include="Source\GeometricPrimitive.h" />
     <ClInclude Include="Source\gltf_model.h" />
     <ClInclude Include="Source\high_resolution_timer.h" />

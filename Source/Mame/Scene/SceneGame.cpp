@@ -200,7 +200,7 @@ void SceneGame::DrawDebug()
     //    fadeType = 0;
     //}
 
-    if (ImGui::Button("stage"))
+    if (ImGui::Button("terrain"))
         changeStage = true;
     if (ImGui::Button("stageP"))
         changeStage1 = true;

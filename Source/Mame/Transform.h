@@ -44,6 +44,10 @@ public:
 	DirectX::XMFLOAT4 GetRotation()const { return rotation; }
 
 	void SetPosition(const DirectX::XMFLOAT3& pos) { position = pos; }
+	void SetPositionX(const float& posX) { position.x = posX; }
+	void SetPositionY(const float& posY) { position.y = posY; }
+	void SetPositionZ(const float& posZ) { position.z = posZ; }
+
 	void SetScale(const DirectX::XMFLOAT3& scl) { scale = scl; }
 	void SetRotation(const DirectX::XMFLOAT4& rot) { rotation = rot; }
 
@@ -53,6 +57,10 @@ public:
 		position.y += pos.y;
 		position.z += pos.z;
 	}
+	void AddPositionX(const float& posX) { position.x += posX; }
+	void AddPositionY(const float& posY) { position.y += posY; }
+	void AddPositionZ(const float& posZ) { position.z += posZ; }
+
 
 	float GetScaleFactor()const { return scaleFactor; }
 	void SetScaleFactor(float f) { scaleFactor = f; }

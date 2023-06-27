@@ -78,7 +78,7 @@ void CannonBall::Update(const float& elapsedTime)
     pos.z += speed;
     GetTransform()->SetPosition(pos);
 
-    UpdateAABB(elapsedTime);    // AABB更新処理
+    UpdateAABB();    // AABB更新処理
 }
 
 // Updateの後に呼ばれる

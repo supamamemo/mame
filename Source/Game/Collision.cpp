@@ -1,4 +1,6 @@
 #include "Collision.h"
+#include "OperatorXMFLOAT3.h"
+#include "Common.h"
 
 #if 0
 #define ADJUST      (0.125f)
@@ -292,124 +294,60 @@ bool Collision::IntersectAABBVsAABB(
 
 bool Collision::IntersectAABBVsAABB(
     const AABB& aabb1, const AABB& aabb2, 
-    NO_CONST AABB& outAABBPosition)
+    NO_CONST DirectX::XMFLOAT3& pushVec)
 {
-#if 0
     // X軸方向の衝突判定
     {
-        // 大きさをモデルと同じ0.01fに調整
-        const float box1Right   = (aabb1.max.x * 0.01f + aabb1.position.x);
-        const float box1Left    = (aabb1.min.x * 0.01f + aabb1.position.x);    
-        const float box2Right   = (aabb2.max.x * 0.01f + aabb2.position.x);
-        const float box2Left    = (aabb2.min.x * 0.01f + aabb2.position.x);
+        const float box1Right   = aabb1.max.x;
+        const float box1Left    = aabb1.min.x;    
+        const float box2Right   = aabb2.max.x;
+        const float box2Left    = aabb2.min.x;
 
-        const bool isHitX = (box1Right > box2Left && box1Left < box2Right);
+        const bool isHitX = (box1Right >= box2Left && box1Left <= box2Right);
 
         if (!isHitX) return false;  // X軸方向での衝突なし
     }
 
     // Y軸方向の衝突判定
     {
-        // 大きさをモデルと同じ0.01fに調整
-        const float box1Up      = aabb1.max.y * 0.01f + aabb1.position.y;
-        const float box1Bottom  = aabb1.min.y * 0.01f + aabb1.position.y;
-        const float box2Up      = aabb2.max.y * 0.01f + aabb2.position.y;
-        const float box2Bottom  = aabb2.min.y * 0.01f + aabb2.position.y;
+        const float box1Up      = aabb1.max.y;
+        const float box1Bottom  = aabb1.min.y;
+        const float box2Up      = aabb2.max.y;
+        const float box2Bottom  = aabb2.min.y;
 
-        const bool isHitY = (box1Up > box2Bottom && box1Bottom < box2Up);
+        const bool isHitY = (box1Up >= box2Bottom && box1Bottom <= box2Up);
 
         if (!isHitY) return false;  // Y軸方向での衝突なし
     }
 
     // Z軸方向の衝突判定
     {
-        // 大きさをモデルと同じ0.01fに調整
-        const float box1Back    = aabb1.max.z * 0.01f + aabb1.position.z;
-        const float box1Front   = aabb1.min.z * 0.01f + aabb1.position.z;
-        const float box2Back    = aabb2.max.z * 0.01f + aabb2.position.z;
-        const float box2Front   = aabb2.min.z * 0.01f + aabb2.position.z;
+        const float box1Back    = aabb1.max.z;
+        const float box1Front   = aabb1.min.z;
+        const float box2Back    = aabb2.max.z;
+        const float box2Front   = aabb2.min.z;
 
-        const bool isHitZ = (box1Back > box2Front && box1Front < box2Back);
+        const bool isHitZ = (box1Back >= box2Front && box1Front <= box2Back);
 
         if (!isHitZ) return false;  // Z軸方向での衝突なし
     }
 
-    // 衝突している範囲を計算
-    {
-        // (std::max)：右が左より"大きければ"右を代入、そうでなければ左を代入
-        // (std::min)：右が左より"小さければ"右を代入、そうでなければ左を代入     
-        
-        //outBoxPosition.min.x = (std::max)(box1.min.x, box2.min.x);
-        //outBoxPosition.max.x = (std::min)(box1.max.x, box2.max.x);
 
-        //outBoxPosition.min.y = (std::max)(box1.min.y, box2.min.y);
-        //outBoxPosition.max.y = (std::min)(box1.max.y, box2.max.y);
+    //// 衝突したAABBの中心座標を求める
+    //const DirectX::XMFLOAT3 center1 = (aabb1.min + aabb1.max) * 0.5f;
+    //const DirectX::XMFLOAT3 center2 = (aabb2.min + aabb2.max) * 0.5f;
 
-        //outBoxPosition.min.z = (std::max)(box1.min.z, box2.min.z);
-        //outBoxPosition.max.z = (std::min)(box1.max.z, box2.max.z);
-    }
+    //// AABB間のベクトルを求める
+    //const DirectX::XMFLOAT3 vec = center2 - center1;
 
-    return true;    // 衝突している
-#endif
+    //// 衝突したAABBの重なりを求める
+    //const DirectX::XMFLOAT3 overlap = XMFloat3Abs(vec);
 
-#if 0 // SORRY
-    if (box1.max.x < box2.min.x || box1.min.x > box2.max.x)
-        return false; // x軸方向での衝突なし
+    //// 重なりの各軸成分を比較して最小値を求める
+    //const float minOverlap = (std::min)((std::min)(overlap.x, overlap.y), overlap.z);
 
-    if (box1.max.y < box2.min.y || box1.min.y > box2.max.y)
-        return false; // y軸方向での衝突なし
-
-    if (box1.max.z < box2.min.z || box1.min.z > box2.max.z)
-        return false; // z軸方向での衝突なし
-
-    // 衝突している範囲を計算
-    outBoxPosition.min.x = (std::max)(box1.min.x, box2.min.x);
-    outBoxPosition.max.x = (std::min)(box1.max.x, box2.max.x);
-    outBoxPosition.min.y = (std::max)(box1.min.y, box2.min.y);
-    outBoxPosition.max.y = (std::min)(box1.max.y, box2.max.y);
-    outBoxPosition.min.z = (std::max)(box1.min.z, box2.min.z);
-    outBoxPosition.max.z = (std::min)(box1.max.z, box2.max.z);
-
-    // AABB1を押し出す
-    if (outBoxPosition.max.x - outBoxPosition.min.x < outBoxPosition.max.y - outBoxPosition.min.y) {
-        if (outBoxPosition.max.x - box1.min.x < box1.max.x - outBoxPosition.min.x)
-            outBoxPosition.max.x = outBoxPosition.min.x;
-        else
-            outBoxPosition.min.x = outBoxPosition.max.x;
-    }
-    else {
-        if (outBoxPosition.max.y - box1.min.y < box1.max.y - outBoxPosition.min.y)
-            outBoxPosition.max.y = outBoxPosition.min.y;
-        else
-            outBoxPosition.min.y = outBoxPosition.max.y;
-    }
-
-    if (outBoxPosition.max.z - box1.min.z < box1.max.z - outBoxPosition.min.z)
-        outBoxPosition.max.z = outBoxPosition.min.z;
-    else
-        outBoxPosition.min.z = outBoxPosition.max.z;
-
-    //// AABB2を押し出す
-    //if (outBoxPosition.max.x - outBoxPosition.min.x < outBoxPosition.max.y - outBoxPosition.min.y) {
-    //    if (outBoxPosition.max.x - box2.min.x < box2.max.x - outBoxPosition.min.x)
-    //        outBoxPosition.max.x = outBoxPosition.min.x;
-    //    else
-    //        outBoxPosition.min.x = outBoxPosition.max.x;
-    //}
-    //else {
-    //    if (outBoxPosition.max.y - box2.min.y < box2.max.y - outBoxPosition.min.y)
-    //        outBoxPosition.max.y = outBoxPosition.min.y;
-    //    else
-    //        outBoxPosition.min.y = outBoxPosition.max.y;
-    //}
-
-    //if (outBoxPosition.max.z - box2.min.z < box2.max.z - outBoxPosition.min.z)
-    //    outBoxPosition.max.z = outBoxPosition.min.z;
-    //else
-    //    outBoxPosition.min.z = outBoxPosition.max.z;
+    //// 押し戻しベクトルを求める
+    //pushVec = vec * (minOverlap / std::sqrtf(XMFloat3Dot(vec, vec)));
 
     return true;  // 3軸方向での衝突あり
-#endif
-
-    return false;
 }

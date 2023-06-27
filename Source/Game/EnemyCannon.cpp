@@ -59,12 +59,9 @@ void EnemyCannon::Update(float elapsedTime)
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
 
     // AABB更新処理
-    UpdateAABB(elapsedTime);
+    UpdateAABB();
 
     CollisionCannonBallVsPlayer(); // エネミー弾丸とプレイヤーの衝突処理
-
-    // デバッグモデルの位置更新
-    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
 }
 
 // Updateの後に呼ばれる
@@ -110,9 +107,9 @@ void EnemyCannon::CollisionCannonBallVsPlayer()
     {
         CannonBall* cannonBall = cannonBallManager.GetCannonBall(i);
 
-        NO_CONST Collision::AABB outPosition = {};
-        const Collision::AABB& playerAABB = PlayerManager::Instance().GetPlayer()->aabb;
-        if (Collision::IntersectAABBVsAABB(cannonBall->aabb, playerAABB, outPosition))
+        NO_CONST DirectX::XMFLOAT3 pushVec = {};
+        const Collision::AABB& playerAABB = PlayerManager::Instance().GetPlayer()->aabb_;
+        if (Collision::IntersectAABBVsAABB(cannonBall->aabb_, playerAABB, pushVec))
         {
             isHit = true;
             // AABB1を押し出す

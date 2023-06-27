@@ -237,8 +237,20 @@
     <ClCompile Include="Source\Game\CannonBallManager.cpp">
       <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
+
     <ClCompile Include="Source\Game\EnemyTofu.cpp">
       <Filter>mamelib\Game\Character</Filter>
+	  </ClCompile>
+
+    <ClCompile Include="Source\Game\Terrain\TerrainBoss.cpp">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Terrain\Terrain.cpp">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Terrain\TerrainManager.cpp">
+      <Filter>mamelib\Game\Terrain</Filter>
+
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -428,10 +440,22 @@
     <ClInclude Include="Source\Game\CannonBallManager.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
+
     <ClInclude Include="Source\Game\EnemyTofu.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+
+    <ClInclude Include="Source\Game\Terrain\TerrainBoss.h">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Terrain\Terrain.h">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Terrain\TerrainManager.h">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClInclude>
+
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">
@@ -504,6 +528,9 @@
     </Filter>
     <Filter Include="mamelib\default\header">
       <UniqueIdentifier>{ada19734-b849-4665-854d-179eaefb2961}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mamelib\Game\Terrain">
+      <UniqueIdentifier>{b5efe010-dced-4d3f-babe-9549ac72a693}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

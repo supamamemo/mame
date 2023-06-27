@@ -1,30 +1,20 @@
 #include "Character.h"
-#include "Collision.h"
-#include "Mathf.h"
+
 #include "../Mame/Graphics/Graphics.h"
-#include "OperatorXMFLOAT3.h"
 #include "../misc.h"
+
+#include "OperatorXMFLOAT3.h"
+#include "Mathf.h"
+#include "Collision.h"
+#include "Terrain/TerrainManager.h"
 
 Character::Character()
 {
     Graphics& graphics = Graphics::Instance();
 
-    debugModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/cube.fbx", true);
+    create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
 
-    // 当たり判定サイズ設定   
-    {
-        //debugModel->skinned_meshes.boundingBox[0] = { -0.5f, -0.5f, -0.5f };
-        //debugModel->skinned_meshes.boundingBox[1] = {  0.5f,  0.5f,  0.5f };
-        aabb.min.x = -40.0f;
-        aabb.min.y =  0.0f;
-        aabb.min.z = -40.0f;
-
-        aabb.max.x =  40.0f;
-        aabb.max.y =  80.0f;
-        aabb.max.z =  40.0f;
-    }
-
-    geometricAABB_ = std::make_unique<GeometricAABB>(graphics.GetDevice(), aabb.min, aabb.max);
+    geometricAABB_ = std::make_unique<GeometricAABB>(graphics.GetDevice(), defaultMin_, defaultMax_);
 }
 
 
@@ -105,19 +95,18 @@ void Character::Render(const float& /*elapsedTime*/)
     graphics.GetShader()->SetState(graphics.GetDeviceContext(), 3, 0, 0);
 
 #endif
-
     // 回転なしワールド行列の作成
     NO_CONST  DirectX::XMFLOAT4X4 noRotationTransform = {};
     {
-        const DirectX::XMFLOAT3& scale      = GetTransform()->GetScale();
+        const DirectX::XMFLOAT3  scale      = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
         const DirectX::XMFLOAT3& position   = GetTransform()->GetPosition();
-        const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z) * DirectX::XMMatrixScaling(0.01f, 0.01f, 0.01f);
+        const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
         const DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
         DirectX::XMStoreFloat4x4(&noRotationTransform, S * T);
     }
 
     // カラー設定
-    const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.4f };
+    //const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.4f };
     
     // AABB描画
     geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
@@ -133,10 +122,6 @@ void Character::DrawDebug()
 {
     // ImGui描画
     GetTransform()->DrawDebug();
-
-    ImGui::Begin("debugmodel");
-    debugModel->GetTransform()->DrawDebug();
-    ImGui::End();
 }
 
 
@@ -224,9 +209,13 @@ void Character::UpdateVelocity(const float& elapsedTime)
 }
 
 
-void Character::UpdateAABB(const float& /*elapsedTime*/)
+// AABB更新処理
+void Character::UpdateAABB()
 {
-    //aabb.position = GetTransform()->GetPosition();
+    const DirectX::XMFLOAT3& position = GetTransform()->GetPosition();
+
+    aabb_.min = position + defaultMin_;
+    aabb_.max = position + defaultMax_;
 }
 
 
@@ -245,113 +234,82 @@ void Character::UpdateVerticalVelocity(const float& elapsedFrame)
 {
     // 重力処理
     velocity.y += gravity * elapsedFrame;
+    const float gravityMax = -20.0f;
+    if (velocity.y < gravityMax) velocity.y = gravityMax;
 }
 
 // 垂直移動更新処理
 void Character::UpdateVerticalMove(const float& elapsedTime)
 {
-    NO_CONST DirectX::XMFLOAT3 position = GetTransform()->GetPosition();
-    NO_CONST DirectX::XMFLOAT4 rotation = GetTransform()->GetRotation();
+    NO_CONST Transform* transform = GetTransform();
 
     // 垂直方向の移動量
     const float my = velocity.y * elapsedTime;
 
-    // キャラクターのY軸方向となる法線ベクトル
-    NO_CONST DirectX::XMFLOAT3 normal = { 0,1,0 };
-
-    // 傾斜率初期化
-    slopeRate = 0.0f;
-
     // 落下中
     if (my < 0.0f)
     {
-        // レイの開始位置は足元より少し上
-        const DirectX::XMFLOAT3 start = {
-            position.x,
-            position.y + stepOffset,
-            position.z
-        };
-        // レイの終点位置は移動後の位置
-        const DirectX::XMFLOAT3 end = {
-            position.x,
-            position.y + my,
-            position.z
-        };
+        NO_CONST TerrainManager& terrainManager = TerrainManager::Instance();
+        const int terrainCount = terrainManager.GetTerrainCount();
 
-#if 0
-        // レイキャストによる地面判定
-        HitResult hit = {};
-        if (StageManager::Instance().RayCast(start, end, hit))
+        NO_CONST bool isHit = false;
+
+        for (int i = 0; i < terrainCount; ++i)
         {
-            // 法線ベクトル取得
-            normal = hit.normal;
+            const Terrain* terrain = terrainManager.GetTerrain(i);
 
-            // 傾斜率の計算
-            const float normalLengthXZ = sqrtf(
-                (hit.normal.x * hit.normal.x) +
-                (hit.normal.z * hit.normal.z)
-            );
-            slopeRate = 1.0f - (hit.normal.y / (normalLengthXZ + hit.normal.y));
-
-            // 地面に接地している
-            //position.y = hit.position.y;
-            position = hit.position;
-
-            // 回転
-            angle.y += hit.rotation.y;
-
-            // 着地した
-            if (!isGround) OnLanding();
-            isGround = true;
-            velocity.y = 0.0f;
-        }
-#else 1
-        if (end.y <= 0.0f)
-        {
-            // バウンス中は跳ねさせる
-            if (isBounce)
+            NO_CONST DirectX::XMFLOAT3 pushVec = {};
+            if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_, pushVec))
             {
-                OnBounce();
-            }
-            else
-            {
-                position.y = 0.0f;
+                isHit = true;
 
-                // 着地した
-                if (!isGround) OnLanding();
-                isGround = true;
-                velocity.y = 0.0f;
-            }
+                // バウンス中は跳ねさせる
+                if (isBounce)
+                {
+                    OnBounce();
+                    break;
+                }
+                else
+                {
+                    // 着地した
+                    if (!isGround) OnLanding();
+                    isGround = true;
+                    velocity.y = 0.0f;
 
+                    isHit = true;
+
+                    // プレイヤーの足元がエネミーの頭より下にめり込んでいたら修正する
+                    if (aabb_.min.y < terrain->aabb_.max.y)
+                    {
+                        // Y軸に重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
+                        const float overlapY = fabsf(terrain->aabb_.max.y) - fabsf(aabb_.min.y); // 位置がマイナスでも問題ないように絶対値に変換しておく
+
+                        // 重なりが微小であれば修正しない(細かく修正しすぎると着地モーションが延々と続く)
+                        if (overlapY <= 0.001f) continue;
+
+                        GetTransform()->AddPositionY(overlapY); // 重なっている分だけ押し戻す
+
+                        // 押し戻し後のAABBの最小座標と最大座標を更新
+                        UpdateAABB();
+
+                    }
+                }
+            }
         }
-#endif
-        else
+
+        if (!isHit)
         {
             // 空中に浮いている
-            position.y += my;
+            transform->AddPositionY(my);
             isGround = false;
         }
     }
     // 上昇中
     else if (my > 0.0f)
     {
-        position.y += my;
+        transform->AddPositionY(my);
         isGround = false;
     }
-
-    // 地面の向きに沿うようにXZ軸回転
-    {
-        // Y軸が法線ベクトル方向に向くオイラー角回転を算出する
-        const float angleX =  atan2f(normal.z, normal.y);
-        const float angleZ = -atan2f(normal.x, normal.y);
-
-        // 線形補完で滑らかに回転する
-        rotation.x = Mathf::Lerp(rotation.x, angleX, 0.2f);
-        rotation.z = Mathf::Lerp(rotation.z, angleZ, 0.2f);
-    }
-
-    GetTransform()->SetPosition(position);
-    GetTransform()->SetRotation(rotation);
 }
 
 
@@ -426,7 +384,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
 // 水平移動更新処理
 void Character::UpdateHorizontalMove(const float& elapsedTime)
 {
-    NO_CONST DirectX::XMFLOAT3 position = model->GetTransform()->GetPosition();
+    Transform* transform = GetTransform();
 
     // 水平速力量計算
     const float velocityLengthX = sqrtf(velocity.x * velocity.x);
@@ -436,125 +394,23 @@ void Character::UpdateHorizontalMove(const float& elapsedTime)
         // 水平移動値
         const float mx = velocity.x * elapsedTime;
 
-        // レイの開始位置と終点位置
-        const DirectX::XMFLOAT3 start = {
-            position.x,
-            position.y + stepOffset,
-            position.z
-        };
-        const DirectX::XMFLOAT3 end = {
-            position.x + mx,
-            position.y + stepOffset,
-            position.z,
-        };
 
-        //// レイキャストによる壁判定
-        //HitResult hit = {};
-        //if (StageManager::Instance().RayCast(start, end, hit))
-        //{
-        //    // 壁までのベクトル
-        //    const DirectX::XMVECTOR Start = DirectX::XMLoadFloat3(&start);
-        //    const DirectX::XMVECTOR End = DirectX::XMLoadFloat3(&end);
-        //    const DirectX::XMVECTOR Vec = DirectX::XMVectorSubtract(End, Start);
-        //
-        //    // 壁の法線
-        //    const DirectX::XMVECTOR Normal =
-        //        DirectX::XMLoadFloat3(&hit.normal);
-        //
-        //    // 入射ベクトルを法線に射影
-        //    const DirectX::XMVECTOR Dot = DirectX::XMVector3Dot(
-        //        DirectX::XMVectorNegate(Vec), Normal
-        //    );
-        //
-        //    // 補正位置の計算        
-        //    {
-        //        //const DirectX::XMVECTOR MovedPosition = DirectX::XMVectorAdd(
-        //        //    End, DirectX::XMVectorMultiply(Normal, Dot)
-        //        //);          
-        //    }
-        //    // (v1 * v2) + v3
-        //    const DirectX::XMVECTOR MovedPosition =
-        //        DirectX::XMVectorMultiplyAdd(Normal, Dot, End);
-        //
-        //    DirectX::XMFLOAT3 movedPosition = {};
-        //    DirectX::XMStoreFloat3(&movedPosition, MovedPosition);
-        //
-        //    // 壁ずりした方向に壁がないか判定
-        //    HitResult hit2 = {};
-        //    if (!StageManager::Instance().RayCast(
-        //        hit.position, movedPosition, hit2))
-        //    {
-        //        // 壁に当たらなければ補正位置に移動
-        //        position.x = movedPosition.x;
-        //        position.z = movedPosition.z;
-        //    }
-        //    else
-        //    {
-        //        // 壁に当たった位置に移動
-        //        position.x = hit2.position.x;
-        //        position.z = hit2.position.z;
-        //    }
-        //}
-        //else
         {
             // 移動処理
-            position.x += mx;
+            transform->AddPositionX(mx);
         }
     }
 
-    model->GetTransform()->SetPosition(position);
 }
 
-DirectX::XMFLOAT4X4 Character::SetDebugModelTransform(DirectX::XMFLOAT4X4 transoform)
+
+void Character::ResetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max)
 {
-    // 0: Target model
-    // 1: Bounding box model
-//    DirectX::XMFLOAT3 dimensions[] = {
-//#if 1
-//            {
-//                model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x,
-//                model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y,
-//                model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z,
-//            },
-//#else
-//            { 100.0f, 150.0f, 60.0f },
-//#endif
-//            {
-//                debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x,
-//                debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y,
-//                debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z,
-//            },
-//    };
-//    DirectX::XMFLOAT3 centers[] = {
-//        {
-//            model->skinned_meshes.boundingBox[0].x + (model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x) * 0.5f,
-//            model->skinned_meshes.boundingBox[0].y + (model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y) * 0.5f,
-//            model->skinned_meshes.boundingBox[0].z + (model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z) * 0.5f,
-//        },
-//        {
-//            debugModel->skinned_meshes.boundingBox[0].x + (debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x) * 0.5f,
-//            debugModel->skinned_meshes.boundingBox[0].y + (debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y) * 0.5f,
-//            debugModel->skinned_meshes.boundingBox[0].z + (debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z) * 0.5f,
-//        },
-//    };
+    // min・maxの再設定
+    defaultMin_ = min;
+    defaultMax_ = max;
 
-    // minからmaxまでの大きさ(長さ？)を求める
-    // (max - min) = (max - (-min)) = (max + (+min))
-    NO_CONST DirectX::XMFLOAT3 min       = debugModel->skinned_meshes.boundingBox[0];
-    NO_CONST DirectX::XMFLOAT3 max       = debugModel->skinned_meshes.boundingBox[1];
-    const    DirectX::XMFLOAT3 dimension = max - min;
-    const    DirectX::XMMATRIX S         = DirectX::XMMatrixScaling(dimension.x, dimension.y, dimension.z);
-
-    //DirectX::XMMATRIX S = DirectX::XMMatrixScaling(dimensions[0].x / dimensions[1].x, dimensions[0].y / dimensions[1].y, dimensions[0].z / dimensions[1].z);
-    //DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(centers[0].x - centers[1].x, centers[0].y - centers[1].y, centers[0].z - centers[1].z);
-
-    const DirectX::XMFLOAT3& position = debugModel->GetTransform()->GetPosition();
-    const DirectX::XMMATRIX  T        = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
-
-    //
-    DirectX::XMFLOAT4X4 world = {};
-    //DirectX::XMStoreFloat4x4(&world, S * DirectX::XMLoadFloat4x4(&transoform));
-    DirectX::XMStoreFloat4x4(&world, S * T);
-
-    return world;
+    // 当たり判定のAABB描画を再設定
+    ID3D11Device* device = Graphics::Instance().GetDevice();
+    geometricAABB_ = std::make_unique<GeometricAABB>(device, defaultMin_, defaultMax_);
 }

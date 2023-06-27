@@ -1,11 +1,39 @@
 #include "EnemyManager.h"
 #include "../Game/Common.h"
 
+
+void EnemyManager::Initialize()
+{
+    for (Enemy*& enemy : enemies)
+    {
+        enemy->Initialize();
+    }
+}
+
+
+void EnemyManager::Finalize()
+{
+    for (Enemy*& enemy : enemies)
+    {
+        enemy->Finalize();
+    }
+}
+
+
+void EnemyManager::Begin()
+{
+    for (Enemy*& enemy : enemies)
+    {
+        enemy->Begin();
+    }
+}
+
+
 // 更新処理
-void EnemyManager::Update(float elapsedTime)
+void EnemyManager::Update(const float& elapsedTime)
 {
     // 更新
-    for (Enemy* enemy : enemies)
+    for (Enemy*& enemy : enemies)
     {
         enemy->Update(elapsedTime);
     }
@@ -30,10 +58,20 @@ void EnemyManager::Update(float elapsedTime)
     removes.clear();
 }
 
-// 描画処理
-void EnemyManager::Render(float elapsedTime)
+
+void EnemyManager::End()
 {
-    for (Enemy* enemy : enemies)
+    for (Enemy*& enemy : enemies)
+    {
+        enemy->End();
+    }
+}
+
+
+// 描画処理
+void EnemyManager::Render(const float& elapsedTime)
+{
+    for (Enemy*& enemy : enemies)
     {
         enemy->Render(elapsedTime);
     }
@@ -55,7 +93,7 @@ void EnemyManager::Remove(Enemy* enemy)
 // エネミー全削除
 void EnemyManager::Clear()
 {
-    for (Enemy* enemy : enemies)
+    for (Enemy*& enemy : enemies)
     {
         SafeDelete(enemy);
     }
@@ -66,7 +104,7 @@ void EnemyManager::Clear()
 // デバッグ
 void EnemyManager::DrawDebug()
 {
-    for (Enemy* enemy : enemies)
+    for (Enemy*& enemy : enemies)
     {
         enemy->DrawDebug();
     }

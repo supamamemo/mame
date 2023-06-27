@@ -34,19 +34,19 @@ Boss::Boss()
     ++nameNum;
 }
 
-Boss::Boss(const char* filename)
-{
-    Graphics& graphics = Graphics::Instance();
-
-    model = std::make_unique<Model>(graphics.GetDevice(), filename, true);
-
-    
-
-    // imgui名前かぶり起きないように...
-    name = "Boss" + std::to_string(nameNum);
-    SetName(name.c_str());
-    ++nameNum;
-}
+//Boss::Boss(const char* filename)
+//{
+//    Graphics& graphics = Graphics::Instance();
+//
+//    model = std::make_unique<Model>(graphics.GetDevice(), filename, true);
+//
+//    
+//
+//    // imgui名前かぶり起きないように...
+//    name = "Boss" + std::to_string(nameNum);
+//    SetName(name.c_str());
+//    ++nameNum;
+//}
 
 // デストラクタ
 Boss::~Boss()
@@ -83,9 +83,10 @@ void Boss::Update(float elapsedTime)
     pos.x += speed;
     model->GetTransform()->SetPosition(pos);
 
+    UpdateAABB(); // AABBの更新処理
 
-    debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
-    debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+    //debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
+    //debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
 }
@@ -98,29 +99,8 @@ void Boss::End()
 // 描画処理
 void Boss::Render(float elapsedTime)
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // Transform更新
-    DirectX::XMFLOAT4X4 transform;
-    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
-
-    // model描画
-    if (&model->keyframe)
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, &model->keyframe);
-    }
-    else
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, nullptr);
-    }
-
-#if _DEBUG
-    // BOUNDING_BOX
-    {
-        DirectX::XMFLOAT4X4 t = SetDebugModelTransform(transform);
-        debugModel->skinned_meshes.render(graphics.GetDeviceContext(), t, DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.2f), nullptr);
-    }
-#endif // _DEBUG
+    // 共通の描画処理
+    Character::Render(elapsedTime);
 }
 
 // debug用
@@ -130,7 +110,7 @@ void Boss::DrawDebug()
 
     Character::DrawDebug();
 
-    if (stateMachine)GetStateMachine()->DrawDebug();
+    if (stateMachine) GetStateMachine()->DrawDebug();
 
     ImGui::End();
 }

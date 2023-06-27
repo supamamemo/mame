@@ -19,7 +19,7 @@ public:
     void Render(const float& elapsedTime);  // 描画処理
     void Clear();                           // クリア
   
-    void ChangeStage(Stage* stage);         // ステージ切り替え
+    void ChangeStage(Stage* terrain);       // ステージ切り替え
 
     Stage* GetCurrentStage() const { return currentStage; }
 

@@ -19,12 +19,16 @@ public:
         return instance;
     }
 
-    // 更新処理
-    void Update(float elapsedTime);
+    void Initialize();                      // 初期化
+    void Finalize();                        // 終了化
+    void Begin();                           // 毎フレーム一番最初に呼ばれる
+    void Update(const float& elapsedTime);  // 更新処理
+    void End();                             // 毎フレーム一番最後に呼ばれる
+    void Render(const float& elapsedTime);  // 描画処理
 
-    // 描画処理
-    void Render(float elapsedTime);
+    void DrawDebug();                       // デバッグ描画
 
+public:
     // エネミー登録
     void Register(Enemy* enemy);
 
@@ -34,10 +38,9 @@ public:
     // エネミー全削除
     void Clear();
 
-    void DrawDebug();
-
+public:
     // エネミー数取得
-    int GetEnemyCount()const { return static_cast<int>(enemies.size()); }
+    const int GetEnemyCount() const { return static_cast<int>(enemies.size()); }
 
     // エネミー取得
     Enemy* GetEnemy(int index) { return enemies.at(index); }
