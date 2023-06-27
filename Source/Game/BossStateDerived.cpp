@@ -93,6 +93,9 @@ namespace BOSS
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
         rotate = playerPos.x > ownerPos.x ? 90.0f : 270.0f;
+        
+        // 進む方向を設定する
+        owner->SetMoveRight(playerPos.x > ownerPos.x ? true : false);
     }
 
     // 更新
@@ -149,14 +152,8 @@ namespace BOSS
         // materialColorを設定(アグレッシブ(赤))
         owner->SetMaterialColor(DirectX::XMFLOAT4(1, 0, 0, 1));
 
-        // position取得
-        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
-        DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
-
         // 左右判定
-        SetMoveSpeed(playerPos.x > ownerPos.x ? speed : -speed);
-        float rot = playerPos.x > ownerPos.x ? 90.0f : -90.0f;
-        owner->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(rot), 0.0f, 0.0f));
+        SetMoveSpeed(owner->GetMoveRight() ? speed : -speed);
     }
 
     // 更新
@@ -453,7 +450,7 @@ namespace TOFU
                 ownerRot.y -= GetRotationSpeed() * elapsedTime;
                 
                 // 90度より小さくなったら90度に設定する
-                if (ownerRot.y < DirectX::XMConvertToRadians(90))
+                if (ownerRot.y <= DirectX::XMConvertToRadians(90))
                     ownerRot.y = DirectX::XMConvertToRadians(90);
             }
         }
@@ -467,7 +464,7 @@ namespace TOFU
                 ownerRot.y += GetRotationSpeed() * elapsedTime;
 
                 // 270度より大きくなったら270度に設定する
-                if (ownerRot.y > DirectX::XMConvertToRadians(270))
+                if (ownerRot.y >= DirectX::XMConvertToRadians(270))
                     ownerRot.y = DirectX::XMConvertToRadians(270);
             }
         }
