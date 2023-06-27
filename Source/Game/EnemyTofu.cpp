@@ -11,7 +11,8 @@ EnemyTofu::EnemyTofu()
 {
     Graphics& graphics = Graphics::Instance();
 
-    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/tohu.fbx", true);
+    model = std::make_unique<Model>(graphics.GetDevice(), "./resources/tohuall.fbx", true);
+    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/touhuwalk.fbx", true);
 
     // ステートマシン
     stateMachine.reset(new StateMachine);
@@ -65,23 +66,23 @@ void EnemyTofu::End()
 // 描画処理
 void EnemyTofu::Render(float elapsedTime)
 {
-    //Character::Render(elapsedTime);
+    Character::Render(elapsedTime);
 
-    Graphics& graphics = Graphics::Instance();
+    //Graphics& graphics = Graphics::Instance();
 
-    // world行列更新
-    NO_CONST DirectX::XMFLOAT4X4 transform = {};
-    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
+    //// world行列更新
+    //NO_CONST DirectX::XMFLOAT4X4 transform = {};
+    //DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
 
-    // model描画
-    if (&model->keyframe)
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, &model->keyframe);
-    }
-    else
-    {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, nullptr);
-    }
+    //// model描画
+    //if (&model->keyframe)
+    //{
+    //    model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, &model->keyframe);
+    //}
+    //else
+    //{
+    //    model->skinned_meshes.render(graphics.GetDeviceContext(), transform, materialColor, nullptr);
+    //}
 }
 
 // debug用

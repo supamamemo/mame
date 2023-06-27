@@ -21,7 +21,8 @@ StagePlains::StagePlains()
 
     // stageê∂ê¨
     {
-        grassBlock[0] = std::make_unique<GrassBlock>("./resources/stage/1.fbx");
+        grassBlock[0] = std::make_unique<GrassBlock>("./resources/gro.fbx");
+        //grassBlock[0] = std::make_unique<GrassBlock>("./resources/stage/1.fbx");
         grassBlock[1] = std::make_unique<GrassBlock>("./resources/stage/2.fbx");
         grassBlock[2] = std::make_unique<GrassBlock>("./resources/stage/3.fbx");
         grassBlock[3] = std::make_unique<GrassBlock>("./resources/stage/4.fbx");

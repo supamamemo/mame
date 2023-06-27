@@ -20,6 +20,7 @@ public:
 
     // •`‰æŠJŽn
     void Begin(ID3D11DeviceContext* dc, const RenderContext& rc);
+    void Begin(ID3D11DeviceContext* dc, const RenderContext& rc, int state);
     void SetState(ID3D11DeviceContext* dc,
         int RastarizeState, int DepthStencilState, int SamplerState);
 

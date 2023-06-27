@@ -46,7 +46,7 @@ void StageBoss::Initialize()
 
 
     //tofu
-    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(5.0f, 1.0f, 10.0f));
+    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.0f, 10.0f));
     tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
 
     // îwåiâº

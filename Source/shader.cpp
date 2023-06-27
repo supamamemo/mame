@@ -267,6 +267,32 @@ void Shader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
 #endif
 }
 
+void Shader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc, int state)
+{
+    Camera& camera = Camera::Instance();
+
+    // サンプラーステート
+    dc->PSSetSamplers(0, 1, samplerState[0].GetAddressOf());
+    dc->PSSetSamplers(1, 1, samplerState[1].GetAddressOf());
+    dc->PSSetSamplers(2, 1, samplerState[2].GetAddressOf());
+
+    dc->OMSetDepthStencilState(depthStencilState[0].Get(), 1);
+
+    dc->OMSetBlendState(blendState.Get(), nullptr, 0xFFFFFFFF);
+
+    dc->RSSetState(rasterizerState[0].Get());
+
+    camera.SetPerspectiveFovTitle(dc);
+
+    CbScene data{};
+    DirectX::XMStoreFloat4x4(&data.viewProjection, camera.GetV() * camera.GetP());
+    data.lightDirection = { view.position.x,view.position.y,view.position.z,view.position.w };
+    data.camera_position = { view.camera.x,view.camera.y,view.camera.z,view.camera.w };
+    dc->UpdateSubresource(sceneConstantBuffer[0].Get(), 0, 0, &data, 0, 0);
+    dc->VSSetConstantBuffers(1, 1, sceneConstantBuffer[0].GetAddressOf());
+    dc->PSSetConstantBuffers(1, 1, sceneConstantBuffer[0].GetAddressOf());
+}
+
 void Shader::SetState(ID3D11DeviceContext* dc, int RastarizeState, int DepthStencilState, int SamplerState)
 {
     dc->PSSetSamplers(SamplerState, 1, samplerState[SamplerState].GetAddressOf());

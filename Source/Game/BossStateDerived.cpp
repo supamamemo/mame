@@ -245,17 +245,23 @@ namespace TOFU
     // 初期化
     void WalkState::Enter()
     {
+        // アニメーション設定
+        owner->PlayAnimation(0, true);
+
         // 移動速度設定
         SetMoveSpeed(1.0f);        
 
         // 目的地を設定
-        destination = owner->GetMoveRight() ? owner->GetTransform()->GetPosition().x + 10.0f
-            : owner->GetTransform()->GetPosition().x - 10.0f;
+        destination = owner->GetMoveRight() ? owner->GetTransform()->GetPosition().x + 6.0f
+            : owner->GetTransform()->GetPosition().x - 6.0f;
     }
 
     // 更新
     void WalkState::Execute(float elapsedTime)
     {
+        // アニメーション更新
+        owner->UpdateAnimation(elapsedTime);
+
         // 移動処理
         {
             DirectX::XMFLOAT3 pos = owner->GetTransform()->GetPosition();
@@ -316,6 +322,9 @@ namespace TOFU
     // 初期化
     void TurnState::Enter()
     {
+        // アニメーション設定
+        owner->PlayAnimation(1, true);
+
         // 回転速度設定
         SetRotationSpeed(3.0f);
 
@@ -326,6 +335,9 @@ namespace TOFU
     // 更新
     void TurnState::Execute(float elapsedTime)
     {
+        // アニメーション更新
+        owner->UpdateAnimation(elapsedTime);
+
         // 次に進む方向へ回転する
         {
             DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
@@ -372,6 +384,9 @@ namespace TOFU
     // 初期化
     void FindState::Enter()
     {
+        // アニメーション設定
+        owner->PlayAnimation(0, true);
+
         // 黄色
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 1.0f));
 
@@ -388,6 +403,9 @@ namespace TOFU
     // 更新
     void FindState::Execute(float elapsedTime)
     {
+        // アニメーション更新
+        owner->UpdateAnimation(elapsedTime);
+
         DirectX::XMFLOAT3 pos = owner->GetTransform()->GetPosition();
         switch (state)
         {
@@ -430,6 +448,9 @@ namespace TOFU
     // 更新
     void TrackState::Execute(float elapsedTime)
     {
+        // アニメーション更新
+        owner->UpdateAnimation(elapsedTime);
+
         // 追跡するために位置をとる
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
