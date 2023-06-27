@@ -21,6 +21,8 @@ public:
     void DrawDebug() override;
 
 private:
-    std::unique_ptr<GrassBlock> grassBlock[26];
+    static const int TERRAIN_COUNT = 26;
+
+    std::unique_ptr<GrassBlock> grassBlock[TERRAIN_COUNT];
 };
 

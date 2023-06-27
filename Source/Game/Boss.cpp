@@ -34,19 +34,19 @@ Boss::Boss()
     ++nameNum;
 }
 
-Boss::Boss(const char* filename)
-{
-    Graphics& graphics = Graphics::Instance();
-
-    model = std::make_unique<Model>(graphics.GetDevice(), filename, true);
-
-    
-
-    // imgui名前かぶり起きないように...
-    name = "Boss" + std::to_string(nameNum);
-    SetName(name.c_str());
-    ++nameNum;
-}
+//Boss::Boss(const char* filename)
+//{
+//    Graphics& graphics = Graphics::Instance();
+//
+//    model = std::make_unique<Model>(graphics.GetDevice(), filename, true);
+//
+//    
+//
+//    // imgui名前かぶり起きないように...
+//    name = "Boss" + std::to_string(nameNum);
+//    SetName(name.c_str());
+//    ++nameNum;
+//}
 
 // デストラクタ
 Boss::~Boss()

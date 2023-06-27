@@ -94,13 +94,14 @@ public: // 取得・設定関数関連
     void ResetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max);
 
 public:
-    std::unique_ptr<Model> model = nullptr;
+    std::unique_ptr<Model> model    =  nullptr;                     // モデル
 
-    Collision::AABB aabb_ = {};  
-    std::unique_ptr<GeometricPrimitive> geometricAABB_ = nullptr;
-
+    std::unique_ptr<GeometricPrimitive> geometricAABB_ = nullptr;   // 当たり判定描画用ジオメトリックプリミティブ
+    Collision::AABB aabb_           = {};                           // 当たり判定構造体
 
 protected:
+    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders;
+
     DirectX::XMFLOAT4 materialColor =   { 1.0f, 0.0f, 0.0f, 0.4f }; // マテリアルカラー
 
     DirectX::XMFLOAT3 velocity      =   { 0,0,0 };                  // 速度
@@ -140,7 +141,7 @@ protected:
 
 private:
     // 大きさの変更をするときに当たり判定のAABB描画の大きさも変更させるためにprivateにしている
-    DirectX::XMFLOAT3 defaultMin_   = { -0.4f, 0.0f, -0.4f };       // 当たり判定のminデフォルト値
-    DirectX::XMFLOAT3 defaultMax_   = {  0.4f, 0.8f,  0.4f };       // 当たり判定のmaxデフォルト値
+    DirectX::XMFLOAT3 defaultMin_   = { -0.4f, -0.0f, -0.4f };       // 当たり判定のminデフォルト値
+    DirectX::XMFLOAT3 defaultMax_   = { +0.4f, +0.8f, +0.4f };       // 当たり判定のmaxデフォルト値
 };
 

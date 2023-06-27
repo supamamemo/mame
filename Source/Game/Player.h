@@ -86,8 +86,6 @@ private: // enum関連
     };
 
 private: // 変数関連
-    Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders = {};
-
     State   state                   = State::Idle;          // 現在のステート
 
     float   dashAcceleration        =  30.0f;               // ダッシュ時のX速度

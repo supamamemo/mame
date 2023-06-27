@@ -40,7 +40,7 @@ public:
 
 public:
     // エネミー数取得
-    int GetEnemyCount()const { return static_cast<int>(enemies.size()); }
+    const int GetEnemyCount() const { return static_cast<int>(enemies.size()); }
 
     // エネミー取得
     Enemy* GetEnemy(int index) { return enemies.at(index); }

@@ -7,6 +7,8 @@
 
 #include "../CannonBall.h"
 
+#include "../Terrain/Terrain.h"
+
 class StageBoss : public Stage
 {
 public:
@@ -22,9 +24,12 @@ public:
     void DrawDebug()                      override;  // デバッグ描画
 
 private:
+    static const int TERRAIN_COUNT = 3;
+
     //std::unique_ptr<Boss> boss;
 
     // 仮にbossクラスで表示してる
-    std::unique_ptr<Boss> stage[3];
+    //std::unique_ptr<Boss> stage[STAGE_COUNT];
+    //std::unique_ptr<Terrain> terrain[TERRAIN_COUNT];
 };
 

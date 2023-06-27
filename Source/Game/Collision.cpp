@@ -303,7 +303,7 @@ bool Collision::IntersectAABBVsAABB(
         const float box2Right   = aabb2.max.x;
         const float box2Left    = aabb2.min.x;
 
-        const bool isHitX = (box1Right > box2Left && box1Left < box2Right);
+        const bool isHitX = (box1Right >= box2Left && box1Left <= box2Right);
 
         if (!isHitX) return false;  // XŽ²•ûŒü‚Å‚ÌÕ“Ë‚È‚µ
     }
@@ -315,7 +315,7 @@ bool Collision::IntersectAABBVsAABB(
         const float box2Up      = aabb2.max.y;
         const float box2Bottom  = aabb2.min.y;
 
-        const bool isHitY = (box1Up > box2Bottom && box1Bottom < box2Up);
+        const bool isHitY = (box1Up >= box2Bottom && box1Bottom <= box2Up);
 
         if (!isHitY) return false;  // YŽ²•ûŒü‚Å‚ÌÕ“Ë‚È‚µ
     }
@@ -327,7 +327,7 @@ bool Collision::IntersectAABBVsAABB(
         const float box2Back    = aabb2.max.z;
         const float box2Front   = aabb2.min.z;
 
-        const bool isHitZ = (box1Back > box2Front && box1Front < box2Back);
+        const bool isHitZ = (box1Back >= box2Front && box1Front <= box2Back);
 
         if (!isHitZ) return false;  // ZŽ²•ûŒü‚Å‚ÌÕ“Ë‚È‚µ
     }

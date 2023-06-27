@@ -48,8 +48,8 @@ void StageManager::Clear()
 }
 
 // stageØ‚è‘Ö‚¦
-void StageManager::ChangeStage(Stage* stage)
+void StageManager::ChangeStage(Stage* terrain)
 {
     // V‚µ‚¢stage‚ğİ’è
-    nextStage = stage;
+    nextStage = terrain;
 }

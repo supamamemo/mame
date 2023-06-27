@@ -21,17 +21,20 @@ Player::Player()
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/hiyokomame.fbx", true);
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temp.fbx", true);
     }
-
-    //geometricPrimitive = std::make_unique<GeometricPrimitive>(graphics.GetDevice());
     
-    create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
+    // create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
 
     //sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/load.png");
 
+    //create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
+
+    DirectX::XMFLOAT3 min = { -0.4f, -0.0f, -0.4f }; // 符号ミスに注意
+    DirectX::XMFLOAT3 max = { +0.4f, +1.0f, +0.4f };
+    ResetAABB(min, max);
+    UpdateAABB();
+
     // 待機ステートへ遷移
     TransitionIdleState();
-
-    //DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
 }
 
 
@@ -42,7 +45,7 @@ Player::~Player()
 
 void Player::Initialize()
 {
-    GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
+    GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 20, 0));
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
     GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
 }
@@ -72,11 +75,11 @@ void Player::Update(const float& elapsedTime)
     case State::HipDrop: UpdateHipDropState(elapsedTime); break;
     }
 
-    // 速力更新処理
-    UpdateVelocity(elapsedTime);
-
     // AABB更新処理
     UpdateAABB();
+
+    // 速力更新処理
+    UpdateVelocity(elapsedTime);
 
     // プレイヤーと敵の衝突判定
     CollisionPlayerVsEnemies();
@@ -300,43 +303,19 @@ void Player::CollisionPlayerVsEnemies()
         {
             isHit = true;
 
-            const DirectX::XMFLOAT3 playerCenter = GetTransform()->GetPosition();
-            const DirectX::XMFLOAT3 enemyCenter = enemy->GetTransform()->GetPosition();
-            
-            const DirectX::XMFLOAT3 vec = enemyCenter - playerCenter;
-
-            // 重なりを求める
-            const DirectX::XMFLOAT3 overlap = XMFloat3Abs(playerCenter - enemyCenter) * 0.05f;
-
-            // 重なりの各軸成分を比較して最小値を求める
-            const float minOverlap = (std::min)(overlap.x, overlap.y);
-
-            NO_CONST float direction   = 0.0f;
-            NO_CONST float penetration = 0.0f;
-
-            //if (minOverlap == overlap.x)
+            //// プレイヤーの足元がエネミーの頭より下にめり込んでいたら修正する
+            //if (aabb_.min.y < enemy->aabb_.max.y)
             //{
-                direction   = (vec.x > 0.0f) ? -1.0f : 1.0f;
-                penetration = overlap.x;
-                //a.position.x += direction * penetration;
-                //GetTransform()->AddPosition(DirectX::XMFLOAT3(direction * penetration, 0, 0));
-                GetTransform()->AddPosition(overlap);
-                velocity = {};
+            //    // Y軸に重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
+            //    const float overlapY = fabsf(enemy->aabb_.max.y) - fabsf(aabb_.min.y);
 
+            //    GetTransform()->AddPositionY(overlapY); // 重なっている分だけ押し戻す
+            //    velocity.y = 0.0f;                      // Y速度をリセット
+
+
+            //    // 押し戻し後のAABBの最小座標と最大座標を更新
+            //    UpdateAABB();
             //}
-            //else if (minOverlap == overlap.y)
-            //{
-            //    direction   = (vec.y > 0.0f) ? -1.0f : 1.0f;
-            //    penetration = overlap.y;
-            //    //a.position.y += direction * penetration;
-            //    GetTransform()->AddPosition(DirectX::XMFLOAT3(0, direction * penetration, 0));
-            //    velocity = {};
-
-            //}
-
-
-            // 押し戻し後のAABBの最小座標と最大座標を更新
-            UpdateAABB();
             
         }
     }
