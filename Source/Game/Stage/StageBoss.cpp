@@ -16,7 +16,7 @@ StageBoss::StageBoss()
         
     Terrain* terrain2 = new TerrainBoss("./resources/stage/1.fbx");
     TerrainManager::Instance().Register(terrain2);
-    terrain2->GetTransform()->AddPosition({ 10,10,0 });
+    terrain2->GetTransform()->AddPosition({ 10,5,0 });
 
     //for (std::unique_ptr<Terrain>& temp : terrain)
     //{
@@ -43,7 +43,7 @@ void StageBoss::Initialize()
 
     TerrainManager& terrainManager = TerrainManager::Instance();
     terrainManager.Initialize();
-    terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
+    //terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
     //terrainManager.GetTerrain(0)->GetTransform()->SetScale(DirectX::XMFLOAT3(4.0f, 1.0f, 1.0f));
 /*    terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-11, 20, 10));
     terrainManager.GetTerrain(1)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));

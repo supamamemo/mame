@@ -261,39 +261,55 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
             NO_CONST DirectX::XMFLOAT3 pushVec = {};
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_, pushVec))
             {
+
                 isHit = true;
 
-                // バウンス中は跳ねさせる
-                if (isBounce)
-                {
-                    OnBounce();
-                    break;
-                }
-                else
-                {
-                    // 着地した
-                    if (!isGround) OnLanding();
-                    isGround = true;
-                    velocity.y = 0.0f;
 
-                    isHit = true;
+                velocity.y = 0.0f;
 
-                    // プレイヤーの足元がエネミーの頭より下にめり込んでいたら修正する
-                    if (aabb_.min.y < terrain->aabb_.max.y)
+                // Y軸に重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
+                // 位置がマイナスでも問題ないように絶対値に変換しておく
+                const float overlapUp       = fabsf( fabsf(aabb_.min.y) - fabsf(terrain->aabb_.max.y) ); // 上からめり込んでいる
+                const float overlapBottom   = fabsf( fabsf(aabb_.max.y) - fabsf(terrain->aabb_.min.y) ); // 下からめり込んでいる
+                //const float overlapRight    = fabsf( fabsf(aabb_.min.x) - fabsf(terrain->aabb_.max.x) ); // 右からめり込んでいる
+                //const float overlapLeft     = fabsf( fabsf(aabb_.max.x) - fabsf(terrain->aabb_.min.x) ); // 左からめり込んでいる
+                // 一番重なっていない値を求める
+                const float overlapY        = (std::min)(overlapUp, overlapBottom);
+                //const float overlapX        = (std::min)(overlapRight, overlapLeft);
+                //const float overlap         = (std::min)(overlapY, overlapX);
+
+                // 重なりが微小であれば修正しない(細かく修正しすぎると着地モーションが延々と続く)
+                if (overlapY <= 0.001f) continue;
+
+                // 重なっている分だけ押し戻す
+                if (overlapY == overlapUp)
+                {
+                    // バウンス中は跳ねさせる
+                    if (isBounce)
                     {
-                        // Y軸に重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
-                        const float overlapY = fabsf(terrain->aabb_.max.y) - fabsf(aabb_.min.y); // 位置がマイナスでも問題ないように絶対値に変換しておく
+                        OnBounce();
+                    }
+                    else
+                    {
+                        GetTransform()->AddPositionY(overlapY);
 
-                        // 重なりが微小であれば修正しない(細かく修正しすぎると着地モーションが延々と続く)
-                        if (overlapY <= 0.001f) continue;
-
-                        GetTransform()->AddPositionY(overlapY); // 重なっている分だけ押し戻す
-
-                        // 押し戻し後のAABBの最小座標と最大座標を更新
-                        UpdateAABB();
-
+                        // 着地した
+                        if (!isGround) OnLanding();
+                        isGround = true;
                     }
                 }
+                else if (overlapY == overlapBottom)
+                {
+                    GetTransform()->AddPositionY(-overlapY + -0.1f);
+                }
+                //else if (overlap == overlapRight)   GetTransform()->AddPositionX(overlap);
+                //else if (overlap == overlapUp)      GetTransform()->AddPositionX(-overlap);
+
+                
+                // 押し戻し後のAABBの最小座標と最大座標を更新
+                UpdateAABB();
+                
+                
             }
         }
 
@@ -307,8 +323,69 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
     // 上昇中
     else if (my > 0.0f)
     {
-        transform->AddPositionY(my);
         isGround = false;
+
+        transform->AddPositionY(my);
+        UpdateAABB();
+
+        NO_CONST TerrainManager& terrainManager = TerrainManager::Instance();
+        const int terrainCount = terrainManager.GetTerrainCount();
+
+        NO_CONST bool isHit = false;
+
+        for (int i = 0; i < terrainCount; ++i)
+        {
+            const Terrain* terrain = terrainManager.GetTerrain(i);
+
+            NO_CONST DirectX::XMFLOAT3 pushVec = {};
+            if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_, pushVec))
+            {
+
+                isHit = true;
+
+                // Y軸に重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
+                // 位置がマイナスでも問題ないように絶対値に変換しておく
+                //const float overlapUp     = fabsf(fabsf(aabb_.min.y) - fabsf(terrain->aabb_.max.y)); // 上からめり込んでいる
+                const float overlapBottom = fabsf(fabsf(aabb_.max.y) - fabsf(terrain->aabb_.min.y)); // 下からめり込んでいる
+                //const float overlapRight    = fabsf( fabsf(aabb_.min.x) - fabsf(terrain->aabb_.max.x) ); // 右からめり込んでいる
+                //const float overlapLeft     = fabsf( fabsf(aabb_.max.x) - fabsf(terrain->aabb_.min.x) ); // 左からめり込んでいる
+                // 一番重なっていない値を求める
+                //const float overlapY = (std::min)(overlapUp, overlapBottom);
+                //const float overlapX        = (std::min)(overlapRight, overlapLeft);
+                //const float overlap         = (std::min)(overlapY, overlapX);
+
+                // 重なりが微小であれば修正しない(細かく修正しすぎると着地モーションが延々と続く)
+                //if (overlapY <= 0.001f) continue;
+                if (overlapBottom <= 0.001f) continue;
+
+                //// 重なっている分だけ押し戻す
+                //if (overlapY == overlapUp)
+                //{
+                //    GetTransform()->AddPositionY(overlapY);
+                //}
+                //else if (overlapY == overlapBottom)
+                //{
+                    GetTransform()->AddPositionY(-overlapBottom + -0.1f);
+
+                    velocity.y = -velocity.y;
+                //}
+                //else if (overlap == overlapRight)   GetTransform()->AddPositionX(overlap);
+                //else if (overlap == overlapUp)      GetTransform()->AddPositionX(-overlap);
+
+
+                // 押し戻し後のAABBの最小座標と最大座標を更新
+                UpdateAABB();
+
+            }
+        }
+
+        //if (!isHit)
+        //{
+        //    // 空中に浮いている
+        //    transform->AddPositionY(my);
+        //    isGround = false;
+        //}
+
     }
 }
 
