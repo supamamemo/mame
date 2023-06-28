@@ -55,4 +55,7 @@ private:
 
     DirectX::XMFLOAT3 defaultMin_ = {};
     DirectX::XMFLOAT3 defaultMax_ = {};
+
+public:
+    static float renderLengthLimit;     // •`‰æ‚³‚ê‚éŒÀŠE‹——£
 };

@@ -1,7 +1,9 @@
 #include "Terrain.h"
 #include "../../Mame/Graphics/Graphics.h"
+#include "../PlayerManager.h"
 
 int Terrain::nameNum = 0;
+float Terrain::renderLengthLimit = 40.0f;
 
 Terrain::Terrain(const char* filename)
 {
@@ -27,6 +29,15 @@ Terrain::Terrain(const char* filename)
 
 void Terrain::Render(const float& elapsedTime)
 {
+    // DrawColl‚ğ­‚È‚­‚·‚é‚½‚ß‚Éplayer‚©‚ç‹ß‚¢‚à‚Ì‚¾‚¯•`‰æ‚·‚é
+    const float playerPosX  = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x;
+    const float terrainPosX = GetTransform()->GetPosition().x;
+    const float vecX        = playerPosX - terrainPosX;
+    const float length      = sqrtf(vecX * vecX);
+
+    if (length > renderLengthLimit) return;
+
+
     Graphics& graphics = Graphics::Instance();
 
     // worlds—ñXV

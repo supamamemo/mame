@@ -3,7 +3,6 @@
 TerrainBoss::TerrainBoss(const char* const filename)
     : Terrain(filename)
 {
-
 }
 
 TerrainBoss::~TerrainBoss()
