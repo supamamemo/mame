@@ -4,6 +4,9 @@
 
 SceneLoading::SceneLoading(BaseScene* nextScene) :nextScene(nextScene) 
 {
+    // ƒV[ƒ“‚Ì‘®«‚ğİ’è
+    SetSceneType(static_cast<int>(Mame::Scene::TYPE::LOAD));
+
     spriteDissolve = std::make_unique<SpriteDissolve>();
 }
 

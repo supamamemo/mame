@@ -12,6 +12,9 @@
 // コンストラクタ
 SceneGame::SceneGame()
 {
+    // シーンの属性を設定
+    SetSceneType(static_cast<int>(Mame::Scene::TYPE::GAME));
+
     spriteDissolve[0] = std::make_unique<SpriteDissolve>();
     spriteDissolve[1] = std::make_unique<SpriteDissolve>(L"./resources/fade.jpg");
 }
@@ -51,8 +54,8 @@ void SceneGame::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
-    StageManager::Instance().ChangeStage(new StagePlains);
-    //StageManager::Instance().ChangeStage(new StageBoss);
+    //StageManager::Instance().ChangeStage(new StagePlains);
+    StageManager::Instance().ChangeStage(new StageBoss);
 }
 
 // 終了化

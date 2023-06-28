@@ -35,6 +35,8 @@ bool framework::initialize()
     se[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/jump.wav");
     se[1] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/coin.wav");
 
+
+    Mame::Scene::SceneManager::Instance().Initialize();
     // シーンタイトル
     Mame::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
 

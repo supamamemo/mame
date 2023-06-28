@@ -218,6 +218,7 @@
     <ClCompile Include="Source\Game\Mathf.cpp" />
     <ClCompile Include="Source\Game\Player.cpp" />
     <ClCompile Include="Source\Game\PlayerManager.cpp" />
+    <ClCompile Include="Source\Game\Pose.cpp" />
     <ClCompile Include="Source\Game\spriteDissolve.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
     <ClCompile Include="Source\Game\Stage\StageBoss.cpp" />
@@ -282,6 +283,7 @@
     <ClInclude Include="Source\Game\OperatorXMFLOAT3.h" />
     <ClInclude Include="Source\Game\Player.h" />
     <ClInclude Include="Source\Game\PlayerManager.h" />
+    <ClInclude Include="Source\Game\Pose.h" />
     <ClInclude Include="Source\Game\spriteDissolve.h" />
     <ClInclude Include="Source\Game\Stage\Stage.h" />
     <ClInclude Include="Source\Game\Stage\StageBoss.h" />

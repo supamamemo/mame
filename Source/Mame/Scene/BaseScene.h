@@ -4,6 +4,13 @@
 
 namespace Mame::Scene
 {
+    enum class TYPE
+    {
+        TITLE,
+        LOAD,
+        GAME,
+    };
+
     class BaseScene
     {
     public:
@@ -25,7 +32,13 @@ namespace Mame::Scene
         // €”õŠ®—¹
         void SetReady() { ready = true; }
 
+        // ¡‚Ç‚ÌƒV[ƒ“‚È‚Ì‚©”»’è‚Å‚«‚é‚æ‚¤‚É‚·‚éˆ×‚Ì‚à‚Ì
+        void SetSceneType(int type) { sceneType = type; }
+        int GetSceneType() { return sceneType; }
+
     private:
         bool ready = false;
+
+        int sceneType = static_cast<int>(TYPE::TITLE);
     };
 }

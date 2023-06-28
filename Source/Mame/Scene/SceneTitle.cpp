@@ -9,6 +9,8 @@
 #include "../../misc.h"
 #include "../../texture.h"
 
+
+
 // todo: 後で消す
 #define FADE 1
 #define MAME 1
@@ -16,6 +18,9 @@
 // コンストラクタ
 SceneTitle::SceneTitle()
 {
+    // シーンの属性を設定
+    SetSceneType(static_cast<int>(Mame::Scene::TYPE::TITLE));
+
     spriteDissolve = std::make_unique<SpriteDissolve>();
 
     // player生成
@@ -198,6 +203,8 @@ void SceneTitle::Update(const float& elapsedTime)
 
     // ボタンを押したらfadeOut始まる
     if (gamePad.GetButtonDown() & GamePad::BTN_A)spriteDissolve->SetFade(true);
+
+
 
     // fadeOut
     if (spriteDissolve->IsFade())

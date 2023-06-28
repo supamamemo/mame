@@ -38,6 +38,7 @@ public:
     Sprite(ID3D11Device* device, const wchar_t* filename);
     ~Sprite();
     
+    void render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, DirectX::XMFLOAT4 color);
     void render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle/*degree*/);
     void render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle/*degree*/, float sx, float sy, float sw, float sh);
     void render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh);
