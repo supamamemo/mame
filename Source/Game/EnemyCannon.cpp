@@ -13,10 +13,7 @@ EnemyCannon::EnemyCannon()
 {
     Graphics& graphics = Graphics::Instance();
 
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/touhu.fbx", true);
     model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_cannon.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/temporary/assets_flag.fbx", true);
-    //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/matome0622.fbx", true);
 
     // ステートマシンをセット
     stateMachine.reset(new StateMachine);

@@ -7,6 +7,8 @@
 
 #include "../CannonBall.h"
 
+
+#include "../EnemyTofu.h"
 #include "../Terrain/Terrain.h"
 
 class StageBoss : public Stage
@@ -29,7 +31,10 @@ private:
     //std::unique_ptr<Boss> boss;
 
     // ‰¼‚ÉbossƒNƒ‰ƒX‚Å•\Ž¦‚µ‚Ä‚é
-    //std::unique_ptr<Boss> stage[STAGE_COUNT];
-    //std::unique_ptr<Terrain> terrain[TERRAIN_COUNT];
+    std::unique_ptr<Boss> stage[3];
+
+    std::unique_ptr<Boss> back;
+
+    std::unique_ptr<EnemyTofu> tofu;
 };
 

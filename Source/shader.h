@@ -20,6 +20,7 @@ public:
 
     // •`‰æŠJŽn
     void Begin(ID3D11DeviceContext* dc, const RenderContext& rc);
+    void Begin(ID3D11DeviceContext* dc, const RenderContext& rc, int state);
     void SetState(ID3D11DeviceContext* dc,
         int RastarizeState, int DepthStencilState, int SamplerState);
 
@@ -38,7 +39,7 @@ public:
         float nearZ = 0;
         float farZ = 100;
 
-        DirectX::XMFLOAT4 position{ 0,-2,1,0 };
+        DirectX::XMFLOAT4 position{ 0,-9,13,0 };
         DirectX::XMFLOAT4 camera{ 0,0,1,0 };
     }view;
 

@@ -25,6 +25,10 @@ public:
     const char* GetName() const { return name.c_str(); }
     void SetName(const char* n) { name = n; }
 
+    // テスト用
+    DirectX::XMFLOAT4 materialColor = { 1.0f,1.0f ,1.0f ,1.0f };
+    void SetMaterialColor(const DirectX::XMFLOAT4& color) { materialColor = color; }
+
 private:
     std::string name;
 };

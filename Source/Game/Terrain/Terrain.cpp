@@ -36,11 +36,11 @@ void Terrain::Render(const float& elapsedTime)
     // model描画
     if (&model->keyframe)
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &model->keyframe);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, GetMaterialColor(), &model->keyframe);
     }
     else
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, GetMaterialColor(), nullptr);
     }
 
 
@@ -116,7 +116,7 @@ void Terrain::Render(const float& elapsedTime)
     //const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.4f };
 
     // AABB描画
-    geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
+    geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, debugMaterialColor);
 
     // ラスタライザ再設定(ソリッド・後ろカリング)
     graphics.GetShader()->SetState(graphics.GetDeviceContext(), 0, 0, 0);

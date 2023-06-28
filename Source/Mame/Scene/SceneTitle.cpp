@@ -11,7 +11,7 @@
 
 // todo: 後で消す
 #define FADE 1
-#define MAME 0
+#define MAME 1
 
 // コンストラクタ
 SceneTitle::SceneTitle()
@@ -191,7 +191,7 @@ void SceneTitle::Update(const float& elapsedTime)
     // camera
 #if MAME
     Camera& camera = Camera::Instance();
-    camera.Update(elapsedTime);
+    camera.UpdateTitle(elapsedTime);
 #endif
 
     spriteDissolve->Update();
@@ -273,7 +273,7 @@ void SceneTitle::Render(const float& elapsedTime)
     rc.lightDirection = { 0.0f, -1.0f, 0.0f, 0.0f };
 
     Shader* shader = graphics.GetShader();
-    shader->Begin(graphics.GetDeviceContext(), rc);
+    shader->Begin(graphics.GetDeviceContext(), rc, 0);
 
     // プレイヤー描画
     PlayerManager::Instance().GetPlayer()->Render(elapsedTime);

@@ -17,6 +17,17 @@ namespace BOSS
     };
 }
 
+namespace TOFU
+{
+    enum class STATE
+    {
+        Walk,
+        Turn,
+        Find,
+        Track,
+    };
+}
+
 namespace CANNON
 {
     enum class STATE
@@ -101,7 +112,62 @@ namespace BOSS
 
 namespace TOFU
 {
-    
+    class WalkState : public State
+    {
+    public:
+        WalkState(Enemy* _tofu) :State(_tofu, "walk") {}
+        ~WalkState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime);
+        void Exit()override;
+
+        void FindPlayer();
+
+    private:
+        float destination = 0.0f;   // 目的地
+    };
+
+    class TurnState :public State
+    {
+    public:
+        TurnState(Enemy* _tofu) :State(_tofu, "turn") {}
+        ~TurnState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+
+    private:
+        float rotate = 0.0f;
+    };
+
+    class FindState :public State
+    {
+    public:
+        FindState(Enemy* _tofu) :State(_tofu, "find") {}
+        ~FindState() {}
+
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+
+    private:
+        float returnPositionY = 0.0f; // 元々居た位置Y
+        int state = 0;
+    };
+
+    class TrackState :public State
+    {
+    public:
+        TrackState(Enemy* _tofu) :State(_tofu, "track") {}
+        ~TrackState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+    };
 }
 
 namespace CANNON

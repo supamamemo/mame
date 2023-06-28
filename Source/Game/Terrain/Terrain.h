@@ -36,13 +36,18 @@ public:
     const char* const GetName() const { return name.c_str(); }
     void SetName(const char* const n) { name = n; }
 
+
+    void SetMaterialColor(DirectX::XMFLOAT4 color) { materialColor = color; }
+    DirectX::XMFLOAT4 GetMaterialColor() { return materialColor; }
+
 public:
     static int nameNum;
 
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders = {};
 
-    DirectX::XMFLOAT4 materialColor = { 1.0f, 0.0f, 0.0f, 0.4f }; // マテリアルカラー
+    DirectX::XMFLOAT4 debugMaterialColor    = { 1.0f, 0.0f, 0.0f, 0.4f }; // マテリアルカラー(debug用)
+    DirectX::XMFLOAT4 materialColor         = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 private:
     // Imgui名前被り防止のためのやつ //    

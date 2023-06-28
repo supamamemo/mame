@@ -25,78 +25,17 @@ void Camera::Update(float elapsedTime)
 void Camera::UpdateTitle(float elapsedTime)
 {
     DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
-    DirectX::XMFLOAT4 rot = GetTransform()->GetRotation();
 
-    float r = 24;
-    float move = 8;
+    DirectX::XMFLOAT3 vec = pos;
+    vec.x = sinf(angle);
+    vec.z = cosf(angle);
 
-    switch (state)
-    {
-    case 0:
-        pos.x += move * elapsedTime;
-        pos.z += move * elapsedTime;
+    vec.x*= length;
+    vec.z*= length;
 
-        rot.y -= DirectX::XMConvertToRadians(r) * elapsedTime;
+    angle -= DirectX::XMConvertToRadians(addAngle);
 
-        if (rot.y <= DirectX::XMConvertToRadians(-90))rot.y = DirectX::XMConvertToRadians(-90);
-        if (pos.x >= 30.0f)
-        {
-            pos.x = 30.0f;
-            pos.z = 0.0f;
-            rot.y = DirectX::XMConvertToRadians(-90);
-            state = 1;
-        }
-
-        break;
-    case 1:
-        pos.x -= move * elapsedTime;
-        pos.z += move * elapsedTime;
-
-        rot.y -= DirectX::XMConvertToRadians(r) * elapsedTime;
-
-        if (rot.y <= DirectX::XMConvertToRadians(-180))rot.y = DirectX::XMConvertToRadians(-180);
-        if (pos.x <= 0.0f)
-        {
-            pos.x = 0.0f;
-            pos.z = 30.0f;
-            rot.y = DirectX::XMConvertToRadians(-180);
-            state = 2;
-        }
-        break;
-    case 2:
-        pos.x -= move * elapsedTime;
-        pos.z -= move * elapsedTime;
-
-        rot.y -= DirectX::XMConvertToRadians(r) * elapsedTime;
-
-        if (rot.y <= DirectX::XMConvertToRadians(-270))rot.y = DirectX::XMConvertToRadians(-270);
-        if (pos.x <= -30.0f)
-        {
-            pos.x = -30.0f;
-            pos.z = 0.0f;
-            rot.y = DirectX::XMConvertToRadians(-270);
-            state = 3;
-        }
-        break;
-    case 3:
-        pos.x += move * elapsedTime;
-        pos.z -= move * elapsedTime;
-
-        rot.y -= DirectX::XMConvertToRadians(r) * elapsedTime;
-
-        if (rot.y <= DirectX::XMConvertToRadians(-360))rot.y = DirectX::XMConvertToRadians(-360);
-        if (pos.x >= 0.0f)
-        {
-            pos.x = 0.0f;
-            pos.z = -30.0f;
-            rot.y = DirectX::XMConvertToRadians(0);
-            state = 0;
-        }
-        break;
-    }
-
-    GetTransform()->SetPosition(pos);
-    GetTransform()->SetRotation(rot);
+    GetTransform()->SetPosition(vec);
 }
 
 
@@ -113,6 +52,28 @@ void Camera::SetPerspectiveFov(ID3D11DeviceContext* dc)
     DirectX::XMFLOAT3 forward = transform.CalcForward();
     DirectX::XMVECTOR eye{ DirectX::XMVectorSet(pos.x,pos.y,pos.z,1.0f) };
     DirectX::XMVECTOR focus{ DirectX::XMVectorSet(pos.x + forward.x,pos.y + forward.y,pos.z + forward.z,1.0f) };
+    //DirectX::XMVECTOR eye{ DirectX::XMVectorSet(camera.eye.x,camera.eye.y,camera.eye.z,1.0f) };
+    //DirectX::XMVECTOR focus{ DirectX::XMVectorSet(camera.focus.x,camera.focus.y,camera.focus.z,1.0f) };
+    DirectX::XMVECTOR up{ DirectX::XMVectorSet(camera.up.x,camera.up.y,camera.up.z,0.0f) };
+    V = { DirectX::XMMatrixLookAtLH(eye, focus, up) };
+
+
+    //DebugMoveCamera();
+}
+
+void Camera::SetPerspectiveFovTitle(ID3D11DeviceContext* dc)
+{
+    D3D11_VIEWPORT viewport{};
+    UINT unm_viewports{ 1 };
+    dc->RSGetViewports(&unm_viewports, &viewport);
+
+    float aspect_ratio{ viewport.Width / viewport.Height };
+    P = { DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(30),aspect_ratio,0.1f,1000.0f) };
+
+    DirectX::XMFLOAT3 pos = transform.GetPosition();
+    DirectX::XMFLOAT3 forward = transform.CalcForward();
+    DirectX::XMVECTOR eye{ DirectX::XMVectorSet(pos.x,pos.y,pos.z,1.0f) };
+    DirectX::XMVECTOR focus{ DirectX::XMVectorSet(0.0f,2.0f,0.0f,0.0f) };
     //DirectX::XMVECTOR eye{ DirectX::XMVectorSet(camera.eye.x,camera.eye.y,camera.eye.z,1.0f) };
     //DirectX::XMVECTOR focus{ DirectX::XMVectorSet(camera.focus.x,camera.focus.y,camera.focus.z,1.0f) };
     DirectX::XMVECTOR up{ DirectX::XMVectorSet(camera.up.x,camera.up.y,camera.up.z,0.0f) };
@@ -141,6 +102,10 @@ void Camera::DrawDebug()
     ImGui::DragFloat("camera_position.x", &camera.eye.x);
     ImGui::DragFloat("camera_position.y", &camera.eye.y);
     
+    ImGui::DragFloat("angle", &angle);
+    ImGui::DragFloat("addAngle", &addAngle);
+    ImGui::DragFloat("length", &length);
+
     if (ImGui::Button("Reset"))Camera::Reset();
 
     ImGui::End();

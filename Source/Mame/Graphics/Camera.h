@@ -29,6 +29,7 @@ public:
     void UpdateTitle(float elapsedTime);
 
     void SetPerspectiveFov(ID3D11DeviceContext* dc);
+    void SetPerspectiveFovTitle(ID3D11DeviceContext* dc);
     //void SetPerspectiveFov(ID3D11DeviceContext* dc, float fovY, float aspect, float nearZ, float farZ);
    
     DirectX::XMMATRIX GetP() { return P; }
@@ -58,7 +59,9 @@ private:
     DirectX::XMMATRIX V{};
 
     // ‰¼
-    int state = 0;
+    float length = 40.0f;
+    float angle = 180.0f;
+    float addAngle = 0.02f;
 
 };
 
