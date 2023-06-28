@@ -206,7 +206,7 @@ void SceneGame::DrawDebug()
     if (ImGui::Button("stageP"))
         changeStage1 = true;
 
-    ImGui::Begin("renderLengthLimit");
-    ImGui::SliderFloat("renderLengthLimit", &Terrain::renderLengthLimit, 0.0f, 50.0f);
+    ImGui::Begin("renderLengthXLimit_");
+    ImGui::SliderFloat("renderLengthXLimit_", &Terrain::renderLengthXLimit_, 0.0f, 50.0f);
     ImGui::End();
 }

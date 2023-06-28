@@ -51,7 +51,7 @@ void EnemyCannon::Begin()
 }
 
 // XVˆ—
-void EnemyCannon::Update(float elapsedTime)
+void EnemyCannon::Update(const float& elapsedTime)
 {
     // cannonBallManager
     cannonBallManager.Update(elapsedTime);
@@ -70,10 +70,9 @@ void EnemyCannon::End()
 }
 
 // •`‰æˆ—
-void EnemyCannon::Render(float elapsedTime)
+void EnemyCannon::Render(const float& elapsedTime)
 {
-    // ‹¤’Ê‚Ì•`‰æˆ—
-    Character::Render(elapsedTime);
+    Enemy::Render(elapsedTime);
 
     // cannonBallManager
     cannonBallManager.Render(elapsedTime);

@@ -491,7 +491,7 @@ void Character::UpdateHorizontalMove(const float& elapsedTime)
 
 
 // 水平移動処理
-void Character::HorizontalRightLeft(const float& horizontalSpeed)
+void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
 {
     // 当たっているかどうか
     NO_CONST bool isHitX = false;
@@ -522,9 +522,18 @@ void Character::HorizontalRightLeft(const float& horizontalSpeed)
                 // 横への重なりがなければ修正しない
                 if (overlapX == 0.0f) continue;
 
-
-                isHitX = true;      // 当たっている   
-                velocity.x = 0.0f;  // X速度をリセット
+                // バウンス中なら壁に当たった時にX速度を反転させる
+                if (isBounce)
+                {                  
+                    horizontalSpeed = -horizontalSpeed; // 今回の速度を反転
+                    velocity.x      = -velocity.x;      // 跳ね返って空中に浮いてるときのX速度も反転させる
+                    saveMoveVecX    = -saveMoveVecX;    // 向いている方向を逆にさせる
+                }
+                else
+                {
+                    velocity.x  = 0.0f;  // X速度をリセット
+                    isHitX      = true;  // 当たっている   
+                }
 
                 // 左よりより右からの重なりの方が小さければ右からめり込んでいて、
                 // 逆に右より左からの重なりの方が小さければ左からめり込んでいると判断し、
@@ -548,7 +557,7 @@ void Character::HorizontalRightLeft(const float& horizontalSpeed)
     }
     
     // 地形に衝突していなければ位置にX速度を加算
-    if (!isHitX)
+    if (!isHitX || isBounce)
     {
         // 移動処理
         GetTransform()->AddPositionX(horizontalSpeed);

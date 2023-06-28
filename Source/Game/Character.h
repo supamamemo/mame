@@ -64,7 +64,7 @@ private:
     void UpdateHorizontalVelocity(const float& elapsedFrame);   // 水平速力更新処理
     void UpdateHorizontalMove(const float& elapsedTime);        // 水平移動更新処理
 
-    void HorizontalRightLeft(const float& horizontalSpeed);     // 水平移動処理(コードが長くなったので水平移動時の処理をこちらに移動)
+    void HorizontalRightLeft(NO_CONST float horizontalSpeed);     // 水平移動処理(コードが長くなったので水平移動時の処理をこちらに移動)
 
 
 public: // アニメーション処理関数関連（ショートカット関数）

@@ -29,8 +29,8 @@ Player::Player()
 
     //create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
 
-    DirectX::XMFLOAT3 min = { -0.4f, -0.0f, -0.4f }; // 符号ミスに注意
-    DirectX::XMFLOAT3 max = { +0.4f, +1.0f, +0.4f };
+    const DirectX::XMFLOAT3 min = { -0.4f, -0.0f, -0.4f }; // 符号ミスに注意
+    const DirectX::XMFLOAT3 max = { +0.4f, +1.0f, +0.4f };
     ResetAABB(min, max);
     UpdateAABB();
 
@@ -140,22 +140,6 @@ void Player::DrawDebug()
 
         ImGui::SliderFloat("turnSpeed",        &turnSpeed, 1.0f, ToRadian(900.0f), "%.0f");  // 旋回速度
 
-        if (ImGui::Button("Speed Reset"))
-        {
-            velocity            =  {};
-            acceleration        =  1.0f;
-            defaultGravity      = -1.0f;
-            hipDropGravity      = -3.0f;
-            friction            =  0.5f;
-            airControl          =  0.3f;
-
-            dashAcceleration    =  30.0f;
-            defaultMoveSpeed    =  5.0f;
-            runMoveSpeed        =  15.0f;
-                                   
-            turnSpeed           =  ToRadian(900.0f);
-        }
-
         ImGui::TreePop();
     }
 
@@ -165,13 +149,6 @@ void Player::DrawDebug()
         ImGui::SliderFloat("jumpSpeed",  &jumpSpeed,       0.0f, 30.0f);   // ジャンプ速度
         ImGui::SliderFloat("d_JumpTime", &defaultJumpTime, 0.0f, 1.0f);    // ジャンプし続けられる時間
         ImGui::SliderInt("jumpLimit",    &jumpLimit,       1,    5);       // ジャンプ最大回数
-
-        if (ImGui::Button("Jump Reset"))
-        {
-            jumpSpeed       = 10.0f;
-            defaultJumpTime = 0.3f;
-            jumpLimit       = 1;
-        }
 
         ImGui::TreePop();
     }
@@ -184,15 +161,6 @@ void Player::DrawDebug()
         ImGui::SliderFloat("bounceScaleX",   &bounceScaleX,        0.0f,  1.0f,  "%.2f");   // 跳ねるときのX速度に掛ける値(※0.75なら現在のspeedXを75%の値にしていく)
         ImGui::SliderFloat("bounceScaleY",   &bounceScaleY,        0.0f,  1.0f,  "%.2f");   // 跳ねるときのY速度に掛ける値(※0.75なら現在のspeedYを75%の値にしていく)
         ImGui::SliderInt("bounceLimit",      &bounceLimit,         0,     10);              // 跳ねる最大回数
-
-        if (ImGui::Button("Bounce Reset"))
-        {
-            defaultBounceSpeedX = 15.0f;
-            defaultBounceSpeedY = 10.0f;
-            bounceScaleX        = 0.75f;
-            bounceScaleY        = 0.75f;
-            bounceLimit         = 2;
-        }
 
         ImGui::TreePop();
     }
@@ -245,7 +213,7 @@ const bool Player::InputMove(const float& elapsedTime)
     Move(moveVecX, moveSpeed);
 
     // 移動ベクトルがゼロベクトルじゃなければ（更新されていたら）保存する
-    // ※保存することでボタンを押し続けなくても自動的に旋回する
+    // ※保存することでボタンを押し続けなくても自動的に旋回しきるようになる
     if (moveVecX != 0.0f && moveVecX != saveMoveVecX)
     {
         saveMoveVecX = moveVecX;
@@ -387,9 +355,9 @@ void Player::OnBounce()
     }
     // バウンスさせる
     else
-    {
-        velocity.x    = saveMoveVec_n * bounceSpeedX;   // プレイヤーの向いている方向にバウンスX速度を代入
-        velocity.y    = bounceSpeedY;                   // バウンスY速度を代入
+    {    
+        velocity.x    = (saveMoveVecX > 0.0f) ? bounceSpeedX : -bounceSpeedX; // プレイヤーの向いている方向にバウンスX速度を代入    
+        velocity.y    = bounceSpeedY;   // バウンスY速度を代入
         bounceSpeedX *= bounceScaleX;   // バウンスX速度を減少
         bounceSpeedY *= bounceScaleY;   // バウンスY速度を減少
         ++bounceCount;                  // バウンスカウント加算
@@ -695,9 +663,9 @@ void Player::TransitionHipDropState()
 {
     state = State::HipDrop;
 
-    // プレイヤーの正規化移動Xベクトルを求める(ステート遷移時に計算する)
-    const float length = sqrtf(saveMoveVecX * saveMoveVecX);
-    saveMoveVec_n      = saveMoveVecX / length;
+    //// プレイヤーの正規化移動Xベクトルを求める(ステート遷移時に計算する)
+    //const float length = sqrtf(saveMoveVecX * saveMoveVecX);
+    //saveMoveVec_n      = saveMoveVecX / length;
 
     gravity  = hipDropGravity;  // 落下速度を上昇
     isBounce = true;            // バウンスさせる

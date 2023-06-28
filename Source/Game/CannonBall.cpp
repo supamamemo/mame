@@ -2,9 +2,10 @@
 #include "CannonBallManager.h"
 
 #include "../Mame/Graphics/Graphics.h"
+#include "PlayerManager.h"
 
-
-int CannonBall::nameNum = 0;
+int   CannonBall::nameNum             = 0;
+float CannonBall::renderLengthXLimit_ = 40.0f;
 
 /// <summary>
 /// コンストラクタ
@@ -89,6 +90,16 @@ void CannonBall::End()
 // 描画処理
 void CannonBall::Render(const float& elapsedTime)
 {
+    // DrawCollを少なくするためにplayerから近いものだけ描画する
+    {
+        const float& enemyPosX  = GetTransform()->GetPosition().x;
+        const float& playerPosX = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x;
+        const float vecX        = enemyPosX - playerPosX;
+        const float lengthX     = sqrtf(vecX * vecX);
+
+        if (lengthX > renderLengthXLimit_) return;
+    }
+
     Character::Render(elapsedTime);
 }
 

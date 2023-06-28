@@ -111,7 +111,6 @@ private: // 変数関連
     float   bounceSpeedY            =  defaultBounceSpeedY; // バウンスY速度
     float   bounceScaleX            =  0.75f;               // バウンスX速度にかける値
     float   bounceScaleY            =  0.75f;               // バウンスY速度にかける値
-    float   saveMoveVec_n           =  0.0f;                // プレイヤーの単位移動ベクトルを保存する（バウンス時に使われる）
 
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  2;                   // 最大バウンス回数

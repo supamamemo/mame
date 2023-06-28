@@ -43,6 +43,8 @@ public:
 public:
     static int nameNum;
 
+    static float renderLengthXLimit_;     // •`‰æ‚³‚ê‚éŒÀŠE‹——£
+
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders = {};
 
@@ -56,6 +58,4 @@ private:
     DirectX::XMFLOAT3 defaultMin_ = {};
     DirectX::XMFLOAT3 defaultMax_ = {};
 
-public:
-    static float renderLengthLimit;     // •`‰æ‚³‚ê‚éŒÀŠE‹——£
 };

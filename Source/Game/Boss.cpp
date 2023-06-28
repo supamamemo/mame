@@ -71,7 +71,7 @@ void Boss::Begin()
 }
 
 // XVˆ—
-void Boss::Update(float elapsedTime)
+void Boss::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
@@ -97,10 +97,9 @@ void Boss::End()
 }
 
 // •`‰æˆ—
-void Boss::Render(float elapsedTime)
+void Boss::Render(const float& elapsedTime)
 {
-    // ‹¤’Ê‚Ì•`‰æˆ—
-    Character::Render(elapsedTime);
+    Enemy::Render(elapsedTime);
 }
 
 // debug—p

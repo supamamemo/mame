@@ -32,6 +32,8 @@ public:
 
     void Destroy();
 
+    static float renderLengthXLimit_;   // ’eŠÛ‚Ì•`‰æ‹——£§ŒÀ
+
 private:
     CannonBallManager* cannonBallManager = nullptr;
 

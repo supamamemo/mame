@@ -23,7 +23,11 @@ StageBoss::StageBoss()
         TerrainManager::Instance().Register(terrain2);
 
         Terrain* terrain3 = new TerrainBoss("./resources/stage/1.fbx");
-        TerrainManager::Instance().Register(terrain3);
+        TerrainManager::Instance().Register(terrain3);        
+        
+        // プレイヤーが壁に衝突したときの反転処理確認用
+        TerrainManager::Instance().Register(new TerrainBoss("./resources/stage/1.fbx"));
+        TerrainManager::Instance().Register(new TerrainBoss("./resources/stage/1.fbx"));
     }
 
 
@@ -71,6 +75,10 @@ void StageBoss::Initialize()
         terrainManager.GetTerrain(2)->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 5, 1));
         terrainManager.GetTerrain(2)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
         terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 11, 10));
+
+        // プレイヤーが壁に衝突したときの反転処理確認用
+        terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 1, 10));
+        terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-25, 1.5f, 10));
         
         // materialColor
         terrainManager.GetTerrain(0)->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.64f, 0.0f, 1.0f));
@@ -82,7 +90,7 @@ void StageBoss::Initialize()
 
     // player初期化
     //PlayerManager::Instance().Initialize();
-    PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f));
+    PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.0f, 10.0f));
 
     // boss初期化
     
