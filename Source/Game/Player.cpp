@@ -267,7 +267,7 @@ const bool Player::InputJump()
 {
     // ボタン入力でジャンプ（ジャンプ回数制限付き）
     const GamePad& gamePad = Input::Instance().GetGamePad();
-    if (gamePad.GetButtonDown() & GamePad::BTN_B)
+    if (gamePad.GetButtonDown() & (GamePad::BTN_A | GamePad::BTN_B))
     {
         // ジャンプ回数がジャンプ上限数以上ならジャンプしない
         if (jumpCount >= jumpLimit) return false;
@@ -433,14 +433,14 @@ void Player::UpdateIdleState(const float& elapsedTime)
     {
         // ダッシュキーが押された瞬間ならダッシュステートへ遷移
         const GamePad& gamePad = Input::Instance().GetGamePad();
-        if (gamePad.GetButtonDown() & GamePad::BTN_X)
+        if (gamePad.GetButtonDown() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
             moveSpeed       = defaultMoveSpeed; // 移動速度をリセット
             TransitionDashState();
             return;
         }
         // 移動速度が走行速度と同じ（走行状態）でダッシュキーが押され続けていれば走行ステートへ遷移
-        else if (moveSpeed == runMoveSpeed && gamePad.GetButton() & GamePad::BTN_X)
+        else if (moveSpeed == runMoveSpeed && gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
             TransitionRunState();
             return;
@@ -478,7 +478,7 @@ void Player::UpdateWalkState(const float& elapsedTime)
     {
         // 移動とダッシュキーが入力されていたらダッシュステートへ
         const GamePad& gamePad = Input::Instance().GetGamePad();
-        if (gamePad.GetButtonDown() & GamePad::BTN_X)
+        if (gamePad.GetButtonDown() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
             TransitionDashState();
             return;
@@ -531,7 +531,7 @@ void Player::UpdateDashState(const float& elapsedTime)
     {
         // 移動とダッシュキーが入力され続けていたら走行ステートへ遷移
         const GamePad& gamePad = Input::Instance().GetGamePad();
-        if (gamePad.GetButton() & GamePad::BTN_X)
+        if (gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
             velocity.x = velocity.x * dashFinishScale; // 速度を減らす
             TransitionRunState();
@@ -604,7 +604,7 @@ void Player::UpdateRunState(const float& elapsedTime)
 
         // 走行キー入力がなければ歩行ステートへ
         const GamePad& gamePad = Input::Instance().GetGamePad();
-        if (!(gamePad.GetButton() & GamePad::BTN_X))
+        if (!(gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y)))
         {
             // 速度パラメータをリセット
             moveSpeed    = defaultMoveSpeed;
@@ -660,7 +660,7 @@ void Player::UpdateJumpState(const float& elapsedTime)
     {
         // ジャンプボタンを押し続けると高く飛ぶ
         const GamePad& gamePad = Input::Instance().GetGamePad();
-        if (gamePad.GetButton() & GamePad::BTN_B)
+        if (gamePad.GetButton() & (GamePad::BTN_A | GamePad::BTN_B))
         {
             Jump(jumpSpeed);            // ジャンプ処理
             jumpTimer -= elapsedTime;   // ジャンプタイマー減算

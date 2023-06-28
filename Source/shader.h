@@ -39,7 +39,7 @@ public:
         float nearZ = 0;
         float farZ = 100;
 
-        DirectX::XMFLOAT4 position{ 0,-2,1,0 };
+        DirectX::XMFLOAT4 position{ 0,-9,13,0 };
         DirectX::XMFLOAT4 camera{ 0,0,1,0 };
     }view;
 

@@ -20,35 +20,35 @@ StagePlains::StagePlains()
     EnemyManager::Instance().Register(cannon2);
 
     // stage生成
-    {
-        grassBlock[0] = std::make_unique<GrassBlock>("./resources/gro.fbx");
-        //grassBlock[0] = std::make_unique<GrassBlock>("./resources/stage/1.fbx");
-        grassBlock[1] = std::make_unique<GrassBlock>("./resources/stage/2.fbx");
-        grassBlock[2] = std::make_unique<GrassBlock>("./resources/stage/3.fbx");
-        grassBlock[3] = std::make_unique<GrassBlock>("./resources/stage/4.fbx");
-        grassBlock[4] = std::make_unique<GrassBlock>("./resources/stage/5.fbx");
-        grassBlock[5] = std::make_unique<GrassBlock>("./resources/stage/6.fbx");
-        grassBlock[6] = std::make_unique<GrassBlock>("./resources/stage/7.fbx");
-        grassBlock[7] = std::make_unique<GrassBlock>("./resources/stage/8.fbx");
-        grassBlock[8] = std::make_unique<GrassBlock>("./resources/stage/9.fbx");
-        grassBlock[9] = std::make_unique<GrassBlock>("./resources/stage/10.fbx");
-        grassBlock[10] = std::make_unique<GrassBlock>("./resources/stage/11.fbx");
-        grassBlock[11] = std::make_unique<GrassBlock>("./resources/stage/12.fbx");
-        grassBlock[12] = std::make_unique<GrassBlock>("./resources/stage/13.fbx");
-        grassBlock[13] = std::make_unique<GrassBlock>("./resources/stage/14.fbx");
-        grassBlock[14] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
-        grassBlock[15] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
-        grassBlock[16] = std::make_unique<GrassBlock>("./resources/stage/16.fbx");
-        grassBlock[17] = std::make_unique<GrassBlock>("./resources/stage/17.fbx");
-        grassBlock[18] = std::make_unique<GrassBlock>("./resources/stage/18.fbx");
-        grassBlock[19] = std::make_unique<GrassBlock>("./resources/stage/19.fbx");
-        grassBlock[20] = std::make_unique<GrassBlock>("./resources/stage/20.fbx");
-        grassBlock[21] = std::make_unique<GrassBlock>("./resources/stage/21.fbx");
-        grassBlock[22] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
-        grassBlock[23] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
-        grassBlock[24] = std::make_unique<GrassBlock>("./resources/stage/22.fbx");
-        grassBlock[25] = std::make_unique<GrassBlock>("./resources/stage/23.fbx");
-    }
+    //{
+    //    grassBlock[0] = std::make_unique<GrassBlock>("./resources/gro.fbx");
+    //    //grassBlock[0] = std::make_unique<GrassBlock>("./resources/stage/1.fbx");
+    //    grassBlock[1] = std::make_unique<GrassBlock>("./resources/stage/2.fbx");
+    //    grassBlock[2] = std::make_unique<GrassBlock>("./resources/stage/3.fbx");
+    //    grassBlock[3] = std::make_unique<GrassBlock>("./resources/stage/4.fbx");
+    //    grassBlock[4] = std::make_unique<GrassBlock>("./resources/stage/5.fbx");
+    //    grassBlock[5] = std::make_unique<GrassBlock>("./resources/stage/6.fbx");
+    //    grassBlock[6] = std::make_unique<GrassBlock>("./resources/stage/7.fbx");
+    //    grassBlock[7] = std::make_unique<GrassBlock>("./resources/stage/8.fbx");
+    //    grassBlock[8] = std::make_unique<GrassBlock>("./resources/stage/9.fbx");
+    //    grassBlock[9] = std::make_unique<GrassBlock>("./resources/stage/10.fbx");
+    //    grassBlock[10] = std::make_unique<GrassBlock>("./resources/stage/11.fbx");
+    //    grassBlock[11] = std::make_unique<GrassBlock>("./resources/stage/12.fbx");
+    //    grassBlock[12] = std::make_unique<GrassBlock>("./resources/stage/13.fbx");
+    //    grassBlock[13] = std::make_unique<GrassBlock>("./resources/stage/14.fbx");
+    //    grassBlock[14] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    //    grassBlock[15] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    //    grassBlock[16] = std::make_unique<GrassBlock>("./resources/stage/16.fbx");
+    //    grassBlock[17] = std::make_unique<GrassBlock>("./resources/stage/17.fbx");
+    //    grassBlock[18] = std::make_unique<GrassBlock>("./resources/stage/18.fbx");
+    //    grassBlock[19] = std::make_unique<GrassBlock>("./resources/stage/19.fbx");
+    //    grassBlock[20] = std::make_unique<GrassBlock>("./resources/stage/20.fbx");
+    //    grassBlock[21] = std::make_unique<GrassBlock>("./resources/stage/21.fbx");
+    //    grassBlock[22] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    //    grassBlock[23] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    //    grassBlock[24] = std::make_unique<GrassBlock>("./resources/stage/22.fbx");
+    //    grassBlock[25] = std::make_unique<GrassBlock>("./resources/stage/23.fbx");
+    //}
 
 
     // todo:後で消す(テスト用)カラー指定
@@ -81,35 +81,35 @@ StagePlains::StagePlains()
     //    grassBlock[25].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
     //}                                                                                       
 
-    grassBlock[0] = std::make_unique<GrassBlock>("./resources/terrain/1.fbx");
-    grassBlock[1] = std::make_unique<GrassBlock>("./resources/terrain/2.fbx");
-    grassBlock[2] = std::make_unique<GrassBlock>("./resources/terrain/3.fbx");
-    grassBlock[3] = std::make_unique<GrassBlock>("./resources/terrain/4.fbx");
-    grassBlock[4] = std::make_unique<GrassBlock>("./resources/terrain/5.fbx");
-    grassBlock[5] = std::make_unique<GrassBlock>("./resources/terrain/6.fbx");
-    grassBlock[6] = std::make_unique<GrassBlock>("./resources/terrain/7.fbx");
-    grassBlock[7] = std::make_unique<GrassBlock>("./resources/terrain/8.fbx");
-    grassBlock[8] = std::make_unique<GrassBlock>("./resources/terrain/9.fbx");
-    grassBlock[9] = std::make_unique<GrassBlock>("./resources/terrain/10.fbx");
-    grassBlock[10] = std::make_unique<GrassBlock>("./resources/terrain/11.fbx");
-    grassBlock[11] = std::make_unique<GrassBlock>("./resources/terrain/12.fbx");
-    grassBlock[12] = std::make_unique<GrassBlock>("./resources/terrain/13.fbx");
-    grassBlock[13] = std::make_unique<GrassBlock>("./resources/terrain/14.fbx");
-    grassBlock[14] = std::make_unique<GrassBlock>("./resources/terrain/15.fbx");
-    grassBlock[15] = std::make_unique<GrassBlock>("./resources/terrain/15.fbx");
-    grassBlock[16] = std::make_unique<GrassBlock>("./resources/terrain/16.fbx");
-    grassBlock[17] = std::make_unique<GrassBlock>("./resources/terrain/17.fbx");
-    grassBlock[18] = std::make_unique<GrassBlock>("./resources/terrain/18.fbx");
-    grassBlock[19] = std::make_unique<GrassBlock>("./resources/terrain/19.fbx");
-    grassBlock[20] = std::make_unique<GrassBlock>("./resources/terrain/20.fbx");
-    grassBlock[21] = std::make_unique<GrassBlock>("./resources/terrain/21.fbx");
-    grassBlock[22] = std::make_unique<GrassBlock>("./resources/terrain/15.fbx");
-    grassBlock[23] = std::make_unique<GrassBlock>("./resources/terrain/15.fbx");
-    grassBlock[24] = std::make_unique<GrassBlock>("./resources/terrain/22.fbx");
-    grassBlock[25] = std::make_unique<GrassBlock>("./resources/terrain/23.fbx");
+    grassBlock[0] = std::make_unique<GrassBlock>("./resources/stage/1.fbx");
+    grassBlock[1] = std::make_unique<GrassBlock>("./resources/stage/2.fbx");
+    grassBlock[2] = std::make_unique<GrassBlock>("./resources/stage/3.fbx");
+    grassBlock[3] = std::make_unique<GrassBlock>("./resources/stage/4.fbx");
+    grassBlock[4] = std::make_unique<GrassBlock>("./resources/stage/5.fbx");
+    grassBlock[5] = std::make_unique<GrassBlock>("./resources/stage/6.fbx");
+    grassBlock[6] = std::make_unique<GrassBlock>("./resources/stage/7.fbx");
+    grassBlock[7] = std::make_unique<GrassBlock>("./resources/stage/8.fbx");
+    grassBlock[8] = std::make_unique<GrassBlock>("./resources/stage/9.fbx");
+    grassBlock[9] = std::make_unique<GrassBlock>("./resources/stage/10.fbx");
+    grassBlock[10] = std::make_unique<GrassBlock>("./resources/stage/11.fbx");
+    grassBlock[11] = std::make_unique<GrassBlock>("./resources/stage/12.fbx");
+    grassBlock[12] = std::make_unique<GrassBlock>("./resources/stage/13.fbx");
+    grassBlock[13] = std::make_unique<GrassBlock>("./resources/stage/14.fbx");
+    grassBlock[14] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    grassBlock[15] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    grassBlock[16] = std::make_unique<GrassBlock>("./resources/stage/16.fbx");
+    grassBlock[17] = std::make_unique<GrassBlock>("./resources/stage/17.fbx");
+    grassBlock[18] = std::make_unique<GrassBlock>("./resources/stage/18.fbx");
+    grassBlock[19] = std::make_unique<GrassBlock>("./resources/stage/19.fbx");
+    grassBlock[20] = std::make_unique<GrassBlock>("./resources/stage/20.fbx");
+    grassBlock[21] = std::make_unique<GrassBlock>("./resources/stage/21.fbx");
+    grassBlock[22] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    grassBlock[23] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    grassBlock[24] = std::make_unique<GrassBlock>("./resources/stage/22.fbx");
+    grassBlock[25] = std::make_unique<GrassBlock>("./resources/stage/23.fbx");
     
 
-#endif
+
 
 }
 

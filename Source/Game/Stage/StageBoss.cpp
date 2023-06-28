@@ -10,36 +10,33 @@
 // ÉRÉìÉXÉgÉâÉNÉ^
 StageBoss::StageBoss()
 {
-    Terrain* terrain = new TerrainBoss("./resources/stage/1.fbx");
-    TerrainManager::Instance().Register(terrain);
-    terrain->GetTransform()->AddPosition({ 0,0,0 });
-        
-    Terrain* terrain2 = new TerrainBoss("./resources/stage/1.fbx");
-    TerrainManager::Instance().Register(terrain2);
-    terrain2->GetTransform()->AddPosition({ 10,10,0 });
+    // ÉXÉeÅ[ÉWê∂ê¨&ìoò^
+    {
+        Terrain* terrain0 = new TerrainBoss("./resources/stage/stage.fbx");
+        TerrainManager::Instance().Register(terrain0);
 
-    //for (std::unique_ptr<Terrain>& temp : terrain)
-    //{
-    //    temp = std::make_unique<TerrainBoss>("./resources/temporary/assets_ground.fbx");
-    //}
+        Terrain* terrain1 = new TerrainBoss("./resources/stage/1.fbx");
+        TerrainManager::Instance().Register(terrain1);
+
+        Terrain* terrain2 = new TerrainBoss("./resources/stage/1.fbx");
+        TerrainManager::Instance().Register(terrain2);
+
+        Terrain* terrain3 = new TerrainBoss("./resources/stage/1.fbx");
+        TerrainManager::Instance().Register(terrain3);
+    }
+
 
     // playerê∂ê¨
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 
     // bossê∂ê¨
-    //boss = std::make_unique<Boss>();
     Boss* boss = new Boss();
-    EnemyManager::Instance().Register(boss); 
+    EnemyManager::Instance().Register(boss);
 
 
-    // âº
-    for (std::unique_ptr<Boss>& temp : stage)
-    {
-        temp = std::make_unique<Boss>("./resources/temporary/assets_ground.fbx");
-    }
 
     // îwåiâº
-    back = std::make_unique<Boss>("./resources/back.fbx");
+    //back = std::make_unique<Boss>(); //("./resources/back.fbx");
 
     // tofu
     tofu = std::make_unique<EnemyTofu>();
@@ -55,35 +52,42 @@ void StageBoss::Initialize()
 
 
     //tofu
-    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.0f, 10.0f));
+    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.5f, 10.0f));
     tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
 
     // îwåiâº
-    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.0f, 20.0f));
-    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 8.0f, 13.0f));
-    back->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(-90), 0.0f, 0.0f));
+    //back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.0f, 20.0f));
+    //back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 8.0f, 13.0f));
+    //back->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(-90), 0.0f, 0.0f));
 
-    TerrainManager& terrainManager = TerrainManager::Instance();
-    terrainManager.Initialize();
-    terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
-    //terrainManager.GetTerrain(0)->GetTransform()->SetScale(DirectX::XMFLOAT3(4.0f, 1.0f, 1.0f));
-/*    terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-11, 20, 10));
-    terrainManager.GetTerrain(1)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
-    terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(9.5f, 20, 10));
-    terrainManager.GetTerrain(2)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0)); */   
-   
-    //terrain[0]->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 1, 10));
-    //terrain[0]->GetTransform()->SetScale(DirectX::XMFLOAT3(4.0f, 1.0f, 1.0f));
-    //terrain[1]->GetTransform()->SetPosition(DirectX::XMFLOAT3(-11, 20, 10));
-    //terrain[1]->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
-    //terrain[2]->GetTransform()->SetPosition(DirectX::XMFLOAT3(9.5f, 20, 10));
-    //terrain[2]->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
-     
+    // ÉXÉeÅ[ÉWèâä˙ê›íË
+    {
+        TerrainManager& terrainManager = TerrainManager::Instance();
+        terrainManager.Initialize();
+        terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
+        terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-9, 21, 10));
+        terrainManager.GetTerrain(1)->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 5, 1));
+        terrainManager.GetTerrain(1)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, DirectX::XMConvertToRadians(90), 0));
+        terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(16.5f, 21, 10));
+        terrainManager.GetTerrain(2)->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 5, 1));
+        terrainManager.GetTerrain(2)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, DirectX::XMConvertToRadians(90), 0));
+        terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 11, 10));
+        
+        // materialColor
+        terrainManager.GetTerrain(0)->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.64f, 0.0f, 1.0f));
+        terrainManager.GetTerrain(1)->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.64f, 0.0f, 1.0f));
+        terrainManager.GetTerrain(2)->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.64f, 0.0f, 1.0f));
+        terrainManager.GetTerrain(3)->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.64f, 0.0f, 1.0f));
+    }
+
+
+
     // playerèâä˙âª
-    PlayerManager::Instance().Initialize();
+    //PlayerManager::Instance().Initialize();
+    PlayerManager::Instance().GetPlayer().get()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f));
 
     // bossèâä˙âª
-    //boss->Initialize();
+    
     EnemyManager::Instance().Initialize();
 }
 
@@ -148,15 +152,13 @@ void StageBoss::Update(const float& elapsedTime)
     playerManager.Update(elapsedTime);
 
     // bossçXêV
-<<<<<<< HEAD
-    boss->Update(elapsedTime);
+    //boss->Update(elapsedTime);
 
     // tofu
     tofu->Update(elapsedTime);
-=======
-    //boss->Update(elapsedTime);
+    
     EnemyManager::Instance().Update(elapsedTime);
->>>>>>> mame/Taki
+
 }
 
 // UpdateÇÃå„Ç…åƒÇŒÇÍÇÈèàóù
@@ -191,21 +193,19 @@ void StageBoss::Render(const float& elapsedTime)
     //boss->Render(elapsedTime);
     EnemyManager::Instance().Render(elapsedTime);
 
-<<<<<<< HEAD
+
 
     // âº
-    for (std::unique_ptr<Boss>& temp : stage)
-    {
-        temp->Render(elapsedTime);
-    }
+    //for (std::unique_ptr<Boss>& temp : stage)
+    //{
+    //    temp->Render(elapsedTime);
+    //}
 
     // îwåiâº
-    back->Render(elapsedTime);
+    //back->Render(elapsedTime);
 
     // tofu
     tofu->Render(elapsedTime);
-=======
->>>>>>> mame/Taki
 }
 
 // debugóp
@@ -228,7 +228,7 @@ void StageBoss::DrawDebug()
     EnemyManager::Instance().DrawDebug();
 
     // îwåiâº
-    back->DrawDebug();
+    //back->DrawDebug();
 
     tofu->DrawDebug();
 #endif

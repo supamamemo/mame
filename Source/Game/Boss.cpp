@@ -56,7 +56,7 @@ Boss::~Boss()
 // ‰Šú‰»
 void Boss::Initialize()
 {
-    GetTransform()->SetPosition(DirectX::XMFLOAT3(2.0f, 1.0f, 10.0f));
+    GetTransform()->SetPosition(DirectX::XMFLOAT3(2.0f, 1.5f, 10.0f));
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(180), 0.0f, 0.0f));
 }
 
