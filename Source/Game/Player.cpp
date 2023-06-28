@@ -266,7 +266,7 @@ const bool Player::InputJump()
 {
     // ボタン入力でジャンプ（ジャンプ回数制限付き）
     const GamePad& gamePad = Input::Instance().GetGamePad();
-    if (gamePad.GetButtonDown() & GamePad::BTN_B)
+    if (gamePad.GetButtonDown() & (GamePad::BTN_B))
     {
         // ジャンプ回数がジャンプ上限数以上ならジャンプしない
         if (jumpCount >= jumpLimit) return false;
@@ -298,8 +298,7 @@ void Player::CollisionPlayerVsEnemies()
     {
         Enemy* enemy = enemyManager.GetEnemy(i);
 
-        NO_CONST DirectX::XMFLOAT3 pushVec = {};
-        if (Collision::IntersectAABBVsAABB(aabb_, enemy->aabb_, pushVec))
+        if (Collision::IntersectAABBVsAABB(aabb_, enemy->aabb_))
         {
             isHit = true;
 
@@ -381,6 +380,9 @@ void Player::OnBounce()
         bounceSpeedY    = defaultBounceSpeedY;  // バウンスY速度リセット
         bounceCount     = 0;                    // バウンスカウントリセット
         isBounce        = false;                // バウンス終了
+     
+        OnLanding();        // 着地時の処理を行う
+        isGround = true;    // 着地した
     }
     // バウンスさせる
     else
@@ -711,11 +713,11 @@ void Player::UpdateHipDropState(const float& elapsedTime)
     // 一回バウンスしたら重力をもとに戻す
     if (bounceCount != 0) gravity = defaultGravity;
 
-    // バウンスが終了したら待機ステートへ遷移
-    if (!isBounce)
-    {
-        TransitionIdleState();
-        return;
-    }
+    //// バウンスが終了したら待機ステートへ遷移
+    //if (!isBounce)
+    //{
+    //    TransitionIdleState();
+    //    return;
+    //}
 
 }

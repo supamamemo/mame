@@ -11,12 +11,16 @@
 StageBoss::StageBoss()
 {
     Terrain* terrain = new TerrainBoss("./resources/stage/1.fbx");
-    TerrainManager::Instance().Register(terrain);
     terrain->GetTransform()->AddPosition({ 0,0,0 });
+    TerrainManager::Instance().Register(terrain);
         
     Terrain* terrain2 = new TerrainBoss("./resources/stage/1.fbx");
+    terrain2->GetTransform()->AddPosition({ 10,7,0 });    
     TerrainManager::Instance().Register(terrain2);
-    terrain2->GetTransform()->AddPosition({ 10,5,0 });
+    
+    Terrain* terrain3 = new TerrainBoss("./resources/stage/1.fbx");
+    terrain3->GetTransform()->AddPosition({ 15,2,0 });
+    TerrainManager::Instance().Register(terrain3);
 
     //for (std::unique_ptr<Terrain>& temp : terrain)
     //{

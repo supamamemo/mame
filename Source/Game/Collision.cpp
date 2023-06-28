@@ -292,9 +292,7 @@ bool Collision::IntersectAABBVsAABB(
 #endif
 
 
-bool Collision::IntersectAABBVsAABB(
-    const AABB& aabb1, const AABB& aabb2, 
-    NO_CONST DirectX::XMFLOAT3& pushVec)
+bool Collision::IntersectAABBVsAABB(const AABB& aabb1, const AABB& aabb2)
 {
     // X軸方向の衝突判定
     {
@@ -322,32 +320,15 @@ bool Collision::IntersectAABBVsAABB(
 
     // Z軸方向の衝突判定
     {
-        const float box1Back    = aabb1.max.z;
-        const float box1Front   = aabb1.min.z;
-        const float box2Back    = aabb2.max.z;
-        const float box2Front   = aabb2.min.z;
+        const float box1Back = aabb1.max.z;
+        const float box1Front = aabb1.min.z;
+        const float box2Back = aabb2.max.z;
+        const float box2Front = aabb2.min.z;
 
         const bool isHitZ = (box1Back >= box2Front && box1Front <= box2Back);
 
         if (!isHitZ) return false;  // Z軸方向での衝突なし
     }
-
-
-    //// 衝突したAABBの中心座標を求める
-    //const DirectX::XMFLOAT3 center1 = (aabb1.min + aabb1.max) * 0.5f;
-    //const DirectX::XMFLOAT3 center2 = (aabb2.min + aabb2.max) * 0.5f;
-
-    //// AABB間のベクトルを求める
-    //const DirectX::XMFLOAT3 vec = center2 - center1;
-
-    //// 衝突したAABBの重なりを求める
-    //const DirectX::XMFLOAT3 overlap = XMFloat3Abs(vec);
-
-    //// 重なりの各軸成分を比較して最小値を求める
-    //const float minOverlap = (std::min)((std::min)(overlap.x, overlap.y), overlap.z);
-
-    //// 押し戻しベクトルを求める
-    //pushVec = vec * (minOverlap / std::sqrtf(XMFloat3Dot(vec, vec)));
 
     return true;  // 3軸方向での衝突あり
 }

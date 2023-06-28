@@ -42,7 +42,7 @@ public:
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders = {};
 
-    DirectX::XMFLOAT4 materialColor = { 0.0f, 1.0f, 0.0f, 0.4f }; // マテリアルカラー
+    DirectX::XMFLOAT4 materialColor = { 1.0f, 0.0f, 0.0f, 0.4f }; // マテリアルカラー
 
 private:
     // Imgui名前被り防止のためのやつ //    

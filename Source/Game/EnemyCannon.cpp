@@ -110,9 +110,8 @@ void EnemyCannon::CollisionCannonBallVsPlayer()
     {
         CannonBall* cannonBall = cannonBallManager.GetCannonBall(i);
 
-        NO_CONST DirectX::XMFLOAT3 pushVec = {};
         const Collision::AABB& playerAABB = PlayerManager::Instance().GetPlayer()->aabb_;
-        if (Collision::IntersectAABBVsAABB(cannonBall->aabb_, playerAABB, pushVec))
+        if (Collision::IntersectAABBVsAABB(cannonBall->aabb_, playerAABB))
         {
             isHit = true;
             // AABB1‚ğ‰Ÿ‚µo‚·

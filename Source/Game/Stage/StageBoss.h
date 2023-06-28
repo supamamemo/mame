@@ -24,7 +24,7 @@ public:
     void DrawDebug()                      override;  // デバッグ描画
 
 private:
-    static const int TERRAIN_COUNT = 3;
+    //static const int TERRAIN_COUNT = 3;
 
     //std::unique_ptr<Boss> boss;
 
