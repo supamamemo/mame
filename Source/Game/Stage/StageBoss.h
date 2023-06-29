@@ -35,6 +35,6 @@ private:
 
     std::unique_ptr<Boss> back;
 
-    std::unique_ptr<EnemyTofu> tofu;
+    //std::unique_ptr<EnemyTofu> tofu;
 };
 

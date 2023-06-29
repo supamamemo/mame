@@ -4,6 +4,7 @@
 #include "OperatorXMFLOAT3.h"
 #include "EnemyManager.h"
 #include "CannonBallManager.h"
+#include "BossStateDerived.h"
 
 Player::Player()
 {
@@ -84,6 +85,17 @@ void Player::Update(const float& elapsedTime)
 
     // プレイヤーと敵の衝突判定
     CollisionPlayerVsEnemies();
+
+
+    // 無敵時間中のキャラクターの点滅
+    if (invincibleTimer > 0.0f)
+    {
+        modelColorAlpha = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 0.7f : 0.0f;
+    }
+    else
+    {
+        modelColorAlpha = 1.0f;
+    }
 
     // 無敵時間更新
     UpdateInvincibleTimer(elapsedTime);
@@ -256,12 +268,15 @@ const bool Player::InputJump()
 }
 
 
+
 void Player::CollisionPlayerVsEnemies()
 {
-    EnemyManager& enemyManager = EnemyManager::Instance();
-    const int     enemyCount   = enemyManager.GetEnemyCount();
+    if (invincibleTimer > 0.0f) return;
 
     bool isHit = false;
+
+    EnemyManager& enemyManager = EnemyManager::Instance();
+    const int     enemyCount = enemyManager.GetEnemyCount();
 
     for (int i = 0; i < enemyCount; ++i)
     {
@@ -271,22 +286,21 @@ void Player::CollisionPlayerVsEnemies()
         {
             isHit = true;
 
-            //// プレイヤーの足元がエネミーの頭より下にめり込んでいたら修正する
-            //if (aabb_.min.y < enemy->aabb_.max.y)
-            //{
-            //    // Y軸に重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
-            //    const float overlapY = fabsf(enemy->aabb_.max.y) - fabsf(aabb_.min.y);
+            // バウンス状態ならエネミーのダメージ処理を行う
+            if (isBounce)
+            {
+                // ダメージを受けなければreturn
+                if (!enemy->ApplyDamage(1, 1.0f)) return;
+            }
+            // そうでなければ自分がダメージを受ける
+            else
+            {
+                if (!ApplyDamage(1, 1.0f)) return;
+            }
 
-            //    GetTransform()->AddPositionY(overlapY); // 重なっている分だけ押し戻す
-            //    velocity.y = 0.0f;                      // Y速度をリセット
-
-
-            //    // 押し戻し後のAABBの最小座標と最大座標を更新
-            //    UpdateAABB();
-            //}
-            
         }
     }
+
 
 #if _DEBUG
     ImGui::Begin("isEnemyHit");
@@ -374,6 +388,7 @@ void Player::OnDamaged()
 // 死亡したときに呼ばれる関数
 void Player::OnDead()
 {
+    GetTransform()->SetScale(DirectX::XMFLOAT3(1, 10, 1));
 }
 
 

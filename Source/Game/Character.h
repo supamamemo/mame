@@ -24,9 +24,15 @@ public:
     Character();
     virtual ~Character() {}
 
-    virtual void Render(const float& elapsedTime); // 描画処理
+    virtual void Render(const float& elapsedTime);  // 描画処理
+    virtual void DrawDebug();                       // デバッグ描画
 
-    virtual void DrawDebug();           // デバッグ描画
+public:
+    // ダメージを与える
+    virtual bool ApplyDamage(
+        const int& damage, 
+        const float& invincibleTime
+    );
 
 protected:
     // 移動処理
@@ -96,6 +102,10 @@ public: // 取得・設定関数関連
     // カラー設定
     void SetMaterialColor(const DirectX::XMFLOAT4& color) { materialColor = color; }
 
+    // 無敵かどうかの設定・取得
+    const float& GetIsInvincible() const { return isInvincible; }
+    void SetIsInvincible(const float& invincible) { isInvincible = invincible; }
+
     // AABB再設定(当たり判定のサイズを途中で変えたいときなどに)
     void ResetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max);
 
@@ -112,6 +122,8 @@ protected:
 
     DirectX::XMFLOAT3 velocity      =   { 0,0,0 };                  // 速度
            
+    float       modelColorAlpha     =   1.0f;
+
     float       stepOffset          =   1.0f;                       // 位置補正(Y位置がキャラクターの中心になるように調整)
                                         
     float       moveVecX            =   0.0f;                       // 移動ベクトルX
@@ -133,17 +145,19 @@ protected:
 
     float       slopeRate           =   1.0f;                       // 傾斜率
                                         
-    float       invincibleTimer     =   1.0f;                       // 無敵時間
+    float       invincibleTimer     =   0.0f;                       // 無敵時間
 
     float       defaultJumpTime     =   0.3f;                       // ジャンプ時間
     float       jumpTimer           =   0.0f;                       // ジャンプタイマー
 
+    int         health              =   3;                          // 体力
     int         jumpCount           =   0;                          // ジャンプ回数
     int         jumpLimit           =   1;                          // 最大ジャンプ回数
                                        
     bool        isGround            =   false;                      // 地面についているか
     bool        isBounce            =   false;                      // バウンスさせるか
     bool        isDash              =   false;                      // ダッシュしているか
+    bool        isInvincible        =   false;                      // 無敵かどうか(ボスに使う)
 
 private:
     // 大きさの変更をするときに当たり判定のAABB描画の大きさも変更させるためにprivateにしている

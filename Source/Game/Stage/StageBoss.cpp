@@ -24,10 +24,6 @@ StageBoss::StageBoss()
 
         Terrain* terrain3 = new TerrainBoss("./resources/stage/1.fbx");
         TerrainManager::Instance().Register(terrain3);        
-        
-        // プレイヤーが壁に衝突したときの反転処理確認用
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/stage/1.fbx"));
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/stage/1.fbx"));
     }
 
 
@@ -44,7 +40,11 @@ StageBoss::StageBoss()
     //back = std::make_unique<Boss>(); //("./resources/back.fbx");
 
     // tofu
-    tofu = std::make_unique<EnemyTofu>();
+    EnemyTofu* tofu = new EnemyTofu();
+    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.5f, 10.0f));
+    tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
+    EnemyManager::Instance().Register(tofu);
+    //tofu = std::make_unique<EnemyTofu>();
 }
 
 // 初期化
@@ -54,9 +54,6 @@ void StageBoss::Initialize()
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0.0f, 0.0f, 0.0f));
 
-    //tofu
-    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.5f, 10.0f));
-    tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
 
     // 背景仮
     //back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.0f, 20.0f));
@@ -75,10 +72,6 @@ void StageBoss::Initialize()
         terrainManager.GetTerrain(2)->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 5, 1));
         terrainManager.GetTerrain(2)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
         terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 11, 10));
-
-        // プレイヤーが壁に衝突したときの反転処理確認用
-        terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 1, 10));
-        terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-25, 1.5f, 10));
         
         // materialColor
         terrainManager.GetTerrain(0)->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.64f, 0.0f, 1.0f));
@@ -161,7 +154,7 @@ void StageBoss::Update(const float& elapsedTime)
     //boss->Update(elapsedTime);
 
     // tofu
-    tofu->Update(elapsedTime);
+    //tofu->Update(elapsedTime);
     
     EnemyManager::Instance().Update(elapsedTime);
 
@@ -211,7 +204,7 @@ void StageBoss::Render(const float& elapsedTime)
     //back->Render(elapsedTime);
 
     // tofu
-    tofu->Render(elapsedTime);
+    //tofu->Render(elapsedTime);
 }
 
 // debug用
@@ -236,6 +229,6 @@ void StageBoss::DrawDebug()
     // 背景仮
     //back->DrawDebug();
 
-    tofu->DrawDebug();
+    //tofu->DrawDebug();
 #endif
 }

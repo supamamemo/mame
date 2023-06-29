@@ -39,6 +39,7 @@ EnemyTofu::~EnemyTofu()
 // 初期化
 void EnemyTofu::Initialize()
 {
+    health = 1; // 体力設定
 }
 
 // 終了化
@@ -56,6 +57,11 @@ void EnemyTofu::Update(const float& elapsedTime)
 {
     // ステート更新
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
+
+    UpdateAABB(); // AABBの更新処理
+
+    // 無敵時間更新
+    UpdateInvincibleTimer(elapsedTime);
 }
 
 // Updateの後に呼び出される
@@ -81,4 +87,11 @@ void EnemyTofu::DrawDebug()
 
     ImGui::End();
 #endif // USE_IMGUI
+}
+
+
+void EnemyTofu::OnDead()
+{
+    // 自分を消去
+    Destroy();
 }
