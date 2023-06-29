@@ -43,8 +43,8 @@ protected:
     void Jump(const float& jumpSpeed);
 
 protected:
-    void UpdateVelocity(const float& elapsedTime);          // 速力処理更新処理
     void UpdateAABB();                                      // AABB更新処理
+    void UpdateVelocity(const float& elapsedTime);          // 速力処理更新処理
     void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
 
 protected:
@@ -58,8 +58,14 @@ private:
     void UpdateVerticalVelocity(const float& elapsedFrame);     // 垂直速力更新処理
     void UpdateVerticalMove(const float& elapsedTime);          // 垂直移動更新処理
 
+    void VerticalFall(const float& fallSpeed);                  // 垂直落下処理(コードが長くなったので落下時の処理をこちらに移動)
+    void VerticalRise(const float& riseSpeed);                  // 垂直上昇処理(コードが長くなったので上昇時の処理をこちらに移動)
+
     void UpdateHorizontalVelocity(const float& elapsedFrame);   // 水平速力更新処理
     void UpdateHorizontalMove(const float& elapsedTime);        // 水平移動更新処理
+
+    void HorizontalRightLeft(NO_CONST float horizontalSpeed);     // 水平移動処理(コードが長くなったので水平移動時の処理をこちらに移動)
+
 
 public: // アニメーション処理関数関連（ショートカット関数）
 

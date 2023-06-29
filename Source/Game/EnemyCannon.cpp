@@ -51,7 +51,7 @@ void EnemyCannon::Begin()
 }
 
 // XVˆ—
-void EnemyCannon::Update(float elapsedTime)
+void EnemyCannon::Update(const float& elapsedTime)
 {
     // cannonBallManager
     cannonBallManager.Update(elapsedTime);
@@ -70,10 +70,9 @@ void EnemyCannon::End()
 }
 
 // •`‰æˆ—
-void EnemyCannon::Render(float elapsedTime)
+void EnemyCannon::Render(const float& elapsedTime)
 {
-    // ‹¤’Ê‚Ì•`‰æˆ—
-    Character::Render(elapsedTime);
+    Enemy::Render(elapsedTime);
 
     // cannonBallManager
     cannonBallManager.Render(elapsedTime);
@@ -107,9 +106,8 @@ void EnemyCannon::CollisionCannonBallVsPlayer()
     {
         CannonBall* cannonBall = cannonBallManager.GetCannonBall(i);
 
-        NO_CONST DirectX::XMFLOAT3 pushVec = {};
         const Collision::AABB& playerAABB = PlayerManager::Instance().GetPlayer()->aabb_;
-        if (Collision::IntersectAABBVsAABB(cannonBall->aabb_, playerAABB, pushVec))
+        if (Collision::IntersectAABBVsAABB(cannonBall->aabb_, playerAABB))
         {
             isHit = true;
             // AABB1‚ğ‰Ÿ‚µo‚·

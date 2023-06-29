@@ -8,6 +8,8 @@
 #include "../../Game/Stage/StagePlains.h"
 #include "../../Game/Stage/StageBoss.h"
 
+#include "../../Game/Terrain/Terrain.h"
+
 
 // コンストラクタ
 SceneGame::SceneGame()
@@ -69,11 +71,13 @@ void SceneGame::Begin()
 {
     if (changeStage)
     {
+        StageManager::Instance().Clear();
         StageManager::Instance().ChangeStage(new StageBoss);
         changeStage = false;
     }
     if (changeStage1)
     {
+        StageManager::Instance().Clear();
         StageManager::Instance().ChangeStage(new StagePlains);
         changeStage1 = false;
     }
@@ -205,4 +209,7 @@ void SceneGame::DrawDebug()
     if (ImGui::Button("stageP"))
         changeStage1 = true;
 
+    ImGui::Begin("renderLengthXLimit_");
+    ImGui::SliderFloat("renderLengthXLimit_", &Terrain::renderLengthXLimit_, 0.0f, 50.0f);
+    ImGui::End();
 }

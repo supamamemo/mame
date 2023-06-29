@@ -43,13 +43,13 @@ public:
 public:
     static int nameNum;
 
+    static float renderLengthXLimit_;     // 描画される限界距離
+
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders = {};
 
-
-    DirectX::XMFLOAT4 debugMaterialColor = { 0.0f, 1.0f, 0.0f, 0.4f }; // マテリアルカラー(debug用)
-    DirectX::XMFLOAT4 materialColor = { 1.0f,1.0f ,1.0f ,1.0f };
-
+    DirectX::XMFLOAT4 debugMaterialColor    = { 1.0f, 0.0f, 0.0f, 0.4f }; // マテリアルカラー(debug用)
+    DirectX::XMFLOAT4 materialColor         = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 private:
     // Imgui名前被り防止のためのやつ //    
@@ -57,4 +57,5 @@ private:
 
     DirectX::XMFLOAT3 defaultMin_ = {};
     DirectX::XMFLOAT3 defaultMax_ = {};
+
 };

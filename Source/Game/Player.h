@@ -102,7 +102,7 @@ private: // 変数関連
 
     float   jumpedPositionY         =  0.0f;                // ジャンプ開始時の位置を保存する
 
-    float   hipDropGravity          = -3.0f;                // ヒップドロップ時の重力
+    float   hipDropGravity          = -2.0f;                // ヒップドロップ時の重力
     float   needHipDropHeight       =  3.0f;                // ヒップドロップに必要な高さ
 
     float   defaultBounceSpeedX     =  15.0f;               // バウンスX速度初期値
@@ -111,11 +111,9 @@ private: // 変数関連
     float   bounceSpeedY            =  defaultBounceSpeedY; // バウンスY速度
     float   bounceScaleX            =  0.75f;               // バウンスX速度にかける値
     float   bounceScaleY            =  0.75f;               // バウンスY速度にかける値
-    float   saveMoveVec_n           =  0.0f;                // プレイヤーの単位移動ベクトルを保存する（バウンス時に使われる）
 
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  2;                   // 最大バウンス回数
 
-    bool    isUpdatedAnimation      = false;                // アニメーションが更新されたか
 };
 

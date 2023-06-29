@@ -249,8 +249,14 @@
     <ClCompile Include="Source\Game\Terrain\TerrainManager.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClCompile>
+
     <ClCompile Include="Source\Game\Pose.cpp">
       <Filter>mamelib\Game</Filter>
+    </ClCompile>
+
+    <ClCompile Include="Source\Game\Terrain\TerrainPlains.cpp">
+      <Filter>mamelib\Game\Terrain</Filter>
+
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -453,8 +459,14 @@
     <ClInclude Include="Source\Game\Terrain\TerrainManager.h">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClInclude>
+
     <ClInclude Include="Source\Game\Pose.h">
       <Filter>mamelib\Game</Filter>
+    </ClInclude>
+
+    <ClInclude Include="Source\Game\Terrain\TerrainPlains.h">
+      <Filter>mamelib\Game\Terrain</Filter>
+
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -249,66 +249,157 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
     // 落下中
     if (my < 0.0f)
     {
-        NO_CONST TerrainManager& terrainManager = TerrainManager::Instance();
-        const int terrainCount = terrainManager.GetTerrainCount();
-
-        NO_CONST bool isHit = false;
-
-        for (int i = 0; i < terrainCount; ++i)
-        {
-            const Terrain* terrain = terrainManager.GetTerrain(i);
-
-            NO_CONST DirectX::XMFLOAT3 pushVec = {};
-            if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_, pushVec))
-            {
-                isHit = true;
-
-                // バウンス中は跳ねさせる
-                if (isBounce)
-                {
-                    OnBounce();
-                    break;
-                }
-                else
-                {
-                    // 着地した
-                    if (!isGround) OnLanding();
-                    isGround = true;
-                    velocity.y = 0.0f;
-
-                    isHit = true;
-
-                    // プレイヤーの足元がエネミーの頭より下にめり込んでいたら修正する
-                    if (aabb_.min.y < terrain->aabb_.max.y)
-                    {
-                        // Y軸に重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
-                        const float overlapY = fabsf(terrain->aabb_.max.y) - fabsf(aabb_.min.y); // 位置がマイナスでも問題ないように絶対値に変換しておく
-
-                        // 重なりが微小であれば修正しない(細かく修正しすぎると着地モーションが延々と続く)
-                        if (overlapY <= 0.001f) continue;
-
-                        GetTransform()->AddPositionY(overlapY); // 重なっている分だけ押し戻す
-
-                        // 押し戻し後のAABBの最小座標と最大座標を更新
-                        UpdateAABB();
-
-                    }
-                }
-            }
-        }
-
-        if (!isHit)
-        {
-            // 空中に浮いている
-            transform->AddPositionY(my);
-            isGround = false;
-        }
+        // 垂直落下処理
+        VerticalFall(my);
     }
     // 上昇中
     else if (my > 0.0f)
     {
-        transform->AddPositionY(my);
+        // 垂直上昇処理
+        VerticalRise(my);
+    }
+}
+
+
+// 垂直落下処理
+void Character::VerticalFall(const float& fallSpeed)
+{
+    // 当たっているかどうか
+    NO_CONST bool isHitY = false;
+
+    // 地形に当たっているか衝突判定処理を行う
+    {
+        NO_CONST TerrainManager& terrainManager = TerrainManager::Instance();
+        const int terrainCount = terrainManager.GetTerrainCount();
+        for (int i = 0; i < terrainCount; ++i)
+        {
+            const Terrain* terrain = terrainManager.GetTerrain(i);
+
+            if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
+            {
+                // 上下左右にそれぞれ重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
+                // 位置がマイナスでも問題ないように絶対値に変換しておく
+                const float overlapUp       = fabsf(fabsf(aabb_.min.y) - fabsf(terrain->aabb_.max.y)); // 上からめり込んでいる
+                const float overlapBottom   = fabsf(fabsf(aabb_.max.y) - fabsf(terrain->aabb_.min.y)); // 下からめり込んでいる
+                const float overlapRight    = fabsf(fabsf(aabb_.min.x) - fabsf(terrain->aabb_.max.x)); // 右からめり込んでいる
+                const float overlapLeft     = fabsf(fabsf(aabb_.max.x) - fabsf(terrain->aabb_.min.x)); // 左からめり込んでいる
+                // 一番小さい(重なっていない)値を求める
+                const float overlapY        = (std::min)(overlapUp, overlapBottom);
+                const float overlapX        = (std::min)(overlapRight, overlapLeft);
+
+                // X軸の方が重なりが小さい(めりこんでいる)ならcontinue
+                if (overlapX < overlapY) continue;
+
+                // 上への重なりがなければ位置を修正しない
+                if (overlapUp == 0.0f)
+                {
+                    isHitY = true; // 当たっている         
+
+                    // バウンス中ならバウンスさせる
+                    // バウンス回数をループ文で消費させないためにbreakしておく
+                    if (isBounce)
+                    {
+                        OnBounce();
+                        break;
+                    }
+
+                    velocity.y = 0.0f; // Y速度をリセット
+
+                    continue;
+                }
+
+                // 下より上からの重なりの方が小さければ上からめり込んでいると判断し、
+                // 重なっている分だけ押し戻す
+                // ※上からのめり込みを優先して<=にしている
+                if (overlapUp <= overlapBottom)
+                {
+                    isHitY      = true; // 当たっている   
+                    velocity.y  = 0.0f; // Y速度をリセット
+
+                    // 重なっている分だけ位置を修正
+                    GetTransform()->AddPositionY(overlapUp);
+
+                    // 押し戻し後のAABBの最小座標と最大座標を更新
+                    UpdateAABB();
+
+                    // バウンス中は跳ねさせる
+                    if (isBounce)
+                    {
+                        OnBounce();
+                        break;
+                    }
+                    else
+                    {
+                        // 着地した
+                        if (!isGround) OnLanding();
+                        isGround = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    // 地形に当たっていなければ落下させる
+    if (!isHitY)
+    {
+        // 空中に浮いている
+        GetTransform()->AddPositionY(fallSpeed);
         isGround = false;
+    }
+}
+
+// 垂直上昇処理
+void Character::VerticalRise(const float& riseSpeed)
+{
+    // 先に上昇速度を位置に加算しておく(地面と衝突判定させないため)
+    GetTransform()->AddPositionY(riseSpeed);
+
+    // AABB更新
+    UpdateAABB(); 
+
+    // 空中にいる
+    isGround = false;
+
+    // 地形に当たっているか衝突判定処理を行う
+    {
+        NO_CONST TerrainManager& terrainManager = TerrainManager::Instance();
+        const int terrainCount = terrainManager.GetTerrainCount();
+        for (int i = 0; i < terrainCount; ++i)
+        {
+            const Terrain* terrain = terrainManager.GetTerrain(i);
+
+            if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
+            {
+                // 上下左右のそれぞれ重なっている値を求める
+                // 位置がマイナスでも問題ないように絶対値に変換しておく
+                const float overlapUp       = fabsf(fabsf(aabb_.min.y) - fabsf(terrain->aabb_.max.y)); // 上からめり込んでいる
+                const float overlapBottom   = fabsf(fabsf(aabb_.max.y) - fabsf(terrain->aabb_.min.y)); // 下からめり込んでいる
+                const float overlapRight    = fabsf(fabsf(aabb_.min.x) - fabsf(terrain->aabb_.max.x)); // 右からめり込んでいる
+                const float overlapLeft     = fabsf(fabsf(aabb_.max.x) - fabsf(terrain->aabb_.min.x)); // 左からめり込んでいる
+                // 一番小さい(重なっていない)値を求める
+                const float overlapY        = (std::min)(overlapUp, overlapBottom);
+                const float overlapX        = (std::min)(overlapRight, overlapLeft);
+
+                // X軸の方が重なりが小さい(めりこんでいる)ならcontinue
+                if (overlapX < overlapY) continue;
+
+                // 上より下からの重なりの方が小さければ下からめり込んでいると判断し、
+                // 重なっている分だけ押し戻す
+                if (overlapBottom < overlapUp)
+                {
+                    velocity.y = 0.0f; // Y速度をリセット
+
+                    // 重なっている分だけ位置を修正
+                    GetTransform()->AddPositionY(-overlapBottom);
+
+                    // 押し戻し後のAABBの最小座標と最大座標を更新
+                    UpdateAABB();
+
+                    break;
+                }
+            }
+        }
     }
 }
 
@@ -341,6 +432,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
         }
     }
 
+
     // ダッシュしていたらダッシュ処理を行う
     if (isDash)
     {
@@ -369,11 +461,11 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
                 velocity.x = moveVecX * maxMoveSpeed;
             }
 
-            // 下り坂でガタガタしないようにする
-            if (isGround && slopeRate > 0.0f) // 着地時はスロープ対応
-            {
-                velocity.y -= dist * slopeRate * elapsedFrame;
-            }
+            //// 下り坂でガタガタしないようにする
+            //if (isGround && slopeRate > 0.0f) // 着地時はスロープ対応
+            //{
+            //    velocity.y -= dist * slopeRate * elapsedFrame;
+            //}
         }
     }
 
@@ -384,8 +476,6 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
 // 水平移動更新処理
 void Character::UpdateHorizontalMove(const float& elapsedTime)
 {
-    Transform* transform = GetTransform();
-
     // 水平速力量計算
     const float velocityLengthX = sqrtf(velocity.x * velocity.x);
 
@@ -394,13 +484,84 @@ void Character::UpdateHorizontalMove(const float& elapsedTime)
         // 水平移動値
         const float mx = velocity.x * elapsedTime;
 
-
-        {
-            // 移動処理
-            transform->AddPositionX(mx);
-        }
+        HorizontalRightLeft(mx);
     }
 
+}
+
+
+// 水平移動処理
+void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
+{
+    // 当たっているかどうか
+    NO_CONST bool isHitX = false;
+
+    // 地形に当たっているか衝突判定処理を行う
+    {
+        NO_CONST TerrainManager& terrainManager = TerrainManager::Instance();
+        const int terrainCount = terrainManager.GetTerrainCount();
+        for (int i = 0; i < terrainCount; ++i)
+        {
+            const Terrain* terrain = terrainManager.GetTerrain(i);
+
+            if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
+            {
+                // 上下左右のそれぞれ重なっている値を求める
+                // 位置がマイナスでも問題ないように絶対値に変換しておく
+                const float overlapUp       = fabsf(fabsf(aabb_.min.y) - fabsf(terrain->aabb_.max.y)); // 上からめり込んでいる
+                const float overlapBottom   = fabsf(fabsf(aabb_.max.y) - fabsf(terrain->aabb_.min.y)); // 下からめり込んでいる
+                const float overlapRight    = fabsf(fabsf(aabb_.min.x) - fabsf(terrain->aabb_.max.x)); // 右からめり込んでいる
+                const float overlapLeft     = fabsf(fabsf(aabb_.max.x) - fabsf(terrain->aabb_.min.x)); // 左からめり込んでいる
+                // 一番重なっていない値を求める
+                const float overlapY        = (std::min)(overlapUp, overlapBottom);
+                const float overlapX        = (std::min)(overlapRight, overlapLeft);
+
+                // Y軸の方が重なりが小さい(めりこんでいる)ならcontinue
+                if (overlapY < overlapX) continue;
+
+                // 横への重なりがなければ修正しない
+                if (overlapX == 0.0f) continue;
+
+                // バウンス中なら壁に当たった時にX速度を反転させる
+                if (isBounce)
+                {                  
+                    horizontalSpeed = -horizontalSpeed; // 今回の速度を反転
+                    velocity.x      = -velocity.x;      // 跳ね返って空中に浮いてるときのX速度も反転させる
+                    saveMoveVecX    = -saveMoveVecX;    // 向いている方向を逆にさせる
+                }
+                else
+                {
+                    velocity.x  = 0.0f;  // X速度をリセット
+                    isHitX      = true;  // 当たっている   
+                }
+
+                // 左よりより右からの重なりの方が小さければ右からめり込んでいて、
+                // 逆に右より左からの重なりの方が小さければ左からめり込んでいると判断し、
+                // 重なっている分だけ位置を押し戻す
+                // ※右からのめり込みを優先して<=にしている
+                if (overlapRight <= overlapLeft)
+                {
+                    GetTransform()->AddPositionX(overlapRight);
+                }
+                else if (overlapLeft < overlapRight)
+                {
+                    GetTransform()->AddPositionX(-overlapLeft);
+                }
+
+                // 押し戻し後のAABBの最小座標と最大座標を更新
+                UpdateAABB();
+
+                break;
+            }
+        }
+    }
+    
+    // 地形に衝突していなければ位置にX速度を加算
+    if (!isHitX || isBounce)
+    {
+        // 移動処理
+        GetTransform()->AddPositionX(horizontalSpeed);
+    }
 }
 
 

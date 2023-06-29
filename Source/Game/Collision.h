@@ -94,12 +94,8 @@ public:
     //);
 #endif
 
-    // Box3D“¯m‚ÌŒğ·”»’è
-    static bool IntersectAABBVsAABB(
-        const    AABB& aabb1, 
-        const    AABB& aabb2, 
-        NO_CONST DirectX::XMFLOAT3& pushVec
-    );
+    // AABB“¯m‚ÌŒğ·”»’è
+    static bool IntersectAABBVsAABB(const AABB& aabb1, const AABB& aabb2);
 
 };
 
