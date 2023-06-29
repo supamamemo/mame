@@ -80,62 +80,62 @@ StagePlains::StagePlains()
                                                                                        
 
 
-    grassBlock[0] = std::make_unique<GrassBlock>("./resources/stage/1.fbx");
-    grassBlock[1] = std::make_unique<GrassBlock>("./resources/stage/2.fbx");
-    grassBlock[2] = std::make_unique<GrassBlock>("./resources/stage/3.fbx");
-    grassBlock[3] = std::make_unique<GrassBlock>("./resources/stage/4.fbx");
-    grassBlock[4] = std::make_unique<GrassBlock>("./resources/stage/5.fbx");
-    grassBlock[5] = std::make_unique<GrassBlock>("./resources/stage/6.fbx");
-    grassBlock[6] = std::make_unique<GrassBlock>("./resources/stage/7.fbx");
-    grassBlock[7] = std::make_unique<GrassBlock>("./resources/stage/8.fbx");
-    grassBlock[8] = std::make_unique<GrassBlock>("./resources/stage/9.fbx");
-    grassBlock[9] = std::make_unique<GrassBlock>("./resources/stage/10.fbx");
-    grassBlock[10] = std::make_unique<GrassBlock>("./resources/stage/11.fbx");
-    grassBlock[11] = std::make_unique<GrassBlock>("./resources/stage/12.fbx");
-    grassBlock[12] = std::make_unique<GrassBlock>("./resources/stage/13.fbx");
-    grassBlock[13] = std::make_unique<GrassBlock>("./resources/stage/14.fbx");
-    grassBlock[14] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
-    grassBlock[15] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
-    grassBlock[16] = std::make_unique<GrassBlock>("./resources/stage/16.fbx");
-    grassBlock[17] = std::make_unique<GrassBlock>("./resources/stage/17.fbx");
-    grassBlock[18] = std::make_unique<GrassBlock>("./resources/stage/18.fbx");
-    grassBlock[19] = std::make_unique<GrassBlock>("./resources/stage/19.fbx");
-    grassBlock[20] = std::make_unique<GrassBlock>("./resources/stage/20.fbx");
-    grassBlock[21] = std::make_unique<GrassBlock>("./resources/stage/21.fbx");
-    grassBlock[22] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
-    grassBlock[23] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
-    grassBlock[24] = std::make_unique<GrassBlock>("./resources/stage/22.fbx");
-    grassBlock[25] = std::make_unique<GrassBlock>("./resources/stage/23.fbx");
-    
-    // todo:後で消す(テスト用)カラー指定
-    {
-        grassBlock[0].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));   // 赤
-        grassBlock[1].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));   // 緑
-        grassBlock[2].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));   // 青
-        grassBlock[3].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));   // 赤
-        grassBlock[4].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));   // 緑
-        grassBlock[5].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));   // 青
-        grassBlock[6].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));   // 赤
-        grassBlock[7].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));   // 緑
-        grassBlock[8].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));   // 青
-        grassBlock[9].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));   // 赤
-        grassBlock[10].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
-        grassBlock[11].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
-        grassBlock[12].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
-        grassBlock[13].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
-        grassBlock[14].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
-        grassBlock[15].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
-        grassBlock[16].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
-        grassBlock[17].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
-        grassBlock[18].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
-        grassBlock[19].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
-        grassBlock[20].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
-        grassBlock[21].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
-        grassBlock[22].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
-        grassBlock[23].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
-        grassBlock[24].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
-        grassBlock[25].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
-    }
+    //grassBlock[0] = std::make_unique<GrassBlock>("./resources/stage/1.fbx");
+    //grassBlock[1] = std::make_unique<GrassBlock>("./resources/stage/2.fbx");
+    //grassBlock[2] = std::make_unique<GrassBlock>("./resources/stage/3.fbx");
+    //grassBlock[3] = std::make_unique<GrassBlock>("./resources/stage/4.fbx");
+    //grassBlock[4] = std::make_unique<GrassBlock>("./resources/stage/5.fbx");
+    //grassBlock[5] = std::make_unique<GrassBlock>("./resources/stage/6.fbx");
+    //grassBlock[6] = std::make_unique<GrassBlock>("./resources/stage/7.fbx");
+    //grassBlock[7] = std::make_unique<GrassBlock>("./resources/stage/8.fbx");
+    //grassBlock[8] = std::make_unique<GrassBlock>("./resources/stage/9.fbx");
+    //grassBlock[9] = std::make_unique<GrassBlock>("./resources/stage/10.fbx");
+    //grassBlock[10] = std::make_unique<GrassBlock>("./resources/stage/11.fbx");
+    //grassBlock[11] = std::make_unique<GrassBlock>("./resources/stage/12.fbx");
+    //grassBlock[12] = std::make_unique<GrassBlock>("./resources/stage/13.fbx");
+    //grassBlock[13] = std::make_unique<GrassBlock>("./resources/stage/14.fbx");
+    //grassBlock[14] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    //grassBlock[15] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    //grassBlock[16] = std::make_unique<GrassBlock>("./resources/stage/16.fbx");
+    //grassBlock[17] = std::make_unique<GrassBlock>("./resources/stage/17.fbx");
+    //grassBlock[18] = std::make_unique<GrassBlock>("./resources/stage/18.fbx");
+    //grassBlock[19] = std::make_unique<GrassBlock>("./resources/stage/19.fbx");
+    //grassBlock[20] = std::make_unique<GrassBlock>("./resources/stage/20.fbx");
+    //grassBlock[21] = std::make_unique<GrassBlock>("./resources/stage/21.fbx");
+    //grassBlock[22] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    //grassBlock[23] = std::make_unique<GrassBlock>("./resources/stage/15.fbx");
+    //grassBlock[24] = std::make_unique<GrassBlock>("./resources/stage/22.fbx");
+    //grassBlock[25] = std::make_unique<GrassBlock>("./resources/stage/23.fbx");
+    //
+    //// todo:後で消す(テスト用)カラー指定
+    //{
+    //    grassBlock[0].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));   // 赤
+    //    grassBlock[1].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));   // 緑
+    //    grassBlock[2].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));   // 青
+    //    grassBlock[3].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));   // 赤
+    //    grassBlock[4].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));   // 緑
+    //    grassBlock[5].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));   // 青
+    //    grassBlock[6].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));   // 赤
+    //    grassBlock[7].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));   // 緑
+    //    grassBlock[8].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));   // 青
+    //    grassBlock[9].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));   // 赤
+    //    grassBlock[10].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
+    //    grassBlock[11].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
+    //    grassBlock[12].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
+    //    grassBlock[13].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
+    //    grassBlock[14].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
+    //    grassBlock[15].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
+    //    grassBlock[16].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
+    //    grassBlock[17].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
+    //    grassBlock[18].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
+    //    grassBlock[19].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
+    //    grassBlock[20].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
+    //    grassBlock[21].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
+    //    grassBlock[22].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
+    //    grassBlock[23].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));  // 青
+    //    grassBlock[24].get()->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));  // 赤
+    //    grassBlock[25].get()->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));  // 緑
+    //}
 
 
     //grassBlock[0] = std::make_unique<GrassBlock>("./resources/stage/1.fbx");

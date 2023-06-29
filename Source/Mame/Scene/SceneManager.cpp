@@ -177,7 +177,7 @@ namespace Mame::Scene
             // èIóπ
             if (gamePad.GetButtonDown() & GamePad::BTN_A)
             {
-                exit(1);
+                PostQuitMessage(0);
             }
 
             break;

@@ -148,7 +148,7 @@ void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
 
 
 // コンストラクタ
-Sprite::Sprite(ID3D11Device* device, const wchar_t* filename)
+Sprite::Sprite(ID3D11Device* device, const wchar_t* filename, const char* psFilename)
 {
     HRESULT hr{ S_OK };
 
@@ -204,8 +204,10 @@ Sprite::Sprite(ID3D11Device* device, const wchar_t* filename)
 
 #if 1
     // シェーダー関連
+    
     create_vs_from_cso(device, "./resources/Shader/sprite_vs.cso", vertex_shader.GetAddressOf(), input_layout.GetAddressOf(), input_element_desc, _countof(input_element_desc));
-    create_ps_from_cso(device, "./resources/Shader/sprite_ps.cso", pixel_shader.GetAddressOf());
+    create_ps_from_cso(device,
+        (psFilename != nullptr) ? psFilename : "./resources/Shader/sprite_ps.cso", pixel_shader.GetAddressOf());
 
     //create_vs_from_cso(device, "UVScroll_vs.cso", vertex_shader.GetAddressOf(), input_layout.GetAddressOf(), input_element_desc, _countof(input_element_desc));
 

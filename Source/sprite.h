@@ -35,7 +35,7 @@ public:
     D3D11_TEXTURE2D_DESC texture2d_desc;
 
 public:
-    Sprite(ID3D11Device* device, const wchar_t* filename);
+    Sprite(ID3D11Device* device, const wchar_t* filename, const char* psFilename = nullptr);
     ~Sprite();
     
     void render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, DirectX::XMFLOAT4 color);
