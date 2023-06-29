@@ -10,6 +10,8 @@
 // ÉRÉìÉXÉgÉâÉNÉ^
 StageBoss::StageBoss()
 {
+    Graphics& graphics = Graphics::Instance();
+
     // ÉXÉeÅ[ÉWê∂ê¨&ìoò^
     {
         Terrain* terrain0 = new TerrainBoss("./resources/stage/stage.fbx");
@@ -33,10 +35,11 @@ StageBoss::StageBoss()
     Boss* boss = new Boss();
     EnemyManager::Instance().Register(boss);
 
-
+    // bossÇÃhpóp
+    chefHat = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/chefHat.png");
 
     // îwåiâº
-    //back = std::make_unique<Boss>(); //("./resources/back.fbx");
+    back = std::make_unique<Boss>("./resources/back.fbx");
 
     // tofu
     tofu = std::make_unique<EnemyTofu>();
@@ -56,9 +59,9 @@ void StageBoss::Initialize()
     tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
 
     // îwåiâº
-    //back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.0f, 20.0f));
-    //back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 8.0f, 13.0f));
-    //back->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(-90), 0.0f, 0.0f));
+    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 2.0f, 32.0f));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 17.0f, 8.0f));
+    back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
     // ÉXÉeÅ[ÉWèâä˙ê›íË
     {
@@ -71,7 +74,8 @@ void StageBoss::Initialize()
         terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(16.5f, 21, 10));
         terrainManager.GetTerrain(2)->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 5, 1));
         terrainManager.GetTerrain(2)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, DirectX::XMConvertToRadians(90), 0));
-        terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 11, 10));
+        terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 10.0f, 10));
+        terrainManager.GetTerrain(3)->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 2.0f, 1.0f));
         
         // materialColor
         terrainManager.GetTerrain(0)->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.64f, 0.0f, 1.0f));
@@ -152,7 +156,7 @@ void StageBoss::Update(const float& elapsedTime)
     playerManager.Update(elapsedTime);
 
     // bossçXêV
-    //boss->Update(elapsedTime);
+
 
     // tofu
     tofu->Update(elapsedTime);
@@ -178,34 +182,27 @@ void StageBoss::End()
 // ï`âÊèàóù
 void StageBoss::Render(const float& elapsedTime)
 {
+    Graphics& graphics = Graphics::Instance();
+    Shader* shader = graphics.GetShader();
+
     // terrain
     TerrainManager::Instance().Render(elapsedTime);
-    //// âº
-    //for (std::unique_ptr<Terrain>& temp : terrain)
-    //{
-    //    temp->Render(elapsedTime);
-    //}
 
     // playerï`âÊ
     PlayerManager::Instance().Render(elapsedTime);
 
     // bossï`âÊ
-    //boss->Render(elapsedTime);
     EnemyManager::Instance().Render(elapsedTime);
 
-
-
-    // âº
-    //for (std::unique_ptr<Boss>& temp : stage)
-    //{
-    //    temp->Render(elapsedTime);
-    //}
-
     // îwåiâº
-    //back->Render(elapsedTime);
+    back->Render(elapsedTime);
 
     // tofu
     tofu->Render(elapsedTime);
+
+    // bossHp
+    shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
+    chefHat->render(graphics.GetDeviceContext(), spr.pos.x, spr.pos.y, spr.texPos.x, spr.texPos.y);
 }
 
 // debugóp
@@ -215,21 +212,25 @@ void StageBoss::DrawDebug()
 
     // terrain
     TerrainManager::Instance().DrawDebug();
-    //for (std::unique_ptr<Terrain>& temp : terrain)
-    //{
-    //    temp->DrawDebug();
-    //}
-
+ 
     // player
     PlayerManager::Instance().DrawDebug();
 
     // boss
-    //boss->DrawDebug();
     EnemyManager::Instance().DrawDebug();
 
+    // bossHp
+    
+
     // îwåiâº
-    //back->DrawDebug();
+    back->DrawDebug();
 
     tofu->DrawDebug();
+
+    ImGui::Begin("spr");
+    ImGui::DragFloat2("pos", &spr.pos.x);
+    ImGui::DragFloat2("texPos", &spr.texPos.x);
+    ImGui::End();
+
 #endif
 }

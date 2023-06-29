@@ -11,6 +11,8 @@
 #include "../EnemyTofu.h"
 #include "../Terrain/Terrain.h"
 
+#include "../../sprite.h"
+
 class StageBoss : public Stage
 {
 public:
@@ -28,13 +30,18 @@ public:
 private:
     static const int TERRAIN_COUNT = 3;
 
-    //std::unique_ptr<Boss> boss;
-
     // ‰¼‚ÉbossƒNƒ‰ƒX‚Å•\Ž¦‚µ‚Ä‚é
-    std::unique_ptr<Boss> stage[3];
-
     std::unique_ptr<Boss> back;
 
     std::unique_ptr<EnemyTofu> tofu;
+
+    std::unique_ptr<Sprite> chefHat = nullptr;
+
+    struct SpriteStruct
+    {
+        DirectX::XMFLOAT2 pos{ 440,10 };
+        DirectX::XMFLOAT2 texPos{ 100,100 };
+    }spr;
+
 };
 

@@ -14,7 +14,7 @@ class Boss : public Enemy
 {
 public:
     Boss();
-    //Boss(const char* filename); // ‰¼‚Å‚·
+    Boss(const char* filename); // ‰¼‚Å‚·
 
     ~Boss()override;
 

@@ -191,6 +191,7 @@ public:
 		break;
 
 		case WM_DESTROY:
+			
 			PostQuitMessage(0);
 			break;
 		case WM_CREATE:
