@@ -15,8 +15,10 @@ public:
     virtual void Begin()                            = 0; // 毎フレーム一番最初に呼ばれる
     virtual void Update(const float& elapsedTime)   = 0; // 更新処理
     virtual void End()                              = 0; // 毎フレーム一番最後に呼ばれる
-    virtual void Render(const float& elapsedTime);        // 描画処理
+    virtual void Render(const float& elapsedTime);       // 描画処理
     virtual void DrawDebug()                        = 0; // デバッグ描画
+
+    void Destroy();                                      // エネミー削除
 
 public:
     // ステートマシン

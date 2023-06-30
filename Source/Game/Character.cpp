@@ -29,11 +29,11 @@ void Character::Render(const float& /*elapsedTime*/)
     // model描画
     if (&model->keyframe)
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), &model->keyframe);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, modelColorAlpha), &model->keyframe);
     }
     else
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, 1), nullptr);
+        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, modelColorAlpha), nullptr);
     }
 
 
@@ -122,6 +122,38 @@ void Character::DrawDebug()
 {
     // ImGui描画
     GetTransform()->DrawDebug();
+}
+
+
+// ダメージを与える
+bool Character::ApplyDamage(const int& damage, const float& invincibleTime)
+{
+    // ダメージが0の場合は健康状態を変更する必要がない
+    if (damage <= 0) return false;
+
+    // 死亡している場合は健康状態を変更しない
+    if (health <= 0) return false;
+
+    // 無敵時間が残っていたら健康状態を変更しない
+    if (invincibleTimer > 0.0f) return false;
+
+    // 無敵モードなら健康状態を変更しない
+    if (isInvincible) return false;
+
+    // ダメージ処理
+    const int damagedHealth = health - damage;
+    health = (damagedHealth > 0) ? damagedHealth : 0;
+
+    // 無敵時間を設定
+    invincibleTimer = invincibleTime;
+
+    // 死亡通知
+    if (health <= 0) OnDead();
+    // ダメージ通知
+    else OnDamaged();
+
+    // 健康状態が変更した場合はtrueを返す
+    return true;
 }
 
 

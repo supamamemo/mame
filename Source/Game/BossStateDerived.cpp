@@ -4,6 +4,7 @@
 #include "PlayerManager.h"
 
 #include "CannonBall.h"
+#include "EnemyTofu.h"
 
 // IdleState
 namespace BOSS
@@ -15,7 +16,7 @@ namespace BOSS
         owner->PlayAnimation(static_cast<int>(BossAnimation::Idle), true);
                 
         // materialColorを設定(セーフティー(青))
-        owner->SetMaterialColor(DirectX::XMFLOAT4(0, 0, 1, 1));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(0, 0, 1, 0.4f));
 
         // タイマーをセット
         SetTimer(2.0f);
@@ -52,7 +53,7 @@ namespace BOSS
         owner->PlayAnimation(static_cast<int>(BossAnimation::Find), true);
 
         // materialColor(見つけた(黄色))
-        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 1.0f));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 0.4f));
 
         // タイマーをセット
         SetTimer(1.0f);
@@ -84,7 +85,7 @@ namespace BOSS
     void RotateState::Enter()
     {
         // materialColor(回転(緑))
-        owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.4f));
 
         // 回転速度設定
         SetRotationSpeed(3.0f);
@@ -150,7 +151,7 @@ namespace BOSS
         owner->PlayAnimation(static_cast<int>(BossAnimation::Attack), true);
 
         // materialColorを設定(アグレッシブ(赤))
-        owner->SetMaterialColor(DirectX::XMFLOAT4(1, 0, 0, 1));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(1, 0, 0, 0.4f));
 
         // 左右判定
         SetMoveSpeed(owner->GetMoveRight() ? speed : -speed);
@@ -200,13 +201,15 @@ namespace BOSS
         owner->PlayAnimation(static_cast<int>(BossAnimation::Recoil), true);
 
         // materialColorを設定(紫)
-        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.4f));
         
         // 反動距離を設定
         recoilCount = 0;
         
         SetRecoil(owner->GetStateMachine()->GetMoveRight() ? 1.0f : -1.0f);
 
+        // 無敵状態を無くす
+        owner->SetIsInvincible(false);
     }
 
     // 更新
@@ -236,6 +239,9 @@ namespace BOSS
     void RecoilState::Exit()
     {
         recoilCount = 0;
+
+        // 無敵状態にする
+        owner->SetIsInvincible(true);
     }
 }
 
@@ -246,7 +252,7 @@ namespace TOFU
     void WalkState::Enter()
     {
         // アニメーション設定
-        owner->PlayAnimation(0, true);
+        owner->PlayAnimation(TofuAnimation::Walk, true);
 
         // 移動速度設定
         SetMoveSpeed(1.0f);        
@@ -323,7 +329,7 @@ namespace TOFU
     void TurnState::Enter()
     {
         // アニメーション設定
-        owner->PlayAnimation(1, true);
+        owner->PlayAnimation(TofuAnimation::Turn, true);
 
         // 回転速度設定
         SetRotationSpeed(3.0f);
@@ -388,7 +394,7 @@ namespace TOFU
         owner->PlayAnimation(0, true);
 
         // 黄色
-        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 1.0f));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 0.4f));
 
         // 今いる地点Yを保存する
         returnPositionY = owner->GetTransform()->GetPosition().y;
@@ -436,7 +442,7 @@ namespace TOFU
     void TrackState::Enter()
     {
         // 赤色
-        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.4f));
 
         // 速度を設定
         SetMoveSpeed(2.0f);
@@ -507,7 +513,7 @@ namespace CANNON
     void IdleState::Enter()
     {
         // materialColor(青)
-        owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 0.4f));
 
         // タイマーセット
         SetTimer(3.0f);
@@ -537,7 +543,7 @@ namespace CANNON
     void AttackState::Enter()
     {
         // materialColorを設定(攻撃(赤))
-        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+        owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.4f));
     }
 
     // 更新   

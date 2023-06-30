@@ -58,6 +58,15 @@ void Boss::Initialize()
 {
     GetTransform()->SetPosition(DirectX::XMFLOAT3(2.0f, 1.5f, 10.0f));
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(180), 0.0f, 0.0f));
+
+    // TODO: ボスの当たり判定設定
+    const DirectX::XMFLOAT3 min = { -0.6f, -0.0f, -0.6f };  // min設定
+    const DirectX::XMFLOAT3 max = { +0.6f, +2.5f, +0.6f };  // max設定
+    ResetAABB(min, max);                                    // minとmaxの再設定（ジオメトリックプリミティブの再生成も行っている）
+    UpdateAABB();                                           // minとmaxを現在の位置に更新する
+
+    // 無敵状態にする
+    isInvincible = true;
 }
 
 // 終了化
@@ -89,6 +98,18 @@ void Boss::Update(const float& elapsedTime)
     //debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
 
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
+
+    // 無敵時間中のキャラクターの点滅(ダメージを受けたかの確認用)
+    if (invincibleTimer > 0.0f)
+    {
+        modelColorAlpha = (static_cast<int>(invincibleTimer * 100.0f) & 0x04) ? 0.7f : 0.0f;
+    }
+    else
+    {
+        modelColorAlpha = 1.0f;
+    }
+
+    UpdateInvincibleTimer(elapsedTime);
 }
 
 // Updateの後に呼ばれる
@@ -112,4 +133,11 @@ void Boss::DrawDebug()
     if (stateMachine) GetStateMachine()->DrawDebug();
 
     ImGui::End();
+}
+
+
+void Boss::OnDead()
+{
+    // 自分を消去
+    Destroy();
 }

@@ -32,6 +32,8 @@ public:
     // 現在のステート番号取得
     int GetStateIndex();
 
+    const State* GetCurrentState() const { return currentState; }
+
     // imgui用
     void DrawDebug();
 

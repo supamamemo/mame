@@ -1,7 +1,9 @@
 #include "Enemy.h"
+#include "EnemyManager.h"
 #include "PlayerManager.h"
 
 float Enemy::renderLengthXLimit_ = 40.0f;
+
 
 void Enemy::Render(const float& elapsedTime)
 {
@@ -16,4 +18,10 @@ void Enemy::Render(const float& elapsedTime)
     }
 
     Character::Render(elapsedTime);
+}
+
+
+void Enemy::Destroy()
+{
+    EnemyManager::Instance().Remove(this);
 }

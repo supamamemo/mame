@@ -1,6 +1,13 @@
 #pragma once
 #include "Enemy.h"
 
+// 豆腐アニメーション
+enum TofuAnimation
+{
+    Walk,
+    Turn,
+};
+
 // 豆腐君
 class EnemyTofu : public Enemy
 {
@@ -16,6 +23,8 @@ public:
     void Render(const float& elapsedTime)  override; // 描画処理
     void DrawDebug()                       override; // デバッグ描画
 
+    void OnDead()                          override; // 死亡したときに呼ばれる
+
 public:
     // Imgui名前被り防止のためのやつ //
     static int nameNum;
@@ -25,5 +34,6 @@ public:
 
 private:
     std::string name = {};
+
 };
 

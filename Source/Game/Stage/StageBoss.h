@@ -33,6 +33,7 @@ private:
     // ‰¼‚ÉbossƒNƒ‰ƒX‚Å•\Ž¦‚µ‚Ä‚é
     std::unique_ptr<Boss> back;
 
+<<<<<<< HEAD
     std::unique_ptr<EnemyTofu> tofu;
 
     std::unique_ptr<Sprite> chefHat = nullptr;
@@ -43,5 +44,8 @@ private:
         DirectX::XMFLOAT2 texPos{ 100,100 };
     }spr;
 
+=======
+    //std::unique_ptr<EnemyTofu> tofu;
+>>>>>>> mame/Taki
 };
 

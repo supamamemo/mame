@@ -26,7 +26,7 @@ public:
     void Render(const float& elapsedTime) override;   // •`‰æˆ—
     void DrawDebug()                      override;   // ƒfƒoƒbƒO•`‰æ
 
-
+    void OnDead()                         override;   // €–S‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
 
 public:
     // Imgui–¼‘O”í‚è–h~‚Ì‚½‚ß‚Ì‚â‚Â //
