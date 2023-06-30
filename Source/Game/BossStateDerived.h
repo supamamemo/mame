@@ -118,14 +118,14 @@ namespace TOFU
         WalkState(Enemy* _tofu) :State(_tofu, "walk") {}
         ~WalkState() {}
 
-        void Enter()override;
-        void Execute(float elapsedTime);
-        void Exit()override;
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
 
         void FindPlayer();
 
     private:
-        float destination = 0.0f;   // 目的地
+        float destination   = 0.0f;   // 目的地
     };
 
     class TurnState :public State
@@ -134,9 +134,9 @@ namespace TOFU
         TurnState(Enemy* _tofu) :State(_tofu, "turn") {}
         ~TurnState() {}
 
-        void Enter()override;
-        void Execute(float elapsedTime)override;
-        void Exit()override;
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
 
     private:
         float rotate = 0.0f;

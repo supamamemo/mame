@@ -101,11 +101,20 @@ public: // 取得・設定関数関連
     Transform* GetTransform() const { return model->GetTransform(); }
 
     // カラー設定
+    const DirectX::XMFLOAT4& SetMaterialColor() const { return materialColor; }
     void SetMaterialColor(const DirectX::XMFLOAT4& color) { materialColor = color; }
 
-    // 無敵かどうかの設定・取得
-    const float& GetIsInvincible() const { return isInvincible; }
-    void SetIsInvincible(const float& invincible) { isInvincible = invincible; }
+    // 無敵かどうかの取得・設定
+    const bool GetIsInvincible() const { return isInvincible; }
+    void SetIsInvincible(const bool& invincible) { isInvincible = invincible; }
+
+    // 移動速度の取得・設定
+    const float GetMoveSpeed() const { return moveSpeed; }
+    void SetMoveSpeed(const float& speed) { moveSpeed = speed; }
+
+    // 旋回速度の取得・設定
+    const float GetTurnSpeed() const { return turnSpeed_; }
+    void SetTurnSpeed(const float turnSpeed) { turnSpeed_ = turnSpeed; }
 
     // AABB再設定(当たり判定のサイズを途中で変えたいときなどに)
     void ResetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max);
@@ -125,13 +134,12 @@ protected:
     DirectX::XMFLOAT4 materialColor =   { 1.0f, 0.0f, 0.0f, 0.4f }; // マテリアルカラー
 
     DirectX::XMFLOAT3 velocity      =   { 0,0,0 };                  // 速度
-
-           
+         
     float       modelColorAlpha     =   1.0f;
 
     float       stepOffset          =   1.0f;                       // 位置補正(Y位置がキャラクターの中心になるように調整)
                                         
-    float       moveVecX            =   0.0f;                       // 移動ベクトルX
+    float       moveVecX_            =   0.0f;                       // 移動ベクトルX
     float       saveMoveVecX        =   1.0f;                       // 移動ベクトルを保存するベクトルX（最初は右を向かせておく）
 
     float       defaultAcceleration =   1.0f;                       // 加速力の初期値
@@ -144,7 +152,7 @@ protected:
 
     float       defaultMoveSpeed    =  5.0f;                        // 移動速度初期値
     float       moveSpeed           =  defaultMoveSpeed;            // 移動速度(最大移動速度に代入される)
-    float       turnSpeed           =  ToRadian(900.0f);            // 旋回速度(180.f * 5)
+    float       turnSpeed_          =  ToRadian(900.0f);            // 旋回速度(180.f * 5)
     float       jumpSpeed           =  10.0f;                       // ジャンプ速度
     float       maxMoveSpeed        =  5.0f;                        // 最大移動速度
 

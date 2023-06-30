@@ -39,7 +39,11 @@ EnemyTofu::~EnemyTofu()
 // 初期化
 void EnemyTofu::Initialize()
 {
-    health = 1; // 体力設定
+    health = 1;                                             // 体力設定
+  
+    moveRangeCenterX_ = GetTransform()->GetPosition().x; // 現在のX位置を移動範囲の中心に設定
+
+    turnSpeed_ = ToRadian(3.0f);    // 旋回速度設定
 }
 
 // 終了化
@@ -58,10 +62,15 @@ void EnemyTofu::Update(const float& elapsedTime)
     // ステート更新
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
 
-    UpdateAABB(); // AABBの更新処理
+    UpdateAABB();                       // AABBの更新処理
 
-    // 無敵時間更新
-    UpdateInvincibleTimer(elapsedTime);
+    UpdateVelocity(elapsedTime);        // 速力処理更新処理
+
+    CollisionEnemyVsPlayer();           // プレイヤーとの衝突判定処理
+ 
+    UpdateInvincibleTimer(elapsedTime); // 無敵時間更新
+    
+    UpdateAnimation(elapsedTime);       // アニメーション更新
 }
 
 // Updateの後に呼び出される

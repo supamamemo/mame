@@ -34,6 +34,7 @@ namespace BOSS
         // 時間を減らす
         SubtractTime(elapsedTime);
 
+        owner->CollisionEnemyVsPlayer();    // プレイヤーとの衝突判定処理
     }
 
     // 終了
@@ -70,6 +71,8 @@ namespace BOSS
 
         // 時間を減らす
         SubtractTime(elapsedTime);
+
+        owner->CollisionEnemyVsPlayer();    // プレイヤーとの衝突判定処理
     }
 
     // 終了
@@ -88,7 +91,7 @@ namespace BOSS
         owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.4f));
 
         // 回転速度設定
-        SetRotationSpeed(3.0f);
+        //SetRotationSpeed(3.0f);
 
         // プレイヤーがどっちにいるのか
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
@@ -109,7 +112,7 @@ namespace BOSS
             if (rotate == 90.0f)
             {
                 // 回転
-                rotation.y -= GetRotationSpeed() * elapsedTime;
+                //rotation.y -= GetRotationSpeed() * elapsedTime;
                 
                 // 回転終わったらAttackStateへ
                 if (DirectX::XMConvertToRadians(rotate) >= rotation.y)
@@ -122,7 +125,7 @@ namespace BOSS
             else
             {
                 // 回転
-                rotation.y += GetRotationSpeed() * elapsedTime;
+                //rotation.y += GetRotationSpeed() * elapsedTime;
 
                 // 回転終わったらAttackStateへ
                 if (DirectX::XMConvertToRadians(rotate) <= rotation.y)
@@ -133,6 +136,8 @@ namespace BOSS
             }
             owner->GetTransform()->SetRotation(rotation);
         }
+
+        owner->CollisionEnemyVsPlayer();    // プレイヤーとの衝突判定処理
     }
 
     // 終了
@@ -154,7 +159,7 @@ namespace BOSS
         owner->SetMaterialColor(DirectX::XMFLOAT4(1, 0, 0, 0.4f));
 
         // 左右判定
-        SetMoveSpeed(owner->GetMoveRight() ? speed : -speed);
+        owner->SetMoveSpeed(owner->GetMoveRight() ? speed : -speed);
     }
 
     // 更新
@@ -165,7 +170,7 @@ namespace BOSS
 
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
 
-        ownerPos.x += GetMoveSpeed() * elapsedTime;
+        ownerPos.x += owner->GetMoveSpeed() * elapsedTime;
 
         // 壁にぶつかったらIdleステートへ
         if (ownerPos.x > 9.0f)
@@ -182,6 +187,8 @@ namespace BOSS
         }
 
         owner->GetTransform()->SetPosition(ownerPos);
+
+        owner->CollisionEnemyVsPlayer();    // プレイヤーとの衝突判定処理
     }
 
     // 終了
@@ -219,9 +226,9 @@ namespace BOSS
         owner->UpdateAnimation(elapsedTime);
 
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
-        SetMoveSpeed(owner->GetStateMachine()->GetMoveRight() ? speed : -speed);
-        ownerPos.x += GetMoveSpeed() * elapsedTime;
-        recoilCount += GetMoveSpeed() * elapsedTime;
+        owner->SetMoveSpeed(owner->GetStateMachine()->GetMoveRight() ? speed : -speed);
+        ownerPos.x += owner->GetMoveSpeed() * elapsedTime;
+        recoilCount += owner->GetMoveSpeed() * elapsedTime;
 
         if (owner->GetStateMachine()->GetMoveRight())
         {
@@ -245,6 +252,7 @@ namespace BOSS
     }
 }
 
+
 // WalkState
 namespace TOFU
 {
@@ -255,33 +263,71 @@ namespace TOFU
         owner->PlayAnimation(TofuAnimation::Walk, true);
 
         // 移動速度設定
-        SetMoveSpeed(1.0f);        
+        owner->SetMoveSpeed(5.0f);        
 
         // 目的地を設定
-        destination = owner->GetMoveRight() ? owner->GetTransform()->GetPosition().x + 6.0f
-            : owner->GetTransform()->GetPosition().x - 6.0f;
+/*        destination = owner->GetMoveRight()
+                    ? owner->GetTransform()->GetPosition().x + owner->GetMoveRangeRadius()
+                    : owner->GetTransform()->GetPosition().x - 6.0f;    */    
+
+        // 移動方向・移動範囲の半径・移動範囲の中心を取得
+        const float moveDirectionX  = owner->GetMoveDirectionX();
+        const float moveRangeCenter = owner->GetMoveRangeCenterX();
+        const float moveRangeRadius = owner->GetMoveRangeRadius();
+
+        // 目的地を設定
+        destination = moveDirectionX * (moveRangeCenter + moveRangeRadius);
     }
 
     // 更新
     void WalkState::Execute(float elapsedTime)
     {
-        // アニメーション更新
-        owner->UpdateAnimation(elapsedTime);
-
         // 移動処理
         {
-            DirectX::XMFLOAT3 pos = owner->GetTransform()->GetPosition();
-            if (owner->GetMoveRight())
+            Transform*   transform      = owner->GetTransform();                    // トランスフォーム取得
+            const float  moveDirectionX = owner->GetMoveDirectionX();               // 移動方向を取得
+            const float  velocityX      = (owner->GetMoveSpeed() * elapsedTime);    // 速度を計算
+
+            // 向いている方向に移動
+            transform->AddPositionX(moveDirectionX * velocityX);
+
+            // 右方向に向いている場合、目的地も左側にあるので到達しているか判定する
+            if (moveDirectionX == 1.0f)
             {
-                pos.x += GetMoveSpeed() * elapsedTime;
-                if (pos.x >= destination)owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
+                // 目的地を超えていたら旋回ステートへ遷移
+                if (transform->GetPosition().x > destination)
+                {
+                    transform->SetPositionX(destination);
+                    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
+                }
             }
-            else
+            // 左方向に向いている場合、目的地も左側にあるので到達しているか判定する
+            else if (moveDirectionX == -1.0f)
             {
-                pos.x -= GetMoveSpeed() * elapsedTime;
-                if (pos.x <= destination)owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
+                // 目的地を超えていたら旋回ステートへ遷移
+                if (transform->GetPosition().x < destination)
+                {
+                    transform->SetPositionX(destination);
+                    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
+                }
             }
-            owner->GetTransform()->SetPosition(pos);
+            
+            //if (owner->GetMoveRight())
+            //{
+            //    transform->AddPositionX(velocityX);
+            //    if (transform->GetPosition().x >= destination)
+            //    {
+            //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
+            //    }
+            //}
+            //else
+            //{
+            //    transform->AddPositionX(-velocityX);
+            //    if (transform->GetPosition().x <= destination)
+            //    {
+            //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
+            //    }
+            //}
         }
 
         // playerとの範囲チェック
@@ -296,29 +342,26 @@ namespace TOFU
     // playerとの距離を計算して近くにいればFindStateへ
     void WalkState::FindPlayer()
     {
-        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
-        DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
+        const DirectX::XMFLOAT3& playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+        const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
 
-        // ownerからplayerへのベクトルを算出
-        DirectX::XMVECTOR VEC = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&playerPos), DirectX::XMLoadFloat3(&ownerPos));
-        DirectX::XMFLOAT3 vec{};
-        DirectX::XMStoreFloat3(&vec, VEC);
+        // プレイヤーとの距離を算出
+        const float vec    = playerPos.x - ownerPos.x;
+        const float length = sqrtf(vec * vec);
 
-        // そもそも範囲外なので判定を行わない
-        float vecX = vec.x;
-        vecX = (vecX > 0) ? vecX : -vecX;
-        if (vecX > 4.0f)return;
+        // プレイヤーとの距離が索敵距離より遠ければreturn
+        if (length > owner->GetSerchLength()) return;
 
-        // owner:進行方向右,player:右の範囲内にいる
-        if (owner->GetMoveRight() && vec.x > 0)
-        {
-            owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Find));
-        }
-        // owner:進行方向左,player:左の範囲内にいる
-        if (!owner->GetMoveRight() && vec.x < 0)
-        {
-            owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Find));
-        }
+        ////　右を向いている状態でプレイヤーが自分より右にいたら発見ステートへ遷移
+        //if (owner->GetMoveRight() && playerPos.x > ownerPos.x)
+        //{
+        //    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Find));
+        //}
+        ////　左を向いている状態でプレイヤーが自分より左にいたら発見ステートへ遷移
+        //else if (!owner->GetMoveRight() && playerPos.x < ownerPos.x)
+        //{
+        //    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Find));
+        //}
     }
 }
 
@@ -328,52 +371,45 @@ namespace TOFU
     // 初期化
     void TurnState::Enter()
     {
-        // アニメーション設定
+        // 旋回アニメーション設定
         owner->PlayAnimation(TofuAnimation::Turn, true);
-
-        // 回転速度設定
-        SetRotationSpeed(3.0f);
-
-        // 回転方向設定
-        rotate = owner->GetMoveRight() ? 270.0f : 90.0f;
     }
 
     // 更新
     void TurnState::Execute(float elapsedTime)
     {
-        // アニメーション更新
-        owner->UpdateAnimation(elapsedTime);
-
         // 次に進む方向へ回転する
         {
-            DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
-            // 90度の場合
-            if (rotate == 90.0f)
-            {
-                // 回転
-                rotation.y -= GetRotationSpeed() * elapsedTime;
+            owner->Turn(elapsedTime, owner->GetMoveDirectionX(), owner->GetTurnSpeed());
 
-                // 回転終わったらAttackStateへ
-                if (DirectX::XMConvertToRadians(rotate) >= rotation.y)
-                {
-                    rotation.y = DirectX::XMConvertToRadians(90.0f);
-                    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
-                }
-            }
-            // 270度の場合
-            else
-            {
-                // 回転
-                rotation.y += GetRotationSpeed() * elapsedTime;
+            //DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
+            //// 90度の場合
+            //if (rotate == 90.0f)
+            //{
+            //    // 回転
+            //    rotation.y -= GetRotationSpeed() * elapsedTime;
 
-                // 回転終わったらAttackStateへ
-                if (DirectX::XMConvertToRadians(rotate) <= rotation.y)
-                {
-                    rotation.y = DirectX::XMConvertToRadians(270.0f);
-                    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
-                }
-            }
-            owner->GetTransform()->SetRotation(rotation);
+            //    // 回転終わったらAttackStateへ
+            //    if (DirectX::XMConvertToRadians(rotate) >= rotation.y)
+            //    {
+            //        rotation.y = DirectX::XMConvertToRadians(90.0f);
+            //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
+            //    }
+            //}
+            //// 270度の場合
+            //else
+            //{
+            //    // 回転
+            //    rotation.y += GetRotationSpeed() * elapsedTime;
+
+            //    // 回転終わったらAttackStateへ
+            //    if (DirectX::XMConvertToRadians(rotate) <= rotation.y)
+            //    {
+            //        rotation.y = DirectX::XMConvertToRadians(270.0f);
+            //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
+            //    }
+            //}
+            //owner->GetTransform()->SetRotation(rotation);
         }
     }
 
@@ -391,7 +427,7 @@ namespace TOFU
     void FindState::Enter()
     {
         // アニメーション設定
-        owner->PlayAnimation(0, true);
+        owner->PlayAnimation(TofuAnimation::Walk, true);
 
         // 黄色
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 0.4f));
@@ -403,24 +439,21 @@ namespace TOFU
         state = 0;
 
         // 飛び跳ねる速度を設定する
-        SetMoveSpeed(10.0f);
+        owner->SetMoveSpeed(10.0f);
     }
 
     // 更新
     void FindState::Execute(float elapsedTime)
     {
-        // アニメーション更新
-        owner->UpdateAnimation(elapsedTime);
-
         DirectX::XMFLOAT3 pos = owner->GetTransform()->GetPosition();
         switch (state)
         {
         case 0:
-            pos.y += GetMoveSpeed() * elapsedTime;
+            pos.y += owner->GetMoveSpeed() * elapsedTime;
             if (pos.y > returnPositionY + 2.0f)state = 1;
             break;
         case 1:
-            pos.y -= GetMoveSpeed() * elapsedTime;
+            pos.y -= owner->GetMoveSpeed() * elapsedTime;
             if (pos.y < returnPositionY)
                 owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Track));
             break;
@@ -445,18 +478,15 @@ namespace TOFU
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.4f));
 
         // 速度を設定
-        SetMoveSpeed(2.0f);
+        owner->SetMoveSpeed(2.0f);
 
         // 回転速度を設定
-        SetRotationSpeed(10.0f);
+        //SetRotationSpeed(10.0f);
     }
 
     // 更新
     void TrackState::Execute(float elapsedTime)
     {
-        // アニメーション更新
-        owner->UpdateAnimation(elapsedTime);
-
         // 追跡するために位置をとる
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
         DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
@@ -469,12 +499,12 @@ namespace TOFU
 
         if (vec.x > 0)
         {
-            ownerPos.x += GetMoveSpeed() * elapsedTime;
+            ownerPos.x += owner->GetMoveSpeed() * elapsedTime;
             
             // 右に進むので回転Yを90度になるように設定する
             if (ownerRot.y != DirectX::XMConvertToRadians(90))
             {
-                ownerRot.y -= GetRotationSpeed() * elapsedTime;
+                //ownerRot.y -= GetRotationSpeed() * elapsedTime;
                 
                 // 90度より小さくなったら90度に設定する
                 if (ownerRot.y <= DirectX::XMConvertToRadians(90))
@@ -483,12 +513,12 @@ namespace TOFU
         }
         else
         {
-            ownerPos.x -= GetMoveSpeed() * elapsedTime;
+            ownerPos.x -= owner->GetMoveSpeed() * elapsedTime;
 
             // 左に進むので回転Yを270度になるように設定する
             if (ownerRot.y != DirectX::XMConvertToRadians(270))
             {
-                ownerRot.y += GetRotationSpeed() * elapsedTime;
+                //ownerRot.y += GetRotationSpeed() * elapsedTime;
 
                 // 270度より大きくなったら270度に設定する
                 if (ownerRot.y >= DirectX::XMConvertToRadians(270))
@@ -505,6 +535,7 @@ namespace TOFU
     {
     }
 }
+
 
 // IdleState
 namespace CANNON

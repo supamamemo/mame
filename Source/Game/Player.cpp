@@ -47,7 +47,6 @@ Player::~Player()
 
 void Player::Initialize()
 {
-    GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 20, 0));
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
     GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
 }
@@ -150,7 +149,7 @@ void Player::DrawDebug()
         ImGui::SliderFloat("d_MoveSpeed",      &defaultMoveSpeed, 0.0f, 20.0f);   // 通常時の最高移動速度
         ImGui::SliderFloat("runMoveSpeed",     &runMoveSpeed,     0.0f, 30.0f);   // 走行時の最高移動速度
 
-        ImGui::SliderFloat("turnSpeed",        &turnSpeed, 1.0f, ToRadian(900.0f), "%.0f");  // 旋回速度
+        ImGui::SliderFloat("turnSpeed_",       &turnSpeed_, 1.0f, ToRadian(900.0f), "%.0f");  // 旋回速度
 
         ImGui::TreePop();
     }
@@ -234,7 +233,7 @@ const bool Player::InputMove(const float& elapsedTime)
     // 旋回処理(急ブレーキアニメーション再生中は処理をしない)
     if (model->GetCurrentAnimationIndex() != Anim_Break)
     {
-        Turn(elapsedTime, saveMoveVecX, turnSpeed);
+        Turn(elapsedTime, saveMoveVecX, turnSpeed_);
     }
 
     // 進行ベクトルがゼロベクトルでない場合は入力された
@@ -273,13 +272,15 @@ const bool Player::InputJump()
 
 void Player::CollisionPlayerVsEnemies()
 {
-    if (invincibleTimer > 0.0f) return;
+    //if (invincibleTimer > 0.0f) return;
+
+    // バウンス時のみ処理を行う
+    if (!isBounce) return;
 
     bool isHit = false;
 
-    EnemyManager& enemyManager = EnemyManager::Instance();
-    const int     enemyCount = enemyManager.GetEnemyCount();
-
+    EnemyManager& enemyManager  = EnemyManager::Instance();
+    const int     enemyCount    = enemyManager.GetEnemyCount();
     for (int i = 0; i < enemyCount; ++i)
     {
         Enemy* enemy = enemyManager.GetEnemy(i);
@@ -288,18 +289,8 @@ void Player::CollisionPlayerVsEnemies()
         {
             isHit = true;
 
-            // バウンス状態ならエネミーのダメージ処理を行う
-            if (isBounce)
-            {
-                // ダメージを受けなければreturn
-                if (!enemy->ApplyDamage(1, 1.0f)) return;
-            }
-            // そうでなければ自分がダメージを受ける
-            else
-            {
-                if (!ApplyDamage(1, 1.0f)) return;
-            }
-
+            // ダメージを受けなければreturn
+            if (!enemy->ApplyDamage(1, 1.0f)) return;
         }
     }
 }
@@ -546,7 +537,7 @@ void Player::UpdateDashState(const float& elapsedTime)
 {
 
     // 旋回処理（カメラ目線のままダッシュしないように更新する）
-    Turn(elapsedTime, saveMoveVecX, turnSpeed);
+    Turn(elapsedTime, saveMoveVecX, turnSpeed_);
 
     
     // ダッシュタイマーが残っていたらをダッシュを継続させる
@@ -601,7 +592,7 @@ void Player::TransitionRunState()
     friction        = runFriction;
 
     // 走行用保存移動ベクトルに移動ベクトルを保存
-    if (runMoveVecX == 0.0f) runMoveVecX = moveVecX;
+    if (runMoveVecX == 0.0f) runMoveVecX = moveVecX_;
 
     // 走行アニメーション再生
     PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
@@ -619,7 +610,7 @@ void Player::UpdateRunState(const float& elapsedTime)
         acceleration = defaultAcceleration;
         friction     = defaultFriction;
 
-        runMoveVecX = moveVecX; // 移動ベクトル保存を更新しておく（ダッシュジャンプして着地する寸前に方向転換するとカメラ目線でラジオ体操するため）
+        runMoveVecX = moveVecX_; // 移動ベクトル保存を更新しておく（ダッシュジャンプして着地する寸前に方向転換するとカメラ目線でラジオ体操するため）
 
         TransitionJumpState();
         return;
@@ -629,8 +620,8 @@ void Player::UpdateRunState(const float& elapsedTime)
         // 速度が最高速度に達していて、
         // 走行用保存移動ベクトルと現在の移動ベクトルの符号が違う場合（方向転換）はブレーキアニメーションを再生
         const bool isPlayBreakAnimation = {
-            (velocity.x >=  runMoveSpeed * 0.8f && runMoveVecX > 0.0f && moveVecX < 0.0f) ||
-            (velocity.x <= -runMoveSpeed * 0.8f && runMoveVecX < 0.0f && moveVecX > 0.0f)
+            (velocity.x >=  runMoveSpeed * 0.8f && runMoveVecX > 0.0f && moveVecX_ < 0.0f) ||
+            (velocity.x <= -runMoveSpeed * 0.8f && runMoveVecX < 0.0f && moveVecX_ > 0.0f)
         };
         if (isPlayBreakAnimation)
         {
@@ -649,7 +640,7 @@ void Player::UpdateRunState(const float& elapsedTime)
             return;
         }
 
-        runMoveVecX = moveVecX; // 保存移動ベクトル更新
+        runMoveVecX = moveVecX_; // 保存移動ベクトル更新
     }
     // 移動入力がなければ待機ステートへ遷移
     else
@@ -744,7 +735,7 @@ void Player::TransitionHipDropState()
 void Player::UpdateHipDropState(const float& elapsedTime)
 {
     // 旋回処理（カメラ目線のままバウンスしないように更新する）
-    Turn(elapsedTime, saveMoveVecX, turnSpeed);
+    Turn(elapsedTime, saveMoveVecX, turnSpeed_);
 
     // 一回バウンスしたら重力をもとに戻す
     if (bounceCount != 0) gravity = defaultGravity;

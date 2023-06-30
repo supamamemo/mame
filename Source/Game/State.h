@@ -21,18 +21,9 @@ public:
     float GetTimer() const { return timer; }
     void SubtractTime(float time) { timer -= time; }
 
-
-    void SetMoveSpeed(float speed) { moveSpeed = speed; }
-    float GetMoveSpeed() { return moveSpeed; }
-    void SetRotationSpeed(float rotSpeed) { rotationSpeed = rotSpeed; }
-    float GetRotationSpeed() { return rotationSpeed; }
-
-
-
 private:
     float timer = 0;
     
-    float moveSpeed = 0.0f;     // ˆÚ“®‘¬“x
     float rotationSpeed = 0.0f; // ‰ñ“]‘¬“x
 
 

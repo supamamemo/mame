@@ -163,7 +163,7 @@ void Character::Move(
     const float& moveSpeed)
 {
     // 移動方向ベクトルを設定
-    moveVecX = vx;
+    moveVecX_ = vx;
 
     // 最大速度設定
     maxMoveSpeed = moveSpeed; // elapsedTimeを乗算しない
@@ -497,7 +497,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
     else if (dist <= maxMoveSpeed)
     {
         // 移動ベクトルがゼロベクトルでないなら加速する
-        const float moveVecDist = sqrtf(moveVecX * moveVecX);
+        const float moveVecDist = sqrtf(moveVecX_ * moveVecX_);
         if (moveVecDist > 0.0f)
         {
             // 加速力
@@ -507,13 +507,13 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
             if (!isGround) acceleration *= airControl;
 
             // 移動ベクトルによる加速処理
-            velocity.x += moveVecX * acceleration;
+            velocity.x += moveVecX_ * acceleration;
 
             // 最大速度制限
             const float dist = sqrtf(velocity.x * velocity.x);
             if (dist > maxMoveSpeed)
             {
-                velocity.x = moveVecX * maxMoveSpeed;
+                velocity.x = moveVecX_ * maxMoveSpeed;
             }
 
             //// 下り坂でガタガタしないようにする
@@ -525,7 +525,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
     }
 
     // 移動ベクトルをリセット
-    moveVecX = 0.0f;
+    moveVecX_ = 0.0f;
 }
 
 // 水平移動更新処理

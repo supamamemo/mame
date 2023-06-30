@@ -69,7 +69,6 @@ void StagePlains::Initialize()
 
     // terrainèâä˙âª
     TerrainManager& terrainManager = TerrainManager::Instance();
-    terrainManager.Initialize();
     // Ç±Ç±Ç≈ínñ Çï¿Ç◊ÇƒÇ¢Ç‹Ç∑
     {
         terrainManager.GetTerrain(0 )->GetTransform()->SetPosition(DirectX::XMFLOAT3( 0.0f,   0.0f,  posZ));
@@ -99,15 +98,15 @@ void StagePlains::Initialize()
         terrainManager.GetTerrain(24)->GetTransform()->SetPosition(DirectX::XMFLOAT3(146.0f,  1.6f,  posZ));
         terrainManager.GetTerrain(25)->GetTransform()->SetPosition(DirectX::XMFLOAT3(149.3f,  1.6f,  posZ));        
     }
+    terrainManager.Initialize();
 
     // playerèâä˙âª
     PlayerManager& playerManager = PlayerManager::Instance();
-    playerManager.Initialize();
     playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1.5f, posZ));
+    playerManager.Initialize();
 
     // enemyèâä˙âª
     EnemyManager& enemyManager = EnemyManager::Instance();
-    enemyManager.Initialize();
     {
         enemyManager.GetEnemy(0 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.0f,   1.5f,  posZ));
         enemyManager.GetEnemy(1 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(13.0f,   1.5f,  posZ));
@@ -133,6 +132,7 @@ void StagePlains::Initialize()
         enemyManager.GetEnemy(21)->GetTransform()->SetPosition(DirectX::XMFLOAT3(156,     1.5f,  posZ));
         enemyManager.GetEnemy(22)->GetTransform()->SetPosition(DirectX::XMFLOAT3(159,     1.5f,  posZ));
     }
+    enemyManager.Initialize();
 }
 
 // èIóπâª
