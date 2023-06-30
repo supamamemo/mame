@@ -249,6 +249,9 @@ const bool Player::InputJump()
     const GamePad& gamePad = Input::Instance().GetGamePad();
     if (gamePad.GetButtonDown() & (GamePad::BTN_A | GamePad::BTN_B))
     {
+        // 地面にいない場合はジャンプしない
+        if (!isGround) return false;
+
         // ジャンプ回数がジャンプ上限数以上ならジャンプしない
         if (jumpCount >= jumpLimit) return false;
 
@@ -266,7 +269,6 @@ const bool Player::InputJump()
 
     return false;
 }
-
 
 
 void Player::CollisionPlayerVsEnemies()
@@ -300,13 +302,6 @@ void Player::CollisionPlayerVsEnemies()
 
         }
     }
-
-
-#if _DEBUG
-    ImGui::Begin("isEnemyHit");
-    ImGui::Checkbox("isEnemyHit", &isHit);
-    ImGui::End();
-#endif
 }
 
 
@@ -358,14 +353,15 @@ void Player::OnBounce()
     // 最大バウンスカウント以上ならバウンス終了させる
     if (bounceCount >= bounceLimit)
     {
-        velocity.y      = 0;                    // Y速度リセット
+        velocity.y      = 0.0f;                 // Y速度リセット
         bounceSpeedX    = defaultBounceSpeedX;  // バウンスX速度リセット
         bounceSpeedY    = defaultBounceSpeedY;  // バウンスY速度リセット
         bounceCount     = 0;                    // バウンスカウントリセット
         isBounce        = false;                // バウンス終了
      
-        OnLanding();        // 着地時の処理を行う
-        isGround = true;    // 着地した
+        OnLanding();                // 着地時の処理を行う
+        isGround        = true;     // 着地した
+        isInvincible    = false;    // 無敵モード解除
     }
     // バウンスさせる
     else
@@ -388,7 +384,59 @@ void Player::OnDamaged()
 // 死亡したときに呼ばれる関数
 void Player::OnDead()
 {
-    GetTransform()->SetScale(DirectX::XMFLOAT3(1, 10, 1));
+    // 仮で縦に引き延ばしている
+    GetTransform()->SetScale(DirectX::XMFLOAT3(1, 5, 1));
+}
+
+
+// 落下死・落下ミスしたときに呼ばれる
+void Player::OnFallDead()
+{
+    // 死んでいたら死亡処理を行いreturn
+    if (health <= 0)
+    {
+        OnDead();
+        //return;
+    }
+
+    // 最後に着地した地形の端っこに戻す
+    {
+        // 落ちた位置によって地形の左右どちらの端に復活するか決める
+        if (aabb_.min.x <= lastLandingTerrainAABBMinX)
+        {
+            GetTransform()->SetPositionX(lastLandingTerrainAABBMinX + ((aabb_.max.x - aabb_.min.x) * 0.5f));
+        }
+        else if (aabb_.max.x >= lastLandingTerrainAABBMaxX)
+        {
+            GetTransform()->SetPositionX(lastLandingTerrainAABBMaxX - ((aabb_.max.x - aabb_.min.x) * 0.5f));
+        }
+
+        // 地形の頭上をY位置に設定
+        GetTransform()->SetPositionY(lastLandingTerrainAABBMaxY);
+
+        UpdateAABB();           // 忘れずにAABB更新
+    }
+
+    health          -=  1;      // 体力減少
+    invincibleTimer  =  1.0f;   // 無敵時間設定
+
+    // ジャンプ中・バウンス中に落ちたときのためにリセットする
+    {
+        velocity.x      =   0.0f;                   // X速度リセット
+        velocity.y      =   0.0f;                   // Y速度リセット
+        bounceSpeedX    =   defaultBounceSpeedX;    // バウンスX速度リセット
+        bounceSpeedY    =   defaultBounceSpeedY;    // バウンスY速度リセット
+        bounceCount     =   0;                      // バウンスカウントリセット
+        isBounce        =   false;                  // バウンス終了
+        isInvincible    =   false;                  // 無敵モード解除
+
+        gravity         =   defaultGravity;         // 重力リセット
+
+        OnLanding();                                // 着地時の処理を行う
+        isGround        =   true;                   // 着地した
+    }
+
+    TransitionIdleState();      // 待機ステートへ遷移
 }
 
 
@@ -496,9 +544,11 @@ void Player::TransitionDashState()
 // ダッシュステート更新処理
 void Player::UpdateDashState(const float& elapsedTime)
 {
+
     // 旋回処理（カメラ目線のままダッシュしないように更新する）
     Turn(elapsedTime, saveMoveVecX, turnSpeed);
 
+    
     // ダッシュタイマーが残っていたらをダッシュを継続させる
     if (dashTimer > 0.0f)
     {
@@ -622,7 +672,7 @@ void Player::TransitionJumpState()
     jumpedPositionY = GetTransform()->GetPosition().y;
     
     // ジャンプ開始アニメーション再生
-    PlayAnimation(Anim_JumpInit, false, 1.0f, 0.0f);
+    PlayAnimation(Anim_JumpInit, false, 1.0f, 0.5f);
 }
 
 // ジャンプステート更新処理
@@ -661,7 +711,8 @@ void Player::UpdateJumpState(const float& elapsedTime)
     if (GetMoveVecY() < 0.0f)
     {      
         // ジャンプ開始時のY位置と現在のY位置からジャンプした高さを算出
-        const float jumpHeight = GetTransform()->GetPosition().y - jumpedPositionY;
+        const float& vecY = GetTransform()->GetPosition().y - jumpedPositionY;
+        const float jumpHeight = sqrtf(vecY * vecY);
 
         // ヒップドロップに必要な距離(高さ)に達していたらヒップドロップステートへ遷移
         if (jumpHeight >= needHipDropHeight)
@@ -682,8 +733,9 @@ void Player::TransitionHipDropState()
     //const float length = sqrtf(saveMoveVecX * saveMoveVecX);
     //saveMoveVec_n      = saveMoveVecX / length;
 
-    gravity  = hipDropGravity;  // 落下速度を上昇
-    isBounce = true;            // バウンスさせる
+    gravity         = hipDropGravity;  // 落下速度を上昇
+    isBounce        = true;            // バウンスさせる
+    isInvincible    = true;            // ヒップドロップバウンス中は無敵モードにする
 
     PlayAnimation(Anim_HipDrop, true);
 }

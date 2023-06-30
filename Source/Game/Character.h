@@ -54,11 +54,12 @@ protected:
     void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
 
 protected:
-    virtual void OnLanding() {}                             // 着地したときに呼ばれる  
-    virtual void OnDash()    {}                             // ダッシュしているときに呼ばれる
-    virtual void OnBounce()  {}                             // バウンスするときに呼ばれる
-    virtual void OnDamaged() {}                             // ダメージを受けたときに呼ばれる  
-    virtual void OnDead()    {}                             // 死亡したときに呼ばれる
+    virtual void OnLanding()  {}                             // 着地したときに呼ばれる  
+    virtual void OnDash()     {}                             // ダッシュしているときに呼ばれる
+    virtual void OnBounce()   {}                             // バウンスするときに呼ばれる
+    virtual void OnDamaged()  {}                             // ダメージを受けたときに呼ばれる  
+    virtual void OnDead()     {}                             // 死亡したときに呼ばれる
+    virtual void OnFallDead() {}                             // 落下死・落下ミスしたときに呼ばれる
 
 private: 
     void UpdateVerticalVelocity(const float& elapsedFrame);     // 垂直速力更新処理
@@ -112,8 +113,11 @@ public: // 取得・設定関数関連
 public:
     std::unique_ptr<Model> model    =  nullptr;                     // モデル
 
-    std::unique_ptr<GeometricPrimitive> geometricAABB_ = nullptr;   // 当たり判定描画用ジオメトリックプリミティブ
-    Collision::AABB aabb_           = {};                           // 当たり判定構造体
+    std::unique_ptr<GeometricPrimitive> geometricAABB_ = nullptr;   // 当たり判定AABB描画用ジオメトリックプリミティブ
+    Collision::AABB aabb_               = {};                       // 当たり判定AABB
+    float lastLandingTerrainAABBMinX    = {};                       // 最後に着地した地形のAABBのminX（落下ミスの復活時に使用）
+    float lastLandingTerrainAABBMaxX    = {};                       // 最後に着地した地形のAABBのmaxX（落下ミスの復活時に使用）
+    float lastLandingTerrainAABBMaxY    = {};                       // 最後に着地した地形のAABBのmaxY（落下ミスの復活時に使用）
 
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders;
@@ -121,6 +125,7 @@ protected:
     DirectX::XMFLOAT4 materialColor =   { 1.0f, 0.0f, 0.0f, 0.4f }; // マテリアルカラー
 
     DirectX::XMFLOAT3 velocity      =   { 0,0,0 };                  // 速度
+
            
     float       modelColorAlpha     =   1.0f;
 

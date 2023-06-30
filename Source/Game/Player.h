@@ -31,11 +31,12 @@ private: // 更新処理関数関連
     void  UpdateDashCoolTimer(const float& elapsedTime); // ダッシュクールタイム更新処理
 
 private: // 瞬間的に呼ばれる関数関連
-    void OnLanding() override;  // 着地したときに呼ばれる   
-    void OnDash()    override;  // ダッシュしているときに呼ばれる
-    void OnBounce()  override;  // バウンスするときに呼ばれる
-    void OnDamaged() override;  // ダメージを受けたときに呼ばれる
-    void OnDead()    override;  // 死亡したときに呼ばれる
+    void OnLanding()    override;  // 着地したときに呼ばれる   
+    void OnDash()       override;  // ダッシュしているときに呼ばれる
+    void OnBounce()     override;  // バウンスするときに呼ばれる
+    void OnDamaged()    override;  // ダメージを受けたときに呼ばれる
+    void OnDead()       override;  // 死亡したときに呼ばれる
+    void OnFallDead()   override;  // 落下死・落下ミスしたときに呼ばれる
 
 private: // ステート関数関連
 #if 1
@@ -88,11 +89,11 @@ private: // enum関連
 private: // 変数関連
     State   state                   = State::Idle;          // 現在のステート
 
-    float   dashAcceleration        =  30.0f;               // ダッシュ時のX速度
+    float   dashAcceleration        =  20.0f;               // ダッシュ時のX速度
     float   defaultDashTime         =  0.1f;                // ダッシュ時間初期値
     float   dashTimer               =  defaultDashTime;     // ダッシュタイマー(ダッシュ時の操作制限時間を管理する)
     float   dashFinishScale         =  0.5f;                // ダッシュが終わって別のステート遷移前に速度を減速させる値
-    float   dashCoolTime            =  0.5f;
+    float   dashCoolTime            =  0.2f;
     float   dashCoolTimer           =  dashCoolTime;        // ダッシュを連発されないようクールタイムを設定
 
     float   runMoveSpeed            =  15.0f;               // 走行時の移動速度(moveSpeedに代入する)

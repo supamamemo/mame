@@ -18,6 +18,8 @@ public:
     virtual void Render(const float& elapsedTime);       // 描画処理
     virtual void DrawDebug()                        = 0; // デバッグ描画
 
+    void OnFallDead() override;                          // 落下死・落下ミスしたときに呼ばれる
+
     void Destroy();                                      // エネミー削除
 
 public:

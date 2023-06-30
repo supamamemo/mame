@@ -143,9 +143,4 @@ void EnemyCannon::CollisionCannonBallVsPlayer()
             //    box1.min.z = outPosition.max.z;   
         }
     }
-#if _DEBUG
-    ImGui::Begin("isPlayerHit");
-    ImGui::Checkbox("isPlayerHit", &isHit);
-    ImGui::End();
-#endif
 }

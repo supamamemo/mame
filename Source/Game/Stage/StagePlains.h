@@ -18,10 +18,5 @@ public:
     void End()                              override;   // 毎フレーム一番最後に呼ばれる
     void Render(const float& elapsedTime)   override;   // 描画処理
     void DrawDebug()                        override;   // デバッグ描画
-
-private:
-    //static const int TERRAIN_COUNT = 26;
-
-    //std::unique_ptr<GrassBlock> grassBlock[TERRAIN_COUNT];
 };
 
