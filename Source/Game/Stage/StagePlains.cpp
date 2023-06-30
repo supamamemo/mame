@@ -90,6 +90,7 @@ void StagePlains::Initialize()
 
     // player‰Šú‰»
     PlayerManager::Instance().Initialize();
+    PlayerManager::Instance().GetPlayer().get()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10.0f, 2.0f, 10.0f));
 
     // enemy‰Šú‰»
     EnemyManager::Instance().Initialize();

@@ -13,7 +13,7 @@
 
 // todo: 後で消す
 #define FADE 1
-#define MAME 0
+#define MAME 1
 
 // コンストラクタ
 SceneTitle::SceneTitle()

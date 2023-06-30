@@ -47,7 +47,7 @@ StageBoss::StageBoss()
     tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.5f, 10.0f));
     tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
     EnemyManager::Instance().Register(tofu);
-    //tofu = std::make_unique<EnemyTofu>();
+    
 }
 
 // 初期化
@@ -80,8 +80,8 @@ void StageBoss::Initialize()
 
 
         // プレイヤーが壁に衝突したときの反転処理確認用
-        terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 1, 10));
-        terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-25, 1.5f, 10));
+        //terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 1, 10));
+        //terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-25, 1.5f, 10));
 
         
         // materialColor
@@ -137,38 +137,12 @@ void StageBoss::Update(const float& elapsedTime)
     // terrain更新
     TerrainManager::Instance().Update(elapsedTime);
 
-
-    DirectX::XMFLOAT3 resultPos{};
-
-    //if (Collision::IntersectAABBVsAABB(&player->aabb, &boss->aabb,  resultPos))
-    //{
-    //    DirectX::XMFLOAT3 pos = player->model->GetTransform()->GetPosition();
-    //    pos.x += resultPos.x;
-    //    pos.y += resultPos.y;
-    //    player->model->GetTransform()->SetPosition(pos);
-    //}
-
-    //if (Collision::IntersectAABBVsAABB(&playerManager.GetPlayer()->aabb, &boss->aabb,  resultPos))
-    //{
-    //    DirectX::XMFLOAT3 pos = playerManager.GetPlayer()->model->GetTransform()->GetPosition();
-    //    pos.x += resultPos.x;
-    //    pos.y += resultPos.y;
-    //    playerManager.GetPlayer()->model->GetTransform()->SetPosition(pos);
-    //}
-
-
     // player更新
     PlayerManager& playerManager = PlayerManager::Instance();
     playerManager.Update(elapsedTime);
-
-    // boss更新
-
-
-    // tofu
-    //tofu->Update(elapsedTime);
     
+    // enemy更新
     EnemyManager::Instance().Update(elapsedTime);
-
 }
 
 // Updateの後に呼ばれる処理
@@ -205,7 +179,7 @@ void StageBoss::Render(const float& elapsedTime)
 
     // tofu
 
-    tofu->Render(elapsedTime);
+    //tofu->Render(elapsedTime);
 
     // bossHp
     shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
@@ -233,8 +207,6 @@ void StageBoss::DrawDebug()
     // 背景仮
     back->DrawDebug();
 
-
-    tofu->DrawDebug();
 
     ImGui::Begin("spr");
     ImGui::DragFloat2("pos", &spr.pos.x);
