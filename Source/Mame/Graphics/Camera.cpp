@@ -17,6 +17,16 @@ void Camera::Update(float elapsedTime)
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
         DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
 
+        //if (cameraPos.x < playerPos.x)
+        //{
+        //    cameraPos.x += 4.f * elapsedTime;
+        //    if (cameraPos.x > playerPos.x) cameraPos.x = playerPos.x;
+        //}
+        //else if (cameraPos.x > playerPos.x)
+        //{
+        //    cameraPos.x += -4.f * elapsedTime;
+        //    if (cameraPos.x < playerPos.x) cameraPos.x = playerPos.x;
+        //}
         cameraPos.x = playerPos.x;
         GetTransform()->SetPosition(cameraPos);
     }

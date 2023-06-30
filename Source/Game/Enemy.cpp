@@ -21,6 +21,13 @@ void Enemy::Render(const float& elapsedTime)
 }
 
 
+// —‰º€E—‰ºƒ~ƒX‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+void Enemy::OnFallDead()
+{
+    Destroy();
+}
+
+
 void Enemy::Destroy()
 {
     EnemyManager::Instance().Remove(this);
