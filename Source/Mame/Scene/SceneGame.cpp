@@ -1,4 +1,7 @@
 #include "SceneGame.h"
+
+#include "../Graphics/EffectManager.h"
+
 #include "../Scene/SceneManager.h"
 #include "../Scene/SceneTitle.h"
 #include "../Graphics/Graphics.h"
@@ -139,6 +142,8 @@ void SceneGame::Update(const float& elapsedTime)
     // stage更新
     StageManager::Instance().Update(elapsedTime);
 
+    // エフェクト更新処理
+    EffectManager::Instance().Update(elapsedTime);
 }
 
 // Updateの後に呼び出される
@@ -167,6 +172,16 @@ void SceneGame::Render(const float& elapsedTime)
 
 
     StageManager::Instance().Render(elapsedTime);
+
+    // 3Dエフェクト描画
+    {
+        Camera& camera = Camera::Instance();
+        DirectX::XMFLOAT4X4 view, projection;
+        DirectX::XMStoreFloat4x4(&view, camera.GetV());
+        DirectX::XMStoreFloat4x4(&projection, camera.GetP());
+
+        EffectManager::Instance().Render(view, projection);
+    }
 
     // fadeOut
     {
