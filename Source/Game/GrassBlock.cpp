@@ -78,7 +78,7 @@ void GrassBlock::Render(float elapsedTime)
     DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
 
     // model描画(アニメーションなし想定)
-    model->skinned_meshes.render(deviceContext, transform, materialColor, nullptr);
+    model->skinned_meshes->render(deviceContext, transform, materialColor, nullptr);
 
     // BOUNDING_BOX
     {

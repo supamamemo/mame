@@ -23,7 +23,7 @@ public:
     
 public: // 取得・設定関数関連
     // アニメーションデータ取得
-    std::vector<animation>* GetAnimation() { return &skinned_meshes.animation_clips; };
+    std::vector<animation>* GetAnimation() { return &skinned_meshes->animation_clips; };
 
     // 現在のアニメーション番号の取得・設定
     const int GetCurrentAnimationIndex()& { return currentAnimationIndex; }
@@ -56,7 +56,7 @@ public: // デバッグ確認用
     bool isDebugBlendAnimation = true;     // アニメーションブレンドオンオフ
 
 public:
-    skinned_mesh skinned_meshes;
+    std::shared_ptr<skinned_mesh> skinned_meshes;
     Transform    transform;
 
     animation::keyframe keyframe = {};

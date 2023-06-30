@@ -19,30 +19,30 @@ DirectX::XMFLOAT4X4 Block::SetDebugModelTransform(DirectX::XMFLOAT4X4 transform)
     DirectX::XMFLOAT3 dimensions[] = {
 #if 1
             {
-                model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x,
-                model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y,
-                model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z,
+                model->skinned_meshes->boundingBox[1].x - model->skinned_meshes->boundingBox[0].x,
+                model->skinned_meshes->boundingBox[1].y - model->skinned_meshes->boundingBox[0].y,
+                model->skinned_meshes->boundingBox[1].z - model->skinned_meshes->boundingBox[0].z,
 
             },
 #else
             { 100.0f, 150.0f, 60.0f },
 #endif
             {
-                debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x,
-                debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y,
-                debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z,
+                debugModel->skinned_meshes->boundingBox[1].x - debugModel->skinned_meshes->boundingBox[0].x,
+                debugModel->skinned_meshes->boundingBox[1].y - debugModel->skinned_meshes->boundingBox[0].y,
+                debugModel->skinned_meshes->boundingBox[1].z - debugModel->skinned_meshes->boundingBox[0].z,
             },
         };
     DirectX::XMFLOAT3 centers[] = {
         {
-            model->skinned_meshes.boundingBox[0].x + (model->skinned_meshes.boundingBox[1].x - model->skinned_meshes.boundingBox[0].x) * 0.5f,
-            model->skinned_meshes.boundingBox[0].y + (model->skinned_meshes.boundingBox[1].y - model->skinned_meshes.boundingBox[0].y) * 0.5f,
-            model->skinned_meshes.boundingBox[0].z + (model->skinned_meshes.boundingBox[1].z - model->skinned_meshes.boundingBox[0].z) * 0.5f,
+            model->skinned_meshes->boundingBox[0].x + (model->skinned_meshes->boundingBox[1].x - model->skinned_meshes->boundingBox[0].x) * 0.5f,
+            model->skinned_meshes->boundingBox[0].y + (model->skinned_meshes->boundingBox[1].y - model->skinned_meshes->boundingBox[0].y) * 0.5f,
+            model->skinned_meshes->boundingBox[0].z + (model->skinned_meshes->boundingBox[1].z - model->skinned_meshes->boundingBox[0].z) * 0.5f,
         },
         {
-            debugModel->skinned_meshes.boundingBox[0].x + (debugModel->skinned_meshes.boundingBox[1].x - debugModel->skinned_meshes.boundingBox[0].x) * 0.5f,
-            debugModel->skinned_meshes.boundingBox[0].y + (debugModel->skinned_meshes.boundingBox[1].y - debugModel->skinned_meshes.boundingBox[0].y) * 0.5f,
-            debugModel->skinned_meshes.boundingBox[0].z + (debugModel->skinned_meshes.boundingBox[1].z - debugModel->skinned_meshes.boundingBox[0].z) * 0.5f,
+            debugModel->skinned_meshes->boundingBox[0].x + (debugModel->skinned_meshes->boundingBox[1].x - debugModel->skinned_meshes->boundingBox[0].x) * 0.5f,
+            debugModel->skinned_meshes->boundingBox[0].y + (debugModel->skinned_meshes->boundingBox[1].y - debugModel->skinned_meshes->boundingBox[0].y) * 0.5f,
+            debugModel->skinned_meshes->boundingBox[0].z + (debugModel->skinned_meshes->boundingBox[1].z - debugModel->skinned_meshes->boundingBox[0].z) * 0.5f,
         },
     };
 

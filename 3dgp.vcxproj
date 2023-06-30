@@ -240,6 +240,7 @@
     <ClCompile Include="Source\Mame\Graphics\Graphics.cpp" />
     <ClCompile Include="Source\Mame\Graphics\Model.cpp" />
     <ClCompile Include="Source\Mame\Graphics\ModelResource.cpp" />
+    <ClCompile Include="Source\Mame\Graphics\ResourceManager.cpp" />
     <ClCompile Include="Source\Mame\Input\GamePad.cpp" />
     <ClCompile Include="Source\Mame\Input\Input.cpp" />
     <ClCompile Include="Source\Mame\Input\Mouse.cpp" />
@@ -310,6 +311,7 @@
     <ClInclude Include="Source\Mame\Graphics\Model.h" />
     <ClInclude Include="Source\Mame\Graphics\ModelResource.h" />
     <ClInclude Include="Source\Mame\Graphics\RenderContext.h" />
+    <ClInclude Include="Source\Mame\Graphics\ResourceManager.h" />
     <ClInclude Include="Source\Mame\Input\GamePad.h" />
     <ClInclude Include="Source\Mame\Input\Input.h" />
     <ClInclude Include="Source\Mame\Input\Keyboard.h" />

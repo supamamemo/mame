@@ -29,11 +29,11 @@ void Character::Render(const float& /*elapsedTime*/)
     // model描画
     if (&model->keyframe)
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, modelColorAlpha), &model->keyframe);
+        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, modelColorAlpha), &model->keyframe);
     }
     else
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, modelColorAlpha), nullptr);
+        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, modelColorAlpha), nullptr);
     }
 
 
@@ -50,7 +50,7 @@ void Character::Render(const float& /*elapsedTime*/)
     debugTransform = SetDebugModelTransform(debugTransform);
 
     // 描画
-    debugModel->skinned_meshes.render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
+    debugModel->skinned_meshes->render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
 #endif
 
     // ラスタライザステート作成・設定
@@ -393,7 +393,7 @@ void Character::VerticalFall(const float& fallSpeed)
         isGround = false;
 
         // 下に落ちたら落下死・落下ミスしたときの処理を行う
-        if (GetTransform()->GetPosition().y < -10.0f)
+        if (GetTransform()->GetPosition().y < -15.0f)
         {
             OnFallDead(); 
         }
