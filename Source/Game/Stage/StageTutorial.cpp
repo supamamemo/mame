@@ -32,6 +32,14 @@ StageTutorial::StageTutorial()
 
     // 背景仮
     back = std::make_unique<Boss>("./resources/back.fbx");
+
+    // エフェクト読み込み
+    effect = new Effect("./resources/effect/e/bimu.efk");
+}
+
+StageTutorial::~StageTutorial()
+{
+    delete effect;
 }
 
 // 初期化
@@ -110,6 +118,9 @@ void StageTutorial::Update(const float& elapsedTime)
 
         PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
     }
+
+    // effect
+    effect->Play({ 0,0,0 });
 }
 
 // Updateの後に呼ばれる

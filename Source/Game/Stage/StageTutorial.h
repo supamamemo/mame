@@ -3,12 +3,14 @@
 
 #include "../Boss.h"
 
+#include "../../Mame/Graphics/Effect.h"
+
 // チュートリアルステージ
 class StageTutorial : public Stage
 {
 public:
     StageTutorial();
-    ~StageTutorial()override {}
+    ~StageTutorial()override;
 
     void Initialize()                     override;  // 初期化
     void Finalize()                       override;  // 終了処理
@@ -21,5 +23,7 @@ public:
 private:
     // 仮にbossクラスで表示している
     std::unique_ptr<Boss> back = nullptr;
+
+    Effect* effect = nullptr;
 };
 
