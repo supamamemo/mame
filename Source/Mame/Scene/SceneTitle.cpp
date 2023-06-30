@@ -378,7 +378,7 @@ void SceneTitle::DrawDebug()
         ImGui::TreePop();
     }
 
-    PlayerManager::Instance().GetPlayer()->model->skinned_meshes.Drawdebug();
+    PlayerManager::Instance().GetPlayer()->model->skinned_meshes->Drawdebug();
 
     spriteDissolve->DrawDebug();
 

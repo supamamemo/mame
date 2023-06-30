@@ -252,6 +252,7 @@
     <ClCompile Include="Source\Game\Terrain\TerrainPlains.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Mame\Graphics\ResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -456,6 +457,7 @@
     <ClInclude Include="Source\Game\Terrain\TerrainPlains.h">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Mame\Graphics\ResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">

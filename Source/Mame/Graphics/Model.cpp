@@ -1,13 +1,32 @@
 #include "Model.h"
+#include "ResourceManager.h"
+
+// TODO: リソースマネージャーの使用
+#define USE_RESOURCE_MANAGER
 
 Model::Model(ID3D11Device* device, const char* fbx_filename, bool triangulate, float sampling_rate)
-    :skinned_meshes(device, fbx_filename, triangulate, sampling_rate)
-{
+{   
+#ifdef USE_RESOURCE_MANAGER // リソースマネージャーあり
+    skinned_meshes = ResourceManager::Instance().LoadModelResource(
+        device, 
+        fbx_filename, 
+        triangulate, 
+        sampling_rate
+    );
+#else // リソースマネージャーなし
+    skinned_meshes = std::make_unique<skinned_mesh>(device, fbx_filename, triangulate, sampling_rate);
+#endif
+
 }
 
 Model::Model(ID3D11Device* device, const char* fbx_filename, std::vector<std::string>& animation_filenames, bool triangulate, float sampling_rate)
-    : skinned_meshes(device, fbx_filename, animation_filenames, triangulate, sampling_rate)
 {
+    skinned_meshes = ResourceManager::Instance().LoadModelResource(
+        device, fbx_filename, 
+        animation_filenames, 
+        triangulate, 
+        sampling_rate
+    );
 }
 
 
@@ -106,10 +125,10 @@ void Model::UpdateAnimation(const float& elapsedTime)
         };
 
         // アニメーションを滑らかに切り替える
-        skinned_meshes.blend_animations(keyframeArr, blendRate, keyframe);
+        skinned_meshes->blend_animations(keyframeArr, blendRate, keyframe);
 
         // アニメーショントランスフォーム更新
-        skinned_meshes.update_animation(keyframe);
+        skinned_meshes->update_animation(keyframe);
     }
     // キーフレームが一度も更新されていなくてアニメーションが再生しきっていなければ現在のフレームを保存
     else
@@ -123,7 +142,7 @@ bool Model::IsPlayAnimation() const
 {
     if (currentAnimationIndex < 0) return false;
 
-    const int animationIndexEnd = static_cast<int>(skinned_meshes.animation_clips.size());
+    const int animationIndexEnd = static_cast<int>(skinned_meshes->animation_clips.size());
     if (currentAnimationIndex >= animationIndexEnd) return false;
 
     return true;

@@ -14,8 +14,8 @@ Terrain::Terrain(const char* filename)
 
         create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
 
-        defaultMin_ = model->skinned_meshes.boundingBox[0] * 0.01f;
-        defaultMax_ = model->skinned_meshes.boundingBox[1] * 0.01f;
+        defaultMin_ = model->skinned_meshes->boundingBox[0] * 0.01f;
+        defaultMax_ = model->skinned_meshes->boundingBox[1] * 0.01f;
         geometricAABB_ = std::make_unique<GeometricAABB>(graphics.GetDevice(), defaultMin_, defaultMax_);
         UpdateAABB();
     }
@@ -49,11 +49,11 @@ void Terrain::Render(const float& elapsedTime)
     // model•`‰æ
     if (&model->keyframe)
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, GetMaterialColor(), &model->keyframe);
+        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, GetMaterialColor(), &model->keyframe);
     }
     else
     {
-        model->skinned_meshes.render(graphics.GetDeviceContext(), transform, GetMaterialColor(), nullptr);
+        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, GetMaterialColor(), nullptr);
     }
 
 
