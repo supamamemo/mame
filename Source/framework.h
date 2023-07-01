@@ -191,6 +191,7 @@ public:
 		break;
 
 		case WM_DESTROY:
+			
 			PostQuitMessage(0);
 			break;
 		case WM_CREATE:
@@ -198,7 +199,7 @@ public:
 		case WM_KEYDOWN:
 			if (wparam == VK_ESCAPE)
 			{
-				PostMessage(hwnd, WM_CLOSE, 0, 0);
+				//PostMessage(hwnd, WM_CLOSE, 0, 0);
 			}
 			break;
 		case WM_ENTERSIZEMOVE:

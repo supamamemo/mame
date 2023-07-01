@@ -2,8 +2,9 @@
 
 #pragma comment(lib, "d3d11.lib")
 
-#include "./Mame/Scene/SceneTitle.h"
-#include "./Mame/Scene/SceneManager.h"
+#include "Mame/Graphics/EffectManager.h"
+#include "Mame/Scene/SceneTitle.h"
+#include "Mame/Scene/SceneManager.h"
 
 framework::framework(HWND hwnd)
     : hwnd(hwnd),
@@ -22,6 +23,8 @@ bool framework::initialize()
     create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/luminance_extraction_ps.cso", pixel_shaders[0].GetAddressOf());
     create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/blur_ps.cso", pixel_shaders[1].GetAddressOf());
 
+    // effectManager
+    EffectManager::Instance().Initialize();
 
     // XAUDIO2
     hr = XAudio2Create(xAudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
@@ -35,6 +38,8 @@ bool framework::initialize()
     se[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/jump.wav");
     se[1] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/coin.wav");
 
+
+    Mame::Scene::SceneManager::Instance().Initialize();
     // シーンタイトル
     Mame::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
 
@@ -342,7 +347,8 @@ bool framework::uninitialize()
 
 framework::~framework()
 {
-
+    // effectmanager
+    EffectManager::Instance().Finalize();
 }
 
 

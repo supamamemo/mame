@@ -105,6 +105,7 @@ void StagePlains::Initialize()
     playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1.5f, posZ));
     playerManager.Initialize();
 
+
     // enemy‰Šú‰»
     EnemyManager& enemyManager = EnemyManager::Instance();
     {

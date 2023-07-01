@@ -249,12 +249,20 @@
     <ClCompile Include="Source\Game\Terrain\TerrainManager.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Pose.cpp">
+      <Filter>mamelib\Game</Filter>
+    </ClCompile>
     <ClCompile Include="Source\Game\Terrain\TerrainPlains.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Mame\Graphics\ResourceManager.cpp">
+
+    <ClCompile Include="Source\Game\Stage\StageTutorial.cpp" />
+    <ClCompile Include="Source\Mame\Graphics\Effect.cpp">
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClCompile>
+
+    <ClCompile Include="Source\Mame\Graphics\ResourceManager.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -456,12 +464,20 @@
     <ClInclude Include="Source\Game\Terrain\TerrainManager.h">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Pose.h">
+      <Filter>mamelib\Game</Filter>
+    </ClInclude>
     <ClInclude Include="Source\Game\Terrain\TerrainPlains.h">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Mame\Graphics\ResourceManager.h">
+
+    <ClInclude Include="Source\Game\Stage\StageTutorial.h" />
+    <ClInclude Include="Source\Mame\Graphics\Effect.h">
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClInclude>
+
+    <ClInclude Include="Source\Mame\Graphics\ResourceManager.h" />
+
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">

@@ -119,15 +119,15 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;USE_IMGUI;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\External\DirectXTK-main\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.2\include;.\External\cereal-master\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\External\DirectXTK-main\Inc;C:\Program Files\Autodesk\FBX\FBX SDK\2020.2\include;.\External\cereal-master\include;.\External\Effekseer162a\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2019\x64\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2020.2\lib\vs2019\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\External\DirectXTK-main\Bin\Desktop_2019\x64\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2020.2\lib\vs2019\x64\debug;.\External\Effekseer162a\lib\vs2019\MD\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;DirectXTK.lib;Effekseer.lib;EffekseerRendererDX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -218,11 +218,13 @@
     <ClCompile Include="Source\Game\Mathf.cpp" />
     <ClCompile Include="Source\Game\Player.cpp" />
     <ClCompile Include="Source\Game\PlayerManager.cpp" />
+    <ClCompile Include="Source\Game\Pose.cpp" />
     <ClCompile Include="Source\Game\spriteDissolve.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
     <ClCompile Include="Source\Game\Stage\StageBoss.cpp" />
     <ClCompile Include="Source\Game\Stage\StageManager.cpp" />
     <ClCompile Include="Source\Game\Stage\StagePlains.cpp" />
+    <ClCompile Include="Source\Game\Stage\StageTutorial.cpp" />
     <ClCompile Include="Source\Game\StateMachine.cpp" />
     <ClCompile Include="Source\Game\Terrain\Terrain.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainBoss.cpp" />
@@ -233,6 +235,7 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Mame\Audio.cpp" />
     <ClCompile Include="Source\Mame\Graphics\Camera.cpp" />
+    <ClCompile Include="Source\Mame\Graphics\Effect.cpp" />
     <ClCompile Include="Source\Mame\Graphics\EffectManager.cpp" />
     <ClCompile Include="Source\Mame\Graphics\Graphics.cpp" />
     <ClCompile Include="Source\Mame\Graphics\Model.cpp" />
@@ -284,11 +287,13 @@
     <ClInclude Include="Source\Game\OperatorXMFLOAT3.h" />
     <ClInclude Include="Source\Game\Player.h" />
     <ClInclude Include="Source\Game\PlayerManager.h" />
+    <ClInclude Include="Source\Game\Pose.h" />
     <ClInclude Include="Source\Game\spriteDissolve.h" />
     <ClInclude Include="Source\Game\Stage\Stage.h" />
     <ClInclude Include="Source\Game\Stage\StageBoss.h" />
     <ClInclude Include="Source\Game\Stage\StageManager.h" />
     <ClInclude Include="Source\Game\Stage\StagePlains.h" />
+    <ClInclude Include="Source\Game\Stage\StageTutorial.h" />
     <ClInclude Include="Source\Game\State.h" />
     <ClInclude Include="Source\Game\StateMachine.h" />
     <ClInclude Include="Source\Game\Terrain\Terrain.h" />
@@ -300,6 +305,7 @@
     <ClInclude Include="Source\high_resolution_timer.h" />
     <ClInclude Include="Source\Mame\Audio.h" />
     <ClInclude Include="Source\Mame\Graphics\Camera.h" />
+    <ClInclude Include="Source\Mame\Graphics\Effect.h" />
     <ClInclude Include="Source\Mame\Graphics\EffectManager.h" />
     <ClInclude Include="Source\Mame\Graphics\Graphics.h" />
     <ClInclude Include="Source\Mame\Graphics\Model.h" />

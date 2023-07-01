@@ -1,4 +1,7 @@
 #include "SceneGame.h"
+
+#include "../Graphics/EffectManager.h"
+
 #include "../Scene/SceneManager.h"
 #include "../Scene/SceneTitle.h"
 #include "../Graphics/Graphics.h"
@@ -7,6 +10,7 @@
 #include "../../Game/Stage/StageManager.h"
 #include "../../Game/Stage/StagePlains.h"
 #include "../../Game/Stage/StageBoss.h"
+#include "../../Game/Stage/StageTutorial.h"
 
 #include "../../Game/Terrain/Terrain.h"
 
@@ -14,6 +18,9 @@
 // コンストラクタ
 SceneGame::SceneGame()
 {
+    // シーンの属性を設定
+    SetSceneType(static_cast<int>(Mame::Scene::TYPE::GAME));
+
     spriteDissolve[0] = std::make_unique<SpriteDissolve>();
     spriteDissolve[1] = std::make_unique<SpriteDissolve>(L"./resources/fade.jpg");
 }
@@ -53,8 +60,9 @@ void SceneGame::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
-    StageManager::Instance().ChangeStage(new StagePlains);
+    //StageManager::Instance().ChangeStage(new StagePlains);
     //StageManager::Instance().ChangeStage(new StageBoss);
+    StageManager::Instance().ChangeStage(new StageTutorial);
 }
 
 // 終了化
@@ -134,6 +142,8 @@ void SceneGame::Update(const float& elapsedTime)
     // stage更新
     StageManager::Instance().Update(elapsedTime);
 
+    // エフェクト更新処理
+    EffectManager::Instance().Update(elapsedTime);
 }
 
 // Updateの後に呼び出される
@@ -162,6 +172,16 @@ void SceneGame::Render(const float& elapsedTime)
 
 
     StageManager::Instance().Render(elapsedTime);
+
+    // 3Dエフェクト描画
+    {
+        Camera& camera = Camera::Instance();
+        DirectX::XMFLOAT4X4 view, projection;
+        DirectX::XMStoreFloat4x4(&view, camera.GetV());
+        DirectX::XMStoreFloat4x4(&projection, camera.GetP());
+
+        EffectManager::Instance().Render(view, projection);
+    }
 
     // fadeOut
     {

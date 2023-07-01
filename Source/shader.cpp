@@ -256,6 +256,7 @@ void Shader::Begin(ID3D11DeviceContext* dc, const RenderContext& rc)
     CbScene data{};
     //DirectX::XMStoreFloat4x4(&data.viewProjection, V * P);
     DirectX::XMStoreFloat4x4(&data.viewProjection, camera.GetV() * camera.GetP());
+    
     data.lightDirection = { view.position.x,view.position.y,view.position.z,view.position.w };
     data.camera_position = { view.camera.x,view.camera.y,view.camera.z,view.camera.w };
     dc->UpdateSubresource(sceneConstantBuffer[0].Get(), 0, 0, &data, 0, 0);

@@ -1,23 +1,16 @@
 #pragma once
-
 #include "Stage.h"
 
-#include "../PlayerManager.h"
 #include "../Boss.h"
 
-#include "../CannonBall.h"
+#include "../../Mame/Graphics/Effect.h"
 
-
-#include "../EnemyTofu.h"
-#include "../Terrain/Terrain.h"
-
-#include "../../sprite.h"
-
-class StageBoss : public Stage
+// チュートリアルステージ
+class StageTutorial : public Stage
 {
 public:
-    StageBoss();
-    ~StageBoss() override {}
+    StageTutorial();
+    ~StageTutorial()override;
 
     void Initialize()                     override;  // 初期化
     void Finalize()                       override;  // 終了処理
@@ -28,22 +21,9 @@ public:
     void DrawDebug()                      override;  // デバッグ描画
 
 private:
-    //static const int TERRAIN_COUNT = 3;
+    // 仮にbossクラスで表示している
+    std::unique_ptr<Boss> back = nullptr;
 
-    // 仮にbossクラスで表示してる
-    std::unique_ptr<Boss> back;
-
-
-    std::unique_ptr<EnemyTofu> tofu;
-
-    std::unique_ptr<Sprite> chefHat = nullptr;
-
-    struct SpriteStruct
-    {
-        DirectX::XMFLOAT2 pos{ 440,10 };
-        DirectX::XMFLOAT2 texPos{ 100,100 };
-    }spr;
-
-
+    Effect* effect = nullptr;
 };
 

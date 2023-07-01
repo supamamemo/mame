@@ -9,13 +9,18 @@
 #include "../../misc.h"
 #include "../../texture.h"
 
+
+
 // todo: 後で消す
 #define FADE 1
-#define MAME 0
+#define MAME 1
 
 // コンストラクタ
 SceneTitle::SceneTitle()
 {
+    // シーンの属性を設定
+    SetSceneType(static_cast<int>(Mame::Scene::TYPE::TITLE));
+
     spriteDissolve = std::make_unique<SpriteDissolve>();
 
     // player生成
@@ -166,8 +171,8 @@ void SceneTitle::Initialize()
             //create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_ps.cso", dummy_sprite->GetPixelShaderAddress());
 
             // UVScroll
-            create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-            create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_ps.cso", dummy_sprite->GetPixelShaderAddress());
+            //create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
+            //create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_ps.cso", dummy_sprite->GetPixelShaderAddress());
         }
     }
 }
@@ -198,6 +203,8 @@ void SceneTitle::Update(const float& elapsedTime)
 
     // ボタンを押したらfadeOut始まる
     if (gamePad.GetButtonDown() & GamePad::BTN_A)spriteDissolve->SetFade(true);
+
+
 
     // fadeOut
     if (spriteDissolve->IsFade())
@@ -321,10 +328,10 @@ void SceneTitle::Render(const float& elapsedTime)
         DirectX::XMMATRIX WORLD = castelModel->GetTransform()->CalcWorldMatrix(0.01f);
         DirectX::XMFLOAT4X4 world = {};
         DirectX::XMStoreFloat4x4(&world, WORLD);
-        castelModel->skinned_meshes.render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
+        castelModel->skinned_meshes->render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
         WORLD = groundModel->GetTransform()->CalcWorldMatrix(0.01f);
         DirectX::XMStoreFloat4x4(&world, WORLD);
-        groundModel->skinned_meshes.render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
+        groundModel->skinned_meshes->render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
 #endif
     }
 

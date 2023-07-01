@@ -7,6 +7,12 @@
 #include "texture.h"
 #include "shader.h"
 
+void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, DirectX::XMFLOAT4 color)
+{
+    render(immediate_context, dx, dy, dw, dh, color.x, color.y, color.z, color.w, 0.0f, 0.0f, 0.0f,
+        static_cast<float>(texture2d_desc.Width), static_cast<float>(texture2d_desc.Height));
+}
+
 void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, float dw, float dh, float r, float g, float b, float a, float angle)
 {
     render(immediate_context, dx, dy, dw, dh, r, g, b, a, angle, 0.0f, 0.0f, static_cast<float>(texture2d_desc.Width), static_cast<float>(texture2d_desc.Height));
@@ -142,7 +148,7 @@ void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
 
 
 // コンストラクタ
-Sprite::Sprite(ID3D11Device* device, const wchar_t* filename)
+Sprite::Sprite(ID3D11Device* device, const wchar_t* filename, const char* psFilename)
 {
     HRESULT hr{ S_OK };
 
@@ -183,7 +189,7 @@ Sprite::Sprite(ID3D11Device* device, const wchar_t* filename)
 
 
     // <4> 入力レイアウトオブジェクトの生成
-#if 0
+#if 1
     // D3D11_INPUT_ELEMENT_DESC構造体
     D3D11_INPUT_ELEMENT_DESC input_element_desc[]
     {
@@ -196,14 +202,16 @@ Sprite::Sprite(ID3D11Device* device, const wchar_t* filename)
     };
 #endif
 
-#if 0
+#if 1
     // シェーダー関連
-    create_vs_from_cso(device, "sprite_vs.cso", vertex_shader.GetAddressOf(), input_layout.GetAddressOf(), input_element_desc, _countof(input_element_desc));
-    create_ps_from_cso(device, "sprite_ps.cso", pixel_shader.GetAddressOf());
+    
+    create_vs_from_cso(device, "./resources/Shader/sprite_vs.cso", vertex_shader.GetAddressOf(), input_layout.GetAddressOf(), input_element_desc, _countof(input_element_desc));
+    create_ps_from_cso(device,
+        (psFilename != nullptr) ? psFilename : "./resources/Shader/sprite_ps.cso", pixel_shader.GetAddressOf());
 
-    create_vs_from_cso(device, "UVScroll_vs.cso", vertex_shader.GetAddressOf(), input_layout.GetAddressOf(), input_element_desc, _countof(input_element_desc));
+    //create_vs_from_cso(device, "UVScroll_vs.cso", vertex_shader.GetAddressOf(), input_layout.GetAddressOf(), input_element_desc, _countof(input_element_desc));
 
-    create_ps_from_cso(device, "UVScroll_ps.cso", pixel_shader.GetAddressOf());
+    //create_ps_from_cso(device, "UVScroll_ps.cso", pixel_shader.GetAddressOf());
 #endif
 
     // テクスチャのロード
