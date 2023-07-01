@@ -94,8 +94,7 @@ void CannonBall::Render(const float& elapsedTime)
     {
         const float& enemyPosX  = GetTransform()->GetPosition().x;
         const float& playerPosX = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x;
-        const float vecX        = enemyPosX - playerPosX;
-        const float lengthX     = sqrtf(vecX * vecX);
+        const float  lengthX    = fabsf(enemyPosX - playerPosX);
 
         if (lengthX > renderLengthXLimit_) return;
     }

@@ -310,15 +310,11 @@ void Character::VerticalFall(const float& fallSpeed)
             if (Collision::IntersectAABBVsAABB(this->aabb_, terrain->aabb_))
             {
                 // 上下左右にそれぞれ重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
-                NO_CONST float vec = 0.0f;
-                vec                         = aabb_.min.y - terrain->aabb_.max.y;
-                const float overlapUp       = sqrtf(vec * vec); // 上からめり込んでいる
-                vec                         = aabb_.max.y - terrain->aabb_.min.y;
-                const float overlapBottom   = sqrtf(vec * vec); // 下からめり込んでいる
-                vec                         = aabb_.min.x - terrain->aabb_.max.x;
-                const float overlapRight    = sqrtf(vec * vec); // 右からめり込んでいる
-                vec                         = aabb_.max.x - terrain->aabb_.min.x;
-                const float overlapLeft     = sqrtf(vec * vec); // 左からめり込んでいる
+                // 符号がマイナスでもプラスの距離が求められるように絶対値にする
+                const float overlapUp       = fabsf(aabb_.min.y - terrain->aabb_.max.y); // 上からめり込んでいる
+                const float overlapBottom   = fabsf(aabb_.max.y - terrain->aabb_.min.y); // 下からめり込んでいる
+                const float overlapRight    = fabsf(aabb_.min.x - terrain->aabb_.max.x); // 右からめり込んでいる
+                const float overlapLeft     = fabsf(aabb_.max.x - terrain->aabb_.min.x); // 左からめり込んでいる
                 // 一番小さい(重なっていない)値を求める(
                 const float overlapY        = (std::min)(overlapUp, overlapBottom);
                 const float overlapX        = (std::min)(overlapRight, overlapLeft);
@@ -388,14 +384,18 @@ void Character::VerticalFall(const float& fallSpeed)
     // 地形に当たっていなければ落下させる
     if (!isHitY)
     {
-        // 空中に浮いている
         GetTransform()->AddPositionY(fallSpeed);
         isGround = false;
 
-        // 下に落ちたら落下死・落下ミスしたときの処理を行う
+        // それなりに下に落ちたら落下死・落下ミスしたときの処理を行う
         if (GetTransform()->GetPosition().y < -15.0f)
         {
             OnFallDead(); 
+        }
+        // 画面から見えなくなるくらいまで落ちたらX速度を0にする
+        else if (GetTransform()->GetPosition().y < -3.0f)
+        {
+            velocity.x = 0.0f;
         }
     }
 }
@@ -423,15 +423,11 @@ void Character::VerticalRise(const float& riseSpeed)
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
             {
                 // 上下左右のそれぞれ重なっている値を求める
-                NO_CONST float vec = 0.0f;
-                vec                         = aabb_.min.y - terrain->aabb_.max.y;
-                const float overlapUp       = sqrtf(vec * vec); // 上からめり込んでいる
-                vec                         = aabb_.max.y - terrain->aabb_.min.y;
-                const float overlapBottom   = sqrtf(vec * vec); // 下からめり込んでいる
-                vec                         = aabb_.min.x - terrain->aabb_.max.x;
-                const float overlapRight    = sqrtf(vec * vec); // 右からめり込んでいる
-                vec                         = aabb_.max.x - terrain->aabb_.min.x;
-                const float overlapLeft     = sqrtf(vec * vec); // 左からめり込んでいる
+                // 符号がマイナスでもプラスの距離が求められるように絶対値にする
+                const float overlapUp       = fabsf(aabb_.min.y - terrain->aabb_.max.y); // 上からめり込んでいる
+                const float overlapBottom   = fabsf(aabb_.max.y - terrain->aabb_.min.y); // 下からめり込んでいる
+                const float overlapRight    = fabsf(aabb_.min.x - terrain->aabb_.max.x); // 右からめり込んでいる
+                const float overlapLeft     = fabsf(aabb_.max.x - terrain->aabb_.min.x); // 左からめり込んでいる
                 // 一番小さい(重なっていない)値を求める
                 const float overlapY        = (std::min)(overlapUp, overlapBottom);
                 const float overlapX        = (std::min)(overlapRight, overlapLeft);
@@ -562,15 +558,11 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
             {
                 // 上下左右のそれぞれ重なっている値を求める
-                NO_CONST float vec = 0.0f;
-                vec                         = aabb_.min.y - terrain->aabb_.max.y;
-                const float overlapUp       = sqrtf(vec * vec); // 上からめり込んでいる
-                vec                         = aabb_.max.y - terrain->aabb_.min.y;
-                const float overlapBottom   = sqrtf(vec * vec); // 下からめり込んでいる
-                vec                         = aabb_.min.x - terrain->aabb_.max.x;
-                const float overlapRight    = sqrtf(vec * vec); // 右からめり込んでいる
-                vec                         = aabb_.max.x - terrain->aabb_.min.x;
-                const float overlapLeft     = sqrtf(vec * vec); // 左からめり込んでいる
+                // 符号がマイナスでもプラスの距離が求められるように絶対値にする
+                const float overlapUp       = fabsf(aabb_.min.y - terrain->aabb_.max.y); // 上からめり込んでいる
+                const float overlapBottom   = fabsf(aabb_.max.y - terrain->aabb_.min.y); // 下からめり込んでいる
+                const float overlapRight    = fabsf(aabb_.min.x - terrain->aabb_.max.x); // 右からめり込んでいる
+                const float overlapLeft     = fabsf(aabb_.max.x - terrain->aabb_.min.x); // 左からめり込んでいる
                 // 一番重なっていない値を求める
                 const float overlapY        = (std::min)(overlapUp, overlapBottom);
                 const float overlapX        = (std::min)(overlapRight, overlapLeft);

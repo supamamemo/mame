@@ -33,8 +33,7 @@ void Terrain::Render(const float& elapsedTime)
     {
         const float terrainPosX = GetTransform()->GetPosition().x;
         const float playerPosX  = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x;
-        const float vecX        = terrainPosX - playerPosX;
-        const float lengthX     = sqrtf(vecX * vecX);
+        const float lengthX     = fabsf(terrainPosX - playerPosX);
 
         if (lengthX > renderLengthXLimit_) return;
     }

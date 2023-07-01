@@ -346,8 +346,7 @@ namespace TOFU
         const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
 
         // プレイヤーとの距離を算出
-        const float vec    = playerPos.x - ownerPos.x;
-        const float length = sqrtf(vec * vec);
+        const float length = fabsf(playerPos.x - ownerPos.x);
 
         // プレイヤーとの距離が索敵距離より遠ければreturn
         if (length > owner->GetSerchLength()) return;

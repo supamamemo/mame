@@ -702,8 +702,7 @@ void Player::UpdateJumpState(const float& elapsedTime)
     if (GetMoveVecY() < 0.0f)
     {      
         // ジャンプ開始時のY位置と現在のY位置からジャンプした高さを算出
-        const float& vecY = GetTransform()->GetPosition().y - jumpedPositionY;
-        const float jumpHeight = sqrtf(vecY * vecY);
+        const float jumpHeight = fabsf(GetTransform()->GetPosition().y - jumpedPositionY);
 
         // ヒップドロップに必要な距離(高さ)に達していたらヒップドロップステートへ遷移
         if (jumpHeight >= needHipDropHeight)
@@ -719,10 +718,6 @@ void Player::UpdateJumpState(const float& elapsedTime)
 void Player::TransitionHipDropState()
 {
     state = State::HipDrop;
-
-    //// プレイヤーの正規化移動Xベクトルを求める(ステート遷移時に計算する)
-    //const float length = sqrtf(saveMoveVecX * saveMoveVecX);
-    //saveMoveVec_n      = saveMoveVecX / length;
 
     gravity         = hipDropGravity;  // 落下速度を上昇
     isBounce        = true;            // バウンスさせる

@@ -36,7 +36,7 @@ inline const DirectX::XMFLOAT3 XMFloat3Normalize(const DirectX::XMFLOAT3& vec)
 
 	if (length <= 0.0f) return DirectX::XMFLOAT3(0,0,0);
 
-	return DirectX::XMFLOAT3(vec / length);
+	return (vec / length);
 }
 
 // XMFLOAT3“¯Žm‚ÌŠOÏ‚ðŒvŽZ(‡”Ô‚É’ˆÓ)
