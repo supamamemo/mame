@@ -47,8 +47,8 @@ Player::~Player()
 
 void Player::Initialize()
 {
+    // ※ここの初期回転値によって振り向きの方向が変わるので注意
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
-    GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
 }
 
 
@@ -157,7 +157,7 @@ void Player::DrawDebug()
     // ジャンプ関連パラメータ
     if (ImGui::TreeNode("Jump"))
     {
-        ImGui::SliderFloat("jumpSpeed",  &jumpSpeed,       0.0f, 30.0f);   // ジャンプ速度
+        ImGui::SliderFloat("jumpSpeed_",  &jumpSpeed_,       0.0f, 30.0f);   // ジャンプ速度
         ImGui::SliderFloat("d_JumpTime", &defaultJumpTime, 0.0f, 1.0f);    // ジャンプし続けられる時間
         ImGui::SliderInt("jumpLimit",    &jumpLimit,       1,    5);       // ジャンプ最大回数
 
@@ -221,7 +221,7 @@ const bool Player::InputMove(const float& elapsedTime)
     const float moveVecX = GetMoveVecX();
 
     // 移動処理
-    Move(moveVecX, moveSpeed);
+    Move(moveVecX, moveSpeed_);
 
     // 移動ベクトルがゼロベクトルじゃなければ（更新されていたら）保存する
     // ※保存することでボタンを押し続けなくても自動的に旋回しきるようになる
@@ -313,7 +313,7 @@ void Player::OnLanding()
     jumpCount = 0;
 
     // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
-    if (moveSpeed == runMoveSpeed)
+    if (moveSpeed_ == runMoveSpeed)
     {
         TransitionRunState();
         return;
@@ -459,12 +459,12 @@ void Player::UpdateIdleState(const float& elapsedTime)
         const GamePad& gamePad = Input::Instance().GetGamePad();
         if (gamePad.GetButtonDown() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
-            moveSpeed       = defaultMoveSpeed; // 移動速度をリセット
+            moveSpeed_       = defaultMoveSpeed; // 移動速度をリセット
             TransitionDashState();
             return;
         }
         // 移動速度が走行速度と同じ（走行状態）でダッシュキーが押され続けていれば走行ステートへ遷移
-        else if (moveSpeed == runMoveSpeed && gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
+        else if (moveSpeed_ == runMoveSpeed && gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
             TransitionRunState();
             return;
@@ -472,7 +472,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
         // 移動入力だけなら歩行ステートへ遷移
         else
         {
-            moveSpeed       = defaultMoveSpeed; // 移動速度をリセット
+            moveSpeed_       = defaultMoveSpeed; // 移動速度をリセット
             TransitionWalkState();
             return;
         }
@@ -486,7 +486,7 @@ void Player::TransitionWalkState()
 {
     state = State::Walk;
 
-    PlayAnimation(Anim_Walk, true);
+    PlayAnimation(Anim_Walk, true, 1.0f, 0.25f);
 }
 
 // 歩行ステート更新処理
@@ -587,7 +587,7 @@ void Player::TransitionRunState()
     state = State::Run;
 
     // 走行時の速度パラメータを設定
-    moveSpeed       = runMoveSpeed;
+    moveSpeed_       = runMoveSpeed;
     acceleration    = runAcceleration;
     friction        = runFriction;
 
@@ -633,7 +633,7 @@ void Player::UpdateRunState(const float& elapsedTime)
         if (!(gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y)))
         {
             // 速度パラメータをリセット
-            moveSpeed    = defaultMoveSpeed;
+            moveSpeed_    = defaultMoveSpeed;
             acceleration = defaultAcceleration;
             friction     = defaultFriction;
             TransitionWalkState();
@@ -688,7 +688,7 @@ void Player::UpdateJumpState(const float& elapsedTime)
         const GamePad& gamePad = Input::Instance().GetGamePad();
         if (gamePad.GetButton() & (GamePad::BTN_A | GamePad::BTN_B))
         {
-            Jump(jumpSpeed);            // ジャンプ処理
+            Jump(jumpSpeed_);            // ジャンプ処理
             jumpTimer -= elapsedTime;   // ジャンプタイマー減算
         }
         // ジャンプボタンを離したらジャンプ終了

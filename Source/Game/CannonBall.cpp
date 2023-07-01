@@ -73,7 +73,7 @@ void CannonBall::Update(const float& elapsedTime)
         return;
     }
 
-    float speed = (directionZ > 0) ? moveSpeed * elapsedTime : -moveSpeed * elapsedTime;
+    float speed = (directionZ > 0) ? moveSpeed_ * elapsedTime : -moveSpeed_ * elapsedTime;
 
     DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
     pos.z += speed;

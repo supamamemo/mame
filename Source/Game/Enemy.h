@@ -18,6 +18,9 @@ public:
     virtual void Render(const float& elapsedTime);          // 描画処理
     virtual void DrawDebug()                        = 0;    // デバッグ描画
 
+    virtual void OnAttacked()   {};                         // 攻撃したときに呼ばれる
+    virtual void OnHitFriend()  {};                         // 味方に当たった時に呼ばれる
+
     void OnFallDead() override;                             // 落下死・落下ミスしたときに呼ばれる
 
     void Destroy();                                         // エネミー削除
@@ -25,6 +28,12 @@ public:
     void CollisionEnemyVsPlayer();                          // エネミーとプレイヤーの衝突判定処理  
 
 public:
+    // 移動処理
+    void Move(const float vx, const float moveSpeed)
+    {
+        Character::Move(vx, moveSpeed);
+    }
+
     // 旋回処理
     bool Turn(
         const    float elapsedTime,
@@ -32,12 +41,22 @@ public:
         NO_CONST float turnSpeed
     );
 
+    // ジャンプ処理
+    void Jump(const float jumpSpeed)
+    {
+        Character::Jump(jumpSpeed);
+    }
+
 public:
     // ステートマシン
     StateMachine* GetStateMachine()const { return stateMachine.get(); }
 
     const bool GetMoveRight() const { return moveRight; }
     void SetMoveRight(const bool r) { moveRight = r; }
+
+    // 目的地の取得・設定
+    const float& GetDestination() const { return destination_; }
+    void SetDestination(const float& destination) { destination_ = destination; }
 
     // 移動範囲の半径の取得・設定
     const float& GetMoveRangeRadius() const { return moveRangeRadius_; }
@@ -55,6 +74,10 @@ public:
     const float& GetMoveDirectionX() const { return moveDirectionX_; }
     void SetMoveDirectionX(const float& moveDirectionX) { moveDirectionX_ = moveDirectionX; }
 
+    // 味方に当たったかの取得・設定
+    const bool GetIsHitFriend() const { return isHitFrined_; }
+    void SetIsHitFriend(const bool isHitFriend) { isHitFrined_ = isHitFriend; }
+
 public: // static変数
     static float renderLengthXLimit_;   // 敵を描画する距離制限
 
@@ -64,12 +87,15 @@ public:
     CannonBallManager cannonBallManager = {};               // 大砲の弾マネージャー
 
 protected:
+    float destination_      = 0.0f;     // 目的地
     float moveRangeCenterX_ = 0.0f;     // 移動範囲の中心X
-    float moveRangeRadius_  = 3.0f;     // 移動範囲の半径
-    float serchLength_      = 3.0f;     // 索敵できる距離
+    float moveRangeRadius_  = 6.0f;     // 移動範囲の半径
+    float serchLength_      = 6.0f;     // 索敵できる距離
     float moveDirectionX_   = 1.0f;     // 移動方向X  
 
+    bool  isHitFrined_      = false;    // 味方に当たったか
+
 private:
-    bool  moveRight  = true;            // 右に進むかどうか
+    bool moveRight          = true; // 右に進むかどうか
 };
 

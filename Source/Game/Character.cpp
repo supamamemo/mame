@@ -482,10 +482,12 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
 // 水平移動更新処理
 void Character::UpdateHorizontalMove(const float& elapsedTime)
 {
-    // 水平速力量計算
-    const float velocityLengthX = sqrtf(velocity.x * velocity.x);
+    // X速度がゼロでも当たり判定が機能するように消している
 
-    if (velocityLengthX > 0.0f)
+    // 水平速力量計算
+    //const float velocityLengthX = sqrtf(velocity.x * velocity.x);
+
+    //if (velocityLengthX > 0.0f)
     {
         // 水平移動値
         const float mx = velocity.x * elapsedTime;
@@ -557,6 +559,10 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
                 // 押し戻し後のAABBの最小座標と最大座標を更新
                 UpdateAABB();
 
+                // 壁に当たった時の処理
+                if (!isHitWall_) OnHitWall();
+                isHitWall_ = true;
+
                 break;
             }
         }
@@ -567,6 +573,7 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
     {
         // 移動処理
         GetTransform()->AddPositionX(horizontalSpeed);
+        isHitWall_ = false;
     }
 }
 

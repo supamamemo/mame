@@ -27,6 +27,9 @@ public:
     virtual void Render(const float& elapsedTime);  // 描画処理
     virtual void DrawDebug();                       // デバッグ描画
 
+    void UpdateAABB();                              // AABB更新処理
+
+
 public:
     // ダメージを与える
     virtual bool ApplyDamage(
@@ -49,7 +52,6 @@ protected:
     void Jump(const float& jumpSpeed);
 
 protected:
-    void UpdateAABB();                                      // AABB更新処理
     void UpdateVelocity(const float& elapsedTime);          // 速力処理更新処理
     void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
 
@@ -60,6 +62,7 @@ protected:
     virtual void OnDamaged()  {}                             // ダメージを受けたときに呼ばれる  
     virtual void OnDead()     {}                             // 死亡したときに呼ばれる
     virtual void OnFallDead() {}                             // 落下死・落下ミスしたときに呼ばれる
+    virtual void OnHitWall()  {}                             // 壁に当たった時の処理
 
 private: 
     void UpdateVerticalVelocity(const float& elapsedFrame);     // 垂直速力更新処理
@@ -104,17 +107,31 @@ public: // 取得・設定関数関連
     const DirectX::XMFLOAT4& SetMaterialColor() const { return materialColor; }
     void SetMaterialColor(const DirectX::XMFLOAT4& color) { materialColor = color; }
 
+    // 速度の設定
+    void SetVelocityX(const float velocityX) { velocity.x = velocityX; }
+    void SetVelocityY(const float velocityY) { velocity.y = velocityY; }
+
     // 無敵かどうかの取得・設定
     const bool GetIsInvincible() const { return isInvincible; }
-    void SetIsInvincible(const bool& invincible) { isInvincible = invincible; }
+    void SetIsInvincible(const bool invincible) { isInvincible = invincible; }
 
     // 移動速度の取得・設定
-    const float GetMoveSpeed() const { return moveSpeed; }
-    void SetMoveSpeed(const float& speed) { moveSpeed = speed; }
+    const float GetMoveSpeed() const { return moveSpeed_; }
+    void SetMoveSpeed(const float speed) { moveSpeed_ = speed; }
 
     // 旋回速度の取得・設定
     const float GetTurnSpeed() const { return turnSpeed_; }
     void SetTurnSpeed(const float turnSpeed) { turnSpeed_ = turnSpeed; }
+
+    // ジャンプ速度の取得・設定
+    const float GetJumpSpeed() const { return jumpSpeed_; }
+    void SetJumpSpeed(const float jumpSpeed) { jumpSpeed_ = jumpSpeed; }
+
+    // 体力の取得
+    const int& GetHealth() const { return health; }
+
+    // 地面についているかどうかの取得
+    const bool& GetIsGround() const { return isGround; }
 
     // AABB再設定(当たり判定のサイズを途中で変えたいときなどに)
     void ResetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max);
@@ -151,9 +168,9 @@ protected:
     float       airControl          =   0.3f;                       // 空中制御
 
     float       defaultMoveSpeed    =  5.0f;                        // 移動速度初期値
-    float       moveSpeed           =  defaultMoveSpeed;            // 移動速度(最大移動速度に代入される)
+    float       moveSpeed_          =  defaultMoveSpeed;            // 移動速度(最大移動速度に代入される)
     float       turnSpeed_          =  ToRadian(900.0f);            // 旋回速度(180.f * 5)
-    float       jumpSpeed           =  10.0f;                       // ジャンプ速度
+    float       jumpSpeed_           = 10.0f;                       // ジャンプ速度
     float       maxMoveSpeed        =  5.0f;                        // 最大移動速度
 
     float       slopeRate           =   1.0f;                       // 傾斜率
@@ -168,6 +185,7 @@ protected:
     int         jumpLimit           =   1;                          // 最大ジャンプ回数
                                        
     bool        isGround            =   false;                      // 地面についているか
+    bool        isHitWall_          =   false;                      // 壁に当たっているか
     bool        isBounce            =   false;                      // バウンスさせるか
     bool        isDash              =   false;                      // ダッシュしているか
     bool        isInvincible        =   false;                      // 無敵かどうか(ボスに使う)

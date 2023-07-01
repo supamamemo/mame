@@ -58,13 +58,16 @@ void StageTutorial::Initialize()
     }
 
     // player‰Šú‰»
-    PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-8.0f, 2.0f, 10.0f));
+    {
+        PlayerManager& playerManager = PlayerManager::Instance();
+        playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-8.0f, 2.0f, 10.0f));
+        playerManager.Initialize();
+    }
 
     // enemy‰Šú‰»
     {
         EnemyManager& enemyManager = EnemyManager::Instance();
         enemyManager.GetEnemy(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(7.5f, 1.5f, 10.0f));
-        enemyManager.GetEnemy(0)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(270), 0.0f, 0.0f));
         enemyManager.Initialize();
     }
 

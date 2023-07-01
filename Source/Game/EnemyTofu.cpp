@@ -28,19 +28,33 @@ EnemyTofu::~EnemyTofu()
 // 初期化
 void EnemyTofu::Initialize()
 {
+    // ※ここの初期回転値によって振り向きの方向が変わるので注意
+    GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
+
+    health      = 1;                // 体力設定
+    moveSpeed_  = 1.0f;             // 移動速度設定(ステートで変わるので最初だけ)
+    turnSpeed_  = ToRadian(90.0f);  // 旋回速度設定(ステートで変わるので最初だけ)
+    jumpSpeed_  = 12.0f;            // ジャンプ速度設定
+
     // ステートマシン
-    moveRangeCenterX_ = GetTransform()->GetPosition().x; // 現在のX位置を移動範囲の中心に設定
-    stateMachine.reset(new StateMachine);
-    GetStateMachine()->RegisterState(new TOFU::WalkState(this));
-    GetStateMachine()->RegisterState(new TOFU::TurnState(this));
-    GetStateMachine()->RegisterState(new TOFU::FindState(this));
-    GetStateMachine()->RegisterState(new TOFU::TrackState(this));
+    {
+        // 現在のX位置を移動範囲の中心に設定
+        moveRangeCenterX_ = GetTransform()->GetPosition().x;
 
-    GetStateMachine()->SetState(static_cast<int>(TOFU::STATE::Walk));
+        // 移動範囲の中心から移動方向に移動範囲の半径分進んだ位置を目的地に設定
+        destination_ = moveRangeCenterX_ + (moveDirectionX_ * moveRangeRadius_);
 
-    health = 1;                                             // 体力設定
+        stateMachine.reset(new StateMachine);
+        GetStateMachine()->RegisterState(new TOFU::WalkState(this));
+        GetStateMachine()->RegisterState(new TOFU::TurnState(this));
+        GetStateMachine()->RegisterState(new TOFU::FindState(this));
+        GetStateMachine()->RegisterState(new TOFU::TrackState(this));
+        GetStateMachine()->RegisterState(new TOFU::IdleBattleState(this));
+    }
 
-    turnSpeed_ = ToRadian(90.0f);    // 旋回速度設定
+    // 進行方向に向かせるために最初は旋回ステートに遷移させる
+    //GetStateMachine()->SetState(static_cast<int>(TOFU::STATE::Walk));
+    GetStateMachine()->SetState(static_cast<int>(TOFU::STATE::Turn));
 }
 
 // 終了化
@@ -61,7 +75,11 @@ void EnemyTofu::Update(const float& elapsedTime)
 
     UpdateAABB();                       // AABBの更新処理
 
-    UpdateVelocity(elapsedTime);        // 速力処理更新処理
+    static bool ONNNNNNNN = false;
+    ImGui::Begin("ONNNNNNNNNNNNNNNNNNNNNnn");
+    ImGui::Checkbox("ONNNNNNNNNNNNNNNNNNNN", &ONNNNNNNN);
+    ImGui::End();
+    if (ONNNNNNNN) UpdateVelocity(elapsedTime);        // 速力処理更新処理
 
     CollisionEnemyVsPlayer();           // プレイヤーとの衝突判定処理
  
@@ -100,4 +118,54 @@ void EnemyTofu::OnDead()
 {
     // 自分を消去
     Destroy();
+}
+
+
+// 壁に当たった時に呼ばれる処理
+void EnemyTofu::OnHitWall()
+{
+    // 追跡中・戦闘待機中なら反転させない
+    const int stateTurn         = static_cast<int>(TOFU::STATE::Turn);
+    const int stateTrack        = static_cast<int>(TOFU::STATE::Track);
+    const int stateIdleBattle   = static_cast<int>(TOFU::STATE::IdleBattle);
+    const int currentStateIndex = GetStateMachine()->GetStateIndex();
+    if (currentStateIndex == stateTurn      || 
+        currentStateIndex == stateTrack     || 
+        currentStateIndex == stateIdleBattle) return;
+
+    moveDirectionX_ = -moveDirectionX_;  // 移動方向を反転
+
+    // 旋回ステートへ遷移
+    GetStateMachine()->SetState(static_cast<int>(TOFU::STATE::Turn));
+}
+
+// 攻撃したときに呼ばれる処理
+void EnemyTofu::OnAttacked()
+{
+    // 追跡中でなければreturn
+    const int stateTrack        = static_cast<int>(TOFU::STATE::Track);
+    const int currentStateIndex = GetStateMachine()->GetStateIndex();
+    if (currentStateIndex != stateTrack) return;
+
+    // 戦闘待機ステートへ遷移
+    GetStateMachine()->SetState(static_cast<int>(TOFU::STATE::IdleBattle));
+}
+
+
+// 味方に当たった時に呼ばれる処理
+void EnemyTofu::OnHitFriend()
+{
+    // 追跡中・戦闘待機中なら反転させない
+    const int stateTurn         = static_cast<int>(TOFU::STATE::Turn);
+    const int stateTrack        = static_cast<int>(TOFU::STATE::Track);
+    const int stateIdleBattle   = static_cast<int>(TOFU::STATE::IdleBattle);
+    const int currentStateIndex = GetStateMachine()->GetStateIndex();
+    if (currentStateIndex == stateTurn      || 
+        currentStateIndex == stateTrack     || 
+        currentStateIndex == stateIdleBattle) return;
+
+    moveDirectionX_ = -moveDirectionX_;  // 移動方向を反転
+
+    // 旋回ステートへ遷移
+    GetStateMachine()->SetState(static_cast<int>(TOFU::STATE::Turn));
 }

@@ -6,6 +6,33 @@
 #include "CannonBall.h"
 #include "EnemyTofu.h"
 
+
+// playerが索敵範囲内にいるか判定する
+bool State::FindPlayer()
+{
+    const std::unique_ptr<Player>& player = PlayerManager::Instance().GetPlayer();
+
+    if (player->GetHealth() <= 0) return false; // プレイヤーが死んでいたらfalse
+
+    const DirectX::XMFLOAT3& playerPos = player->GetTransform()->GetPosition();
+    const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
+
+    // プレイヤーとの距離が索敵距離より遠ければfalse
+    const float length = fabsf(playerPos.x - ownerPos.x);
+    if (length > owner->GetSerchLength()) return false;
+
+    // 右を向いている状態でプレイヤーが自分より右にいるか、
+    // 左を向いている状態でプレイヤーが自分より左にいたら発見しているのでtrue
+    if ((owner->GetMoveDirectionX() ==  1.0f && playerPos.x > ownerPos.x) ||
+        (owner->GetMoveDirectionX() == -1.0f && playerPos.x < ownerPos.x))
+    {
+        return true;
+    }
+
+    // 見つからなかった
+    return false;
+}
+
 // IdleState
 namespace BOSS
 {
@@ -259,108 +286,62 @@ namespace TOFU
     // 初期化
     void WalkState::Enter()
     {
+        // 移動速度設定
+        owner->SetMoveSpeed(1.0f);        
+
+        // 旋回速度設定
+        owner->SetTurnSpeed(ToRadian(90.0f));
+
         // アニメーション設定
         owner->PlayAnimation(TofuAnimation::Walk, true);
-
-        // 移動速度設定
-        owner->SetMoveSpeed(5.0f);        
-
-        // 目的地を設定
-/*        destination = owner->GetMoveRight()
-                    ? owner->GetTransform()->GetPosition().x + owner->GetMoveRangeRadius()
-                    : owner->GetTransform()->GetPosition().x - 6.0f;    */    
-
-        // 移動方向・移動範囲の半径・移動範囲の中心を取得
-        const float moveDirectionX  = owner->GetMoveDirectionX();
-        const float moveRangeCenter = owner->GetMoveRangeCenterX();
-        const float moveRangeRadius = owner->GetMoveRangeRadius();
-
-        // 目的地を設定
-        destination = moveDirectionX * (moveRangeCenter + moveRangeRadius);
     }
 
     // 更新
     void WalkState::Execute(float elapsedTime)
     {
-        // 移動処理
+        Transform*   transform      = owner->GetTransform();                
+        const float  moveDirectionX = owner->GetMoveDirectionX();           
+        const float  velocityX      = (owner->GetMoveSpeed() * elapsedTime);
+
+        // 向いている方向に移動
+        owner->Move(owner->GetMoveDirectionX(), owner->GetMoveSpeed());
+
+        // playerが索敵範囲にいたら発見ステートへ遷移
+        if (FindPlayer())
         {
-            Transform*   transform      = owner->GetTransform();                    // トランスフォーム取得
-            const float  moveDirectionX = owner->GetMoveDirectionX();               // 移動方向を取得
-            const float  velocityX      = (owner->GetMoveSpeed() * elapsedTime);    // 速度を計算
-
-            // 向いている方向に移動
-            transform->AddPositionX(moveDirectionX * velocityX);
-
-            // 右方向に向いている場合、目的地も左側にあるので到達しているか判定する
-            if (moveDirectionX == 1.0f)
-            {
-                // 目的地を超えていたら旋回ステートへ遷移
-                if (transform->GetPosition().x > destination)
-                {
-                    transform->SetPositionX(destination);
-                    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
-                }
-            }
-            // 左方向に向いている場合、目的地も左側にあるので到達しているか判定する
-            else if (moveDirectionX == -1.0f)
-            {
-                // 目的地を超えていたら旋回ステートへ遷移
-                if (transform->GetPosition().x < destination)
-                {
-                    transform->SetPositionX(destination);
-                    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
-                }
-            }
-            
-            //if (owner->GetMoveRight())
-            //{
-            //    transform->AddPositionX(velocityX);
-            //    if (transform->GetPosition().x >= destination)
-            //    {
-            //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
-            //    }
-            //}
-            //else
-            //{
-            //    transform->AddPositionX(-velocityX);
-            //    if (transform->GetPosition().x <= destination)
-            //    {
-            //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Turn));
-            //    }
-            //}
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
+            return;
         }
 
-        // playerとの範囲チェック
-        //FindPlayer();
+        // 右方向に向いている場合、目的地も左側にあるので到達しているか判定する
+        if (moveDirectionX == 1.0f)
+        {
+            // 目的地を超えていたら旋回ステートへ遷移
+            if (transform->GetPosition().x >= owner->GetDestination())
+            {
+                transform->SetPositionX(owner->GetDestination());       // 位置修正             
+                owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
+                return;
+            }
+        }
+        // 左方向に向いている場合、目的地も左側にあるので到達しているか判定する
+        else if (moveDirectionX == -1.0f)
+        {
+            // 目的地を超えていたら旋回ステートへ遷移
+            if (transform->GetPosition().x <= owner->GetDestination())
+            {
+                transform->SetPositionX(owner->GetDestination());       // 位置修正             
+                owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
+                return;
+            }
+        }        
     }
 
     // 終了
     void WalkState::Exit()
     {
-    }
-
-    // playerとの距離を計算して近くにいればFindStateへ
-    void WalkState::FindPlayer()
-    {
-        const DirectX::XMFLOAT3& playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
-        const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
-
-        // プレイヤーとの距離を算出
-        const float length = fabsf(playerPos.x - ownerPos.x);
-
-        // プレイヤーとの距離が索敵距離より遠ければreturn
-        if (length > owner->GetSerchLength()) return;
-
-        ////　右を向いている状態でプレイヤーが自分より右にいたら発見ステートへ遷移
-        //if (owner->GetMoveRight() && playerPos.x > ownerPos.x)
-        //{
-        //    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Find));
-        //}
-        ////　左を向いている状態でプレイヤーが自分より左にいたら発見ステートへ遷移
-        //else if (!owner->GetMoveRight() && playerPos.x < ownerPos.x)
-        //{
-        //    owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Find));
-        //}
     }
 }
 
@@ -370,10 +351,6 @@ namespace TOFU
     // 初期化
     void TurnState::Enter()
     {
-        // 移動方向を反転
-        const float moveDirectionX = owner->GetMoveDirectionX();
-        owner->SetMoveDirectionX(-moveDirectionX);
-
         // 旋回アニメーション設定
         owner->PlayAnimation(TofuAnimation::Turn, true);
     }
@@ -381,53 +358,34 @@ namespace TOFU
     // 更新
     void TurnState::Execute(float elapsedTime)
     {
-        // 次に進む方向へ回転する
+        const float moveDirectionX = owner->GetMoveDirectionX();
+        const float turnSpeed      = owner->GetTurnSpeed();
+
+        // 回転中ならreturn
+        if (owner->Turn(elapsedTime, moveDirectionX, turnSpeed)) return;
+        
+        // 回転が終わった後、範囲内にプレイヤーがいたら発見ステートへ遷移
+        if (State::FindPlayer())
         {
-            // 回転が終了していれば歩行ステートへ遷移
-            const float moveDirectionX = owner->GetMoveDirectionX();
-            const float turnSpeed      = owner->GetTurnSpeed();
-            if (!owner->Turn(elapsedTime, moveDirectionX, turnSpeed))
-            {
-                owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
-            }
-
-            {
-                //DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
-                //// 90度の場合
-                //if (rotate == 90.0f)
-                //{
-                //    // 回転
-                //    rotation.y -= GetRotationSpeed() * elapsedTime;
-
-                //    // 回転終わったらAttackStateへ
-                //    if (DirectX::XMConvertToRadians(rotate) >= rotation.y)
-                //    {
-                //        rotation.y = DirectX::XMConvertToRadians(90.0f);
-                //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
-                //    }
-                //}
-                //// 270度の場合
-                //else
-                //{
-                //    // 回転
-                //    rotation.y += GetRotationSpeed() * elapsedTime;
-
-                //    // 回転終わったらAttackStateへ
-                //    if (DirectX::XMConvertToRadians(rotate) <= rotation.y)
-                //    {
-                //        rotation.y = DirectX::XMConvertToRadians(270.0f);
-                //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
-                //    }
-                //}
-                //owner->GetTransform()->SetRotation(rotation);
-            }
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
+            return;
         }
+        // 歩行ステートへ遷移
+        else
+        {
+            // 移動範囲の中心から移動方向に向かって移動範囲の半径分進んだ位置を目的地に設定する
+            const float moveRangeCenterX = owner->GetMoveRangeCenterX();
+            const float moveRangeRadius  = owner->GetMoveRangeRadius();
+            owner->SetDestination(moveRangeCenterX + (owner->GetMoveDirectionX() * moveRangeRadius));
+
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Walk));
+            return;
+        }      
     }
 
     // 終了
     void TurnState::Exit()
     {
-        //owner->SetMoveRight(owner->GetMoveRight() ? false : true);
     }
 }
 
@@ -437,39 +395,39 @@ namespace TOFU
     // 初期化
     void FindState::Enter()
     {
-        // アニメーション設定
-        owner->PlayAnimation(TofuAnimation::Walk, true);
-
         // 黄色
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 0.4f));
-
-        // 今いる地点Yを保存する
-        returnPositionY = owner->GetTransform()->GetPosition().y;
 
         // stateをリセット
         state = 0;
 
-        // 飛び跳ねる速度を設定する
-        owner->SetMoveSpeed(10.0f);
+        // アニメーション設定
+        owner->PlayAnimation(TofuAnimation::Walk, true);
     }
 
     // 更新
     void FindState::Execute(float elapsedTime)
     {
-        DirectX::XMFLOAT3 pos = owner->GetTransform()->GetPosition();
         switch (state)
         {
-        case 0:
-            pos.y += owner->GetMoveSpeed() * elapsedTime;
-            if (pos.y > returnPositionY + 2.0f)state = 1;
+        case 0: // 地面についていたらジャンプさせる(空中ジャンプ防止)
+            if (owner->GetIsGround())
+            {
+                owner->Jump(owner->GetJumpSpeed());
+                ++state;
+                break;
+            }
+
             break;
-        case 1:
-            pos.y -= owner->GetMoveSpeed() * elapsedTime;
-            if (pos.y < returnPositionY)
-                owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Track));
+        case 1: // 地面についたら追跡ステートへ遷移
+            if (owner->GetIsGround())
+            {
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Track));
+                break;
+            }
+
             break;
         }
-        owner->GetTransform()->SetPosition(pos);
     }
 
     // 終了
@@ -492,53 +450,62 @@ namespace TOFU
         owner->SetMoveSpeed(2.0f);
 
         // 回転速度を設定
-        //SetRotationSpeed(10.0f);
+        owner->SetTurnSpeed(ToRadian(540.0f));
+
+        // 追跡時間を設定
+        State::SetTimer(3.0f);
+
+        owner->PlayAnimation(TofuAnimation::Walk, true);
+        owner->SetAnimationSpeed(1.25f); // アニメーション速度を速めに設定
     }
 
     // 更新
     void TrackState::Execute(float elapsedTime)
     {
-        // 追跡するために位置をとる
-        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
-        DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
-        DirectX::XMVECTOR VEC = DirectX::XMVectorSubtract(DirectX::XMLoadFloat3(&playerPos), DirectX::XMLoadFloat3(&ownerPos));
-        DirectX::XMFLOAT3 vec{};
-        DirectX::XMStoreFloat3(&vec, VEC);
-
-        // 追跡の方向に会うための回転
-        DirectX::XMFLOAT4 ownerRot = owner->GetTransform()->GetRotation();
-
-        if (vec.x > 0)
+        // プレイヤーへ向かう方向を算出して移動方向に設定
         {
-            ownerPos.x += owner->GetMoveSpeed() * elapsedTime;
-            
-            // 右に進むので回転Yを90度になるように設定する
-            if (ownerRot.y != DirectX::XMConvertToRadians(90))
+            const DirectX::XMFLOAT3& playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+            const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
+            const float              vec       = (playerPos.x - ownerPos.x);
+            const float              vec_n     = (vec / fabs(vec));
+            if (vec_n != owner->GetMoveDirectionX()) owner->SetMoveDirectionX(vec_n);
+        }
+
+        // プレイヤーを追いかける
+        owner->Move(owner->GetMoveDirectionX(), owner->GetMoveSpeed());
+
+        // 旋回処理
+        owner->Turn(elapsedTime, owner->GetMoveDirectionX(), owner->GetTurnSpeed());
+
+        // プレイヤーが索敵範囲から外れたら追跡時間を減少し、
+        // 追跡時間が終わったら旋回ステートへ遷移する(通常時に戻る)
+        if (!State::FindPlayer())
+        {
+            State::SubtractTime(elapsedTime);
+            if (State::GetTimer() <= 0.0f)
             {
-                //ownerRot.y -= GetRotationSpeed() * elapsedTime;
-                
-                // 90度より小さくなったら90度に設定する
-                if (ownerRot.y <= DirectX::XMConvertToRadians(90))
-                    ownerRot.y = DirectX::XMConvertToRadians(90);
+                // 移動方向の設定
+                {
+                    // 自分から移動範囲の中心へ向かう単位ベクトルを移動方向に設定
+                    const float moveRangeCenterX = owner->GetMoveRangeCenterX();
+                    const float positionX        = owner->GetTransform()->GetPosition().x;
+                    const float vec              = (moveRangeCenterX - positionX);
+                    const float vec_n            = (vec / fabsf(vec));
+                    owner->SetMoveDirectionX(vec_n);
+                }
+
+                // 旋回速度を通常に戻す
+                owner->SetTurnSpeed(ToRadian(90.0f));
+
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
+                return;
             }
         }
+        // プレイヤーが索敵範囲にいれば追跡時間を設定
         else
         {
-            ownerPos.x -= owner->GetMoveSpeed() * elapsedTime;
-
-            // 左に進むので回転Yを270度になるように設定する
-            if (ownerRot.y != DirectX::XMConvertToRadians(270))
-            {
-                //ownerRot.y += GetRotationSpeed() * elapsedTime;
-
-                // 270度より大きくなったら270度に設定する
-                if (ownerRot.y >= DirectX::XMConvertToRadians(270))
-                    ownerRot.y = DirectX::XMConvertToRadians(270);
-            }
+            State::SetTimer(3.0f);
         }
-
-        owner->GetTransform()->SetPosition(ownerPos);
-        owner->GetTransform()->SetRotation(ownerRot);
     }
 
     // 終了
@@ -546,6 +513,63 @@ namespace TOFU
     {
     }
 }
+
+// IdleBattleState(攻撃後にしばらく待機するステート)
+namespace TOFU
+{
+    void IdleBattleState::Enter()
+    {
+        // 移動速度を設定(停止)
+        owner->SetMoveSpeed(0.0f);
+
+        // 戦闘待機時間を設定
+        State::SetTimer(3.0f);
+
+        // 再生停止
+        owner->PlayAnimation(-1, false);
+    }
+
+    void IdleBattleState::Execute(float elapsedTime)
+    {
+        // 旋回処理
+        owner->Turn(elapsedTime, owner->GetMoveDirectionX(), owner->GetTurnSpeed());
+        
+        State::SubtractTime(elapsedTime); // 待機時間減少
+
+        if (State::GetTimer() > 0.0f) return;
+
+        // プレイヤーが範囲内にいたら追跡ステートへ遷移
+        if (State::FindPlayer())
+        {
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Track));
+            return;            
+        }
+        // プレイヤーが範囲内にいなくて待機時間が終了していれば旋回ステートへ遷移(通常時に戻る)
+        else 
+        {
+            // 移動方向の設定
+            {
+                // 自分から移動範囲の中心へ向かう単位ベクトルを移動方向に設定
+                const float moveRangeCenterX = owner->GetMoveRangeCenterX();
+                const float positionX        = owner->GetTransform()->GetPosition().x;
+                const float vec              = (moveRangeCenterX - positionX);
+                const float vec_n            = (vec / fabsf(vec));
+                owner->SetMoveDirectionX(vec_n);
+            }
+
+            // 旋回速度を通常に戻す
+            owner->SetTurnSpeed(ToRadian(90.0f));
+
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
+            return;
+        }
+    }
+
+    void IdleBattleState::Exit()
+    {
+    }
+}
+
 
 
 // IdleState

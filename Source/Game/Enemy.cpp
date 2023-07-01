@@ -19,7 +19,6 @@ void Enemy::Render(const float& elapsedTime)
     Character::Render(elapsedTime);
 }
 
-
 // 落下死・落下ミスしたときに呼ばれる
 void Enemy::OnFallDead()
 {
@@ -40,6 +39,8 @@ void Enemy::CollisionEnemyVsPlayer()
     {    
         // ダメージを受けなければreturn
         if (!player->ApplyDamage(1, 1.0f)) return;
+
+        this->OnAttacked(); // 攻撃したときに呼ばれる処理
     }
 }
 
@@ -61,7 +62,7 @@ bool Enemy::Turn(
     // 回転角が微小な場合は回転を行わない(回転終了)
     const float angle = acosf(dot); // ラジアン
     //if (fabsf(angle) <= 0.001f) return false;
-    if (fabsf(angle) <= 0.01f) return false;
+    if (fabsf(angle) <= 0.05f) return false;
 
     // 内積値は-1.0~1.0で表現されており、2つの単位ベクトルの角度が
     // 小さいほど1.0に近づくという性質を利用して回転速度を調整する  

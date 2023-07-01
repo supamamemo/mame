@@ -14,6 +14,9 @@ public:
     virtual void Execute(float elapsedTime) = 0;
     // ステートから出ていくときのメソッド
     virtual void Exit() = 0;
+
+public:
+    bool FindPlayer();  // プレイヤーを索敵する(豆腐の歩行と追跡ステートで使いたかったのでここに移動)
     
 public:
     const char* GetName() { return name; }
