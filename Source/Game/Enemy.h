@@ -26,7 +26,7 @@ public:
 
 public:
     // ù‰ñˆ—
-    void Turn(
+    bool Turn(
         const    float elapsedTime,
         const    float vx,
         NO_CONST float turnSpeed
@@ -65,8 +65,8 @@ public:
 
 protected:
     float moveRangeCenterX_ = 0.0f;     // ˆÚ“®”ÍˆÍ‚Ì’†SX
-    float moveRangeRadius_  = 6.0f;     // ˆÚ“®”ÍˆÍ‚Ì”¼Œa
-    float serchLength_      = 6.0f;     // õ“G‚Å‚«‚é‹——£
+    float moveRangeRadius_  = 3.0f;     // ˆÚ“®”ÍˆÍ‚Ì”¼Œa
+    float serchLength_      = 3.0f;     // õ“G‚Å‚«‚é‹——£
     float moveDirectionX_   = 1.0f;     // ˆÚ“®•ûŒüX  
 
 private:

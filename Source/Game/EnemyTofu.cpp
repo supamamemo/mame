@@ -14,17 +14,6 @@ EnemyTofu::EnemyTofu()
     model = std::make_unique<Model>(graphics.GetDevice(), "./resources/tohuall.fbx", true);
     //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/touhuwalk.fbx", true);
 
-    // ステートマシン
-    stateMachine.reset(new StateMachine);
-
-    GetStateMachine()->RegisterState(new TOFU::WalkState(this));
-    GetStateMachine()->RegisterState(new TOFU::TurnState(this));
-    GetStateMachine()->RegisterState(new TOFU::FindState(this));
-    GetStateMachine()->RegisterState(new TOFU::TrackState(this));
-
-    GetStateMachine()->SetState(static_cast<int>(TOFU::STATE::Walk));
-
-
     // imgui名前かぶりが起きないように...
     name = "EnemyTofu" + std::to_string(nameNum);
     SetName(name.c_str());
@@ -39,11 +28,19 @@ EnemyTofu::~EnemyTofu()
 // 初期化
 void EnemyTofu::Initialize()
 {
-    health = 1;                                             // 体力設定
-  
+    // ステートマシン
     moveRangeCenterX_ = GetTransform()->GetPosition().x; // 現在のX位置を移動範囲の中心に設定
+    stateMachine.reset(new StateMachine);
+    GetStateMachine()->RegisterState(new TOFU::WalkState(this));
+    GetStateMachine()->RegisterState(new TOFU::TurnState(this));
+    GetStateMachine()->RegisterState(new TOFU::FindState(this));
+    GetStateMachine()->RegisterState(new TOFU::TrackState(this));
 
-    turnSpeed_ = ToRadian(3.0f);    // 旋回速度設定
+    GetStateMachine()->SetState(static_cast<int>(TOFU::STATE::Walk));
+
+    health = 1;                                             // 体力設定
+
+    turnSpeed_ = ToRadian(90.0f);    // 旋回速度設定
 }
 
 // 終了化

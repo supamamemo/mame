@@ -331,7 +331,7 @@ namespace TOFU
         }
 
         // playerとの範囲チェック
-        FindPlayer();
+        //FindPlayer();
     }
 
     // 終了
@@ -370,6 +370,10 @@ namespace TOFU
     // 初期化
     void TurnState::Enter()
     {
+        // 移動方向を反転
+        const float moveDirectionX = owner->GetMoveDirectionX();
+        owner->SetMoveDirectionX(-moveDirectionX);
+
         // 旋回アニメーション設定
         owner->PlayAnimation(TofuAnimation::Turn, true);
     }
@@ -379,43 +383,51 @@ namespace TOFU
     {
         // 次に進む方向へ回転する
         {
-            owner->Turn(elapsedTime, owner->GetMoveDirectionX(), owner->GetTurnSpeed());
+            // 回転が終了していれば歩行ステートへ遷移
+            const float moveDirectionX = owner->GetMoveDirectionX();
+            const float turnSpeed      = owner->GetTurnSpeed();
+            if (!owner->Turn(elapsedTime, moveDirectionX, turnSpeed))
+            {
+                owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
+            }
 
-            //DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
-            //// 90度の場合
-            //if (rotate == 90.0f)
-            //{
-            //    // 回転
-            //    rotation.y -= GetRotationSpeed() * elapsedTime;
+            {
+                //DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
+                //// 90度の場合
+                //if (rotate == 90.0f)
+                //{
+                //    // 回転
+                //    rotation.y -= GetRotationSpeed() * elapsedTime;
 
-            //    // 回転終わったらAttackStateへ
-            //    if (DirectX::XMConvertToRadians(rotate) >= rotation.y)
-            //    {
-            //        rotation.y = DirectX::XMConvertToRadians(90.0f);
-            //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
-            //    }
-            //}
-            //// 270度の場合
-            //else
-            //{
-            //    // 回転
-            //    rotation.y += GetRotationSpeed() * elapsedTime;
+                //    // 回転終わったらAttackStateへ
+                //    if (DirectX::XMConvertToRadians(rotate) >= rotation.y)
+                //    {
+                //        rotation.y = DirectX::XMConvertToRadians(90.0f);
+                //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
+                //    }
+                //}
+                //// 270度の場合
+                //else
+                //{
+                //    // 回転
+                //    rotation.y += GetRotationSpeed() * elapsedTime;
 
-            //    // 回転終わったらAttackStateへ
-            //    if (DirectX::XMConvertToRadians(rotate) <= rotation.y)
-            //    {
-            //        rotation.y = DirectX::XMConvertToRadians(270.0f);
-            //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
-            //    }
-            //}
-            //owner->GetTransform()->SetRotation(rotation);
+                //    // 回転終わったらAttackStateへ
+                //    if (DirectX::XMConvertToRadians(rotate) <= rotation.y)
+                //    {
+                //        rotation.y = DirectX::XMConvertToRadians(270.0f);
+                //        owner->GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Walk));
+                //    }
+                //}
+                //owner->GetTransform()->SetRotation(rotation);
+            }
         }
     }
 
     // 終了
     void TurnState::Exit()
     {
-        owner->SetMoveRight(owner->GetMoveRight() ? false : true);
+        //owner->SetMoveRight(owner->GetMoveRight() ? false : true);
     }
 }
 

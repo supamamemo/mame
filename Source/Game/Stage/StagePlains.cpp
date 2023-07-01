@@ -48,7 +48,7 @@ StagePlains::StagePlains()
     // enemy¶¬
     EnemyManager& enemyManager = EnemyManager::Instance();
     {
-        // 23‘Ì¶¬E“o˜^
+        // 23‘Ì¶¬
         for (int i = 0; i < 23; ++i)
         {
             enemyManager.Register(new EnemyTofu());

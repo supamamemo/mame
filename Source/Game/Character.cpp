@@ -142,10 +142,14 @@ void Character::Turn(
 
     // 自身の回転値から前方向を求める
     const float frontX = sinf(rotation.y);
-    const float frontZ = cosf(rotation.y);
 
     // 回転角を求めるため、2つの単位ベクトルの内積計算する
     const float dot = (frontX * vx) /*+ (frontZ * vz)*/;
+
+    // 回転角が微小な場合は回転を行わない
+    const float angle = acosf(dot); // ラジアン
+    //if (fabsf(angle) <= 0.001f) return;
+    if (fabsf(angle) <= 0.01f) return;
 
     // 内積値は-1.0~1.0で表現されており、2つの単位ベクトルの角度が
     // 小さいほど1.0に近づくという性質を利用して回転速度を調整する  
@@ -153,7 +157,8 @@ void Character::Turn(
     if (rot > turnSpeed) rot = turnSpeed;
 
     // 左右判定を行うために2つの単位ベクトルの外積を計算する
-    const float cross = (frontZ * vx) /*- (frontX * vz)*/;
+    const float frontZ = cosf(rotation.y);
+    const float cross  = (frontZ * vx) /*- (frontX * vz)*/;
 
     // 2Dの外積値が正の場合か負の場合によって左右判定が行える
     // 左右判定を行うことによって左右回転を選択する
