@@ -448,6 +448,7 @@ namespace TOFU
         {
         case 0: // ジャンプさせる
             owner->Jump(owner->GetJumpSpeed());
+            owner->SetIsOnFriend(false); // 味方の上に乗っかっているかフラグをリセットする
             ++state;
             break;
         case 1: // 地面か敵の上についたら追跡ステートへ遷移
@@ -494,19 +495,18 @@ namespace TOFU
     {
         const std::unique_ptr<Player>& player = PlayerManager::Instance().GetPlayer();
 
-        // プレイヤーが死んでいたら戦闘待機ステートへ遷移
-        if (player->GetHealth() <= 0)
-        {
-            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::IdleBattle));
-        }
-
         // プレイヤーへ向かう方向を算出して移動方向に設定
         {
             const DirectX::XMFLOAT3& playerPos = player->GetTransform()->GetPosition();
             const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
-            const float              vec       = (playerPos.x - ownerPos.x);
-            const float              vec_n     = (vec / fabsf(vec));
-            owner->SetMoveDirectionX(vec_n);
+            const float vecX      = (playerPos.x - ownerPos.x);
+            const float lengthX   = fabsf(vecX);
+            // 距離がゼロ以下だと豆腐が消滅するので防止
+            if (lengthX > 0.0f)
+            {
+                const float vecX_n = (vecX / lengthX);
+                owner->SetMoveDirectionX(vecX_n);
+            }
         }
 
         // プレイヤーを追いかける
@@ -517,7 +517,7 @@ namespace TOFU
 
         // プレイヤーが索敵範囲から外れたら追跡時間を減少し、
         // 追跡時間が終わったら旋回ステートへ遷移する(通常時に戻る)
-        if (!FindPlayer())
+        if (player->GetHealth() <= 0 || !FindPlayer())
         {
             SubtractTime(elapsedTime);
             if (GetTimer() <= 0.0f)

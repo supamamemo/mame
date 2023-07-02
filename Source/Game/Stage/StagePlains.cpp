@@ -115,9 +115,16 @@ void StagePlains::Initialize()
 
         // 位置設定
         {
+#if 0
+            // 豆腐の上下の押し戻し処理確認用
             enemyManager.GetEnemy(0 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(12.0f,   1.5f,  posZ));
             enemyManager.GetEnemy(1 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(12.0f,   20.5f, posZ));
             enemyManager.GetEnemy(2 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(12.0f,   30.5f, posZ));
+#else
+            enemyManager.GetEnemy(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.0f,    1.5f,  posZ));
+            enemyManager.GetEnemy(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(13.0f,    20.5f, posZ));
+            enemyManager.GetEnemy(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(15.0f,    30.5f, posZ));
+#endif
             enemyManager.GetEnemy(3 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(24.5f,   1.5f,  posZ));
             enemyManager.GetEnemy(4 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(33.0f,   3.0f,  posZ));
             enemyManager.GetEnemy(5 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(40.0f,   1.5f,  posZ));
