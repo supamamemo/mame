@@ -40,8 +40,6 @@ Boss::Boss(const char* filename)
 
     model = std::make_unique<Model>(graphics.GetDevice(), filename, true);
 
-    
-
     // imgui–¼‘O‚©‚Ô‚è‹N‚«‚È‚¢‚æ‚¤‚É...
     name = "Boss" + std::to_string(nameNum);
     SetName(name.c_str());

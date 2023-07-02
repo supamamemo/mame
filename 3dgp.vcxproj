@@ -174,7 +174,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.2\include;.\External\cereal-master\include;.\External\DirectXTK-main\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.2\include;.\External\cereal-master\include;.\External\DirectXTK-main\Inc;.\External\Effekseer162a\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -183,8 +183,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.2\lib\vs2019\x64\release;.\External\DirectXTK-main\Bin\Desktop_2019\x64\Release;);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>d3d11.lib;zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;DirectXTK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Program Files\Autodesk\FBX\FBX SDK\2020.2\lib\vs2019\x64\release;.\External\DirectXTK-main\Bin\Desktop_2019\x64\Release;.\External\Effekseer162a\lib\vs2019\MD\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;zlib-md.lib;libxml2-md.lib;libfbxsdk-md.lib;DirectXTK.lib;Effekseer.lib;EffekseerRendererDX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -205,6 +205,7 @@
     <ClCompile Include="Source\Game\Block.cpp" />
     <ClCompile Include="Source\Game\Boss.cpp" />
     <ClCompile Include="Source\Game\BossStateDerived.cpp" />
+    <ClCompile Include="Source\Game\Box.cpp" />
     <ClCompile Include="Source\Game\CannonBall.cpp" />
     <ClCompile Include="Source\Game\CannonBallManager.cpp" />
     <ClCompile Include="Source\Game\Character.cpp" />
@@ -230,6 +231,8 @@
     <ClCompile Include="Source\Game\Terrain\TerrainBoss.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainManager.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainPlains.cpp" />
+    <ClCompile Include="Source\Game\UI.cpp" />
+    <ClCompile Include="Source\Game\UIManager.cpp" />
     <ClCompile Include="Source\GeometricPrimitive.cpp" />
     <ClCompile Include="Source\gltf_model.cpp" />
     <ClCompile Include="Source\main.cpp" />
@@ -273,6 +276,7 @@
     <ClInclude Include="Source\Game\Block.h" />
     <ClInclude Include="Source\Game\Boss.h" />
     <ClInclude Include="Source\Game\BossStateDerived.h" />
+    <ClInclude Include="Source\Game\Box.h" />
     <ClInclude Include="Source\Game\CannonBall.h" />
     <ClInclude Include="Source\Game\CannonBallManager.h" />
     <ClInclude Include="Source\Game\Character.h" />
@@ -300,6 +304,8 @@
     <ClInclude Include="Source\Game\Terrain\TerrainBoss.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainManager.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainPlains.h" />
+    <ClInclude Include="Source\Game\UI.h" />
+    <ClInclude Include="Source\Game\UIManager.h" />
     <ClInclude Include="Source\GeometricPrimitive.h" />
     <ClInclude Include="Source\gltf_model.h" />
     <ClInclude Include="Source\high_resolution_timer.h" />

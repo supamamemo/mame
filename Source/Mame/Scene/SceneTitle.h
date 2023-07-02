@@ -68,7 +68,7 @@ public:
 
 
     // title model
-    std::unique_ptr<Model> castelModel = nullptr;
+    std::unique_ptr<Model> castleModel = nullptr;
     std::unique_ptr<Model> groundModel = nullptr;
 
 };

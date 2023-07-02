@@ -30,7 +30,7 @@ SceneTitle::SceneTitle()
     {
 #if MAME
         Graphics& graphics = Graphics::Instance();
-        castelModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
+        castleModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
         groundModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/ground.fbx", true);
 #endif
     }
@@ -58,7 +58,8 @@ void SceneTitle::Initialize()
     // title model
     {
 #if MAME
-        castelModel->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
+        castleModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.45f, 0.0f));
+        castleModel->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
         groundModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(4.0f, -1.0f, -36.0f));
         groundModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 1.0f, 0.5f));
         groundModel->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(-90), 0, 0));
@@ -325,13 +326,13 @@ void SceneTitle::Render(const float& elapsedTime)
     // title model
     {
 #if MAME
-        DirectX::XMMATRIX WORLD = castelModel->GetTransform()->CalcWorldMatrix(0.01f);
+        DirectX::XMMATRIX WORLD = castleModel->GetTransform()->CalcWorldMatrix(0.01f);
         DirectX::XMFLOAT4X4 world = {};
         DirectX::XMStoreFloat4x4(&world, WORLD);
-        castelModel->skinned_meshes.render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
+        castleModel->skinned_meshes->render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
         WORLD = groundModel->GetTransform()->CalcWorldMatrix(0.01f);
         DirectX::XMStoreFloat4x4(&world, WORLD);
-        groundModel->skinned_meshes.render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
+        groundModel->skinned_meshes->                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
 #endif
     }
 
@@ -396,7 +397,7 @@ void SceneTitle::DrawDebug()
     {
 #if MAME
         ImGui::Begin("castelModel");
-        castelModel->GetTransform()->DrawDebug();
+        castleModel->GetTransform()->DrawDebug();
         ImGui::End();
         ImGui::Begin("groundModel");
         groundModel->GetTransform()->DrawDebug();

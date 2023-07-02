@@ -1,7 +1,7 @@
 #pragma once
 #include "Stage.h"
 
-#include "../Boss.h"
+#include "../Box.h"
 
 #include "../../Mame/Graphics/Effect.h"
 
@@ -21,8 +21,29 @@ public:
     void DrawDebug()                      override;  // デバッグ描画
 
 private:
+    void TutorialStateUpdate(float elapsedTime);
+    void TutorialStateRender(float elapsedTime);
+
+    int tutorialState = 0;
+    
+
+    enum STATE
+    {
+        MoveReception,  // 移動受付
+        JumpReception,  // ジャンプ受付
+    };
+
+private:
+    int stickMoveState = 0; // スティック動き
+    float stickTime = 0;
+    void StickState(float elapsedTime);
+
+private:
     // 仮にbossクラスで表示している
-    std::unique_ptr<Boss> back = nullptr;
+    std::unique_ptr<Box> back = nullptr;
+    std::unique_ptr<Box> box = nullptr;
+
+    // UI
 
     Effect* effect = nullptr;
 };
