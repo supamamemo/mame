@@ -59,7 +59,7 @@ void Character::Render(const float& /*elapsedTime*/)
     }
     
     // AABB描画
-    //geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
+    geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
 
     // ラスタライザ再設定(ソリッド・後ろカリング)
     graphics.GetShader()->SetState(graphics.GetDeviceContext(), 0, 0, 0);

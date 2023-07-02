@@ -63,7 +63,7 @@ namespace BOSS
         // 待機時間が終了したら発見ステートへ遷移
         if (GetTimer() <= 0.0f)
         {
-            owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Find));
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
             return;
         }
 
@@ -96,11 +96,15 @@ namespace BOSS
     // 更新
     void FindState::Execute(float elapsedTime)
     {
-        // タイマーが0になったらAttackStateへ
-        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Turn));
-
         // 時間を減らす
         SubtractTime(elapsedTime);
+
+        // タイマーが0になったら旋回ステートへ遷移
+        if (GetTimer() < 0.0f)
+        {
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
+            return;
+        }
 
         owner->CollisionEnemyVsPlayer();    // プレイヤーとの衝突判定処理
     }
@@ -124,12 +128,19 @@ namespace BOSS
         //SetRotationSpeed(3.0f);
 
         // プレイヤーがどっちにいるのか
-        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer().get()->GetTransform()->GetPosition();
-        DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
-        rotate = playerPos.x > ownerPos.x ? 90.0f : 270.0f;
-        
+        //rotate = playerPos.x > ownerPos.x ? 90.0f : 270.0f;
+    
         // 進む方向を設定する
-        owner->SetMoveRight(playerPos.x > ownerPos.x ? true : false);
+        //owner->SetMoveRight(playerPos.x > ownerPos.x ? true : false);
+
+        // プレイヤーがどっちにいるのか
+        const DirectX::XMFLOAT3& playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+        const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
+        const float vecX    = (playerPos.x - ownerPos.x);
+        const float vecX_n  = (vecX / fabsf(vecX));
+
+        // 進む方向を設定する
+        owner->SetMoveDirectionX(vecX_n);
     }
 
     // 更新
@@ -137,34 +148,42 @@ namespace BOSS
     {
         // プレイヤーの方向に向くように回転する
         {
-            DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
-            // 90度の場合
-            if (rotate == 90.0f)
-            {
-                // 回転
-                //rotation.y -= GetRotationSpeed() * elapsedTime;
-                
-                // 回転終わったらAttackStateへ
-                if (DirectX::XMConvertToRadians(rotate) >= rotation.y)
-                {
-                    rotation.y = DirectX::XMConvertToRadians(90.0f);
-                    owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Attack));
-                }
-            }
-            // -90度の場合
-            else
-            {
-                // 回転
-                //rotation.y += GetRotationSpeed() * elapsedTime;
+            //DirectX::XMFLOAT4 rotation = owner->GetTransform()->GetRotation();
+            //// 90度の場合
+            //if (rotate == 90.0f)
+            //{
+            //    // 回転
+            //    //rotation.y -= GetRotationSpeed() * elapsedTime;
+            //    
+            //    // 回転終わったらAttackStateへ
+            //    if (DirectX::XMConvertToRadians(rotate) >= rotation.y)
+            //    {
+            //        rotation.y = DirectX::XMConvertToRadians(90.0f);
+            //        owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Attack));
+            //    }
+            //}
+            //// -90度の場合
+            //else
+            //{
+            //    // 回転
+            //    //rotation.y += GetRotationSpeed() * elapsedTime;
 
-                // 回転終わったらAttackStateへ
-                if (DirectX::XMConvertToRadians(rotate) <= rotation.y)
-                {
-                    rotation.y = DirectX::XMConvertToRadians(270.0f);
-                    owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
-                }
-            }
-            owner->GetTransform()->SetRotation(rotation);
+            //    // 回転終わったらAttackStateへ
+            //    if (DirectX::XMConvertToRadians(rotate) <= rotation.y)
+            //    {
+            //        rotation.y = DirectX::XMConvertToRadians(270.0f);
+            //        owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
+            //    }
+            //}
+            //owner->GetTransform()->SetRotation(rotation);
+        }
+        // 回転が終わったら攻撃ステートへ遷移
+        const float moveDirectionX = owner->GetMoveDirectionX();
+        const float turnSpeed      = owner->GetTurnSpeed();      
+        if (!owner->Turn(elapsedTime, moveDirectionX, turnSpeed)) 
+        {
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
+            return;
         }
 
         owner->CollisionEnemyVsPlayer();    // プレイヤーとの衝突判定処理
@@ -182,41 +201,46 @@ namespace BOSS
     // 初期化
     void AttackState::Enter()
     {
-        // アニメーションセット
-        owner->PlayAnimation(static_cast<int>(BossAnimation::Attack), true);
-
         // materialColorを設定(アグレッシブ(赤))
         owner->SetMaterialColor(DirectX::XMFLOAT4(1, 0, 0, 0.4f));
 
         // 左右判定
-        owner->SetMoveSpeed(owner->GetMoveRight() ? speed : -speed);
+        //owner->SetMoveSpeed(owner->GetMoveRight() ? speed : -speed);
+        
+        // アニメーションセット
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Attack), true);
     }
 
     // 更新
     void AttackState::Execute(float elapsedTime)
     {
-        // アニメーション更新
-        owner->UpdateAnimation(elapsedTime);
+        //const DirectX::XMFLOAT3& ownerPos = owner->GetTransform()->GetPosition();
+        Transform* transform = owner->GetTransform();
+        
+        // 移動
+        //ownerPos.x += owner->GetMoveSpeed() * elapsedTime;
+        owner->SetMoveSpeed(owner->GetMoveDirectionX() * speed);
+        transform->AddPositionX(owner->GetMoveSpeed() * elapsedTime);
 
-        DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
-
-        ownerPos.x += owner->GetMoveSpeed() * elapsedTime;
-
-        // 壁にぶつかったらIdleステートへ
-        if (ownerPos.x > 9.0f)
+        // 壁にぶつかったら反動ステートへ
+        //if (ownerPos.x > 9.0f)
+        if (transform->GetPosition().x > 9.0f)
         {
-            ownerPos.x = 9.0f;
-            owner->GetStateMachine()->SetMoveRight(false);
-            owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));
+            //ownerPos.x = 9.0f;
+            //owner->GetStateMachine()->SetMoveRight(false);
+            transform->SetPositionX(9.0f);
+            owner->SetMoveDirectionX(-owner->GetMoveDirectionX());
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Recoil));
         }
-        if (ownerPos.x < -9.0f)
+        if (transform->GetPosition().x < -9.0f)
         {
-            ownerPos.x = -9.0f;
-            owner->GetStateMachine()->SetMoveRight(true);
-            owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));
+            //ownerPos.x = -9.0f;
+            //owner->GetStateMachine()->SetMoveRight(true);
+            transform->SetPositionX(-9.0f);
+            owner->SetMoveDirectionX(-owner->GetMoveDirectionX());
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Recoil));
         }
-
-        owner->GetTransform()->SetPosition(ownerPos);
+        //owner->GetTransform()->SetPosition(ownerPos);
 
         owner->CollisionEnemyVsPlayer();    // プレイヤーとの衝突判定処理
     }
@@ -234,48 +258,50 @@ namespace BOSS
     // 初期化
     void RecoilState::Enter()
     {
-        // アニメーションセット
-        owner->PlayAnimation(static_cast<int>(BossAnimation::Recoil), true);
-
         // materialColorを設定(紫)
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.4f));
         
         // 反動距離を設定
         recoilCount = 0;
         
-        SetRecoil(owner->GetStateMachine()->GetMoveRight() ? 1.0f : -1.0f);
+        //SetRecoil(owner->GetStateMachine()->GetMoveRight() ? 1.0f : -1.0f);
+        SetRecoil(owner->GetMoveDirectionX());
 
         // 無敵状態を無くす
         owner->SetIsInvincible(false);
+
+        // アニメーションセット
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Recoil), true);
     }
 
     // 更新
     void RecoilState::Execute(float elapsedTime)
     {
-        // アニメーション更新
-        owner->UpdateAnimation(elapsedTime);
+        Transform* transform = owner->GetTransform();
 
-        DirectX::XMFLOAT3 ownerPos = owner->GetTransform()->GetPosition();
-        owner->SetMoveSpeed(owner->GetStateMachine()->GetMoveRight() ? speed : -speed);
-        ownerPos.x += owner->GetMoveSpeed() * elapsedTime;
-        recoilCount += owner->GetMoveSpeed() * elapsedTime;
+        //owner->SetMoveSpeed(owner->GetStateMachine()->GetMoveRight() ? speed : -speed);
+        owner->SetMoveSpeed(owner->GetMoveDirectionX() * speed);
 
-        if (owner->GetStateMachine()->GetMoveRight())
+        transform->AddPositionX(owner->GetMoveSpeed() * elapsedTime);
+        recoilCount += (owner->GetMoveSpeed() * elapsedTime);
+
+        //if (owner->GetStateMachine()->GetMoveRight())
+        if (owner->GetMoveDirectionX() == 1.0f)
         {
-            if (recoilCount > recoil)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Idle));
+            if (recoilCount > recoil) owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
         }
         else
         {
-            if (recoilCount < recoil)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Idle));
+            if (recoilCount < recoil) owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
         }
         
-        owner->GetTransform()->SetPosition(ownerPos);
+        //owner->GetTransform()->SetPosition(ownerPos);
     }
 
     // 終了
     void RecoilState::Exit()
     {
-        recoilCount = 0;
+        recoilCount = 0.0f;
 
         // 無敵状態にする
         owner->SetIsInvincible(true);
@@ -479,8 +505,8 @@ namespace TOFU
             const DirectX::XMFLOAT3& playerPos = player->GetTransform()->GetPosition();
             const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
             const float              vec       = (playerPos.x - ownerPos.x);
-            const float              vec_n     = (vec / fabs(vec));
-            if (vec_n != owner->GetMoveDirectionX()) owner->SetMoveDirectionX(vec_n);
+            const float              vec_n     = (vec / fabsf(vec));
+            owner->SetMoveDirectionX(vec_n);
         }
 
         // プレイヤーを追いかける

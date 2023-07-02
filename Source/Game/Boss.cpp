@@ -67,6 +67,8 @@ void Boss::Initialize()
     ResetAABB(min, max);                                    // minとmaxの再設定（ジオメトリックプリミティブの再生成も行っている）
     UpdateAABB();                                           // minとmaxを現在の位置に更新する
 
+    turnSpeed_ = ToRadian(90.0f);  // 旋回速度の設定
+
     // 無敵状態にする
     isInvincible = true;
 }
