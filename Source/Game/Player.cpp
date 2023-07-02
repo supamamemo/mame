@@ -249,7 +249,7 @@ const bool Player::InputJump()
     if (gamePad.GetButtonDown() & (GamePad::BTN_A | GamePad::BTN_B))
     {
         // 地面にいない場合はジャンプしない
-        if (!isGround) return false;
+        if (!isGround_) return false;
 
         // ジャンプ回数がジャンプ上限数以上ならジャンプしない
         if (jumpCount >= jumpLimit) return false;
@@ -351,7 +351,7 @@ void Player::OnBounce()
         isBounce        = false;                // バウンス終了
      
         OnLanding();                // 着地時の処理を行う
-        isGround        = true;     // 着地した
+        isGround_        = true;     // 着地した
         isInvincible    = false;    // 無敵モード解除
     }
     // バウンスさせる
@@ -411,8 +411,12 @@ void Player::OnFallDead()
     health          -=  1;      // 体力減少
     invincibleTimer  =  1.0f;   // 無敵時間設定
 
-    // ジャンプ中・バウンス中に落ちたときのためにリセットする
+    // 走行中・ジャンプ中・バウンス中に落ちたときのためにリセットする
     {
+        moveSpeed_      =   defaultMoveSpeed;       // 移動速度リセット
+        acceleration    =   defaultAcceleration;    // 加速力リセット
+        friction        =   defaultFriction;        // 摩擦力リセット
+
         velocity.x      =   0.0f;                   // X速度リセット
         velocity.y      =   0.0f;                   // Y速度リセット
         bounceSpeedX    =   defaultBounceSpeedX;    // バウンスX速度リセット
@@ -424,7 +428,7 @@ void Player::OnFallDead()
         gravity         =   defaultGravity;         // 重力リセット
 
         OnLanding();                                // 着地時の処理を行う
-        isGround        =   true;                   // 着地した
+        isGround_        =  true;                   // 着地した
     }
 
     TransitionIdleState();      // 待機ステートへ遷移
@@ -587,7 +591,7 @@ void Player::TransitionRunState()
     state = State::Run;
 
     // 走行時の速度パラメータを設定
-    moveSpeed_       = runMoveSpeed;
+    moveSpeed_      = runMoveSpeed;
     acceleration    = runAcceleration;
     friction        = runFriction;
 
@@ -610,7 +614,7 @@ void Player::UpdateRunState(const float& elapsedTime)
         acceleration = defaultAcceleration;
         friction     = defaultFriction;
 
-        runMoveVecX = moveVecX_; // 移動ベクトル保存を更新しておく（ダッシュジャンプして着地する寸前に方向転換するとカメラ目線でラジオ体操するため）
+        runMoveVecX = moveVecX_; // 移動ベクトル保存を更新しておく（ダッシュジャンプして着地する寸前に方向転換するとカメラ目線になるため）
 
         TransitionJumpState();
         return;

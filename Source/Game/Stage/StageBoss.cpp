@@ -33,8 +33,7 @@ StageBoss::StageBoss()
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 
     // bossê∂ê¨
-    Boss* boss = new Boss();
-    EnemyManager::Instance().Register(boss);
+    EnemyManager::Instance().Register(new Boss());
 
     // bossÇÃhpóp
     chefHat = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/chefHat.png");
@@ -43,10 +42,10 @@ StageBoss::StageBoss()
     back = std::make_unique<Boss>("./resources/back.fbx");
 
     // tofu
-    EnemyTofu* tofu = new EnemyTofu();
-    tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.5f, 10.0f));
-    tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
-    EnemyManager::Instance().Register(tofu);
+    //EnemyTofu* tofu = new EnemyTofu();
+    //tofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.5f, 10.0f));
+    //tofu->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(90), 0.0f, 0.0f));
+    //EnemyManager::Instance().Register(tofu);
     
 }
 

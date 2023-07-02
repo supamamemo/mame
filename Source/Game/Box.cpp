@@ -42,10 +42,9 @@ void Box::Render(const float& elapsedTime)
 
     // DrawColl‚ğ­‚È‚­‚·‚é‚½‚ß‚Éplayer‚©‚ç‹ß‚¢‚à‚Ì‚¾‚¯•`‰æ‚·‚é
     {
-        const float& boxPosX = GetTransform()->GetPosition().x;
+        const float& boxPosX    = GetTransform()->GetPosition().x;
         const float& playerPosX = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x;
-        const float vecX = boxPosX - playerPosX;
-        const float lengthX = sqrtf(vecX * vecX);
+        const float  lengthX    = fabsf(boxPosX - playerPosX);
 
         if (lengthX > renderLengthXLimit_) return;
     }

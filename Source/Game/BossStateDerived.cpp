@@ -17,9 +17,13 @@ bool State::FindPlayer()
     const DirectX::XMFLOAT3& playerPos = player->GetTransform()->GetPosition();
     const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
 
-    // プレイヤーとの距離が索敵距離より遠ければfalse
-    const float length = fabsf(playerPos.x - ownerPos.x);
-    if (length > owner->GetSerchLength()) return false;
+    // プレイヤーとの距離Yが索敵距離Yより遠ければfalse
+    const float lengthY = fabsf(playerPos.y - ownerPos.y);
+    if (lengthY > owner->GetSerchLengthY()) return false;
+
+    // プレイヤーとの距離Xが索敵距離Xより遠ければfalse
+    const float lengthX = fabsf(playerPos.x - ownerPos.x);
+    if (lengthX > owner->GetSerchLengthX()) return false;
 
     // 右を向いている状態でプレイヤーが自分より右にいるか、
     // 左を向いている状態でプレイヤーが自分より左にいたら発見しているのでtrue
@@ -33,33 +37,35 @@ bool State::FindPlayer()
     return false;
 }
 
+
 // IdleState
 namespace BOSS
 {
     // 初期化
     void IdleState::Enter()
-    {
-        // アニメーションセット
-        owner->PlayAnimation(static_cast<int>(BossAnimation::Idle), true);
-                
+    {               
         // materialColorを設定(セーフティー(青))
         owner->SetMaterialColor(DirectX::XMFLOAT4(0, 0, 1, 0.4f));
 
-        // タイマーをセット
+        // 待機時間をセット
         SetTimer(2.0f);
+
+        // アニメーションセット
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Idle), true);
     }
 
     // 更新
     void IdleState::Execute(float elapsedTime)
     {
-        // アニメーション更新
-        owner->UpdateAnimation(elapsedTime);
-
-        // タイマーが0になったらFindeステートへ
-        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Find));
-
-        // 時間を減らす
+        // 待機時間を減少
         SubtractTime(elapsedTime);
+
+        // 待機時間が終了したら発見ステートへ遷移
+        if (GetTimer() <= 0.0f)
+        {
+            owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Find));
+            return;
+        }
 
         owner->CollisionEnemyVsPlayer();    // プレイヤーとの衝突判定処理
     }
@@ -77,24 +83,21 @@ namespace BOSS
     // 初期化
     void FindState::Enter()
     {
-        // アニメーションセット
-        owner->PlayAnimation(static_cast<int>(BossAnimation::Find), true);
-
         // materialColor(見つけた(黄色))
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 0.4f));
 
         // タイマーをセット
         SetTimer(1.0f);
+
+        // アニメーションセット
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Find), true);
     }
 
     // 更新
     void FindState::Execute(float elapsedTime)
     {
-        // アニメーション更新
-        owner->UpdateAnimation(elapsedTime);
-
         // タイマーが0になったらAttackStateへ
-        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Rotate));
+        if (GetTimer() < 0)owner->GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Turn));
 
         // 時間を減らす
         SubtractTime(elapsedTime);
@@ -108,11 +111,11 @@ namespace BOSS
     }
 }
 
-// RotateState
+// TurnState
 namespace BOSS
 {
     // 初期化
-    void RotateState::Enter()
+    void TurnState::Enter()
     {
         // materialColor(回転(緑))
         owner->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.4f));
@@ -130,7 +133,7 @@ namespace BOSS
     }
 
     // 更新
-    void RotateState::Execute(float elapsedTime)
+    void TurnState::Execute(float elapsedTime)
     {
         // プレイヤーの方向に向くように回転する
         {
@@ -168,7 +171,7 @@ namespace BOSS
     }
 
     // 終了
-    void RotateState::Exit()
+    void TurnState::Exit()
     {
     }
 }
@@ -299,9 +302,7 @@ namespace TOFU
     // 更新
     void WalkState::Execute(float elapsedTime)
     {
-        Transform*   transform      = owner->GetTransform();                
-        const float  moveDirectionX = owner->GetMoveDirectionX();           
-        const float  velocityX      = (owner->GetMoveSpeed() * elapsedTime);
+        Transform* transform = owner->GetTransform();                
 
         // 向いている方向に移動
         owner->Move(owner->GetMoveDirectionX(), owner->GetMoveSpeed());
@@ -309,29 +310,35 @@ namespace TOFU
         // playerが索敵範囲にいたら発見ステートへ遷移
         if (FindPlayer())
         {
-            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
-            return;
+            // 地面か敵の上に乗っていたら遷移させるようにする(空中ジャンプ防止)
+            if (owner->GetIsGround() || owner->GetIsOnFriend())
+            {
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
+                return;
+            }
         }
 
         // 右方向に向いている場合、目的地も左側にあるので到達しているか判定する
-        if (moveDirectionX == 1.0f)
+        if (owner->GetMoveDirectionX() == 1.0f)
         {
             // 目的地を超えていたら旋回ステートへ遷移
             if (transform->GetPosition().x >= owner->GetDestination())
             {
-                transform->SetPositionX(owner->GetDestination());       // 位置修正             
+                // ※追跡の移動などで目的地を大幅に超えていた場合、位置修正が瞬間移動になってしまうのでコメントアウトにしている
+                //transform->SetPositionX(owner->GetDestination());       // 位置修正             
                 owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
                 return;
             }
         }
         // 左方向に向いている場合、目的地も左側にあるので到達しているか判定する
-        else if (moveDirectionX == -1.0f)
+        else if (owner->GetMoveDirectionX() == -1.0f)
         {
             // 目的地を超えていたら旋回ステートへ遷移
             if (transform->GetPosition().x <= owner->GetDestination())
             {
-                transform->SetPositionX(owner->GetDestination());       // 位置修正             
+                // ※追跡の移動などで目的地を大幅に超えていた場合、位置修正が瞬間移動になってしまうのでコメントアウトにしている
+                //transform->SetPositionX(owner->GetDestination());       // 位置修正              
                 owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
                 return;
@@ -364,14 +371,14 @@ namespace TOFU
         // 回転中ならreturn
         if (owner->Turn(elapsedTime, moveDirectionX, turnSpeed)) return;
         
-        // 回転が終わった後、範囲内にプレイヤーがいたら発見ステートへ遷移
-        if (State::FindPlayer())
-        {
-            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
-            return;
-        }
-        // 歩行ステートへ遷移
-        else
+        //// 回転が終わった後、範囲内にプレイヤーがいたら発見ステートへ遷移
+        //if (State::FindPlayer())
+        //{
+        //    owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
+        //    return;
+        //}
+        //// 歩行ステートへ遷移
+        //else
         {
             // 移動範囲の中心から移動方向に向かって移動範囲の半径分進んだ位置を目的地に設定する
             const float moveRangeCenterX = owner->GetMoveRangeCenterX();
@@ -398,6 +405,9 @@ namespace TOFU
         // 黄色
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.8f, 0.0f, 0.4f));
 
+        owner->SetVelocityX(0.0f); // X速度をリセット
+        owner->Move(0.0f, 0.0f);   // 横移動入力リセット
+
         // stateをリセット
         state = 0;
 
@@ -410,22 +420,16 @@ namespace TOFU
     {
         switch (state)
         {
-        case 0: // 地面についていたらジャンプさせる(空中ジャンプ防止)
-            if (owner->GetIsGround())
-            {
-                owner->Jump(owner->GetJumpSpeed());
-                ++state;
-                break;
-            }
-
+        case 0: // ジャンプさせる
+            owner->Jump(owner->GetJumpSpeed());
+            ++state;
             break;
-        case 1: // 地面についたら追跡ステートへ遷移
-            if (owner->GetIsGround())
+        case 1: // 地面か敵の上についたら追跡ステートへ遷移
+            if (owner->GetIsGround() || owner->GetIsOnFriend())
             {
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Track));
                 break;
             }
-
             break;
         }
     }
@@ -453,7 +457,7 @@ namespace TOFU
         owner->SetTurnSpeed(ToRadian(540.0f));
 
         // 追跡時間を設定
-        State::SetTimer(3.0f);
+        SetTimer(3.0f);
 
         owner->PlayAnimation(TofuAnimation::Walk, true);
         owner->SetAnimationSpeed(1.25f); // アニメーション速度を速めに設定
@@ -462,9 +466,17 @@ namespace TOFU
     // 更新
     void TrackState::Execute(float elapsedTime)
     {
+        const std::unique_ptr<Player>& player = PlayerManager::Instance().GetPlayer();
+
+        // プレイヤーが死んでいたら戦闘待機ステートへ遷移
+        if (player->GetHealth() <= 0)
+        {
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::IdleBattle));
+        }
+
         // プレイヤーへ向かう方向を算出して移動方向に設定
         {
-            const DirectX::XMFLOAT3& playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+            const DirectX::XMFLOAT3& playerPos = player->GetTransform()->GetPosition();
             const DirectX::XMFLOAT3& ownerPos  = owner->GetTransform()->GetPosition();
             const float              vec       = (playerPos.x - ownerPos.x);
             const float              vec_n     = (vec / fabs(vec));
@@ -479,10 +491,10 @@ namespace TOFU
 
         // プレイヤーが索敵範囲から外れたら追跡時間を減少し、
         // 追跡時間が終わったら旋回ステートへ遷移する(通常時に戻る)
-        if (!State::FindPlayer())
+        if (!FindPlayer())
         {
-            State::SubtractTime(elapsedTime);
-            if (State::GetTimer() <= 0.0f)
+            SubtractTime(elapsedTime);
+            if (GetTimer() <= 0.0f)
             {
                 // 移動方向の設定
                 {
@@ -504,7 +516,7 @@ namespace TOFU
         // プレイヤーが索敵範囲にいれば追跡時間を設定
         else
         {
-            State::SetTimer(3.0f);
+            SetTimer(3.0f);
         }
     }
 
@@ -523,10 +535,10 @@ namespace TOFU
         owner->SetMoveSpeed(0.0f);
 
         // 戦闘待機時間を設定
-        State::SetTimer(3.0f);
+        SetTimer(3.0f);
 
         // 再生停止
-        owner->PlayAnimation(-1, false);
+        owner->PlayAnimation(TofuAnimation::Turn, true, 1.25f);
     }
 
     void IdleBattleState::Execute(float elapsedTime)
@@ -534,15 +546,19 @@ namespace TOFU
         // 旋回処理
         owner->Turn(elapsedTime, owner->GetMoveDirectionX(), owner->GetTurnSpeed());
         
-        State::SubtractTime(elapsedTime); // 待機時間減少
+        SubtractTime(elapsedTime); // 待機時間減少
 
-        if (State::GetTimer() > 0.0f) return;
+        if (GetTimer() > 0.0f) return;
 
-        // プレイヤーが範囲内にいたら追跡ステートへ遷移
-        if (State::FindPlayer())
+        // プレイヤーが範囲内にいたら発見ステートへ遷移
+        if (FindPlayer())
         {
-            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Track));
-            return;            
+            // 地面か敵の上に乗っていたら遷移させるようにする(空中ジャンプ防止)
+            if (owner->GetIsGround() || owner->GetIsOnFriend())
+            {
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
+                return;
+            }
         }
         // プレイヤーが範囲内にいなくて待機時間が終了していれば旋回ステートへ遷移(通常時に戻る)
         else 

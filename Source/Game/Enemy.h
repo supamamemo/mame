@@ -66,17 +66,24 @@ public:
     const float& GetMoveRangeCenterX() const { return moveRangeCenterX_; }
     void SetMoveRangeCenterX(const float& moveRangeCenterX ) { moveRangeCenterX_ = moveRangeCenterX; }    
     
-    // 索敵距離の取得・設定
-    const float& GetSerchLength() const { return serchLength_; }
-    void SetSerchLength(const float& serchLength) { serchLength_ = serchLength; }
+    // 索敵距離Xの取得・設定
+    const float& GetSerchLengthX() const { return searchLengthX_; }
+    void SetSerchLengthX(const float& searchLengthX) { searchLengthX_ = searchLengthX; }       
+    // 索敵距離Yの取得・設定
+    const float& GetSerchLengthY() const { return searchLengthY_; }
+    void SetSerchLengthY(const float& searchLengthY) { searchLengthY_ = searchLengthY; }
 
     // 移動方向Xの取得・設定
     const float& GetMoveDirectionX() const { return moveDirectionX_; }
     void SetMoveDirectionX(const float& moveDirectionX) { moveDirectionX_ = moveDirectionX; }
 
     // 味方に当たったかの取得・設定
-    const bool GetIsHitFriend() const { return isHitFrined_; }
-    void SetIsHitFriend(const bool isHitFriend) { isHitFrined_ = isHitFriend; }
+    const bool GetIsHitFriend() const { return isHitFriend_; }
+    void SetIsHitFriend(const bool isHitFriend) { isHitFriend_ = isHitFriend; }
+
+    // 味方の上に乗っかっているかの取得・設定
+    const bool GetIsOnFriend() const { return isOnFriend_; }
+    void SetIsOnFriend(const bool isOnFriend) { isOnFriend_ = isOnFriend; }
 
 public: // static変数
     static float renderLengthXLimit_;   // 敵を描画する距離制限
@@ -87,15 +94,17 @@ public:
     CannonBallManager cannonBallManager = {};               // 大砲の弾マネージャー
 
 protected:
-    float destination_      = 0.0f;     // 目的地
-    float moveRangeCenterX_ = 0.0f;     // 移動範囲の中心X
-    float moveRangeRadius_  = 6.0f;     // 移動範囲の半径
-    float serchLength_      = 6.0f;     // 索敵できる距離
-    float moveDirectionX_   = 1.0f;     // 移動方向X  
+    float destination_      =    0.0f;     // 目的地
+    float moveRangeCenterX_ =    0.0f;     // 移動範囲の中心X
+    float moveRangeRadius_  =    4.0f;     // 移動範囲の半径
+    float searchLengthX_    =    4.0f;     // X軸で索敵できる距離
+    float searchLengthY_    =    2.0f;     // Y軸で索敵できる距離
+    float moveDirectionX_   =   -1.0f;     // 移動方向X（デフォルトは左向き）
 
-    bool  isHitFrined_      = false;    // 味方に当たったか
+    bool  isHitFriend_      =   false;     // 味方に当たったか
+    bool  isOnFriend_       =   false;     // 味方の上に乗っかっているか
 
 private:
-    bool moveRight          = true; // 右に進むかどうか
+    bool moveRight          =   true; // 右に進むかどうか
 };
 

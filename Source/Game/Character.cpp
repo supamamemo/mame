@@ -221,7 +221,7 @@ void Character::UpdateVerticalVelocity(const float& elapsedFrame)
 {
     // 重力処理
     velocity.y += gravity * elapsedFrame;
-    const float gravityMax = -20.0f;
+    const float gravityMax = -18.0f;
     if (velocity.y < gravityMax) velocity.y = gravityMax;
 }
 
@@ -327,8 +327,8 @@ void Character::VerticalFall(const float& fallSpeed)
                     else
                     {
                         // 着地した
-                        if (!isGround) OnLanding();
-                        isGround = true;
+                        if (!isGround_) OnLanding();
+                        isGround_ = true;
                         break;
                     }
                 }
@@ -340,7 +340,7 @@ void Character::VerticalFall(const float& fallSpeed)
     if (!isHitY)
     {
         GetTransform()->AddPositionY(fallSpeed);
-        isGround = false;
+        isGround_ = false;
 
         // それなりに下に落ちたら落下死・落下ミスしたときの処理を行う
         if (GetTransform()->GetPosition().y < -15.0f)
@@ -365,7 +365,7 @@ void Character::VerticalRise(const float& riseSpeed)
     UpdateAABB(); 
 
     // 空中にいる
-    isGround = false;
+    isGround_ = false;
 
     // 地形に当たっているか衝突判定処理を行う
     {
@@ -421,7 +421,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
         // 摩擦力
         float friction = this->friction * elapsedFrame;
         // 空中にいるときは摩擦力を減らす
-        if (!isGround) friction *= airControl;
+        if (!isGround_) friction *= airControl;
 
         // 摩擦による横方向の減速処理
         if (dist > friction)
@@ -455,7 +455,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
             float acceleration = this->acceleration * elapsedFrame;
 
             // 空中にいるときは加速力を減らす
-            if (!isGround) acceleration *= airControl;
+            if (!isGround_) acceleration *= airControl;
 
             // 移動ベクトルによる加速処理
             velocity.x += moveVecX_ * acceleration;

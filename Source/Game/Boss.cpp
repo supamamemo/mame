@@ -21,7 +21,7 @@ Boss::Boss()
 
     GetStateMachine()->RegisterState(new BOSS::IdleState(this));
     GetStateMachine()->RegisterState(new BOSS::FindState(this));
-    GetStateMachine()->RegisterState(new BOSS::RotateState(this));
+    GetStateMachine()->RegisterState(new BOSS::TurnState(this));
     GetStateMachine()->RegisterState(new BOSS::AttackState(this));
     GetStateMachine()->RegisterState(new BOSS::RecoilState(this));
 
@@ -56,7 +56,8 @@ Boss::~Boss()
 // 初期化
 void Boss::Initialize()
 {
-    GetTransform()->SetPosition(DirectX::XMFLOAT3(2.0f, 1.5f, 10.0f));
+    GetTransform()->SetPosition(DirectX::XMFLOAT3(3.0f, 1.5f, 10.0f));
+
     // ※ここの初期回転値によって振り向きの方向が変わるので注意
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, ToRadian(180.0f), 0.0f, 0.0f));
 
@@ -101,6 +102,10 @@ void Boss::Update(const float& elapsedTime)
     UpdateAABB();                       // AABBの更新処理
 
     UpdateVelocity(elapsedTime);        // 速力処理更新処理
+
+    // ひるんでいるときなどにプレイヤーと衝突してプレイヤーがダメージを食らわないように
+    // 衝突判定処理はステート毎に行う
+    // CollisionEnemyVsPlayer();
 
     UpdateInvincibleTimer(elapsedTime); // 無敵時間の更新処理
 

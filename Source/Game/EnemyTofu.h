@@ -23,6 +23,7 @@ public:
     void Render(const float& elapsedTime)  override; // 描画処理
     void DrawDebug()                       override; // デバッグ描画
 
+    void OnLanding()                       override; // 着地時に呼ばれる
     void OnDead()                          override; // 死亡したときに呼ばれる
 
     void OnHitWall()                       override; // 壁に当たった時に呼ばれる
