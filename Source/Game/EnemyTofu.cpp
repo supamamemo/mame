@@ -75,11 +75,13 @@ void EnemyTofu::Update(const float& elapsedTime)
 
     UpdateAABB();                       // AABBの更新処理
 
+#ifdef USE_IMGUI
     static bool ONNNNNNNN = false;
     ImGui::Begin("ONNNNNNNNNNNNNNNNNNNNNnn");
     ImGui::Checkbox("ONNNNNNNNNNNNNNNNNNNN", &ONNNNNNNN);
     ImGui::End();
     if (ONNNNNNNN) UpdateVelocity(elapsedTime);        // 速力処理更新処理
+#endif // USE_IMGUI
 
     CollisionEnemyVsPlayer();           // プレイヤーとの衝突判定処理
  

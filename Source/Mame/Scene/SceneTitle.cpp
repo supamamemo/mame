@@ -30,7 +30,7 @@ SceneTitle::SceneTitle()
     {
 #if MAME
         Graphics& graphics = Graphics::Instance();
-        castleModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
+        castleModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/castle.fbx", true);
         groundModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/ground.fbx", true);
 #endif
     }

@@ -14,6 +14,9 @@
 
 #include "../UIManager.h"
 
+#include "../Stage/StageManager.h"
+#include "../Stage/StagePlains.h"
+
 // コンストラクタ
 StageTutorial::StageTutorial()
 {
@@ -37,9 +40,6 @@ StageTutorial::StageTutorial()
     // 背景仮
     back = std::make_unique<Box>("./resources/back.fbx");
 
-    // 誘導用
-    box = std::make_unique<Box>("./resources/cube.fbx");
-
     // UI
     {
         UIManager& uiManager = UIManager::Instance();
@@ -48,14 +48,11 @@ StageTutorial::StageTutorial()
         uiManager.Register(new UI(L"./resources/tutorial/stick.png"));      // 1
         uiManager.Register(new UI(L"./resources/tutorial/A.png"));          // 2
     }
-
-    // エフェクト読み込み
-    effect = new Effect("./resources/effect/e/bimu.efk");
 }
 
 StageTutorial::~StageTutorial()
 {
-    delete effect;
+
 }
 
 // 初期化
@@ -93,11 +90,7 @@ void StageTutorial::Initialize()
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
     // 誘導用
-    {
-        box->GetTransform()->SetPosition(DirectX::XMFLOAT3(-3.0f, 2.5f, 10.0f));
-        box->GetTransform()->SetScale(DirectX::XMFLOAT3(150.0f, 50.0f, 130.0f));
-        box->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 0.3f));
-    }
+    tutorialState = STATE::MoveReception;
 
     // UI
     {
@@ -108,6 +101,10 @@ void StageTutorial::Initialize()
         UIManager::Instance().GetUI(2)->SetPosition(DirectX::XMFLOAT2(350, 330));
         UIManager::Instance().GetUI(2)->SetSize(DirectX::XMFLOAT2(100, 100));
     }
+
+    // エフェクト読み込み
+    effect = new Effect("./resources/effect/box.efk");
+    effect->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
 }
 
 // 終了
@@ -123,6 +120,12 @@ void StageTutorial::Finalize()
     // trttain終了化
     TerrainManager::Instance().Finalize();
     TerrainManager::Instance().Clear(); // vectorクリア
+
+    // uimanager
+    UIManager::Instance().Finalize();
+    UIManager::Instance().Clear();
+
+    delete effect;
 }
 
 // Updateの前に呼ばれる
@@ -163,9 +166,6 @@ void StageTutorial::Update(const float& elapsedTime)
 
     // tutorialstate
     TutorialStateUpdate(elapsedTime);
-
-    // effect
-    //effect->Play({ 0,0,0 });
 }
 
 // Updateの後に呼ばれる
@@ -226,11 +226,10 @@ void StageTutorial::DrawDebug()
     // 背景仮
     back->DrawDebug();
 
-    // 誘導用
-    box->DrawDebug();
-
     // ui
     UIManager::Instance().DrawDebug();
+
+    effect->DrawDebug();
 
     ImGui::Begin("s");
     ImGui::DragInt("stickState", &stickMoveState);
@@ -247,9 +246,17 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
     {
     case STATE::MoveReception:
         // UI
-        UIManager::Instance().GetUI(0)->SetIsRender(true);
-        UIManager::Instance().GetUI(1)->SetIsRender(true);
         StickState(elapsedTime);
+
+        // effect(緑の範囲)
+        //if (effect->GetTimer() > 4.7f)
+        if (effect->GetTimer() > 3.0f)
+        {
+            handle = effect->FadeOutEffect(effect->GetPosition(), effect->GetScale(), effect->GetColor(),110.0f);
+            //handle = effect->Play(effect->GetPosition(), effect->GetScale(), effect->GetColor());
+            effect->SetTimer(0.0f);
+        }
+        effect->AddTimer(elapsedTime);
 
         // 次に行く条件
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
@@ -258,13 +265,20 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
             UIManager::Instance().GetUI(0)->SetIsRender(false);
             UIManager::Instance().GetUI(1)->SetIsRender(false);
 
+            effect->Stop(handle);
+            effect->FadeOutEffect(effect->GetPosition(), effect->GetScale(), effect->GetColor(), 200.0f);
+
             tutorialState = STATE::JumpReception;
         }
 
         break;
     case STATE::JumpReception:
-        // UI
-        UIManager::Instance().GetUI(2)->SetIsRender(true);
+
+        if (gamePad.GetButton() & GamePad::BTN_A)
+        {
+            //StageManager::Instance().ChangeStage(new StagePlains);
+            //effect->Stop(handle);
+        }
 
         break;
     }
@@ -276,12 +290,17 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
     switch (tutorialState)
     {
     case STATE::MoveReception:
-        // 誘導用
-        box->Render(elapsedTime);
+        // UI
+        UIManager::Instance().GetUI(0)->SetIsRender(true);
+        UIManager::Instance().GetUI(1)->SetIsRender(true);
 
+        
 
         break;
     case STATE::JumpReception:
+        // UI
+        UIManager::Instance().GetUI(2)->SetIsRender(true);
+
         break;
     }
 }

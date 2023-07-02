@@ -18,12 +18,24 @@ Effect::Effect(const char* filename)
 }
 
 // çƒê∂
-Effekseer::Handle Effect::Play(const DirectX::XMFLOAT3& position, float scale)
+Effekseer::Handle Effect::Play(const DirectX::XMFLOAT3& position, DirectX::XMFLOAT3 scale, DirectX::XMFLOAT4 color)
 {
     Effekseer::ManagerRef effekseerManager = EffectManager::Instance().GetEffekseerManager();
 
     Effekseer::Handle handle = effekseerManager->Play(effekseerEffect, position.x, position.y, position.z);
-    effekseerManager->SetScale(handle, scale, scale, scale);
+    effekseerManager->SetScale(handle, scale.x, scale.y, scale.z);
+    
+
+    // colorê›íË
+    {
+        //EffekseerÇÃcolorÇÕ0~255ÇÁÇµÇ¢
+        Effekseer::Color col{ static_cast<unsigned char>(color.x * 255),
+            static_cast<unsigned char>(color.y * 255),
+        static_cast<unsigned char>(color.z * 255),
+        static_cast<unsigned char>(color.w * 255) };
+        effekseerManager->SetAllColor(handle, col);
+    }
+
     return handle;
 }
 
@@ -49,4 +61,63 @@ void Effect::SetScale(Effekseer::Handle handle, const DirectX::XMFLOAT3& scale)
     Effekseer::ManagerRef effekseerManager = EffectManager::Instance().GetEffekseerManager();
 
     effekseerManager->SetScale(handle, scale.x, scale.y, scale.z);
+}
+
+void Effect::DrawDebug()
+{
+    ImGui::Begin("effect");
+    
+    ImGui::DragInt("drawTime", &drawTime);
+
+    ImGui::DragFloat3("pos", &pos.x);
+    ImGui::DragFloat3("scale", &scale.x);
+    ImGui::ColorEdit4("color", &color.x);
+    ImGui::DragFloat("timer", &timer);
+    ImGui::End();
+}
+
+
+Effekseer::Handle Effect::FadeOutEffect(const DirectX::XMFLOAT3& position, DirectX::XMFLOAT3 scale, DirectX::XMFLOAT4 color, const float time)
+{
+    Effekseer::ManagerRef effekseerManager = EffectManager::Instance().GetEffekseerManager();
+
+
+    Effekseer::Vector3D p{ pos.x, pos.y, pos.z };
+
+    Effekseer::Handle handle = effekseerManager->Play(effekseerEffect, p, time);
+    effekseerManager->SetScale(handle, scale.x, scale.y, scale.z);
+
+
+    // colorê›íË
+    {
+        //EffekseerÇÃcolorÇÕ0~255ÇÁÇµÇ¢
+        Effekseer::Color col{ static_cast<unsigned char>(color.x * 255),
+            static_cast<unsigned char>(color.y * 255),
+        static_cast<unsigned char>(color.z * 255),
+        static_cast<unsigned char>(color.w * 255) };
+        effekseerManager->SetAllColor(handle, col);
+    }
+
+    return handle;
+}
+
+void Effect::FadeOutEffect(Effekseer::Handle handle, const float time)
+{
+    Effekseer::ManagerRef effekseerManager = EffectManager::Instance().GetEffekseerManager();
+
+
+    Effekseer::Vector3D p{ pos.x, pos.y, pos.z };
+
+    effekseerManager->Play(effekseerEffect, p, time);
+
+    effekseerManager->SetScale(handle, scale.x, scale.y, scale.z);
+    // colorê›íË
+    {
+        //EffekseerÇÃcolorÇÕ0~255ÇÁÇµÇ¢
+        Effekseer::Color col{ static_cast<unsigned char>(1.0f * 255),
+            static_cast<unsigned char>(0.0f * 255),
+        static_cast<unsigned char>(0.0f * 255),
+        static_cast<unsigned char>(1.0f * 255) };
+        effekseerManager->SetAllColor(handle, col);
+    }
 }

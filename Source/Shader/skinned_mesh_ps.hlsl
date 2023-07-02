@@ -41,7 +41,7 @@ float4 main(VS_OUT pin) :SV_TARGET
     
 
 
-    //return color;
+    return color * pin.color;
 
     
     return float4(diffuse + specular, alpha) * pin.color;

@@ -68,6 +68,7 @@ void Box::Render(const float& elapsedTime)
 // debug—p
 void Box::DrawDebug()
 {
+#ifdef USE_IMGUI
     ImGui::Begin(GetName());
 
     GetTransform()->DrawDebug();
@@ -75,4 +76,5 @@ void Box::DrawDebug()
     ImGui::ColorEdit4("color", &materialColor.x);
 
     ImGui::End();
+#endif
 }
