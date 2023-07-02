@@ -34,6 +34,7 @@ Boss::Boss()
     ++nameNum;
 }
 
+
 Boss::Boss(const char* filename)
 {
     Graphics& graphics = Graphics::Instance();
@@ -51,11 +52,13 @@ Boss::~Boss()
 {
 }
 
+
 // 初期化
 void Boss::Initialize()
 {
     GetTransform()->SetPosition(DirectX::XMFLOAT3(2.0f, 1.5f, 10.0f));
-    GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(180), 0.0f, 0.0f));
+    // ※ここの初期回転値によって振り向きの方向が変わるので注意
+    GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, ToRadian(180.0f), 0.0f, 0.0f));
 
     // TODO: ボスの当たり判定設定
     const DirectX::XMFLOAT3 min = { -0.6f, -0.0f, -0.6f };  // min設定
@@ -67,47 +70,53 @@ void Boss::Initialize()
     isInvincible = true;
 }
 
+
 // 終了化
 void Boss::Finalize()
 {
 }
+
 
 // Updateの前に呼ばれる
 void Boss::Begin()
 {
 }
 
+
 // 更新処理
 void Boss::Update(const float& elapsedTime)
 {
-    GamePad& gamePad = Input::Instance().GetGamePad();
+    //GamePad& gamePad = Input::Instance().GetGamePad();
 
-    float ax = gamePad.GetAxisRX();
+    //float ax = gamePad.GetAxisRX();
 
-    float speed = 0.001f;
-    speed *= ax;
-    DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
-    pos.x += speed;
-    model->GetTransform()->SetPosition(pos);
+    //float speed = 0.001f;
+    //speed *= ax;
+    //DirectX::XMFLOAT3 pos = model->GetTransform()->GetPosition();
+    //pos.x += speed;
+    //model->GetTransform()->SetPosition(pos);
 
-    UpdateAABB(); // AABBの更新処理
+    if (stateMachine) GetStateMachine()->Update(elapsedTime); // ステート更新処理
 
-    //debugModel->GetTransform()->SetPosition(model->GetTransform()->GetPosition());
-    //debugModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f));
+    UpdateAABB();                       // AABBの更新処理
 
-    if (stateMachine) GetStateMachine()->Update(elapsedTime);
+    UpdateVelocity(elapsedTime);        // 速力処理更新処理
+
+    UpdateInvincibleTimer(elapsedTime); // 無敵時間の更新処理
 
     // 無敵時間中のキャラクターの点滅(ダメージを受けたかの確認用)
-    if (invincibleTimer > 0.0f)
     {
-        modelColorAlpha = (static_cast<int>(invincibleTimer * 100.0f) & 0x04) ? 0.7f : 0.0f;
-    }
-    else
-    {
-        modelColorAlpha = 1.0f;
+        if (invincibleTimer > 0.0f)
+        {
+            modelColorAlpha = (static_cast<int>(invincibleTimer * 100.0f) & 0x04) ? 0.7f : 0.0f;
+        }
+        else
+        {
+            modelColorAlpha = 1.0f;
+        }
     }
 
-    UpdateInvincibleTimer(elapsedTime);
+    UpdateAnimation(elapsedTime);       // アニメーション更新
 }
 
 // Updateの後に呼ばれる

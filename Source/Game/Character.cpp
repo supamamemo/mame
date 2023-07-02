@@ -36,53 +36,7 @@ void Character::Render(const float& /*elapsedTime*/)
         model->skinned_meshes->render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, modelColorAlpha), nullptr);
     }
 
-
 #if _DEBUG
-
-    // デバッグモデルでの描画
-#if 0
-    DirectX::XMFLOAT4X4 debugTransform = {};
-
-    // ワールド行列の取得とスケール調整
-    DirectX::XMStoreFloat4x4(&debugTransform, debugModel->GetTransform()->CalcWorldMatrix(0.01f));
-
-    // ワールド行列設定
-    debugTransform = SetDebugModelTransform(debugTransform);
-
-    // 描画
-    debugModel->skinned_meshes->render(graphics.GetDeviceContext(), debugTransform, { 1.0f, 0.0f, 0.0f, 0.2f }, nullptr);
-#endif
-
-    // ラスタライザステート作成・設定
-#if 0
-    Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizer_state = nullptr;
-    
-    // ラスタライザステート作成
-    NO_CONST HRESULT hr = {};
-    NO_CONST D3D11_RASTERIZER_DESC rasterizer_desc = {};
-    //rasterizer_desc.FillMode                = D3D11_FILL_WIREFRAME; // 塗りつぶし
-    rasterizer_desc.FillMode                = D3D11_FILL_SOLID; // 塗りつぶし
-    //rasterizer_desc.CullMode                = D3D11_CULL_BACK;	    // 背面カリング（裏面を描画しない）
-    rasterizer_desc.CullMode                = D3D11_CULL_NONE;	    // カリングなし
-
-    // ?
-    //rasterizer_desc.FrontCounterClockwise   = FALSE;			    // 三角形をを反時計回り（裏側）にするか
-    rasterizer_desc.FrontCounterClockwise   = TRUE;			    // 三角形をを反時計回り（裏側）にするか
-
-    rasterizer_desc.DepthBias               = 0;	                // 指定されたピクセルに追加された深度値
-    rasterizer_desc.DepthBiasClamp          = 0;	                // ピクセルの最大深度バイアス
-    rasterizer_desc.SlopeScaledDepthBias    = 0;	                // 指定されたピクセルの傾きのスカラー
-    rasterizer_desc.DepthClipEnable         = TRUE;	                // 距離によるクリッピングを行うかのフラグ
-    rasterizer_desc.ScissorEnable           = FALSE;                // シザー矩形カリングを行うかのフラグ
-    rasterizer_desc.MultisampleEnable       = FALSE;                // マルチサンプリングアンチエイリアス(略称：MSAA)のレンダーターゲットを使用している時、四辺形ラインアンチエイリアスを行うか、アルファラインアンチエイリアスを行うかを決めるフラグ
-    rasterizer_desc.AntialiasedLineEnable   = FALSE;                // MSAAのレンダーターゲットを使用している時、線分描画でMultisampleEnableがfalseのとき、アンチエイリアスを有効にします
-    hr = graphics.GetDevice()->CreateRasterizerState(&rasterizer_desc, rasterizer_state.GetAddressOf());
-    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-    // ラスタライザステート設定(ワイヤーフレーム)
-    graphics.GetDeviceContext()->RSSetState(rasterizer_state.Get());
-
-#else
     // RS番号
     {
         // 0 ソリッド・後ろカリング
@@ -94,19 +48,15 @@ void Character::Render(const float& /*elapsedTime*/)
     // ラスタライザ設定(ソリッド・カリングなし)
     graphics.GetShader()->SetState(graphics.GetDeviceContext(), 3, 0, 0);
 
-#endif
     // 回転なしワールド行列の作成
-    NO_CONST  DirectX::XMFLOAT4X4 noRotationTransform = {};
+    NO_CONST DirectX::XMFLOAT4X4 noRotationTransform = {};
     {
         const DirectX::XMFLOAT3  scale      = DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f);
         const DirectX::XMFLOAT3& position   = GetTransform()->GetPosition();
-        const DirectX::XMMATRIX S = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
-        const DirectX::XMMATRIX T = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
+        const DirectX::XMMATRIX  S          = DirectX::XMMatrixScaling(scale.x, scale.y, scale.z);
+        const DirectX::XMMATRIX  T          = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
         DirectX::XMStoreFloat4x4(&noRotationTransform, S * T);
     }
-
-    // カラー設定
-    //const DirectX::XMFLOAT4 materialColor = { 1, 0, 0, 0.4f };
     
     // AABB描画
     //geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
@@ -163,7 +113,7 @@ void Character::Move(
     const float& moveSpeed)
 {
     // 移動方向ベクトルを設定
-    moveVecX = vx;
+    moveVecX_ = vx;
 
     // 最大速度設定
     maxMoveSpeed = moveSpeed; // elapsedTimeを乗算しない
@@ -192,10 +142,14 @@ void Character::Turn(
 
     // 自身の回転値から前方向を求める
     const float frontX = sinf(rotation.y);
-    const float frontZ = cosf(rotation.y);
 
     // 回転角を求めるため、2つの単位ベクトルの内積計算する
     const float dot = (frontX * vx) /*+ (frontZ * vz)*/;
+
+    // 回転角が微小な場合は回転を行わない
+    const float angle = acosf(dot); // ラジアン
+    //if (fabsf(angle) <= 0.001f) return;
+    if (fabsf(angle) <= 0.01f) return;
 
     // 内積値は-1.0~1.0で表現されており、2つの単位ベクトルの角度が
     // 小さいほど1.0に近づくという性質を利用して回転速度を調整する  
@@ -203,7 +157,8 @@ void Character::Turn(
     if (rot > turnSpeed) rot = turnSpeed;
 
     // 左右判定を行うために2つの単位ベクトルの外積を計算する
-    const float cross = (frontZ * vx) /*- (frontX * vz)*/;
+    const float frontZ = cosf(rotation.y);
+    const float cross  = (frontZ * vx) /*- (frontX * vz)*/;
 
     // 2Dの外積値が正の場合か負の場合によって左右判定が行える
     // 左右判定を行うことによって左右回転を選択する
@@ -310,15 +265,11 @@ void Character::VerticalFall(const float& fallSpeed)
             if (Collision::IntersectAABBVsAABB(this->aabb_, terrain->aabb_))
             {
                 // 上下左右にそれぞれ重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
-                NO_CONST float vec = 0.0f;
-                vec                         = aabb_.min.y - terrain->aabb_.max.y;
-                const float overlapUp       = sqrtf(vec * vec); // 上からめり込んでいる
-                vec                         = aabb_.max.y - terrain->aabb_.min.y;
-                const float overlapBottom   = sqrtf(vec * vec); // 下からめり込んでいる
-                vec                         = aabb_.min.x - terrain->aabb_.max.x;
-                const float overlapRight    = sqrtf(vec * vec); // 右からめり込んでいる
-                vec                         = aabb_.max.x - terrain->aabb_.min.x;
-                const float overlapLeft     = sqrtf(vec * vec); // 左からめり込んでいる
+                // 符号がマイナスでもプラスの距離が求められるように絶対値にする
+                const float overlapUp       = fabsf(aabb_.min.y - terrain->aabb_.max.y); // 上からめり込んでいる
+                const float overlapBottom   = fabsf(aabb_.max.y - terrain->aabb_.min.y); // 下からめり込んでいる
+                const float overlapRight    = fabsf(aabb_.min.x - terrain->aabb_.max.x); // 右からめり込んでいる
+                const float overlapLeft     = fabsf(aabb_.max.x - terrain->aabb_.min.x); // 左からめり込んでいる
                 // 一番小さい(重なっていない)値を求める(
                 const float overlapY        = (std::min)(overlapUp, overlapBottom);
                 const float overlapX        = (std::min)(overlapRight, overlapLeft);
@@ -388,14 +339,18 @@ void Character::VerticalFall(const float& fallSpeed)
     // 地形に当たっていなければ落下させる
     if (!isHitY)
     {
-        // 空中に浮いている
         GetTransform()->AddPositionY(fallSpeed);
         isGround = false;
 
-        // 下に落ちたら落下死・落下ミスしたときの処理を行う
+        // それなりに下に落ちたら落下死・落下ミスしたときの処理を行う
         if (GetTransform()->GetPosition().y < -15.0f)
         {
             OnFallDead(); 
+        }
+        // 画面から見えなくなるくらいまで落ちたらX速度を0にする
+        else if (GetTransform()->GetPosition().y < -3.0f)
+        {
+            velocity.x = 0.0f;
         }
     }
 }
@@ -423,15 +378,11 @@ void Character::VerticalRise(const float& riseSpeed)
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
             {
                 // 上下左右のそれぞれ重なっている値を求める
-                NO_CONST float vec = 0.0f;
-                vec                         = aabb_.min.y - terrain->aabb_.max.y;
-                const float overlapUp       = sqrtf(vec * vec); // 上からめり込んでいる
-                vec                         = aabb_.max.y - terrain->aabb_.min.y;
-                const float overlapBottom   = sqrtf(vec * vec); // 下からめり込んでいる
-                vec                         = aabb_.min.x - terrain->aabb_.max.x;
-                const float overlapRight    = sqrtf(vec * vec); // 右からめり込んでいる
-                vec                         = aabb_.max.x - terrain->aabb_.min.x;
-                const float overlapLeft     = sqrtf(vec * vec); // 左からめり込んでいる
+                // 符号がマイナスでもプラスの距離が求められるように絶対値にする
+                const float overlapUp       = fabsf(aabb_.min.y - terrain->aabb_.max.y); // 上からめり込んでいる
+                const float overlapBottom   = fabsf(aabb_.max.y - terrain->aabb_.min.y); // 下からめり込んでいる
+                const float overlapRight    = fabsf(aabb_.min.x - terrain->aabb_.max.x); // 右からめり込んでいる
+                const float overlapLeft     = fabsf(aabb_.max.x - terrain->aabb_.min.x); // 左からめり込んでいる
                 // 一番小さい(重なっていない)値を求める
                 const float overlapY        = (std::min)(overlapUp, overlapBottom);
                 const float overlapX        = (std::min)(overlapRight, overlapLeft);
@@ -497,7 +448,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
     else if (dist <= maxMoveSpeed)
     {
         // 移動ベクトルがゼロベクトルでないなら加速する
-        const float moveVecDist = sqrtf(moveVecX * moveVecX);
+        const float moveVecDist = sqrtf(moveVecX_ * moveVecX_);
         if (moveVecDist > 0.0f)
         {
             // 加速力
@@ -507,13 +458,13 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
             if (!isGround) acceleration *= airControl;
 
             // 移動ベクトルによる加速処理
-            velocity.x += moveVecX * acceleration;
+            velocity.x += moveVecX_ * acceleration;
 
             // 最大速度制限
             const float dist = sqrtf(velocity.x * velocity.x);
             if (dist > maxMoveSpeed)
             {
-                velocity.x = moveVecX * maxMoveSpeed;
+                velocity.x = moveVecX_ * maxMoveSpeed;
             }
 
             //// 下り坂でガタガタしないようにする
@@ -525,16 +476,18 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
     }
 
     // 移動ベクトルをリセット
-    moveVecX = 0.0f;
+    moveVecX_ = 0.0f;
 }
 
 // 水平移動更新処理
 void Character::UpdateHorizontalMove(const float& elapsedTime)
 {
-    // 水平速力量計算
-    const float velocityLengthX = sqrtf(velocity.x * velocity.x);
+    // X速度がゼロでも当たり判定が機能するように消している
 
-    if (velocityLengthX > 0.0f)
+    // 水平速力量計算
+    //const float velocityLengthX = sqrtf(velocity.x * velocity.x);
+
+    //if (velocityLengthX > 0.0f)
     {
         // 水平移動値
         const float mx = velocity.x * elapsedTime;
@@ -562,15 +515,11 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
             {
                 // 上下左右のそれぞれ重なっている値を求める
-                NO_CONST float vec = 0.0f;
-                vec                         = aabb_.min.y - terrain->aabb_.max.y;
-                const float overlapUp       = sqrtf(vec * vec); // 上からめり込んでいる
-                vec                         = aabb_.max.y - terrain->aabb_.min.y;
-                const float overlapBottom   = sqrtf(vec * vec); // 下からめり込んでいる
-                vec                         = aabb_.min.x - terrain->aabb_.max.x;
-                const float overlapRight    = sqrtf(vec * vec); // 右からめり込んでいる
-                vec                         = aabb_.max.x - terrain->aabb_.min.x;
-                const float overlapLeft     = sqrtf(vec * vec); // 左からめり込んでいる
+                // 符号がマイナスでもプラスの距離が求められるように絶対値にする
+                const float overlapUp       = fabsf(aabb_.min.y - terrain->aabb_.max.y); // 上からめり込んでいる
+                const float overlapBottom   = fabsf(aabb_.max.y - terrain->aabb_.min.y); // 下からめり込んでいる
+                const float overlapRight    = fabsf(aabb_.min.x - terrain->aabb_.max.x); // 右からめり込んでいる
+                const float overlapLeft     = fabsf(aabb_.max.x - terrain->aabb_.min.x); // 左からめり込んでいる
                 // 一番重なっていない値を求める
                 const float overlapY        = (std::min)(overlapUp, overlapBottom);
                 const float overlapX        = (std::min)(overlapRight, overlapLeft);
@@ -610,6 +559,10 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
                 // 押し戻し後のAABBの最小座標と最大座標を更新
                 UpdateAABB();
 
+                // 壁に当たった時の処理
+                if (!isHitWall_) OnHitWall();
+                isHitWall_ = true;
+
                 break;
             }
         }
@@ -620,6 +573,7 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
     {
         // 移動処理
         GetTransform()->AddPositionX(horizontalSpeed);
+        isHitWall_ = false;
     }
 }
 

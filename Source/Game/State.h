@@ -14,6 +14,9 @@ public:
     virtual void Execute(float elapsedTime) = 0;
     // ステートから出ていくときのメソッド
     virtual void Exit() = 0;
+
+public:
+    bool FindPlayer();  // プレイヤーを索敵する(豆腐の歩行と追跡ステートで使いたかったのでここに移動)
     
 public:
     const char* GetName() { return name; }
@@ -21,18 +24,9 @@ public:
     float GetTimer() const { return timer; }
     void SubtractTime(float time) { timer -= time; }
 
-
-    void SetMoveSpeed(float speed) { moveSpeed = speed; }
-    float GetMoveSpeed() { return moveSpeed; }
-    void SetRotationSpeed(float rotSpeed) { rotationSpeed = rotSpeed; }
-    float GetRotationSpeed() { return rotationSpeed; }
-
-
-
 private:
     float timer = 0;
     
-    float moveSpeed = 0.0f;     // 移動速度
     float rotationSpeed = 0.0f; // 回転速度
 
 

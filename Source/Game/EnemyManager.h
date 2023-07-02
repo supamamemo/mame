@@ -25,9 +25,9 @@ public:
     void Update(const float& elapsedTime);  // 更新処理
     void End();                             // 毎フレーム一番最後に呼ばれる
     void Render(const float& elapsedTime);  // 描画処理
-
     void DrawDebug();                       // デバッグ描画
 
+    void CollisionEnemyVsEnemy();           // エネミー同士の衝突判定処理
 public:
     // エネミー登録
     void Register(Enemy* enemy);

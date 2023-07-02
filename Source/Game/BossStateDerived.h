@@ -25,6 +25,7 @@ namespace TOFU
         Turn,
         Find,
         Track,
+        IdleBattle,
     };
 }
 
@@ -118,14 +119,9 @@ namespace TOFU
         WalkState(Enemy* _tofu) :State(_tofu, "walk") {}
         ~WalkState() {}
 
-        void Enter()override;
-        void Execute(float elapsedTime);
-        void Exit()override;
-
-        void FindPlayer();
-
-    private:
-        float destination = 0.0f;   // 目的地
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
     };
 
     class TurnState :public State
@@ -134,12 +130,9 @@ namespace TOFU
         TurnState(Enemy* _tofu) :State(_tofu, "turn") {}
         ~TurnState() {}
 
-        void Enter()override;
-        void Execute(float elapsedTime)override;
-        void Exit()override;
-
-    private:
-        float rotate = 0.0f;
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
     };
 
     class FindState :public State
@@ -154,7 +147,6 @@ namespace TOFU
         void Exit()override;
 
     private:
-        float returnPositionY = 0.0f; // 元々居た位置Y
         int state = 0;
     };
 
@@ -167,6 +159,18 @@ namespace TOFU
         void Enter()override;
         void Execute(float elapsedTime)override;
         void Exit()override;
+    };
+
+    // 戦闘待機ステート
+    class IdleBattleState : public State
+    {
+    public:
+        IdleBattleState(Enemy* _tofu) :State(_tofu, "track") {}
+        ~IdleBattleState() {}
+
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
     };
 }
 

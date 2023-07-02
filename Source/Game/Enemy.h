@@ -10,25 +10,73 @@ public:
     Enemy() {}
     virtual ~Enemy() {};
 
-    virtual void Initialize()                       = 0; // 初期化
-    virtual void Finalize()                         = 0; // 終了化
-    virtual void Begin()                            = 0; // 毎フレーム一番最初に呼ばれる
-    virtual void Update(const float& elapsedTime)   = 0; // 更新処理
-    virtual void End()                              = 0; // 毎フレーム一番最後に呼ばれる
-    virtual void Render(const float& elapsedTime);       // 描画処理
-    virtual void DrawDebug()                        = 0; // デバッグ描画
+    virtual void Initialize()                       = 0;    // 初期化
+    virtual void Finalize()                         = 0;    // 終了化
+    virtual void Begin()                            = 0;    // 毎フレーム一番最初に呼ばれる
+    virtual void Update(const float& elapsedTime)   = 0;    // 更新処理
+    virtual void End()                              = 0;    // 毎フレーム一番最後に呼ばれる
+    virtual void Render(const float& elapsedTime);          // 描画処理
+    virtual void DrawDebug()                        = 0;    // デバッグ描画
 
-    void OnFallDead() override;                          // 落下死・落下ミスしたときに呼ばれる
+    virtual void OnAttacked()   {};                         // 攻撃したときに呼ばれる
+    virtual void OnHitFriend()  {};                         // 味方に当たった時に呼ばれる
 
-    void Destroy();                                      // エネミー削除
+    void OnFallDead() override;                             // 落下死・落下ミスしたときに呼ばれる
+
+    void Destroy();                                         // エネミー削除
+
+    void CollisionEnemyVsPlayer();                          // エネミーとプレイヤーの衝突判定処理  
+
+public:
+    // 移動処理
+    void Move(const float vx, const float moveSpeed)
+    {
+        Character::Move(vx, moveSpeed);
+    }
+
+    // 旋回処理
+    bool Turn(
+        const    float elapsedTime,
+        const    float vx,
+        NO_CONST float turnSpeed
+    );
+
+    // ジャンプ処理
+    void Jump(const float jumpSpeed)
+    {
+        Character::Jump(jumpSpeed);
+    }
 
 public:
     // ステートマシン
     StateMachine* GetStateMachine()const { return stateMachine.get(); }
 
-public:
-    void SetMoveRight(bool r) { moveRight = r; }
-    bool GetMoveRight() { return moveRight; }
+    const bool GetMoveRight() const { return moveRight; }
+    void SetMoveRight(const bool r) { moveRight = r; }
+
+    // 目的地の取得・設定
+    const float& GetDestination() const { return destination_; }
+    void SetDestination(const float& destination) { destination_ = destination; }
+
+    // 移動範囲の半径の取得・設定
+    const float& GetMoveRangeRadius() const { return moveRangeRadius_; }
+    void SetMoveRangeRadius(const float& moveRange ) { moveRangeRadius_ = moveRange; }    
+    
+    // 移動範囲の中心Xの取得・設定
+    const float& GetMoveRangeCenterX() const { return moveRangeCenterX_; }
+    void SetMoveRangeCenterX(const float& moveRangeCenterX ) { moveRangeCenterX_ = moveRangeCenterX; }    
+    
+    // 索敵距離の取得・設定
+    const float& GetSerchLength() const { return serchLength_; }
+    void SetSerchLength(const float& serchLength) { serchLength_ = serchLength; }
+
+    // 移動方向Xの取得・設定
+    const float& GetMoveDirectionX() const { return moveDirectionX_; }
+    void SetMoveDirectionX(const float& moveDirectionX) { moveDirectionX_ = moveDirectionX; }
+
+    // 味方に当たったかの取得・設定
+    const bool GetIsHitFriend() const { return isHitFrined_; }
+    void SetIsHitFriend(const bool isHitFriend) { isHitFrined_ = isHitFriend; }
 
 public: // static変数
     static float renderLengthXLimit_;   // 敵を描画する距離制限
@@ -38,8 +86,16 @@ public:
 
     CannonBallManager cannonBallManager = {};               // 大砲の弾マネージャー
 
-private:
-    bool moveRight = true;      // 右に進むかどうか
+protected:
+    float destination_      = 0.0f;     // 目的地
+    float moveRangeCenterX_ = 0.0f;     // 移動範囲の中心X
+    float moveRangeRadius_  = 6.0f;     // 移動範囲の半径
+    float serchLength_      = 6.0f;     // 索敵できる距離
+    float moveDirectionX_   = 1.0f;     // 移動方向X  
 
+    bool  isHitFrined_      = false;    // 味方に当たったか
+
+private:
+    bool moveRight          = true; // 右に進むかどうか
 };
 

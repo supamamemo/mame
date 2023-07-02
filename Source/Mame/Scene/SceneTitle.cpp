@@ -329,10 +329,11 @@ void SceneTitle::Render(const float& elapsedTime)
         DirectX::XMMATRIX WORLD = castleModel->GetTransform()->CalcWorldMatrix(0.01f);
         DirectX::XMFLOAT4X4 world = {};
         DirectX::XMStoreFloat4x4(&world, WORLD);
+
         castleModel->skinned_meshes->render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
         WORLD = groundModel->GetTransform()->CalcWorldMatrix(0.01f);
         DirectX::XMStoreFloat4x4(&world, WORLD);
-        groundModel->skinned_meshes->                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
+        groundModel->skinned_meshes->render(graphics.GetDeviceContext(), world, DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), nullptr);
 #endif
     }
 

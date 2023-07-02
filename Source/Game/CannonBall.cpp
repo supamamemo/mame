@@ -73,7 +73,7 @@ void CannonBall::Update(const float& elapsedTime)
         return;
     }
 
-    float speed = (directionZ > 0) ? moveSpeed * elapsedTime : -moveSpeed * elapsedTime;
+    float speed = (directionZ > 0) ? moveSpeed_ * elapsedTime : -moveSpeed_ * elapsedTime;
 
     DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
     pos.z += speed;
@@ -94,8 +94,7 @@ void CannonBall::Render(const float& elapsedTime)
     {
         const float& enemyPosX  = GetTransform()->GetPosition().x;
         const float& playerPosX = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x;
-        const float vecX        = enemyPosX - playerPosX;
-        const float lengthX     = sqrtf(vecX * vecX);
+        const float  lengthX    = fabsf(enemyPosX - playerPosX);
 
         if (lengthX > renderLengthXLimit_) return;
     }

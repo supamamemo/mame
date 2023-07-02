@@ -19,27 +19,26 @@ public:
     void DrawDebug() override;              // デバッグ描画
 
 private: // 入力処理関数関連   
-    const float GetMoveVecX() const;                 // 左スティック入力値から移動X方向ベクトルを取得   
-    const float GetMoveVecY() const;                 // 左スティック入力値から移動Y方向ベクトルを取得   
-    const bool  InputMove(const float& elapsedTime); // 移動入力処理   
-    const bool  InputJump();                         // ジャンプ入力処理
+    const float GetMoveVecX() const;                        // 左スティック入力値から移動X方向ベクトルを取得   
+    const float GetMoveVecY() const;                        // 左スティック入力値から移動Y方向ベクトルを取得   
+    const bool  InputMove(const float& elapsedTime);        // 移動入力処理   
+    const bool  InputJump();                                // ジャンプ入力処理
 
 private: // 衝突判定関数関連       
-    void CollisionPlayerVsEnemies();    // プレイヤーとエネミーの衝突判定
+    void CollisionPlayerVsEnemies();                        // プレイヤーとエネミーの衝突判定
 
 private: // 更新処理関数関連
-    void  UpdateDashCoolTimer(const float& elapsedTime); // ダッシュクールタイム更新処理
+    void  UpdateDashCoolTimer(const float& elapsedTime);    // ダッシュクールタイム更新処理
 
 private: // 瞬間的に呼ばれる関数関連
-    void OnLanding()    override;  // 着地したときに呼ばれる   
-    void OnDash()       override;  // ダッシュしているときに呼ばれる
-    void OnBounce()     override;  // バウンスするときに呼ばれる
-    void OnDamaged()    override;  // ダメージを受けたときに呼ばれる
-    void OnDead()       override;  // 死亡したときに呼ばれる
-    void OnFallDead()   override;  // 落下死・落下ミスしたときに呼ばれる
+    void OnLanding()    override;                       // 着地したときに呼ばれる   
+    void OnDash()       override;                       // ダッシュしているときに呼ばれる
+    void OnBounce()     override;                       // バウンスするときに呼ばれる
+    void OnDamaged()    override;                       // ダメージを受けたときに呼ばれる
+    void OnDead()       override;                       // 死亡したときに呼ばれる
+    void OnFallDead()   override;                       // 落下死・落下ミスしたときに呼ばれる
 
 private: // ステート関数関連
-#if 1
     void TransitionIdleState();                         // 待機ステートへ遷移
     void UpdateIdleState(const float& elapsedTime);     // 待機ステート更新処理
      
@@ -57,7 +56,7 @@ private: // ステート関数関連
     
     void TransitionHipDropState();                      // ヒップドロップステートへ遷移   
     void UpdateHipDropState(const float& elapsedTime);  // ヒップドロップステート更新処理
-#endif
+
 private: // enum関連
     // ステート
     enum class State

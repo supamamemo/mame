@@ -47,9 +47,8 @@ Player::~Player()
 
 void Player::Initialize()
 {
-    GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 20, 0));
+    // ※ここの初期回転値によって振り向きの方向が変わるので注意
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
-    GetTransform()->SetScale(DirectX::XMFLOAT3(1, 1, 1));
 }
 
 
@@ -150,7 +149,7 @@ void Player::DrawDebug()
         ImGui::SliderFloat("d_MoveSpeed",      &defaultMoveSpeed, 0.0f, 20.0f);   // 通常時の最高移動速度
         ImGui::SliderFloat("runMoveSpeed",     &runMoveSpeed,     0.0f, 30.0f);   // 走行時の最高移動速度
 
-        ImGui::SliderFloat("turnSpeed",        &turnSpeed, 1.0f, ToRadian(900.0f), "%.0f");  // 旋回速度
+        ImGui::SliderFloat("turnSpeed_",       &turnSpeed_, 1.0f, ToRadian(900.0f), "%.0f");  // 旋回速度
 
         ImGui::TreePop();
     }
@@ -158,7 +157,7 @@ void Player::DrawDebug()
     // ジャンプ関連パラメータ
     if (ImGui::TreeNode("Jump"))
     {
-        ImGui::SliderFloat("jumpSpeed",  &jumpSpeed,       0.0f, 30.0f);   // ジャンプ速度
+        ImGui::SliderFloat("jumpSpeed_",  &jumpSpeed_,       0.0f, 30.0f);   // ジャンプ速度
         ImGui::SliderFloat("d_JumpTime", &defaultJumpTime, 0.0f, 1.0f);    // ジャンプし続けられる時間
         ImGui::SliderInt("jumpLimit",    &jumpLimit,       1,    5);       // ジャンプ最大回数
 
@@ -222,7 +221,7 @@ const bool Player::InputMove(const float& elapsedTime)
     const float moveVecX = GetMoveVecX();
 
     // 移動処理
-    Move(moveVecX, moveSpeed);
+    Move(moveVecX, moveSpeed_);
 
     // 移動ベクトルがゼロベクトルじゃなければ（更新されていたら）保存する
     // ※保存することでボタンを押し続けなくても自動的に旋回しきるようになる
@@ -234,7 +233,7 @@ const bool Player::InputMove(const float& elapsedTime)
     // 旋回処理(急ブレーキアニメーション再生中は処理をしない)
     if (model->GetCurrentAnimationIndex() != Anim_Break)
     {
-        Turn(elapsedTime, saveMoveVecX, turnSpeed);
+        Turn(elapsedTime, saveMoveVecX, turnSpeed_);
     }
 
     // 進行ベクトルがゼロベクトルでない場合は入力された
@@ -273,13 +272,15 @@ const bool Player::InputJump()
 
 void Player::CollisionPlayerVsEnemies()
 {
-    if (invincibleTimer > 0.0f) return;
+    //if (invincibleTimer > 0.0f) return;
+
+    // バウンス時のみ処理を行う
+    if (!isBounce) return;
 
     bool isHit = false;
 
-    EnemyManager& enemyManager = EnemyManager::Instance();
-    const int     enemyCount = enemyManager.GetEnemyCount();
-
+    EnemyManager& enemyManager  = EnemyManager::Instance();
+    const int     enemyCount    = enemyManager.GetEnemyCount();
     for (int i = 0; i < enemyCount; ++i)
     {
         Enemy* enemy = enemyManager.GetEnemy(i);
@@ -288,18 +289,8 @@ void Player::CollisionPlayerVsEnemies()
         {
             isHit = true;
 
-            // バウンス状態ならエネミーのダメージ処理を行う
-            if (isBounce)
-            {
-                // ダメージを受けなければreturn
-                if (!enemy->ApplyDamage(1, 1.0f)) return;
-            }
-            // そうでなければ自分がダメージを受ける
-            else
-            {
-                if (!ApplyDamage(1, 1.0f)) return;
-            }
-
+            // ダメージを受けなければreturn
+            if (!enemy->ApplyDamage(1, 1.0f)) return;
         }
     }
 }
@@ -322,7 +313,7 @@ void Player::OnLanding()
     jumpCount = 0;
 
     // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
-    if (moveSpeed == runMoveSpeed)
+    if (moveSpeed_ == runMoveSpeed)
     {
         TransitionRunState();
         return;
@@ -468,12 +459,12 @@ void Player::UpdateIdleState(const float& elapsedTime)
         const GamePad& gamePad = Input::Instance().GetGamePad();
         if (gamePad.GetButtonDown() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
-            moveSpeed       = defaultMoveSpeed; // 移動速度をリセット
+            moveSpeed_       = defaultMoveSpeed; // 移動速度をリセット
             TransitionDashState();
             return;
         }
         // 移動速度が走行速度と同じ（走行状態）でダッシュキーが押され続けていれば走行ステートへ遷移
-        else if (moveSpeed == runMoveSpeed && gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
+        else if (moveSpeed_ == runMoveSpeed && gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
             TransitionRunState();
             return;
@@ -481,7 +472,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
         // 移動入力だけなら歩行ステートへ遷移
         else
         {
-            moveSpeed       = defaultMoveSpeed; // 移動速度をリセット
+            moveSpeed_       = defaultMoveSpeed; // 移動速度をリセット
             TransitionWalkState();
             return;
         }
@@ -495,7 +486,7 @@ void Player::TransitionWalkState()
 {
     state = State::Walk;
 
-    PlayAnimation(Anim_Walk, true);
+    PlayAnimation(Anim_Walk, true, 1.0f, 0.25f);
 }
 
 // 歩行ステート更新処理
@@ -546,7 +537,7 @@ void Player::UpdateDashState(const float& elapsedTime)
 {
 
     // 旋回処理（カメラ目線のままダッシュしないように更新する）
-    Turn(elapsedTime, saveMoveVecX, turnSpeed);
+    Turn(elapsedTime, saveMoveVecX, turnSpeed_);
 
     
     // ダッシュタイマーが残っていたらをダッシュを継続させる
@@ -596,12 +587,12 @@ void Player::TransitionRunState()
     state = State::Run;
 
     // 走行時の速度パラメータを設定
-    moveSpeed       = runMoveSpeed;
+    moveSpeed_       = runMoveSpeed;
     acceleration    = runAcceleration;
     friction        = runFriction;
 
     // 走行用保存移動ベクトルに移動ベクトルを保存
-    if (runMoveVecX == 0.0f) runMoveVecX = moveVecX;
+    if (runMoveVecX == 0.0f) runMoveVecX = moveVecX_;
 
     // 走行アニメーション再生
     PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
@@ -619,7 +610,7 @@ void Player::UpdateRunState(const float& elapsedTime)
         acceleration = defaultAcceleration;
         friction     = defaultFriction;
 
-        runMoveVecX = moveVecX; // 移動ベクトル保存を更新しておく（ダッシュジャンプして着地する寸前に方向転換するとカメラ目線でラジオ体操するため）
+        runMoveVecX = moveVecX_; // 移動ベクトル保存を更新しておく（ダッシュジャンプして着地する寸前に方向転換するとカメラ目線でラジオ体操するため）
 
         TransitionJumpState();
         return;
@@ -629,8 +620,8 @@ void Player::UpdateRunState(const float& elapsedTime)
         // 速度が最高速度に達していて、
         // 走行用保存移動ベクトルと現在の移動ベクトルの符号が違う場合（方向転換）はブレーキアニメーションを再生
         const bool isPlayBreakAnimation = {
-            (velocity.x >=  runMoveSpeed * 0.8f && runMoveVecX > 0.0f && moveVecX < 0.0f) ||
-            (velocity.x <= -runMoveSpeed * 0.8f && runMoveVecX < 0.0f && moveVecX > 0.0f)
+            (velocity.x >=  runMoveSpeed * 0.8f && runMoveVecX > 0.0f && moveVecX_ < 0.0f) ||
+            (velocity.x <= -runMoveSpeed * 0.8f && runMoveVecX < 0.0f && moveVecX_ > 0.0f)
         };
         if (isPlayBreakAnimation)
         {
@@ -642,14 +633,14 @@ void Player::UpdateRunState(const float& elapsedTime)
         if (!(gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y)))
         {
             // 速度パラメータをリセット
-            moveSpeed    = defaultMoveSpeed;
+            moveSpeed_    = defaultMoveSpeed;
             acceleration = defaultAcceleration;
             friction     = defaultFriction;
             TransitionWalkState();
             return;
         }
 
-        runMoveVecX = moveVecX; // 保存移動ベクトル更新
+        runMoveVecX = moveVecX_; // 保存移動ベクトル更新
     }
     // 移動入力がなければ待機ステートへ遷移
     else
@@ -697,7 +688,7 @@ void Player::UpdateJumpState(const float& elapsedTime)
         const GamePad& gamePad = Input::Instance().GetGamePad();
         if (gamePad.GetButton() & (GamePad::BTN_A | GamePad::BTN_B))
         {
-            Jump(jumpSpeed);            // ジャンプ処理
+            Jump(jumpSpeed_);            // ジャンプ処理
             jumpTimer -= elapsedTime;   // ジャンプタイマー減算
         }
         // ジャンプボタンを離したらジャンプ終了
@@ -711,8 +702,7 @@ void Player::UpdateJumpState(const float& elapsedTime)
     if (GetMoveVecY() < 0.0f)
     {      
         // ジャンプ開始時のY位置と現在のY位置からジャンプした高さを算出
-        const float& vecY = GetTransform()->GetPosition().y - jumpedPositionY;
-        const float jumpHeight = sqrtf(vecY * vecY);
+        const float jumpHeight = fabsf(GetTransform()->GetPosition().y - jumpedPositionY);
 
         // ヒップドロップに必要な距離(高さ)に達していたらヒップドロップステートへ遷移
         if (jumpHeight >= needHipDropHeight)
@@ -729,10 +719,6 @@ void Player::TransitionHipDropState()
 {
     state = State::HipDrop;
 
-    //// プレイヤーの正規化移動Xベクトルを求める(ステート遷移時に計算する)
-    //const float length = sqrtf(saveMoveVecX * saveMoveVecX);
-    //saveMoveVec_n      = saveMoveVecX / length;
-
     gravity         = hipDropGravity;  // 落下速度を上昇
     isBounce        = true;            // バウンスさせる
     isInvincible    = true;            // ヒップドロップバウンス中は無敵モードにする
@@ -744,7 +730,7 @@ void Player::TransitionHipDropState()
 void Player::UpdateHipDropState(const float& elapsedTime)
 {
     // 旋回処理（カメラ目線のままバウンスしないように更新する）
-    Turn(elapsedTime, saveMoveVecX, turnSpeed);
+    Turn(elapsedTime, saveMoveVecX, turnSpeed_);
 
     // 一回バウンスしたら重力をもとに戻す
     if (bounceCount != 0) gravity = defaultGravity;

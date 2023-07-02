@@ -37,16 +37,16 @@ void Model::PlayAnimation(
     // 設定用のアニメーション番号が現在のアニメーション番号と同じ場合はreturn
     if (currentAnimationIndex == index) return;
 
-    currentAnimationIndex = index;    // 再生するアニメーション番号を設定
+    currentAnimationIndex   = index;    // 再生するアニメーション番号を設定
     currentAnimationSeconds = 0.0f;     // アニメーション再生時間リセット
 
-    animationLoopFlag = loop;     // ループさせるか
-    animationEndFlag = false;    // 再生終了フラグをリセット
+    animationLoopFlag       = loop;     // ループさせるか
+    animationEndFlag        = false;    // 再生終了フラグをリセット
 
-    animationSpeed = speed;    // アニメーション再生速度
+    animationSpeed          = speed;    // アニメーション再生速度
 
-    animationBlendTime = 0.0f;
-    animationBlendSeconds = blendSeconds;
+    animationBlendTime      = 0.0f;
+    animationBlendSeconds   = blendSeconds;
 }
 
 

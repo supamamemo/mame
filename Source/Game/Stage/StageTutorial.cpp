@@ -63,23 +63,29 @@ void StageTutorial::Initialize()
 {
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
-    camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0.0f, 0.0f, 0.0f));
+    camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
 
     // ƒXƒe[ƒW‰ŠúÝ’è
     {
         TerrainManager& terrainManager = TerrainManager::Instance();
-        terrainManager.Initialize();
         terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f));
         terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(32.0f, 0.0f, 10.0f));
+        terrainManager.Initialize();
     }
 
     // player‰Šú‰»
-    PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-8.0f, 2.0f, 10.0f));
+    {
+        PlayerManager& playerManager = PlayerManager::Instance();
+        playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-8.0f, 2.0f, 10.0f));
+        playerManager.Initialize();
+    }
 
     // enemy‰Šú‰»
-    EnemyManager::Instance().Initialize();
-    EnemyManager::Instance().GetEnemy(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(7.5f, 1.5f, 10.0f));
-    EnemyManager::Instance().GetEnemy(0)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
+    {
+        EnemyManager& enemyManager = EnemyManager::Instance();
+        enemyManager.GetEnemy(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(7.5f, 1.5f, 10.0f));
+        enemyManager.Initialize();
+    }
 
     // ”wŒi‰¼
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 4.0f, 32.0f));
