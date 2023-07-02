@@ -39,11 +39,11 @@ void SceneGame::Initialize()
     {
     case 0:
         spriteDissolve[0]->Initialize();
-        spriteDissolve[0]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+        spriteDissolve[0]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
         break;
     case 1:
         spriteDissolve[0]->Initialize();
-        spriteDissolve[0]->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+        spriteDissolve[0]->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
         break;
     }
     

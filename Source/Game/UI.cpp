@@ -11,7 +11,7 @@ UI::UI(const wchar_t* filename)
     uiSprite = std::make_unique<Sprite>(graphics.GetDevice(), filename);
 
     // imgui–¼‘O‚©‚Ô‚è‹N‚«‚È‚¢‚æ‚¤‚É...
-    name = "Boss" + std::to_string(nameNum);
+    name = "UI" + std::to_string(nameNum);
     SetName(name.c_str());
     ++nameNum;
 }

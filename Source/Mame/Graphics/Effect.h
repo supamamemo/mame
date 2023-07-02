@@ -42,6 +42,7 @@ public:
     DirectX::XMFLOAT3 GetScale() { return scale; }
     DirectX::XMFLOAT4 GetColor() { return color; }
 
+    Effekseer::Handle handle;
 private:
     Effekseer::EffectRef effekseerEffect;
 

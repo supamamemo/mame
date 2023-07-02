@@ -17,6 +17,25 @@
 #include "../Stage/StageManager.h"
 #include "../Stage/StagePlains.h"
 
+enum UISPRITE
+{
+    Bubble,         // 吹き出し
+    BubbleStick,    // 吹き出しPC
+    StickBase,      // base
+    StickCenter,    // center
+    StickRight,     // right
+    StickLeft,      // left
+    GamePadA,
+    GamePadB,
+    GamePadX,
+    GamePadY,
+    KeyBoardA,
+    KeyBoardD,
+    KeyBoardS,
+    KeyBoardSHIFT,
+    KeyBoardSPACE,
+};
+
 // コンストラクタ
 StageTutorial::StageTutorial()
 {
@@ -40,13 +59,28 @@ StageTutorial::StageTutorial()
     // 背景仮
     back = std::make_unique<Box>("./resources/back.fbx");
 
+    // 看板
+    signboard = std::make_unique<Box>("./resources/frag.fbx");
+
     // UI
     {
         UIManager& uiManager = UIManager::Instance();
 
-        uiManager.Register(new UI(L"./resources/tutorial/stickBase.png"));  // 0
-        uiManager.Register(new UI(L"./resources/tutorial/stick.png"));      // 1
-        uiManager.Register(new UI(L"./resources/tutorial/A.png"));          // 2
+        uiManager.Register(new UI(L"./resources/tutorial/hukidasi.png"));           // hukidasi
+        uiManager.Register(new UI(L"./resources/tutorial/hukidasi_stick.png"));     // hukidasiPC
+        uiManager.Register(new UI(L"./resources/tutorial/stickBase.png"));          // stickbase
+        uiManager.Register(new UI(L"./resources/tutorial/stick_center.png"));       // center
+        uiManager.Register(new UI(L"./resources/tutorial/stick_right.png"));        // right
+        uiManager.Register(new UI(L"./resources/tutorial/stick_left.png"));         // left
+        uiManager.Register(new UI(L"./resources/tutorial/GamePadA.png"));       // A
+        uiManager.Register(new UI(L"./resources/tutorial/GamePadB.png"));       // B
+        uiManager.Register(new UI(L"./resources/tutorial/GamePadX.png"));       // X
+        uiManager.Register(new UI(L"./resources/tutorial/GamePadY.png"));       // Y
+        uiManager.Register(new UI(L"./resources/tutorial/PC_A.png"));           // A_PC
+        uiManager.Register(new UI(L"./resources/tutorial/PC_D.png"));           // D_PC
+        uiManager.Register(new UI(L"./resources/tutorial/PC_S.png"));           // S_PC
+        uiManager.Register(new UI(L"./resources/tutorial/PC_shift.png"));       // SHIFT
+        uiManager.Register(new UI(L"./resources/tutorial/PC_space.png"));       // SPACE
     }
 }
 
@@ -89,22 +123,43 @@ void StageTutorial::Initialize()
     back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 22.0f, 10.0f));
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
+    // 看板
+    signboard->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 3.0f, 10.0f));
+
     // 誘導用
     tutorialState = STATE::MoveReception;
 
     // UI
     {
-        UIManager::Instance().GetUI(0)->SetPosition(DirectX::XMFLOAT2(160, 424));
-        UIManager::Instance().GetUI(0)->SetSize(DirectX::XMFLOAT2(100, 100));
-        UIManager::Instance().GetUI(1)->SetPosition(DirectX::XMFLOAT2(170, 424));
-        UIManager::Instance().GetUI(1)->SetSize(DirectX::XMFLOAT2(100, 100));
-        UIManager::Instance().GetUI(2)->SetPosition(DirectX::XMFLOAT2(350, 330));
-        UIManager::Instance().GetUI(2)->SetSize(DirectX::XMFLOAT2(100, 100));
+        // stick
+        {
+            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT2(160, 300));
+            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT2(160, 300));
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetPosition(DirectX::XMFLOAT2(160, 300));
+            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetPosition(DirectX::XMFLOAT2(160, 300));
+            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetSize(DirectX::XMFLOAT2(100, 100));
+        }
+
+        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT2(60, 280));
+        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(300, 150));
+        
+        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT2(100, 300));
+        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetSize(DirectX::XMFLOAT2(100, 100));
+        UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT2(210, 300));
+        UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetSize(DirectX::XMFLOAT2(100, 100));
     }
 
     // エフェクト読み込み
-    effect = new Effect("./resources/effect/box.efk");
-    effect->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
+    effect[0] = new Effect("./resources/effect/box.efk");
+    effect[1] = new Effect("./resources/effect/ring.efk");
+
+    effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
 }
 
 // 終了
@@ -125,7 +180,10 @@ void StageTutorial::Finalize()
     UIManager::Instance().Finalize();
     UIManager::Instance().Clear();
 
-    delete effect;
+    effect[0]->Stop(effect[0]->handle);
+    effect[1]->Stop(effect[1]->handle);
+    delete effect[0];
+    delete effect[1];
 }
 
 // Updateの前に呼ばれる
@@ -199,6 +257,9 @@ void StageTutorial::Render(const float& elapsedTime)
     // 背景仮
     back->Render(elapsedTime);
 
+    // 看板
+    signboard->Render(elapsedTime);
+
     TutorialStateRender(elapsedTime);
 
     // UI
@@ -226,12 +287,18 @@ void StageTutorial::DrawDebug()
     // 背景仮
     back->DrawDebug();
 
+    // 看板
+    signboard->DrawDebug();
+
     // ui
     UIManager::Instance().DrawDebug();
 
-    effect->DrawDebug();
+    // effect
+    effect[0]->DrawDebug();
+    effect[1]->DrawDebug();
 
     ImGui::Begin("s");
+    ImGui::DragFloat("stickTimer", &stickTime);
     ImGui::DragInt("stickState", &stickMoveState);
     ImGui::End();
 #endif
@@ -250,29 +317,44 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
         // effect(緑の範囲)
         //if (effect->GetTimer() > 4.7f)
-        if (effect->GetTimer() > 3.0f)
+        if (effect[0]->GetTimer() > 3.0f)
         {
-            handle = effect->FadeOutEffect(effect->GetPosition(), effect->GetScale(), effect->GetColor(),110.0f);
+            effect[0]->handle = effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 110.0f);
             //handle = effect->Play(effect->GetPosition(), effect->GetScale(), effect->GetColor());
-            effect->SetTimer(0.0f);
+            effect[0]->SetTimer(0.0f);
         }
-        effect->AddTimer(elapsedTime);
+        effect[0]->AddTimer(elapsedTime);
 
         // 次に行く条件
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
         if (playerPos.x > -3.8f)
         {
-            UIManager::Instance().GetUI(0)->SetIsRender(false);
-            UIManager::Instance().GetUI(1)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
 
-            effect->Stop(handle);
-            effect->FadeOutEffect(effect->GetPosition(), effect->GetScale(), effect->GetColor(), 200.0f);
+            effect[0]->Stop(effect[0]->handle);
+            effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 200.0f);
 
             tutorialState = STATE::JumpReception;
         }
 
         break;
     case STATE::JumpReception:
+
+        // effect(上に徐々に上がる)
+        if (effect[1]->GetTimer() > 0.5f)
+        {
+            DirectX::XMFLOAT3 pos = effect[1]->GetPosition();
+            pos.y += 1;
+            if (pos.y > 7.0f)pos.y = 3.0f;
+            effect[1]->SetPosition(pos);
+
+            effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetColor(), 0.0f);
+            effect[1]->SetTimer(0.0f);
+        }
+        effect[1]->AddTimer(elapsedTime);
 
         if (gamePad.GetButton() & GamePad::BTN_A)
         {
@@ -291,15 +373,15 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
     {
     case STATE::MoveReception:
         // UI
-        UIManager::Instance().GetUI(0)->SetIsRender(true);
-        UIManager::Instance().GetUI(1)->SetIsRender(true);
-
-        
+        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
 
         break;
     case STATE::JumpReception:
         // UI
-        UIManager::Instance().GetUI(2)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(true);
 
         break;
     }
@@ -309,48 +391,57 @@ void StageTutorial::StickState(float elapsedTime)
 {
     stickTime += elapsedTime;
 
-    DirectX::XMFLOAT2 pos = UIManager::Instance().GetUI(1)->GetPosition();
-
     // スティック
     switch (stickMoveState)
     {
     case 0:
-        pos = { 160, 424 };
+        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
 
         if (stickTime > 1.0f)
         {
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(true);
+
             stickTime = 0;
             stickMoveState = 1;
         }
         break;
     case 1:
-        pos = { 140,424 };
+        UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(true);
+        
 
         if (stickTime > 1.0f)
         {
+            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
+            
             stickTime = 0;
             stickMoveState = 2;
         }
         break;
     case 2:
-        pos = { 160, 424 };
-
+        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
+        
         if (stickTime > 1.0f)
         {
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(true);
+
             stickTime = 0;
             stickMoveState = 3;
         }
         break;
     case 3:
-        pos = { 180, 424 };
-
+        UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(true);
+        
         if (stickTime > 1.0f)
         {
+            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
+
             stickTime = 0;
             stickMoveState = 0;
         }
         break;
     }
-
-    UIManager::Instance().GetUI(1)->SetPosition(pos);
 }

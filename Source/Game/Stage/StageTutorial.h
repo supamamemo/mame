@@ -40,10 +40,9 @@ private:
 
 private:
     std::unique_ptr<Box> back = nullptr;
-    
+    std::unique_ptr<Box> signboard = nullptr;
 
     // UI
-    Effect* effect = nullptr;
-    Effekseer::Handle handle;
+    Effect* effect[4];
 };
 
