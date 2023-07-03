@@ -11,7 +11,7 @@ namespace BOSS
     {
         Idle,
         Find,
-        Rotate,
+        Turn,
         Attack,
         Recoil,
     };
@@ -62,11 +62,11 @@ namespace BOSS
         void Exit()override;
     };
 
-    class RotateState : public State
+    class TurnState : public State
     {
     public:
-        RotateState(Enemy* _boss) :State(_boss, "rotate") {}
-        ~RotateState() {}
+        TurnState(Enemy* _boss) :State(_boss, "rotate") {}
+        ~TurnState() {}
 
         void Enter()override;
         void Execute(float elapsedTime)override;

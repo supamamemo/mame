@@ -130,8 +130,9 @@ public: // 取得・設定関数関連
     // 体力の取得
     const int& GetHealth() const { return health; }
 
-    // 地面についているかどうかの取得
-    const bool& GetIsGround() const { return isGround; }
+    // 地面についているかどうかの取得・設定
+    const bool& GetIsGround() const { return isGround_; }
+    void SetIsGround(const bool isGround) { isGround_ = isGround; }
 
     // AABB再設定(当たり判定のサイズを途中で変えたいときなどに)
     void ResetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max);
@@ -184,7 +185,7 @@ protected:
     int         jumpCount           =   0;                          // ジャンプ回数
     int         jumpLimit           =   1;                          // 最大ジャンプ回数
                                        
-    bool        isGround            =   false;                      // 地面についているか
+    bool        isGround_            =   false;                      // 地面についているか
     bool        isHitWall_          =   false;                      // 壁に当たっているか
     bool        isBounce            =   false;                      // バウンスさせるか
     bool        isDash              =   false;                      // ダッシュしているか

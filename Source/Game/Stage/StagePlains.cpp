@@ -34,7 +34,7 @@ StagePlains::StagePlains()
         for (int i = 0; i < 23; ++i)
         {
             enemyManager.Register(new EnemyTofu());
-        }
+        }        
     }
 }
 
@@ -81,17 +81,19 @@ void StagePlains::Initialize()
 
         // 位置設定
         {
-            enemyManager.GetEnemy(0 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.0f,   1.5f,  posZ));
-            enemyManager.GetEnemy(1 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.0f,   20.5f,  posZ));
-            enemyManager.GetEnemy(2 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.0f,   30.5f,  posZ));
-            //enemyManager.GetEnemy(3 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.5f,   40.5f,  posZ));
-            //enemyManager.GetEnemy(4 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.0f,   50.5f,  posZ));
-            //enemyManager.GetEnemy(5 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.0f,   60.5f,  posZ));
-            /*enemyManager.GetEnemy(1 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(13.0f,   1.5f,  posZ));
-            enemyManager.GetEnemy(2 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(15.0f,   1.5f,  posZ));
+#if 0
+            // 豆腐の上下の押し戻し処理確認用
+            enemyManager.GetEnemy(0 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(12.0f,   1.5f,  posZ));
+            enemyManager.GetEnemy(1 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(12.0f,   20.5f, posZ));
+            enemyManager.GetEnemy(2 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(12.0f,   30.5f, posZ));
+#else
+            enemyManager.GetEnemy(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.0f,    1.5f,  posZ));
+            enemyManager.GetEnemy(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(13.0f,    20.5f, posZ));
+            enemyManager.GetEnemy(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(15.0f,    30.5f, posZ));
+#endif
             enemyManager.GetEnemy(3 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(24.5f,   1.5f,  posZ));
-            enemyManager.GetEnemy(4 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(33.0f,   1.5f,  posZ));
-            enemyManager.GetEnemy(5 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(40.0f,   1.5f,  posZ));*/
+            enemyManager.GetEnemy(4 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(33.0f,   3.0f,  posZ));
+            enemyManager.GetEnemy(5 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(40.0f,   1.5f,  posZ));
             enemyManager.GetEnemy(6 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(43.0f,   1.5f,  posZ));
             enemyManager.GetEnemy(7 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(52.5f,   2.0f,  posZ));
             enemyManager.GetEnemy(8 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(58.0f,   4.0f,  posZ));

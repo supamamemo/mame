@@ -73,15 +73,33 @@ void EnemyTofu::Update(const float& elapsedTime)
     // ステート更新
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
 
+    // 地形の端を超えて落ちそうになったら修正
+    {
+        if (lastLandingTerrainAABBMaxX != 0.0f && aabb_.max.x > lastLandingTerrainAABBMaxX)
+        {
+            const float fixLeft = -fabsf(aabb_.max.x - lastLandingTerrainAABBMaxX);
+            GetTransform()->AddPositionX(fixLeft);
+        }
+        else if (lastLandingTerrainAABBMinX != 0.0f && aabb_.min.x < lastLandingTerrainAABBMinX)
+        {
+            const float fixRight = fabsf(aabb_.min.x - lastLandingTerrainAABBMinX);
+            GetTransform()->AddPositionX(fixRight);
+        }
+    }
+
     UpdateAABB();                       // AABBの更新処理
 
-#ifdef USE_IMGUI
-    static bool ONNNNNNNN = false;
+
+
+#if _DEBUG
+    static bool ONNNNNNNN = true;
     ImGui::Begin("ONNNNNNNNNNNNNNNNNNNNNnn");
     ImGui::Checkbox("ONNNNNNNNNNNNNNNNNNNN", &ONNNNNNNN);
     ImGui::End();
     if (ONNNNNNNN) UpdateVelocity(elapsedTime);        // 速力処理更新処理
-#endif // USE_IMGUI
+#else
+    UpdateVelocity(elapsedTime);        // 速力処理更新処理
+#endif
 
     CollisionEnemyVsPlayer();           // プレイヤーとの衝突判定処理
  
@@ -111,10 +129,18 @@ void EnemyTofu::DrawDebug()
 
     if (stateMachine)GetStateMachine()->DrawDebug();
 
+    ImGui::Checkbox("isONNNNNNNNNNNNFRIENDDDDDDDDD", &isOnFriend_);
+
     ImGui::End();
 #endif // USE_IMGUI
 }
 
+
+void EnemyTofu::OnLanding()
+{
+    // 着地時に敵に乗っかっているかのフラグをリセットする
+    isOnFriend_ = false;
+}
 
 void EnemyTofu::OnDead()
 {
@@ -126,14 +152,10 @@ void EnemyTofu::OnDead()
 // 壁に当たった時に呼ばれる処理
 void EnemyTofu::OnHitWall()
 {
-    // 追跡中・戦闘待機中なら反転させない
-    const int stateTurn         = static_cast<int>(TOFU::STATE::Turn);
-    const int stateTrack        = static_cast<int>(TOFU::STATE::Track);
-    const int stateIdleBattle   = static_cast<int>(TOFU::STATE::IdleBattle);
+    // 歩行ステートのときのみ反転処理を行う
+    const int stateWalk         = static_cast<int>(TOFU::STATE::Walk);
     const int currentStateIndex = GetStateMachine()->GetStateIndex();
-    if (currentStateIndex == stateTurn      || 
-        currentStateIndex == stateTrack     || 
-        currentStateIndex == stateIdleBattle) return;
+    if (currentStateIndex != stateWalk) return;
 
     moveDirectionX_ = -moveDirectionX_;  // 移動方向を反転
 
@@ -157,14 +179,10 @@ void EnemyTofu::OnAttacked()
 // 味方に当たった時に呼ばれる処理
 void EnemyTofu::OnHitFriend()
 {
-    // 追跡中・戦闘待機中なら反転させない
-    const int stateTurn         = static_cast<int>(TOFU::STATE::Turn);
-    const int stateTrack        = static_cast<int>(TOFU::STATE::Track);
-    const int stateIdleBattle   = static_cast<int>(TOFU::STATE::IdleBattle);
+    // 歩行ステートのときのみ反転処理を行う
+    const int stateWalk         = static_cast<int>(TOFU::STATE::Walk);
     const int currentStateIndex = GetStateMachine()->GetStateIndex();
-    if (currentStateIndex == stateTurn      || 
-        currentStateIndex == stateTrack     || 
-        currentStateIndex == stateIdleBattle) return;
+    if (currentStateIndex != stateWalk) return;
 
     moveDirectionX_ = -moveDirectionX_;  // 移動方向を反転
 

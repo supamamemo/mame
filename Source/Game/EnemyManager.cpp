@@ -124,79 +124,104 @@ void EnemyManager::DrawDebug()
 // エネミー同士の衝突判定処理
 void EnemyManager::CollisionEnemyVsEnemy()
 {
-    NO_CONST bool isHitA = false;
-    NO_CONST bool isHitB = false;
+    NO_CONST bool isHitX_A = false;
+    NO_CONST bool isHitX_B = false;
+
+    NO_CONST bool isHitY_A = false;
+    NO_CONST bool isHitY_B = false;
 
     EnemyManager& enemyManager = EnemyManager::Instance();
-    const int enemyCount = enemyManager.GetEnemyCount();
+    const int enemyCount       = enemyManager.GetEnemyCount();
     for (int a = 0; a < enemyCount; ++a)
     {
         Enemy* enemyA = enemyManager.GetEnemy(a);
+
+        //// Aの味方の上に乗っかっているかフラグを最初にリセットする
+        //enemyA->SetIsOnFriend(false);
 
         // a以降の敵と判定を行う（a以前はすでに判定済みのため）
         for (int b = a + 1; b < enemyCount; ++b)
         {
             Enemy* enemyB = enemyManager.GetEnemy(b);
 
+            //// Bの味方の上に乗っかっているかフラグを最初にリセットする
+            //enemyB->SetIsOnFriend(false);
+
             if (Collision::IntersectAABBVsAABB(enemyA->aabb_, enemyB->aabb_))
             {
                 // 上下左右のそれぞれ重なっている値を求める
                 // 符号がマイナスでもプラスの距離が求められるように絶対値にする
-                const float overlapUp       = fabsf(enemyA->aabb_.min.y - enemyB->aabb_.max.y); // 上からめり込んでいる
-                const float overlapBottom   = fabsf(enemyA->aabb_.max.y - enemyB->aabb_.min.y); // 下からめり込んでいる
-                const float overlapRight    = fabsf(enemyA->aabb_.min.x - enemyB->aabb_.max.x); // 右からめり込んでいる
-                const float overlapLeft     = fabsf(enemyA->aabb_.max.x - enemyB->aabb_.min.x); // 左からめり込んでいる
+                const float overlapUp     = fabsf(enemyA->aabb_.min.y - enemyB->aabb_.max.y); // 上からめり込んでいる
+                const float overlapBottom = fabsf(enemyA->aabb_.max.y - enemyB->aabb_.min.y); // 下からめり込んでいる
+                const float overlapRight  = fabsf(enemyA->aabb_.min.x - enemyB->aabb_.max.x); // 右からめり込んでいる
+                const float overlapLeft   = fabsf(enemyA->aabb_.max.x - enemyB->aabb_.min.x); // 左からめり込んでいる
                 // 一番重なっていない値を求める
-                const float overlapY        = (std::min)(overlapUp, overlapBottom);
-                const float overlapX        = (std::min)(overlapRight, overlapLeft);
-                const float overlap         = (std::min)(overlapY, overlapX);
-
-                // 重なりがなければ修正しない
-                if (overlap == 0.0f) continue;
-
-                isHitA = true;
-                isHitB = true;
+                const float overlapY      = (std::min)(overlapUp, overlapBottom);
+                const float overlapX      = (std::min)(overlapRight, overlapLeft);
+                //const float overlap       = (std::min)(overlapY, overlapX);
 
                 // Y軸に重なっている場合
-                if (overlap == overlapY)
+                if (overlapY <= overlapX)
                 {
-                     enemyA->SetVelocityY(0.0f); // Y速度をリセット
-                    //enemyB->SetVelocityY(0.0f); // Y速度をリセット
+                    isHitY_A = true;
+                    isHitY_B = true;
 
                     // 上からめり込んでいる場合
-                    if (overlap == overlapUp)
+                    if (overlapUp <= overlapBottom)
                     {
+                        enemyA->SetVelocityY(0.0f); // Y速度をリセット
 
                         // 重なっている分だけ位置を修正
-                        // enemyA->GetTransform()->AddPositionY(overlapUp);
-                        enemyA->GetTransform()->AddPositionY( overlapUp * 0.5f);
-                        enemyB->GetTransform()->AddPositionY(-overlapUp * 0.5f);
+                        if (overlapUp != 0.0f)
+                        {
+                            enemyA->GetTransform()->AddPositionY(overlapUp);
+                            //enemyA->GetTransform()->AddPositionY( overlapUp * 0.5f);
+                            //enemyB->GetTransform()->AddPositionY(-overlapUp * 0.5f);
+                        }
+
+                        // 味方の上に乗っかっている
+                        enemyA->SetIsOnFriend(true);
                     }
                     // 下からめり込んでいる場合
-                    else if (overlap == overlapBottom)
+                    else
                     {
+                        enemyB->SetVelocityY(0.0f); // Y速度をリセット
+
                         // 重なっている分だけ位置を修正
-                        //enemyA->GetTransform()->AddPositionY(-overlapBottom);
-                        enemyA->GetTransform()->AddPositionY(-overlapBottom * 0.5f);
-                        enemyB->GetTransform()->AddPositionY( overlapBottom * 0.5f);
+                        if (overlapBottom != 0.0f)
+                        {
+                            //enemyA->GetTransform()->AddPositionY(-overlapBottom);
+                            enemyB->GetTransform()->AddPositionY(overlapBottom);
+                            //enemyA->GetTransform()->AddPositionY(-overlapBottom * 0.5f);
+                            //enemyB->GetTransform()->AddPositionY( overlapBottom * 0.5f);
+                        }
+
+                        // 味方の上に乗っかっている
+                        enemyB->SetIsOnFriend(true);
                     }
                 }
                 // X軸に重なっている場合
-                else if (overlap == overlapX)
+                else
                 {
+                    // 重なりがなければ修正しない
+                    if (overlapX == 0.0f) continue;
+
                     enemyA->SetVelocityX(0.0f); // X速度をリセット
                     enemyB->SetVelocityX(0.0f); // X速度をリセット
 
+                    isHitX_A = true;
+                    isHitX_B = true;
+
                     // 右からめり込んでいる場合
-                    if (overlap == overlapRight)
+                    if (overlapX == overlapRight)
                     {
                         // 重なっている分だけ位置を修正
                         //enemyA->GetTransform()->AddPositionX(overlapRight + 0.1f);
                         enemyA->GetTransform()->AddPositionX(( overlapRight +  0.05f) * 0.5f); // 無限旋回ループ防止のために少し調整する
                         enemyB->GetTransform()->AddPositionX((-overlapRight + -0.05f) * 0.5f); // 無限旋回ループ防止のために少し調整する
-                    }                                                                                 
+                    }
                     // 左からめり込んでいる場合
-                    else if (overlap == overlapLeft)
+                    else if (overlapX == overlapLeft)
                     {
                         // 重なっている分だけ位置を修正
                         //enemyA->GetTransform()->AddPositionX(-overlapLeft + -0.1f);
@@ -204,31 +229,55 @@ void EnemyManager::CollisionEnemyVsEnemy()
                         enemyB->GetTransform()->AddPositionX(( overlapLeft +  0.05f) * 0.5f); // 無限旋回ループ防止のために少し調整する
                     }
 
-                    // 横から当たっていたら敵同士で当たった時の処理を行う
+                    // 横から当たっていたら味方に当たった時の処理を行う
                     //enemyA->OnHitFriend();
                     //enemyB->OnHitFriend();
                     if (!enemyA->GetIsHitFriend()) enemyA->OnHitFriend();
-                    if (!enemyB->GetIsHitFriend()) enemyB->OnHitFriend();                    
+                    if (!enemyB->GetIsHitFriend()) enemyB->OnHitFriend();
                     enemyA->SetIsHitFriend(true);
                     enemyB->SetIsHitFriend(true);
                 }
 
                 // 押し戻し後のAABBの最小座標と最大座標を更新
-                enemyA->UpdateAABB();             
-                enemyB->UpdateAABB();             
+                enemyA->UpdateAABB();
+                enemyB->UpdateAABB();
             }
 
-            if (!isHitB)
+            if (!isHitX_B)
             {
                 enemyB->SetIsHitFriend(false);
-            }
-            isHitB = false;
+            }                   
+            else
+            { 
+                isHitX_B = false;
+            }            
+            
+            //if (!isHitY_B)
+            //{
+            //    enemyB->SetIsOnFriend(false);
+            //}                   
+            //else
+            //{ 
+            //    isHitY_B = false;
+            //}
         }
 
-        if (!isHitA)
+        if (!isHitX_A)
         {
             enemyA->SetIsHitFriend(false);
+        }        
+        else
+        {
+            isHitX_A = false;
         }
-        isHitA = false;
+
+        //if (!isHitY_A)
+        //{
+        //    enemyA->SetIsOnFriend(false);
+        //}
+        //else
+        //{
+        //    isHitY_A = false;
+        //}
     }
 }

@@ -103,7 +103,7 @@ private: // 変数関連
     float   jumpedPositionY         =  0.0f;                // ジャンプ開始時の位置を保存する
 
     float   hipDropGravity          = -2.0f;                // ヒップドロップ時の重力
-    float   needHipDropHeight       =  3.0f;                // ヒップドロップに必要な高さ
+    float   needHipDropHeight       =  2.5f;                // ヒップドロップに必要な高さ
 
     float   defaultBounceSpeedX     =  15.0f;               // バウンスX速度初期値
     float   defaultBounceSpeedY     =  10.0f;               // バウンスY速度初期値
