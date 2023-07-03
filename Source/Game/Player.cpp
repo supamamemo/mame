@@ -1,10 +1,11 @@
 #include "Player.h"
+
 #include "../Mame/Graphics/Graphics.h"
 #include "../Mame/Input/Input.h"
+#include "../Mame/Scene/SceneManager.h"
+
 #include "OperatorXMFLOAT3.h"
 #include "EnemyManager.h"
-#include "CannonBallManager.h"
-#include "BossStateDerived.h"
 
 Player::Player()
 {
@@ -74,6 +75,7 @@ void Player::Update(const float& elapsedTime)
     case State::Run:     UpdateRunState(elapsedTime);     break;
     case State::Jump:    UpdateJumpState(elapsedTime);    break;
     case State::HipDrop: UpdateHipDropState(elapsedTime); break;
+    case State::Death:   UpdateDeathState(elapsedTime);   break;
     }
 
     // AABB更新処理
@@ -377,20 +379,16 @@ void Player::OnDamaged()
 // 死亡したときに呼ばれる関数
 void Player::OnDead()
 {
-    // 仮で縦に引き延ばしている
-    GetTransform()->SetScale(DirectX::XMFLOAT3(1, 5, 1));
+    // 死亡ステートへ遷移
+    TransitionDeathState();
 }
 
 
 // 落下死・落下ミスしたときに呼ばれる
 void Player::OnFallDead()
 {
-    // 死んでいたら死亡処理を行いreturn
-    if (health <= 0)
-    {
-        OnDead();
-        //return;
-    }
+    // 死んでいたらreturn
+    if (health <= 0) return;
 
     // 最後に着地した地形の端っこに戻す
     {
@@ -753,4 +751,31 @@ void Player::UpdateHipDropState(const float& elapsedTime)
     //    return;
     //}
 
+}
+
+
+void Player::TransitionDeathState()
+{
+    state = State::Death;
+
+    // 速度リセット
+    velocity = {};
+
+    // 正面を向くように設定
+    GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10.0f), ToRadian(180.0f), 0, 0));
+    
+    Jump(jumpSpeed_ * 2.0f);    // 飛び上がらせる
+
+    gravity = deathGravity_;    // 重力を軽くする
+
+    invincibleTimer = 0.0f;     // 点滅させないように無敵タイマーをリセットする
+
+    // ダッシュアニメ―ションを再生
+    PlayAnimation(Anim_Dash, true, 1.25f);
+}
+
+void Player::UpdateDeathState(const float& elapsedTime)
+{
+    // 画面に向かって来る
+    GetTransform()->AddPositionZ(-15.0f * elapsedTime);
 }

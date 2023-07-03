@@ -13,9 +13,14 @@ void Camera::Initialize()
 
 void Camera::Update(float elapsedTime)
 {
+    PlayerManager& playerManager = PlayerManager::Instance();
+
+    // プレイヤーが死んでいたらreturn
+    if (playerManager.GetPlayer()->GetHealth() <= 0) return;
+
     // プレイヤーのxにカメラのxをあわせる
     {
-        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+        DirectX::XMFLOAT3 playerPos = playerManager.GetPlayer()->GetTransform()->GetPosition();
         DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
 
         //if (cameraPos.x < playerPos.x)
@@ -194,7 +199,6 @@ void Camera::UpdateShake(const float elapsedTime)
 {
     if (!isShake_)
     {
-        transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
         return; // 画面振動していなければreturn
     }
 
@@ -222,6 +226,7 @@ void Camera::UpdateShake(const float elapsedTime)
         ++shakeState_;
         break;
     case 4: // シェイク終了
+        transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
         shakeState_ = 0;
         shakeTimer_ = defaultShakeTime_;
         isShake_    = false;

@@ -127,6 +127,11 @@ public: // 取得・設定関数関連
     const float GetJumpSpeed() const { return jumpSpeed_; }
     void SetJumpSpeed(const float jumpSpeed) { jumpSpeed_ = jumpSpeed; }
 
+
+    // モデルの不透明度の取得・設定
+    const float GetModelColorAlpha() const { return modelColorAlpha; }
+    void SetModelColorAlpha(const float colorAlpha) { modelColorAlpha = colorAlpha; }
+
     // 体力の取得
     const int& GetHealth() const { return health; }
 

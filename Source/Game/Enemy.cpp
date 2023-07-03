@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "EnemyManager.h"
 #include "PlayerManager.h"
+#include "../Mame/Scene/SceneManager.h"
 
 float Enemy::renderLengthXLimit_ = 40.0f;
 
@@ -38,9 +39,13 @@ void Enemy::CollisionEnemyVsPlayer()
     if (Collision::IntersectAABBVsAABB(this->aabb_, player->aabb_))
     {    
         // ダメージを受けなければreturn
-        if (!player->ApplyDamage(1, 1.0f)) return;
+        if (!player->ApplyDamage(1, 2.0f)) return;
 
         this->OnAttacked(); // 攻撃したときに呼ばれる処理
+
+        // ヒットストップ再生
+        Mame::Scene::SceneManager::Instance().PlayHitStop();
+        player->SetModelColorAlpha(1.0f); // ヒットストップ時に無敵タイマーで透明にならないようにする
     }
 }
 
