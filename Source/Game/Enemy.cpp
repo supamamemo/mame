@@ -42,10 +42,6 @@ void Enemy::CollisionEnemyVsPlayer()
         if (!player->ApplyDamage(1, 2.0f)) return;
 
         this->OnAttacked(); // 攻撃したときに呼ばれる処理
-
-        // ヒットストップ再生
-        Mame::Scene::SceneManager::Instance().PlayHitStop();
-        player->SetModelColorAlpha(1.0f); // ヒットストップ時に無敵タイマーで透明にならないようにする
     }
 }
 

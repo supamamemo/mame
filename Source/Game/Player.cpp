@@ -373,6 +373,10 @@ void Player::OnBounce()
 // ダメージを受けた時に呼ばれる関数
 void Player::OnDamaged()
 {
+    // ヒットストップ再生
+    Mame::Scene::SceneManager::Instance().PlayHitStop();
+
+    SetModelColorAlpha(1.0f); // ヒットストップ時に無敵タイマーで透明にならないようにする
 }
 
 
