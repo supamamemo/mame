@@ -6,7 +6,7 @@
 
 void Camera::Initialize()
 {
-    transform.SetPosition({ 0, 1.3f, -30 });
+    transform.SetPosition({ 0, 21.0f, -30 });
     transform.SetRotation({});
 }
 
@@ -29,6 +29,8 @@ void Camera::Update(float elapsedTime)
         //    if (cameraPos.x < playerPos.x) cameraPos.x = playerPos.x;
         //}
         cameraPos.x = playerPos.x;
+
+        cameraPos.y = playerPos.y + 5.776f;
         GetTransform()->SetPosition(cameraPos);
     }
 }
@@ -169,6 +171,25 @@ void Camera::DebugMoveCamera()
 }
 
 
+
+#ifdef _DEBUG
+void Camera::SetDebugCamera()
+{
+    DirectX::XMFLOAT3 pos = transform.GetPosition();
+    pos.y = 1.3f;
+    transform.SetPosition(pos);
+    length = 40.0f;
+}
+
+void Camera::SetDebugCamera1()
+{
+    DirectX::XMFLOAT3 pos = transform.GetPosition();
+    pos.y = 21.0f;
+    transform.SetPosition(pos);
+    length = 60.0f;
+}
+#endif // _DEBUG
+
 void Camera::UpdateShake(const float elapsedTime)
 {
     if (!isShake_)
@@ -208,3 +229,4 @@ void Camera::UpdateShake(const float elapsedTime)
     }   
 
 }
+

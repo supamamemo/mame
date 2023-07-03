@@ -89,6 +89,8 @@ void EnemyTofu::Update(const float& elapsedTime)
 
     UpdateAABB();                       // AABBÇÃçXêVèàóù
 
+
+
 #if _DEBUG
     static bool ONNNNNNNN = true;
     ImGui::Begin("ONNNNNNNNNNNNNNNNNNNNNnn");

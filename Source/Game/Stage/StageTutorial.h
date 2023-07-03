@@ -39,12 +39,10 @@ private:
     void StickState(float elapsedTime);
 
 private:
-    // ‰¼‚ÉbossƒNƒ‰ƒX‚Å•\Ž¦‚µ‚Ä‚¢‚é
     std::unique_ptr<Box> back = nullptr;
-    std::unique_ptr<Box> box = nullptr;
+    std::unique_ptr<Box> signboard = nullptr;
 
     // UI
-
-    Effect* effect = nullptr;
+    Effect* effect[4];
 };
 

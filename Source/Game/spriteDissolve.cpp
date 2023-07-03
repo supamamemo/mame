@@ -57,28 +57,21 @@ void SpriteDissolve::Initialize()
         D3D11_TEXTURE2D_DESC mask_texture2d_desc;
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dissolve_animation.png",
             mask_texture[0].GetAddressOf(), &mask_texture2d_desc);
-        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/images.jpg",
-            mask_texture[1].GetAddressOf(), &mask_texture2d_desc);
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dissolve_animation2.png",
+            mask_texture[1].GetAddressOf(), &mask_texture2d_desc);
+
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise.png",
             mask_texture[2].GetAddressOf(), &mask_texture2d_desc);
-        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dissolve_3.png",
+        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise1.png",
             mask_texture[3].GetAddressOf(), &mask_texture2d_desc);
-        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise.jpg",
-            mask_texture[4].GetAddressOf(), &mask_texture2d_desc);
-        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise1.jpg",
-            mask_texture[5].GetAddressOf(), &mask_texture2d_desc);
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise2.png",
-            mask_texture[6].GetAddressOf(), &mask_texture2d_desc);
+            mask_texture[4].GetAddressOf(), &mask_texture2d_desc);
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise3.jpg",
-            mask_texture[7].GetAddressOf(), &mask_texture2d_desc);
+            mask_texture[5].GetAddressOf(), &mask_texture2d_desc);
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise4.png",
-            mask_texture[8].GetAddressOf(), &mask_texture2d_desc);
-        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/di.png",
-            mask_texture[9].GetAddressOf(), &mask_texture2d_desc);
-        load_texture_from_file(graphics.GetDevice(), L"./resources/mask/dl.png",
-            mask_texture[10].GetAddressOf(), &mask_texture2d_desc);
+            mask_texture[6].GetAddressOf(), &mask_texture2d_desc);
         load_texture_from_file(graphics.GetDevice(), L"./resources/mask/noise5.png",
-            mask_texture[11].GetAddressOf(), &mask_texture2d_desc);
+            mask_texture[7].GetAddressOf(), &mask_texture2d_desc);
     }
 
     // dissolve_sprite

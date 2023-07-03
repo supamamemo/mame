@@ -416,12 +416,10 @@ void skinned_mesh::create_com_objects(ID3D11Device* device, const char* fbx_file
         // load_texture
         load_texture_from_file(device, L"./resources/mask/dissolve_animation.png",
             mask_texture[0].GetAddressOf(), &mask_texture2dDesc);
-        load_texture_from_file(device, L"./resources/mask/images.jpg",
-            mask_texture[1].GetAddressOf(), &mask_texture2dDesc);
         load_texture_from_file(device, L"./resources/mask/dissolve_animation2.png",
+            mask_texture[1].GetAddressOf(), &mask_texture2dDesc);
+        load_texture_from_file(device, L"./resources/mask/noise.png",
             mask_texture[2].GetAddressOf(), &mask_texture2dDesc);
-        load_texture_from_file(device, L"./resources/mask/dissolve_3.png",
-            mask_texture[3].GetAddressOf(), &mask_texture2dDesc);
     }
 
     D3D11_BUFFER_DESC buffer_desc{};
