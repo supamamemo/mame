@@ -35,7 +35,7 @@ void Camera::Update(float elapsedTime)
         //}
         cameraPos.x = playerPos.x;
 
-        cameraPos.y = playerPos.y + 5.776f;
+        //cameraPos.y = playerPos.y + 5.776f;
         GetTransform()->SetPosition(cameraPos);
     }
 }

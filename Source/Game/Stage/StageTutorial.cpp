@@ -360,7 +360,7 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
             if (pos.y > 7.0f)pos.y = 3.0f;
             effect[1]->SetPosition(pos);
 
-            effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetColor(), 0.0f);
+            effect[1]->handle = effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetColor(), 0.0f);
             effect[1]->SetTimer(0.0f);
         }
         effect[1]->AddTimer(elapsedTime);
