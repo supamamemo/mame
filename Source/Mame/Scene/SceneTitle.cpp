@@ -44,7 +44,9 @@ void SceneTitle::Initialize()
  
     // カメラ位置リセット
     shader->Initialize();
-
+    
+    Camera& camera = Camera::Instance();
+    camera.SetAngle(0.0f);
 
     // fadeout用
 #if FADE
@@ -59,10 +61,9 @@ void SceneTitle::Initialize()
     {
 #if MAME
         castleModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.45f, 0.0f));
-        castleModel->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
         groundModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(4.0f, -1.0f, -36.0f));
         groundModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 1.0f, 0.5f));
-        groundModel->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(-90), 0, 0));
+        groundModel->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(90), 0, 0));
 #endif
     }
 
@@ -205,6 +206,12 @@ void SceneTitle::Update(const float& elapsedTime)
     // ボタンを押したらfadeOut始まる
     if (gamePad.GetButtonDown() & GamePad::BTN_A)spriteDissolve->SetFade(true);
 
+
+    // todo:後で消す
+#ifdef _DEBUG
+    if (gamePad.GetButtonDown() & GamePad::BTN_X)camera.SetDebugCamera();
+    if (gamePad.GetButtonDown() & GamePad::BTN_Y)camera.SetDebugCamera1();
+#endif // _DEBUG
 
 
     // fadeOut

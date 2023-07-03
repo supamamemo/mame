@@ -17,6 +17,8 @@
 #include "../Stage/StageManager.h"
 #include "../Stage/StagePlains.h"
 
+#include "../../Mame/Scene/SceneManager.h"
+
 enum UISPRITE
 {
     Bubble,         // ‚«o‚µ
@@ -224,6 +226,13 @@ void StageTutorial::Update(const float& elapsedTime)
 
     // tutorialstate
     TutorialStateUpdate(elapsedTime);
+
+    GamePad& gamePad = Input::Instance().GetGamePad();
+    if (gamePad.GetButtonDown() & GamePad::BTN_X)
+    {
+        if(Mame::Scene::SceneManager::Instance().GetCurrentScene()->GetSceneType()==static_cast<int>(Mame::Scene::TYPE::GAME))
+            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
+    }
 }
 
 // Update‚ÌŒã‚ÉŒÄ‚Î‚ê‚é

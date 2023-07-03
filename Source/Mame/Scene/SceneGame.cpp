@@ -60,9 +60,9 @@ void SceneGame::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
-    //StageManager::Instance().ChangeStage(new StagePlains);
+    StageManager::Instance().ChangeStage(new StagePlains);
     //StageManager::Instance().ChangeStage(new StageBoss);
-    StageManager::Instance().ChangeStage(new StageTutorial);
+    //StageManager::Instance().ChangeStage(new StageTutorial);
 }
 
 // 終了化
@@ -74,17 +74,24 @@ void SceneGame::Finalize()
 // Updateの前に呼び出される
 void SceneGame::Begin()
 {
-    if (changeStage)
+    // ステージの切り替え
+    if (GetChangeStageTutorial())
     {
         StageManager::Instance().Clear();
-        StageManager::Instance().ChangeStage(new StageBoss);
-        changeStage = false;
+        StageManager::Instance().ChangeStage(new StageTutorial);
+        SetChangeStageTutorial();
     }
-    if (changeStage1)
+    if (GetChangeStagePlains())
     {
         StageManager::Instance().Clear();
         StageManager::Instance().ChangeStage(new StagePlains);
-        changeStage1 = false;
+        SetChangeStagePlains();
+    }
+    if (GetChangeStageBoss())
+    {
+        StageManager::Instance().Clear();
+        StageManager::Instance().ChangeStage(new StageBoss);
+        SetChangeStageBoss();
     }
 }
 
@@ -221,10 +228,12 @@ void SceneGame::DrawDebug()
     //    fadeType = 0;
     //}
 
-    if (ImGui::Button("terrain"))
-        changeStage = true;
-    if (ImGui::Button("stageP"))
-        changeStage1 = true;
+    if (ImGui::Button("tutorial"))
+        ChangeStage(static_cast<int>(Mame::Scene::STAGE::Tutorial));
+    if (ImGui::Button("plains"))
+        ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
+    if (ImGui::Button("boss"))
+        ChangeStage(static_cast<int>(Mame::Scene::STAGE::Boss));
 
     ImGui::Begin("renderLengthXLimit_");
     ImGui::SliderFloat("renderLengthXLimit_", &Terrain::renderLengthXLimit_, 0.0f, 50.0f);

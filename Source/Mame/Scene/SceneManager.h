@@ -6,6 +6,8 @@
 
 namespace Mame::Scene
 {
+
+
     class SceneManager
     {
     private:

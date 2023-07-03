@@ -49,6 +49,13 @@ public:
     void Reset();
     void DebugMoveCamera();
 
+    void SetAngle(float a) { angle = a; }
+
+#ifdef _DEBUG
+    void SetDebugCamera();
+    void SetDebugCamera1();
+#endif // _DEBUG
+
 public:
     Transform* GetTransform() { return &transform; }
 
@@ -59,8 +66,8 @@ private:
     DirectX::XMMATRIX V{};
 
     // ‰¼
-    float length = 40.0f;
-    float angle = 180.0f;
+    float length = 60.0f;
+    float angle = 0.0f;
     float addAngle = 0.02f;
 
 };

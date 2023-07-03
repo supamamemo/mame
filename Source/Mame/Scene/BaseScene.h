@@ -11,6 +11,13 @@ namespace Mame::Scene
         GAME,
     };
 
+    enum class STAGE
+    {
+        Tutorial,
+        Plains,
+        Boss,
+    };
+
     class BaseScene
     {
     public:
@@ -36,9 +43,29 @@ namespace Mame::Scene
         void SetSceneType(int type) { sceneType = type; }
         int GetSceneType() { return sceneType; }
 
+
+
     private:
         bool ready = false;
 
         int sceneType = static_cast<int>(TYPE::TITLE);
+
+
+    public:
+        // stageを変更するいい方法が思いつかなかったので、とりあえずここで。。。
+        void ChangeStage(int stage);
+        bool GetChangeStageTutorial() { return changeStageTutorial; }
+        bool GetChangeStagePlains() { return changeStagePlains; }
+        bool GetChangeStageBoss() { return changeStageBoss; }
+        void SetChangeStageTutorial() { changeStageTutorial = false; }
+        void SetChangeStagePlains() { changeStagePlains = false; }
+        void SetChangeStageBoss() { changeStageBoss = false; }
+
+    private:
+        // stageを変更するいい方法が思いつかなかったので、とりあえずここで。。。
+        bool changeStageTutorial = false;
+        bool changeStagePlains = false;
+        bool changeStageBoss = false;
+
     };
 }
