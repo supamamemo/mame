@@ -51,6 +51,9 @@ public:
 	void SetScale(const DirectX::XMFLOAT3& scl) { scale = scl; }
 
 	void SetRotation(const DirectX::XMFLOAT4& rot) { rotation = rot; }
+	void SetRotationX(const float rotX) { rotation.x = rotX; }
+	void SetRotationY(const float rotY) { rotation.y = rotY; }
+	void SetRotationZ(const float rotZ) { rotation.z = rotZ; }
 	void AddRotationX(const float rotX) { rotation.x += rotX; }
 	void AddRotationY(const float rotY) { rotation.y += rotY; }
 	void AddRotationZ(const float rotZ) { rotation.z += rotZ; }

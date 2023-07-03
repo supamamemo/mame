@@ -52,7 +52,7 @@ void Camera::UpdateTitle(float elapsedTime)
     vec.x*= length;
     vec.z*= length;
 
-    angle -= DirectX::XMConvertToRadians(addAngle);
+    angle -= addAngle * elapsedTime;
 
     GetTransform()->SetPosition(vec);
 }

@@ -24,29 +24,7 @@ void TitlePlayer::Finalize()
 
 void TitlePlayer::Update(const float& elapsedTime)
 {
-    Transform* transform = GetTransform();
-
-    const DirectX::XMFLOAT3 center = { 0,0,0 };
-    //GetTransform()->SetPositionX(20.0f);
-    const float radius = 20.0f;
-
-    const float rotationSpeedY = ToRadian(-0.05f);
-    //transform->AddRotationY(rotationSpeedY);
-    rotationY += rotationSpeedY;
-
-    const float vecX = sinf(rotationY);
-    const float vecZ = cosf(rotationY);    
-
-    const float turnVecX = sinf(rotationY + ToRadian(-90.0f));
-    const float turnVecZ = cosf(rotationY + ToRadian(-90.0f));
-
-    const float posX = center.x + radius * vecX;
-    const float posZ = center.z + radius * vecZ;
-
-    transform->SetPositionX(posX);
-    transform->SetPositionZ(posZ);
-
-    Turn(elapsedTime, turnVecX, turnVecZ, ToRadian(360.0f));
+    CircularMotion(elapsedTime);
 
     UpdateAnimation(elapsedTime); // アニメーション更新
 }
@@ -61,6 +39,34 @@ void TitlePlayer::DrawDebug()
     ImGui::Begin("titlePlayer_");
     Character::DrawDebug();
     ImGui::End();
+}
+
+
+void TitlePlayer::CircularMotion(const float elapsedTime)
+{
+    Transform* transform = GetTransform();
+
+    // 回転させる
+    rotationY += rotationSpeedY * elapsedTime;  
+
+    // 単位円（単位ベクトル）を求める
+    circle.unitCircle.x = sinf(rotationY);  // sinf：中心からX軸に向かう単位円を求める
+    circle.unitCircle.z = cosf(rotationY);  // cosf：中心からY軸(Z軸)に向かう単位円を求める
+
+    // 円の中心から単位円の方向に向かって円の半径分進んだ位置を求める
+    const float posX = circle.center.x + circle.unitCircle.x * circle.radius;
+    const float posZ = circle.center.z + circle.unitCircle.z * circle.radius;
+
+    // 位置を更新
+    transform->SetPositionX(posX);
+    transform->SetPositionZ(posZ);
+
+    // プレイヤーを進行方向に向かせる
+    const float turnVecX = sinf(rotationY + ToRadian(-90.0f)); // 進行方向に向かせるために追加で-90度曲げている
+    const float turnVecZ = cosf(rotationY + ToRadian(-90.0f)); // 進行方向に向かせるために追加で-90度曲げている
+    transform->SetRotationY(atan2f(turnVecX, turnVecZ));       // atan2f：座標から角度を求める
+
+    //Turn(elapsedTime, turnVecX, turnVecZ, ToRadian(360.0f));
 }
 
 

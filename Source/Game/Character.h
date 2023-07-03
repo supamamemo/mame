@@ -111,9 +111,12 @@ public: // 取得・設定関数関連
     void SetVelocityX(const float velocityX) { velocity.x = velocityX; }
     void SetVelocityY(const float velocityY) { velocity.y = velocityY; }
 
-    // 無敵かどうかの取得・設定
-    const bool GetIsInvincible() const { return isInvincible; }
-    void SetIsInvincible(const bool invincible) { isInvincible = invincible; }
+    // モデルの不透明度の取得・設定
+    const float GetModelColorAlpha() const { return modelColorAlpha; }
+    void SetModelColorAlpha(const float colorAlpha) { modelColorAlpha = colorAlpha; }
+
+    // 保存した移動方向ベクトルの取得
+    const float GetSaveMoveVecX() const { return saveMoveVecX_; }
 
     // 移動速度の取得・設定
     const float GetMoveSpeed() const { return moveSpeed_; }
@@ -128,10 +131,6 @@ public: // 取得・設定関数関連
     void SetJumpSpeed(const float jumpSpeed) { jumpSpeed_ = jumpSpeed; }
 
 
-    // モデルの不透明度の取得・設定
-    const float GetModelColorAlpha() const { return modelColorAlpha; }
-    void SetModelColorAlpha(const float colorAlpha) { modelColorAlpha = colorAlpha; }
-
     // 体力の取得
     const int& GetHealth() const { return health; }
 
@@ -139,8 +138,12 @@ public: // 取得・設定関数関連
     const bool& GetIsGround() const { return isGround_; }
     void SetIsGround(const bool isGround) { isGround_ = isGround; }
 
-    // AABB再設定(当たり判定のサイズを途中で変えたいときなどに)
-    void ResetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max);
+    // 無敵かどうかの取得・設定
+    const bool GetIsInvincible() const { return isInvincible; }
+    void SetIsInvincible(const bool invincible) { isInvincible = invincible; }
+
+    // AABB設定(当たり判定のサイズを途中で変えたいときなどに)
+    void SetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max);
 
 public:
     std::unique_ptr<Model> model    =  nullptr;                     // モデル
@@ -162,8 +165,8 @@ protected:
 
     float       stepOffset          =   1.0f;                       // 位置補正(Y位置がキャラクターの中心になるように調整)
                                         
-    float       moveVecX_            =   0.0f;                       // 移動ベクトルX
-    float       saveMoveVecX        =   1.0f;                       // 移動ベクトルを保存するベクトルX（最初は右を向かせておく）
+    float       moveVecX_           =   0.0f;                       // 移動ベクトルX
+    float       saveMoveVecX_        =   1.0f;                       // 移動ベクトルを保存するベクトルX（最初は右を向かせておく）
 
     float       defaultAcceleration =   1.0f;                       // 加速力の初期値
     float       acceleration        =   defaultAcceleration;        // 加速力

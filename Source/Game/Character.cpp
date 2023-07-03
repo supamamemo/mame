@@ -535,7 +535,7 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
                 {                  
                     horizontalSpeed = -horizontalSpeed; // ¡‰ñ‚Ì‘¬“x‚ğ”½“]
                     velocity.x      = -velocity.x;      // ’µ‚Ë•Ô‚Á‚Ä‹ó’†‚É•‚‚¢‚Ä‚é‚Æ‚«‚ÌX‘¬“x‚à”½“]‚³‚¹‚é
-                    saveMoveVecX    = -saveMoveVecX;    // Œü‚¢‚Ä‚¢‚é•ûŒü‚ğ‹t‚É‚³‚¹‚é
+                    saveMoveVecX_    = -saveMoveVecX_;    // Œü‚¢‚Ä‚¢‚é•ûŒü‚ğ‹t‚É‚³‚¹‚é
                 }
                 else
                 {
@@ -578,7 +578,7 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
 }
 
 
-void Character::ResetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max)
+void Character::SetAABB(const DirectX::XMFLOAT3& min, const DirectX::XMFLOAT3& max)
 {
     // minEmax‚ÌÄİ’è
     defaultMin_ = min;

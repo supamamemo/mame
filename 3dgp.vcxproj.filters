@@ -273,7 +273,7 @@
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\TitlePlayer.cpp">
-      <Filter>mamelib\Game</Filter>
+      <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\UIManager.cpp">
       <Filter>mamelib\Game\UI</Filter>
@@ -506,7 +506,7 @@
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\TitlePlayer.h">
-      <Filter>mamelib\Game</Filter>
+      <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\UIManager.h">
       <Filter>mamelib\Game\UI</Filter>

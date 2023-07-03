@@ -3,6 +3,7 @@
 #include "../Mame/Graphics/Graphics.h"
 
 #include "BossStateDerived.h"
+#include "PlayerManager.h"
 
 int EnemyTofu::nameNum = 0;
 
@@ -50,6 +51,7 @@ void EnemyTofu::Initialize()
         GetStateMachine()->RegisterState(new TOFU::FindState(this));
         GetStateMachine()->RegisterState(new TOFU::TrackState(this));
         GetStateMachine()->RegisterState(new TOFU::IdleBattleState(this));
+        GetStateMachine()->RegisterState(new TOFU::DeathState(this));
     }
 
     // 進行方向に向かせるために最初は旋回ステートに遷移させる
@@ -142,9 +144,28 @@ void EnemyTofu::OnLanding()
     isOnFriend_ = false;
 }
 
+
+void EnemyTofu::OnDamaged()
+{
+}
+
+
 void EnemyTofu::OnDead()
 {
-    // 自分を消去
+    // プレイヤーの移動方向保存ベクトルを取得
+    const float plSaveMoveVecX   = PlayerManager::Instance().GetPlayer()->GetSaveMoveVecX();
+    const float length           = fabsf(plSaveMoveVecX);
+    const float plSaveMoveVecX_n = (length > 0.0f) ? (plSaveMoveVecX / length) : 1.0f; // 単位ベクトル化(ゼロベクトルの予防込み)
+
+    moveDirectionX_ = plSaveMoveVecX_n; // プレイヤーの攻撃方向に吹っ飛ぶようにする
+
+    GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Death));
+}
+
+
+void EnemyTofu::OnFallDead()
+{
+    /// 自分を消去
     Destroy();
 }
 
