@@ -30,7 +30,7 @@ void Camera::Update(float elapsedTime)
         //}
         cameraPos.x = playerPos.x;
 
-        cameraPos.y = playerPos.y + 5.776f;
+        //cameraPos.y = playerPos.y + 5.776f;
         GetTransform()->SetPosition(cameraPos);
     }
 }
@@ -194,7 +194,7 @@ void Camera::UpdateShake(const float elapsedTime)
 {
     if (!isShake_)
     {
-        transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
+        
         return; // âÊñ êUìÆÇµÇƒÇ¢Ç»ÇØÇÍÇŒreturn
     }
 
@@ -220,6 +220,7 @@ void Camera::UpdateShake(const float elapsedTime)
         shakeState_ = 0;
         shakeTimer_ = defaultShakeTime_;
         isShake_    = false;
+        transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
         break;
     }   
 

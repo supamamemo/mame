@@ -14,20 +14,18 @@ StageBoss::StageBoss()
 
     // ステージ生成&登録
     {
-        //Terrain* terrain0 = new TerrainBoss("./resources/stage/stage.fbx");
-        Terrain* terrain0 = new TerrainBoss("./resources/stage/1.fbx");
-        TerrainManager::Instance().Register(terrain0);
+        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
 
-        Terrain* terrain1 = new TerrainBoss("./resources/stage/1.fbx");
-        TerrainManager::Instance().Register(terrain1);
+        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
 
-        Terrain* terrain2 = new TerrainBoss("./resources/stage/1.fbx");
-        TerrainManager::Instance().Register(terrain2);
+        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
 
-        Terrain* terrain3 = new TerrainBoss("./resources/stage/1.fbx");
-        TerrainManager::Instance().Register(terrain3);        
+        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
+
+        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
+
+        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
     }
-
 
     // player生成
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
@@ -68,16 +66,22 @@ void StageBoss::Initialize()
 
         // 位置設定
         {
-            terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 0, 10));
-            terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-9, 21, 10));
-            terrainManager.GetTerrain(1)->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 5, 1));
-            terrainManager.GetTerrain(1)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
-            terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(16.5f, 21, 10));
-            terrainManager.GetTerrain(2)->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 5, 1));
+            terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1, 10));
 
-            terrainManager.GetTerrain(2)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, ToRadian(90), 0));
-            terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 10.0f, 10));
-            terrainManager.GetTerrain(3)->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 2.0f, 1.0f));
+            terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 11, 10));
+
+            terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 11, 10));
+                       
+            terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 11, 10));            
+
+            terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 8, 10));
+            terrainManager.GetTerrain(4)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+            // terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10)); // しまった後
+           
+            terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10));
+            terrainManager.GetTerrain(5)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
+            // terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10)); // 空いた後
+            
         }
         
         // materialColor

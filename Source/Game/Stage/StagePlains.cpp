@@ -18,8 +18,8 @@ StagePlains::StagePlains()
         terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx" )); // 3
         terrainManager.Register(new TerrainPlains("./resources/stage/6.fbx" )); // 4
         terrainManager.Register(new TerrainPlains("./resources/stage/6.fbx" )); // 5
-        terrainManager.Register(new TerrainPlains("./resources/stage/7.fbx" )); // 6
-        terrainManager.Register(new TerrainPlains("./resources/stage/7.fbx" )); // 7
+        terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx" )); // 6
+        terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx" )); // 7
         terrainManager.Register(new TerrainPlains("./resources/stage/2.fbx" )); // 8
         terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx" )); // 9
     }
@@ -60,10 +60,10 @@ void StagePlains::Initialize()
             terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(34.0f, 0.0f, posZ));
             terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(42.0f, 2.0f, posZ));
             terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(54.0f, 2.0f, posZ));
-            terrainManager.GetTerrain(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(64.0f, 6.0f, posZ));
-            terrainManager.GetTerrain(7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(72.0f, 4.0f, posZ));
-            terrainManager.GetTerrain(8)->GetTransform()->SetPosition(DirectX::XMFLOAT3(86.0f, 0.0f, posZ));
-            terrainManager.GetTerrain(9)->GetTransform()->SetPosition(DirectX::XMFLOAT3(92.0f, -1.0f, posZ));
+            terrainManager.GetTerrain(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(62.0f, 6.0f, posZ));
+            terrainManager.GetTerrain(7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(67.0f, 4.0f, posZ));
+            terrainManager.GetTerrain(8)->GetTransform()->SetPosition(DirectX::XMFLOAT3(79.0f, 0.0f, posZ));
+            terrainManager.GetTerrain(9)->GetTransform()->SetPosition(DirectX::XMFLOAT3(84.0f, -1.0f, posZ));
         }
         terrainManager.Initialize();
     }
