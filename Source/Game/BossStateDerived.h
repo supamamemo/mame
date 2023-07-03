@@ -102,11 +102,11 @@ namespace BOSS
         void Exit()override;
 
     public:
-        void SetRecoil(float r) { recoil = r; }
+        void SetRecoil(float r) { recoilLength = r; }
 
     private:
-        float recoil = 0;       // ”½“®‹——£
-        float recoilCount = 0;  // ¡‚Ç‚ê‚¾‚¯”½“®‚Å”ò‚ñ‚Å‚¢‚é‚©
+        float recoilLength        = 1.25f;   // ”½“®‹——£
+        float currentRecoilLength = 0.0f;   // ¡‚Ç‚ê‚¾‚¯”½“®‚Å”ò‚ñ‚Å‚¢‚é‚©
         float speed = 2.0f;
     };
 }

@@ -70,7 +70,7 @@ private:
     float angle = 0.0f;
     float addAngle = 0.02f;
 
-    float   defaultShakeTime_   = 0.075f;                 // —h‚ê‚éŠÔ
+    float   defaultShakeTime_   = 0.05f;                 // —h‚ê‚éŠÔ
     float   shakeTimer_         = defaultShakeTime_;    // U“®ƒ^ƒCƒ}[
     int     shakeState_         = 0;                    // —h‚ê‚éƒXƒe[ƒg
     bool    isShake_            = false;                // —h‚ç‚·‚©‚Ç‚¤‚©

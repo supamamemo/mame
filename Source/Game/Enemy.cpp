@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "EnemyManager.h"
 #include "PlayerManager.h"
+#include "../Mame/Scene/SceneManager.h"
 
 float Enemy::renderLengthXLimit_ = 40.0f;
 
@@ -38,7 +39,7 @@ void Enemy::CollisionEnemyVsPlayer()
     if (Collision::IntersectAABBVsAABB(this->aabb_, player->aabb_))
     {    
         // ƒ_ƒ[ƒW‚ðŽó‚¯‚È‚¯‚ê‚Îreturn
-        if (!player->ApplyDamage(1, 1.0f)) return;
+        if (!player->ApplyDamage(1, 2.0f)) return;
 
         this->OnAttacked(); // UŒ‚‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éˆ—
     }

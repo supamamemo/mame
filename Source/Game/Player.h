@@ -55,7 +55,10 @@ private: // ステート関数関連
     void UpdateJumpState(const float& elapsedTime);     // ジャンプステート更新処理    
     
     void TransitionHipDropState();                      // ヒップドロップステートへ遷移   
-    void UpdateHipDropState(const float& elapsedTime);  // ヒップドロップステート更新処理
+    void UpdateHipDropState(const float& elapsedTime);  // ヒップドロップステート更新処理    
+    
+    void TransitionDeathState();                    // 死亡ステートへ遷移   
+    void UpdateDeathState(const float& elapsedTime);    // 死亡ステート更新処理
 
 private: // enum関連
     // ステート
@@ -67,6 +70,7 @@ private: // enum関連
         Run,     // 走行
         Jump,    // ジャンプ
         HipDrop, // ヒップドロップ
+        Death,   // 死亡
     };
 
     // アニメーション
@@ -111,6 +115,8 @@ private: // 変数関連
     float   bounceSpeedY            =  defaultBounceSpeedY; // バウンスY速度
     float   bounceScaleX            =  0.75f;               // バウンスX速度にかける値
     float   bounceScaleY            =  0.75f;               // バウンスY速度にかける値
+
+    float   deathGravity_           = -0.5f;                // 死亡ステート時の重力
 
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  2;                   // 最大バウンス回数

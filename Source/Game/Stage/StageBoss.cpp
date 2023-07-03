@@ -127,7 +127,6 @@ void StageBoss::Begin()
     PlayerManager::Instance().Begin();
 
     // boss
-    //boss->Begin();
     EnemyManager::Instance().Begin();
 }
 

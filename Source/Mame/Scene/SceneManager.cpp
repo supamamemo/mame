@@ -25,7 +25,7 @@ namespace Mame::Scene
     }
 
     // 更新処理
-    void SceneManager::Update(float elapesdTime)
+    void SceneManager::Update(float elapsedTime)
     {
         if (nextScene)
         {
@@ -45,11 +45,23 @@ namespace Mame::Scene
 
         if (currentScene)
         {
+            //bool hitStopTiming = false;
+            if (hitStopTimer_ > 0.0f)
+            {
+                hitStopTimer_ -= elapsedTime;
+                //hitStopTiming = (hitStopTimer_ > 0.8f) || (static_cast<int>(hitStopTimer_ * 10.0f) % 2 == 0);
+            } 
+            else
+            {
+                isHitStop_ = false;
+            }
+
             // pose中じゃない
-            if (!GetPose())
+            //if (!GetPose() && !hitStopTiming)
+            if (!GetPose() && !isHitStop_)
             {
                 currentScene->Begin();
-                currentScene->Update(elapesdTime);
+                currentScene->Update(elapsedTime);
                 currentScene->End();
             }
             // pose中
@@ -59,12 +71,12 @@ namespace Mame::Scene
                 {
                     // タイトル
                 case static_cast<int>(Mame::Scene::TYPE::TITLE):
-                    PoseUpdateTitle(elapesdTime);
+                    PoseUpdateTitle(elapsedTime);
                     break;
 
                     // ゲーム
                 case static_cast<int>(Mame::Scene::TYPE::GAME):
-                    PoseUpdateGame(elapesdTime);
+                    PoseUpdateGame(elapsedTime);
                     break;
                 }
             }

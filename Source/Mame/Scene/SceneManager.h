@@ -43,6 +43,17 @@ namespace Mame::Scene
         void SetPose(bool p) { pose = p; }
         bool GetPose() { return pose; }
 
+        void PlayHitStop() 
+        {
+            hitStopTimer_ = defaultHitStopTime_;
+            isHitStop_    = true;
+        }
+
+    public:
+        float   defaultHitStopTime_ = 0.25f;
+        float   hitStopTimer_       = 0.0f;
+        bool    isHitStop_          = false;
+
     private:
         BaseScene* currentScene = nullptr;
         BaseScene* nextScene = nullptr;
@@ -50,7 +61,7 @@ namespace Mame::Scene
         // poseŠÖ˜A
         bool pose = false;
         std::unique_ptr<Pose>sprite[10]{};
-        int RS, DS, SS = 0;
+        int RS = 0, DS = 0, SS = 0;
 
         int state = 0;
     };
