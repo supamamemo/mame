@@ -2,7 +2,6 @@
 
 #include "Character.h"
 
-
 class Player : public Character
 {
 public:
@@ -122,4 +121,3 @@ private: // 変数関連
     int     bounceLimit             =  2;                   // 最大バウンス回数
 
 };
-

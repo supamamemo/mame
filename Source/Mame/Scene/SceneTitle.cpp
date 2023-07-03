@@ -10,7 +10,6 @@
 #include "../../texture.h"
 
 
-
 // todo: 後で消す
 #define FADE 1
 #define MAME 1
@@ -23,8 +22,8 @@ SceneTitle::SceneTitle()
 
     spriteDissolve = std::make_unique<SpriteDissolve>();
 
-    // player生成
-    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+    // titlePlayer生成
+    titlePlayer_ = std::make_unique<TitlePlayer>();
 
     // title model
     {
@@ -68,7 +67,7 @@ void SceneTitle::Initialize()
     }
 
     // プレイヤー初期化
-    PlayerManager::Instance().GetPlayer()->Initialize();
+    titlePlayer_->Initialize();
 
 
     HRESULT hr{ S_OK };
@@ -182,7 +181,7 @@ void SceneTitle::Initialize()
 // 終了化
 void SceneTitle::Finalize()
 {
-    PlayerManager::Instance().Finalize();
+    titlePlayer_->Finalize();
 }
 
 // 毎フレーム一番最初に呼ばれる
@@ -263,7 +262,7 @@ void SceneTitle::Update(const float& elapsedTime)
         if (scroll_direction.y < -10.0f)scroll_direction.y += 10.0f;
     }
 
-    PlayerManager::Instance().GetPlayer()->Update(elapsedTime);
+    titlePlayer_->Update(elapsedTime);
 }
 
 // 毎フレーム一番最後に呼ばれる
@@ -291,7 +290,7 @@ void SceneTitle::Render(const float& elapsedTime)
     shader->Begin(graphics.GetDeviceContext(), rc, 0);
 
     // プレイヤー描画
-    PlayerManager::Instance().GetPlayer()->Render(elapsedTime);
+    titlePlayer_->Render(elapsedTime);
 
     // スプライト描画
     shader->SetState(graphics.GetDeviceContext(), RS, DS, SS);
@@ -359,7 +358,7 @@ void SceneTitle::DrawDebug()
     Shader* shader = graphics.GetShader();
     shader->DrawDebug();
 
-    PlayerManager::Instance().GetPlayer()->DrawDebug();
+    titlePlayer_->DrawDebug();
 
     if (ImGui::TreeNode("State"))
     {
@@ -394,7 +393,7 @@ void SceneTitle::DrawDebug()
         ImGui::TreePop();
     }
 
-    PlayerManager::Instance().GetPlayer()->model->skinned_meshes->Drawdebug();
+    titlePlayer_->DrawDebug();
 
     spriteDissolve->DrawDebug();
 
