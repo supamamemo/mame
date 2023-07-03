@@ -10,6 +10,7 @@ void Camera::Initialize()
     transform.SetRotation({});
 }
 
+
 void Camera::Update(float elapsedTime)
 {
     // プレイヤーのxにカメラのxをあわせる
@@ -32,6 +33,7 @@ void Camera::Update(float elapsedTime)
     }
 }
 
+
 void Camera::UpdateTitle(float elapsedTime)
 {
     DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
@@ -46,6 +48,12 @@ void Camera::UpdateTitle(float elapsedTime)
     angle -= DirectX::XMConvertToRadians(addAngle);
 
     GetTransform()->SetPosition(vec);
+}
+
+
+void Camera::UpdateBoss(const float elapsedTime)
+{
+    UpdateShake(elapsedTime);   // 画面振動更新
 }
 
 
@@ -158,4 +166,40 @@ void Camera::DebugMoveCamera()
 
     // プレイヤー移動確認のためにコメントアウトしています
     //transform.SetPosition(pos);
+}
+
+
+void Camera::UpdateShake(const float elapsedTime)
+{
+    if (!isShake_)
+    {
+        transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
+        return; // 画面振動していなければreturn
+    }
+
+    shakeTimer_ -= elapsedTime;
+    if (shakeTimer_ > 0.0f) return;
+    else shakeTimer_ = defaultShakeTime_;
+
+    switch (shakeState_)
+    {
+    case 0: 
+        transform.SetPosition(DirectX::XMFLOAT3(0.5f, 2, -12.0f));
+        ++shakeState_;
+        break;
+    case 1: 
+        transform.SetPosition(DirectX::XMFLOAT3(-1, -0.5f, -12.0f));
+        ++shakeState_;
+        break;
+    case 2: 
+        transform.SetPosition(DirectX::XMFLOAT3(-2, 0, -12.0f));
+        ++shakeState_;
+        break;
+    case 3: // シェイク終了
+        shakeState_ = 0;
+        shakeTimer_ = defaultShakeTime_;
+        isShake_    = false;
+        break;
+    }   
+
 }

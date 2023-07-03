@@ -8,10 +8,8 @@
 class Camera
 {
 private: // シングルトン化
-    Camera() {}
+    Camera()  {}
     ~Camera() {}
-
-
 
 public:
     // 唯一のインスタンス取得
@@ -21,12 +19,12 @@ public:
         return camera;
     }
 
-
-
     void Initialize();
     void Update(float elapsedTime);
 
     void UpdateTitle(float elapsedTime);
+
+    void UpdateBoss(const float elapsedTime);
 
     void SetPerspectiveFov(ID3D11DeviceContext* dc);
     void SetPerspectiveFovTitle(ID3D11DeviceContext* dc);
@@ -44,10 +42,12 @@ public:
         DirectX::XMFLOAT3 up{ 0.0f,1.0f,0.0f };
     }camera;
 
-
-
     void Reset();
     void DebugMoveCamera();
+
+public:
+    void PlayShake() { isShake_ = true; }      // 画面を揺らす
+    void UpdateShake(const float elapsedTime); // 画面振動更新処理
 
 public:
     Transform* GetTransform() { return &transform; }
@@ -63,5 +63,9 @@ private:
     float angle = 180.0f;
     float addAngle = 0.02f;
 
+    float   defaultShakeTime_   = 0.075f;                 // 揺れる時間
+    float   shakeTimer_         = defaultShakeTime_;    // 振動タイマー
+    int     shakeState_         = 0;                    // 揺れるステート
+    bool    isShake_            = false;                // 揺らすかどうか
 };
 

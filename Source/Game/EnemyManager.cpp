@@ -230,12 +230,12 @@ void EnemyManager::CollisionEnemyVsEnemy()
                     }
 
                     // 横から当たっていたら味方に当たった時の処理を行う
-                    enemyA->OnHitFriend();
-                    enemyB->OnHitFriend();
-                    //if (!enemyA->GetIsHitFriend()) enemyA->OnHitFriend();
-                    //if (!enemyB->GetIsHitFriend()) enemyB->OnHitFriend();
-                    //enemyA->SetIsHitFriend(true);
-                    //enemyB->SetIsHitFriend(true);
+                    //enemyA->OnHitFriend();
+                    //enemyB->OnHitFriend();
+                    if (!enemyA->GetIsHitFriend()) enemyA->OnHitFriend();
+                    if (!enemyB->GetIsHitFriend()) enemyB->OnHitFriend();
+                    enemyA->SetIsHitFriend(true);
+                    enemyB->SetIsHitFriend(true);
                 }
 
                 // 押し戻し後のAABBの最小座標と最大座標を更新

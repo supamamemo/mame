@@ -130,6 +130,8 @@ void StageBoss::Begin()
 // 更新処理
 void StageBoss::Update(const float& elapsedTime)
 {
+    Camera::Instance().UpdateBoss(elapsedTime);
+
     // terrain更新
     TerrainManager::Instance().Update(elapsedTime);
 

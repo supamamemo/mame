@@ -73,6 +73,20 @@ void EnemyTofu::Update(const float& elapsedTime)
     // ステート更新
     if (stateMachine) GetStateMachine()->Update(elapsedTime);
 
+    // 地形の端を超えて落ちそうになったら修正
+    {
+        if (lastLandingTerrainAABBMaxX != 0.0f && aabb_.max.x > lastLandingTerrainAABBMaxX)
+        {
+            const float fixLeft = -fabsf(aabb_.max.x - lastLandingTerrainAABBMaxX);
+            GetTransform()->AddPositionX(fixLeft);
+        }
+        else if (lastLandingTerrainAABBMinX != 0.0f && aabb_.min.x < lastLandingTerrainAABBMinX)
+        {
+            const float fixRight = fabsf(aabb_.min.x - lastLandingTerrainAABBMinX);
+            GetTransform()->AddPositionX(fixRight);
+        }
+    }
+
     UpdateAABB();                       // AABBの更新処理
 
 #if _DEBUG

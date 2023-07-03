@@ -344,6 +344,24 @@ namespace TOFU
             }
         }
 
+        // 地形の端を超えそうになったら旋回ステートへ遷移
+        {
+            if (owner->lastLandingTerrainAABBMaxX != 0.0f && 
+                owner->aabb_.max.x > owner->lastLandingTerrainAABBMaxX)
+            {
+                owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
+                return;
+            }
+            else if (owner->lastLandingTerrainAABBMinX != 0.0f &&
+                owner->aabb_.min.x < owner->lastLandingTerrainAABBMinX)
+            {
+                owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
+                return;
+            }
+        }
+
         // 右方向に向いている場合、目的地も左側にあるので到達しているか判定する
         if (owner->GetMoveDirectionX() == 1.0f)
         {

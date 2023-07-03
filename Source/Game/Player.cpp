@@ -291,6 +291,8 @@ void Player::CollisionPlayerVsEnemies()
 
             // ƒ_ƒ[ƒW‚ðŽó‚¯‚È‚¯‚ê‚Îreturn
             if (!enemy->ApplyDamage(1, 1.0f)) return;
+
+            Camera::Instance().PlayShake();
         }
     }
 }
