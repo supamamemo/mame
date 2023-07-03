@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 
 #include "../Transform.h"
+#include "../../Game/Common.h"
 
 class Camera
 {
@@ -66,11 +67,11 @@ private:
     DirectX::XMMATRIX V{};
 
     // ‰¼
-    float length = 60.0f;
-    float angle = 0.0f;
-    float addAngle = 0.02f;
+    float length   = 60.0f;
+    float angle    = 0.0f;
+    float addAngle = ToRadian(15.0f);
 
-    float   defaultShakeTime_   = 0.05f;                 // —h‚ê‚éŠÔ
+    float   defaultShakeTime_   = 0.05f;                // —h‚ê‚éŠÔ
     float   shakeTimer_         = defaultShakeTime_;    // U“®ƒ^ƒCƒ}[
     int     shakeState_         = 0;                    // —h‚ê‚éƒXƒe[ƒg
     bool    isShake_            = false;                // —h‚ç‚·‚©‚Ç‚¤‚©

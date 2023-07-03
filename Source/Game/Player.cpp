@@ -33,7 +33,7 @@ Player::Player()
 
     const DirectX::XMFLOAT3 min = { -0.4f, -0.0f, -0.4f }; // 符号ミスに注意
     const DirectX::XMFLOAT3 max = { +0.4f, +1.0f, +0.4f };
-    ResetAABB(min, max);
+    SetAABB(min, max);
     UpdateAABB();
 
     // 待機ステートへ遷移
@@ -227,15 +227,15 @@ const bool Player::InputMove(const float& elapsedTime)
 
     // 移動ベクトルがゼロベクトルじゃなければ（更新されていたら）保存する
     // ※保存することでボタンを押し続けなくても自動的に旋回しきるようになる
-    if (moveVecX != 0.0f && moveVecX != saveMoveVecX)
+    if (moveVecX != 0.0f && moveVecX != saveMoveVecX_)
     {
-        saveMoveVecX = moveVecX;
+        saveMoveVecX_ = moveVecX;
     }
 
     // 旋回処理(急ブレーキアニメーション再生中は処理をしない)
     if (model->GetCurrentAnimationIndex() != Anim_Break)
     {
-        Turn(elapsedTime, saveMoveVecX, turnSpeed_);
+        Turn(elapsedTime, saveMoveVecX_, turnSpeed_);
     }
 
     // 進行ベクトルがゼロベクトルでない場合は入力された
@@ -338,7 +338,7 @@ void Player::OnLanding()
 void Player::OnDash()
 {
     // ダッシュ時の速度を設定
-    velocity.x = saveMoveVecX * dashAcceleration;
+    velocity.x = saveMoveVecX_ * dashAcceleration;
 }
 
 
@@ -361,7 +361,7 @@ void Player::OnBounce()
     // バウンスさせる
     else
     {    
-        velocity.x    = (saveMoveVecX > 0.0f) ? bounceSpeedX : -bounceSpeedX; // プレイヤーの向いている方向にバウンスX速度を代入    
+        velocity.x    = (saveMoveVecX_ > 0.0f) ? bounceSpeedX : -bounceSpeedX; // プレイヤーの向いている方向にバウンスX速度を代入    
         velocity.y    = bounceSpeedY;   // バウンスY速度を代入
         bounceSpeedX *= bounceScaleX;   // バウンスX速度を減少
         bounceSpeedY *= bounceScaleY;   // バウンスY速度を減少
@@ -383,6 +383,11 @@ void Player::OnDamaged()
 // 死亡したときに呼ばれる関数
 void Player::OnDead()
 {
+    // ヒットストップ再生
+    Mame::Scene::SceneManager::Instance().PlayHitStop();
+
+    SetModelColorAlpha(1.0f); // ヒットストップ時に無敵タイマーで透明にならないようにする
+
     // 死亡ステートへ遷移
     TransitionDeathState();
 }
@@ -545,7 +550,7 @@ void Player::UpdateDashState(const float& elapsedTime)
 {
 
     // 旋回処理（カメラ目線のままダッシュしないように更新する）
-    Turn(elapsedTime, saveMoveVecX, turnSpeed_);
+    Turn(elapsedTime, saveMoveVecX_, turnSpeed_);
 
     
     // ダッシュタイマーが残っていたらをダッシュを継続させる
@@ -743,7 +748,7 @@ void Player::TransitionHipDropState()
 void Player::UpdateHipDropState(const float& elapsedTime)
 {
     // 旋回処理（カメラ目線のままバウンスしないように更新する）
-    Turn(elapsedTime, saveMoveVecX, turnSpeed_);
+    Turn(elapsedTime, saveMoveVecX_, turnSpeed_);
 
     // 一回バウンスしたら重力をもとに戻す
     if (bounceCount != 0) gravity = defaultGravity;

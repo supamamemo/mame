@@ -275,7 +275,7 @@
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\TitlePlayer.cpp">
-      <Filter>mamelib\Game</Filter>
+      <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -504,7 +504,7 @@
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\TitlePlayer.h">
-      <Filter>mamelib\Game</Filter>
+      <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

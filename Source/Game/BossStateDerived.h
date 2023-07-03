@@ -26,6 +26,7 @@ namespace TOFU
         Find,
         Track,
         IdleBattle,
+        Death,
     };
 }
 
@@ -165,8 +166,20 @@ namespace TOFU
     class IdleBattleState : public State
     {
     public:
-        IdleBattleState(Enemy* _tofu) :State(_tofu, "track") {}
+        IdleBattleState(Enemy* _tofu) :State(_tofu, "idleBattle") {}
         ~IdleBattleState() {}
+
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
+    };    
+    
+    // 死亡ステート
+    class DeathState : public State
+    {
+    public:
+        DeathState(Enemy* _tofu) :State(_tofu, "death") {}
+        ~DeathState() {}
 
         void Enter()                    override;
         void Execute(float elapsedTime) override;

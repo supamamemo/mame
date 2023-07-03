@@ -394,6 +394,7 @@ namespace TOFU
     void WalkState::Exit()
     {
     }
+
 }
 
 // TurnState
@@ -630,7 +631,42 @@ namespace TOFU
     }
 }
 
+// DeathState(死亡ステート)
+namespace TOFU
+{
+    void DeathState::Enter()
+    {
+        owner->SetMoveSpeed(10.0f);             // XZ方向の吹っ飛び力を設定
 
+        owner->SetJumpSpeed(20.0f);             // Y方向の吹っ飛び力設定
+        owner->Jump(owner->GetJumpSpeed());     // 上に吹っ飛ばす
+
+        owner->SetTurnSpeed(ToRadian(540.0f)); // 回転速度設定
+    }
+
+    void DeathState::Execute(float elapsedTime)
+    {
+        Transform* transform = owner->GetTransform();
+
+        // 吹っ飛ばす
+        const float moveDirectionX  = owner->GetMoveDirectionX();           // 吹っ飛ぶ方向X(OnDead関数で設定済み)
+        const float impulse         = owner->GetMoveSpeed() * elapsedTime;  // 吹っ飛び力
+        const float velocityX       = moveDirectionX * impulse;             // 横に吹っ飛ばす
+        const float velocityZ       = -impulse;                             // 手前に吹っ飛ばす
+        transform->AddPosition(DirectX::XMFLOAT3(velocityX, 0.0f, velocityZ));
+
+        // 回転させる
+        const float rotate = moveDirectionX * owner->GetTurnSpeed() * elapsedTime;
+        transform->AddRotationX(rotate);
+        transform->AddRotationZ(rotate);
+
+        // (消滅処理はOnFallDead関数で行っている)
+    }
+
+    void DeathState::Exit()
+    {
+    }
+}
 
 // IdleState
 namespace CANNON

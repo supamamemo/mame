@@ -24,7 +24,9 @@ public:
     void DrawDebug()                       override; // デバッグ描画
 
     void OnLanding()                       override; // 着地時に呼ばれる
+    void OnDamaged()                       override; // ダメージを受けたときに呼ばれる
     void OnDead()                          override; // 死亡したときに呼ばれる
+    void OnFallDead()                      override; // 落下ミスしたときに呼ばれる
 
     void OnHitWall()                       override; // 壁に当たった時に呼ばれる
     void OnAttacked()                      override; // 攻撃したときに呼ばれる
