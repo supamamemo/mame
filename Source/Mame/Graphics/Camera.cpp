@@ -181,21 +181,26 @@ void Camera::UpdateShake(const float elapsedTime)
     if (shakeTimer_ > 0.0f) return;
     else shakeTimer_ = defaultShakeTime_;
 
+    const float posX = 0.25f;
     switch (shakeState_)
     {
     case 0: 
-        transform.SetPosition(DirectX::XMFLOAT3(0.5f, 2, -12.0f));
+        transform.SetPosition(DirectX::XMFLOAT3( posX, 10.0f, -12.0f));
         ++shakeState_;
         break;
     case 1: 
-        transform.SetPosition(DirectX::XMFLOAT3(-1, -0.5f, -12.0f));
+        transform.SetPosition(DirectX::XMFLOAT3(-posX, 10.0f, -12.0f));
         ++shakeState_;
         break;
     case 2: 
-        transform.SetPosition(DirectX::XMFLOAT3(-2, 0, -12.0f));
+        transform.SetPosition(DirectX::XMFLOAT3( posX, 10.0f, -12.0f));
         ++shakeState_;
         break;
-    case 3: // シェイク終了
+    case 3:
+        transform.SetPosition(DirectX::XMFLOAT3(-posX, 10.0f, -12.0f));
+        ++shakeState_;
+        break;
+    case 4: // シェイク終了
         shakeState_ = 0;
         shakeTimer_ = defaultShakeTime_;
         isShake_    = false;

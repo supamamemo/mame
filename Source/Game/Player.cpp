@@ -669,17 +669,22 @@ void Player::TransitionJumpState()
     jumpedPositionY = GetTransform()->GetPosition().y;
     
     // ジャンプ開始アニメーション再生
-    PlayAnimation(Anim_JumpInit, false, 1.0f, 0.5f);
+    PlayAnimation(Anim_JumpInit, false, 1.5f);
 }
 
 // ジャンプステート更新処理
 void Player::UpdateJumpState(const float& elapsedTime)
 {
-    // ジャンプ開始アニメーションが終了したらジャンプアニメーション再生
-    if (!IsPlayAnimation()) PlayAnimation(Anim_Jump, true, 1.25f);
-
     // 落下し始めたら落下アニメーション再生
-    if (velocity.y < 0.0f) PlayAnimation(Anim_Fall, true);
+    if (velocity.y < 0.0f)
+    {
+        PlayAnimation(Anim_Fall, true);
+    }
+    // ジャンプ開始アニメーションが終了したらジャンプアニメーション再生
+    else if (!IsPlayAnimation())
+    {
+        PlayAnimation(Anim_Jump, true, 1.25f);
+    }
 
     // 移動入力処理
     InputMove(elapsedTime);

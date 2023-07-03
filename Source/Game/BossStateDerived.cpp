@@ -261,11 +261,11 @@ namespace BOSS
         // materialColor‚ðÝ’è(Ž‡)
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 0.4f));
         
-        // ”½“®‹——£‚ðÝ’è
-        recoilCount = 0;
+        // Œ»Ý‚Ì”½“®‹——£‚ðƒŠƒZƒbƒg
+        currentRecoilLength = 0.0f;
         
         //SetRecoil(owner->GetStateMachine()->GetMoveRight() ? 1.0f : -1.0f);
-        SetRecoil(owner->GetMoveDirectionX());
+        //SetRecoil(owner->GetMoveDirectionX());
 
         // –³“Gó‘Ô‚ð–³‚­‚·
         owner->SetIsInvincible(false);
@@ -280,19 +280,21 @@ namespace BOSS
         Transform* transform = owner->GetTransform();
 
         //owner->SetMoveSpeed(owner->GetStateMachine()->GetMoveRight() ? speed : -speed);
-        owner->SetMoveSpeed(owner->GetMoveDirectionX() * speed);
-
-        transform->AddPositionX(owner->GetMoveSpeed() * elapsedTime);
-        recoilCount += (owner->GetMoveSpeed() * elapsedTime);
 
         //if (owner->GetStateMachine()->GetMoveRight())
-        if (owner->GetMoveDirectionX() == 1.0f)
+        if (currentRecoilLength < recoilLength)
         {
-            if (recoilCount > recoil) owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+            owner->SetMoveSpeed(owner->GetMoveDirectionX() * speed);
+
+            transform->AddPositionX(owner->GetMoveSpeed() * elapsedTime);
+            currentRecoilLength += fabsf(owner->GetMoveSpeed() * elapsedTime);
+
+            if (currentRecoilLength >= recoilLength) SetTimer(1.0f);
         }
         else
         {
-            if (recoilCount < recoil) owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+            SubtractTime(elapsedTime);
+            if (GetTimer() <= 0.0f) owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
         }
         
         //owner->GetTransform()->SetPosition(ownerPos);
@@ -301,8 +303,6 @@ namespace BOSS
     // I—¹
     void RecoilState::Exit()
     {
-        recoilCount = 0.0f;
-
         // –³“Gó‘Ô‚É‚·‚é
         owner->SetIsInvincible(true);
     }
