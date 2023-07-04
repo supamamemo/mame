@@ -33,6 +33,8 @@ public:
     const int GetTerrainCount() const { return static_cast<int>(terrains.size()); } // 地形数取得  
     Terrain* GetTerrain(int index) { return terrains.at(index); }                   // 地形取得
 
+
+
 private:
     std::vector<Terrain*> terrains;
     std::set<Terrain*> removes;

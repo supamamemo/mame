@@ -101,6 +101,8 @@ void TerrainManager::Clear()
     terrains.shrink_to_fit();    // vectorの余分なメモリを解放する関数(C++11)
 }
 
+
+
 // デバッグ
 void TerrainManager::DrawDebug()
 {

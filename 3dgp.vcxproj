@@ -225,6 +225,7 @@
     <ClCompile Include="Source\Game\Stage\StageBoss.cpp" />
     <ClCompile Include="Source\Game\Stage\StageManager.cpp" />
     <ClCompile Include="Source\Game\Stage\StagePlains.cpp" />
+    <ClCompile Include="Source\Game\Stage\a.cpp" />
     <ClCompile Include="Source\Game\Stage\StageTutorial.cpp" />
     <ClCompile Include="Source\Game\StateMachine.cpp" />
     <ClCompile Include="Source\Game\Terrain\Terrain.cpp" />
@@ -300,6 +301,7 @@
     <ClInclude Include="Source\Game\Stage\StageBoss.h" />
     <ClInclude Include="Source\Game\Stage\StageManager.h" />
     <ClInclude Include="Source\Game\Stage\StagePlains.h" />
+    <ClInclude Include="Source\Game\Stage\a.h" />
     <ClInclude Include="Source\Game\Stage\StageTutorial.h" />
     <ClInclude Include="Source\Game\State.h" />
     <ClInclude Include="Source\Game\StateMachine.h" />

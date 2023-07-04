@@ -22,7 +22,7 @@
 enum UISPRITE
 {
     Bubble,         // 吹き出し
-    BubbleStick,    // 吹き出しPC
+    BubbleStick,    // 吹き出しスティック
     StickBase,      // base
     StickCenter,    // center
     StickRight,     // right
@@ -46,7 +46,7 @@ StageTutorial::StageTutorial()
     // ステージ生成&登録
     {
         TerrainManager& terrainManager = TerrainManager::Instance();
-        
+
         terrainManager.Register(new TerrainPlains("./resources/stage/1.fbx"));  // 0
         terrainManager.Register(new TerrainPlains("./resources/stage/1.fbx"));  // 1
     }
@@ -135,6 +135,9 @@ void StageTutorial::Initialize()
     {
         // stick
         {
+            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT2(135, 275));
+            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetSize(DirectX::XMFLOAT2(150, 150));
+
             UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT2(160, 300));
             UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
 
@@ -150,7 +153,7 @@ void StageTutorial::Initialize()
 
         UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT2(60, 280));
         UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(300, 150));
-        
+
         UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT2(100, 300));
         UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetSize(DirectX::XMFLOAT2(100, 100));
         UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT2(210, 300));
@@ -230,8 +233,8 @@ void StageTutorial::Update(const float& elapsedTime)
     GamePad& gamePad = Input::Instance().GetGamePad();
     if (gamePad.GetButtonDown() & GamePad::BTN_X)
     {
-        if(Mame::Scene::SceneManager::Instance().GetCurrentScene()->GetSceneType()==static_cast<int>(Mame::Scene::TYPE::GAME))
-            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
+        //if(Mame::Scene::SceneManager::Instance().GetCurrentScene()->GetSceneType()==static_cast<int>(Mame::Scene::TYPE::GAME))
+        //    Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
     }
 }
 
@@ -338,6 +341,7 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
         if (playerPos.x > -3.8f)
         {
+            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
             UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
             UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
             UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
@@ -372,6 +376,7 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         }
 
         break;
+
     }
 }
 
@@ -382,7 +387,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
     {
     case STATE::MoveReception:
         // UI
-        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
 
         break;
@@ -417,20 +422,20 @@ void StageTutorial::StickState(float elapsedTime)
         break;
     case 1:
         UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(true);
-        
+
 
         if (stickTime > 1.0f)
         {
             UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
             UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
-            
+
             stickTime = 0;
             stickMoveState = 2;
         }
         break;
     case 2:
         UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
-        
+
         if (stickTime > 1.0f)
         {
             UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
@@ -442,7 +447,7 @@ void StageTutorial::StickState(float elapsedTime)
         break;
     case 3:
         UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(true);
-        
+
         if (stickTime > 1.0f)
         {
             UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);

@@ -10,7 +10,7 @@ class StagePlains : public Stage
 public:
     StagePlains();
     ~StagePlains() override {}
-
+    
     void Initialize()                       override;   // ‰Šú‰»
     void Finalize()                         override;   // I—¹ˆ—
     void Begin()                            override;   // –ˆƒtƒŒ[ƒ€ˆê”ÔÅ‰‚ÉŒÄ‚Î‚ê‚é

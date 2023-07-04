@@ -146,6 +146,7 @@ namespace Mame::Scene
         currentScene = nullptr;
     }
 
+
     // pose’†‚Ìupdate(sceneTitle)
     void SceneManager::PoseUpdateTitle(float elapsedTime)
     {

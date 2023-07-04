@@ -29,6 +29,8 @@ namespace Mame::Scene
 
         void Clear();   // シーンクリア
 
+
+
         // シーン切り替え
         void ChangeScene(BaseScene* scene);
 
