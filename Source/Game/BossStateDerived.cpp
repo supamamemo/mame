@@ -90,7 +90,7 @@ namespace BOSS
         SetTimer(1.0f);
 
         // アニメーションセット
-        owner->PlayAnimation(static_cast<int>(BossAnimation::Find), true);
+        owner->PlayAnimation(static_cast<int>(BossAnimation::AttackBefore), true);
     }
 
     // 更新

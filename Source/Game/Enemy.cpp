@@ -16,7 +16,6 @@ void Enemy::Render(const float& elapsedTime)
 
         if (lengthX > renderLengthXLimit_) return;
     }
-
     Character::Render(elapsedTime);
 }
 

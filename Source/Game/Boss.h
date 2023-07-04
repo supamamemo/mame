@@ -4,10 +4,14 @@
 
 enum class BossAnimation
 {
-    Idle,
-    Find,
-    Attack,
-    Recoil,
+    Attack,         // UŒ‚
+    Recoil,         // •Ç‚É“–‚½‚é
+    Idle,           // ‘Ò‹@
+    AttackBefore,   // —\”õ“®ì
+    GetAttack,      // ‚­‚ç‚¢
+    Dead,           // ‚â‚ç‚ê
+    Cry,            // ‚È‚­
+    Turn,
 };
 
 class Boss : public Enemy
