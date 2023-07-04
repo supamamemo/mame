@@ -91,9 +91,7 @@ void EnemyTofu::Update(const float& elapsedTime)
 
     UpdateAABB();                       // AABBÇÃçXêVèàóù
 
-
-
-#if _DEBUG
+#if 0
     static bool ONNNNNNNN = true;
     ImGui::Begin("ONNNNNNNNNNNNNNNNNNNNNnn");
     ImGui::Checkbox("ONNNNNNNNNNNNNNNNNNNN", &ONNNNNNNN);
