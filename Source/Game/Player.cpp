@@ -138,6 +138,8 @@ void Player::DrawDebug()
 
     //ImGui::DragFloat2("box2dLenght", &box2d.lenght.x);
 
+    ImGui::DragInt("hp", &health);
+
     // 速度関連パラメータ
     if (ImGui::TreeNode("Speed"))
     {
