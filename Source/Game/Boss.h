@@ -18,16 +18,16 @@ public:
 
     ~Boss() override;
 
-    void Initialize()                     override;   // 初期化
-    void Finalize()                       override;   // 終了化
-    void Begin()                          override;   // 毎フレーム一番最初に呼ばれる
-    void Update(const float& elapsedTime) override;   // 更新処理
-    void End()                            override;   // 毎フレーム一番最後に呼ばれる
-    void Render(const float& elapsedTime) override;   // 描画処理
-    void DrawDebug()                      override;   // デバッグ描画
+    void Initialize()                     override; // 初期化
+    void Finalize()                       override; // 終了化
+    void Begin()                          override; // 毎フレーム一番最初に呼ばれる
+    void Update(const float& elapsedTime) override; // 更新処理
+    void End()                            override; // 毎フレーム一番最後に呼ばれる
+    void Render(const float& elapsedTime) override; // 描画処理
+    void DrawDebug()                      override; // デバッグ描画
 
-    void OnDead()                         override;   // 死亡したときに呼ばれる
-
+    void OnDead()                         override; // 死亡したときに呼ばれる
+    void OnHitWall()                      override; // 壁に当たった時に呼ばれる
 public:
     // Imgui名前被り防止のためのやつ //
     static int nameNum;
