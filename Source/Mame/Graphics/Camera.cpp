@@ -35,7 +35,34 @@ void Camera::Update(float elapsedTime)
         //}
         cameraPos.x = playerPos.x;
 
-        //cameraPos.y = playerPos.y + 5.776f;
+        // todo : Ç±Ç±Ç«Ç§Ç…Ç©ÇµÇΩÇ¢
+        // çÇÇ¢Ç∆Ç±ÇÎ
+        if (playerPos.x < 37.0f)
+            cameraMoveY = 0;
+        if ((playerPos.x > 37.0f && playerPos.x < 60.0f) && playerPos.y > 8.0f)
+            cameraMoveY = 1;
+        if (playerPos.x > 60.0f)
+            cameraMoveY = 0;
+        if (playerPos.x > 140.0f && playerPos.y > 7.0f)
+            cameraMoveY = 1;
+
+
+        switch (cameraMoveY)
+        {
+        case 0:
+            cameraPos.y -= elapsedTime * 5;
+            if (cameraPos.y <= 8.0f)cameraPos.y = 8.0f;
+            break;
+        case 1:
+            cameraPos.y += elapsedTime * 5;
+                if (cameraPos.y >= 11.0f)cameraPos.y = 11.0f;
+            break;
+        case 2:
+            cameraPos.y += elapsedTime * 5;
+            if (cameraPos.y >= 11.0f)cameraPos.y = 11.0f;
+            break;
+        }
+
         GetTransform()->SetPosition(cameraPos);
     }
 }
@@ -130,6 +157,9 @@ void Camera::DrawDebug()
     ImGui::DragFloat("angle", &angle);
     ImGui::DragFloat("addAngle", &addAngle);
     ImGui::DragFloat("length", &length);
+
+    ImGui::DragInt("cameraMoveY", &cameraMoveY);
+
 
     if (ImGui::Button("Reset"))Camera::Reset();
 

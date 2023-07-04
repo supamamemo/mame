@@ -75,5 +75,11 @@ private:
     float   shakeTimer_         = defaultShakeTime_;    // 振動タイマー
     int     shakeState_         = 0;                    // 揺れるステート
     bool    isShake_            = false;                // 揺らすかどうか
+
+    // StagePlains用
+    int cameraMoveY = 0;
+    bool cameraUp = false; // カメラ上昇するか
+    bool cameraDown = false;
+
 };
 
