@@ -25,6 +25,12 @@ SceneTitle::SceneTitle()
     // titlePlayer生成
     titlePlayer_ = std::make_unique<TitlePlayer>();
 
+    // titleEnemyTofu生成
+    for (std::unique_ptr<TitleEnemyTofu>& titleEnemyTofu : titleEnemyTofu_)
+    {
+        titleEnemyTofu = std::make_unique<TitleEnemyTofu>();
+    }
+
     // title model
     {
 #if MAME
@@ -66,9 +72,18 @@ void SceneTitle::Initialize()
 #endif
     }
 
-    // プレイヤー初期化
+
+    // titlePlayer初期化
+    titlePlayer_->SetRotationY(ToRadian(0.0f)); // 初期位置を設定
     titlePlayer_->Initialize();
 
+    // titleEnemyTofu初期化
+    const float rotationY = ToRadian(10.0f); // 初期位置(豆腐同士の間隔にも影響)
+    for (int i = 0; i < ENEMY_TOFU_COUNT; ++i)
+    {
+        titleEnemyTofu_[i]->SetRotationY(rotationY * (i + 1)); // 初期位置を設定
+        titleEnemyTofu_[i]->Initialize();
+    }
 
     HRESULT hr{ S_OK };
 
@@ -163,7 +178,6 @@ void SceneTitle::Initialize()
         //dummy_sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/ground.png");
 
 
-
         // dummy_sprite
         if (dummy_sprite)
         {
@@ -181,6 +195,11 @@ void SceneTitle::Initialize()
 // 終了化
 void SceneTitle::Finalize()
 {
+    for (std::unique_ptr<TitleEnemyTofu>& titleEnemyTofu : titleEnemyTofu_)
+    {
+        titleEnemyTofu->Finalize();
+    }
+
     titlePlayer_->Finalize();
 }
 
@@ -262,7 +281,14 @@ void SceneTitle::Update(const float& elapsedTime)
         if (scroll_direction.y < -10.0f)scroll_direction.y += 10.0f;
     }
 
+    // titlePlayer更新
     titlePlayer_->Update(elapsedTime);
+
+    // titleEnemyTofu更新
+    for (std::unique_ptr<TitleEnemyTofu>& titleEnemyTofu : titleEnemyTofu_)
+    {
+        titleEnemyTofu->Update(elapsedTime);
+    }
 }
 
 // 毎フレーム一番最後に呼ばれる
@@ -289,8 +315,14 @@ void SceneTitle::Render(const float& elapsedTime)
     Shader* shader = graphics.GetShader();
     shader->Begin(graphics.GetDeviceContext(), rc, 0);
 
-    // プレイヤー描画
+    // titlePlayer描画
     titlePlayer_->Render(elapsedTime);
+
+    // titleEnemyTofu描画
+    for (std::unique_ptr<TitleEnemyTofu>& titleEnemyTofu : titleEnemyTofu_)
+    {
+        titleEnemyTofu->Render(elapsedTime);
+    }
 
     // スプライト描画
     shader->SetState(graphics.GetDeviceContext(), RS, DS, SS);
@@ -359,6 +391,11 @@ void SceneTitle::DrawDebug()
     shader->DrawDebug();
 
     titlePlayer_->DrawDebug();
+
+    for (std::unique_ptr<TitleEnemyTofu>& titleEnemyTofu : titleEnemyTofu_)
+    {
+        titleEnemyTofu->DrawDebug();
+    }
 
     if (ImGui::TreeNode("State"))
     {

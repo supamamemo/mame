@@ -1,11 +1,5 @@
 #include "Character.h"
-
 #include "../Mame/Graphics/Graphics.h"
-#include "../misc.h"
-
-#include "OperatorXMFLOAT3.h"
-#include "Mathf.h"
-#include "Collision.h"
 #include "Terrain/TerrainManager.h"
 
 Character::Character()

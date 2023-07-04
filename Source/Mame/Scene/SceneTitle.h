@@ -7,6 +7,7 @@
 #include "../../Game/spriteDissolve.h"
 
 #include "../../Game/TitlePlayer.h"
+#include "../../Game/TitleEnemyTofu.h"
 
 class SceneTitle : public Mame::Scene::BaseScene
 {
@@ -38,7 +39,11 @@ public:
     Microsoft::WRL::ComPtr<ID3D11BlendState>        blendState          = nullptr;
 
 public:
-    std::unique_ptr<TitlePlayer> titlePlayer_ = nullptr;
+    std::unique_ptr<TitlePlayer> titlePlayer_ = nullptr;    // タイトル用プレイヤー
+
+    static const int ENEMY_TOFU_COUNT = 3;  // エネミー豆腐最大数
+    std::unique_ptr<TitleEnemyTofu> titleEnemyTofu_[ENEMY_TOFU_COUNT] = {}; //　タイトル用エネミー豆腐
+
 
     // fadeOut/fadeIn用のディゾルブ
     std::unique_ptr<SpriteDissolve> spriteDissolve;

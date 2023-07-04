@@ -277,6 +277,12 @@
     <ClCompile Include="Source\Game\TitlePlayer.cpp">
       <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\TitleCharacter.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\TitleEnemyTofu.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -504,6 +510,12 @@
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\TitlePlayer.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\TitleCharacter.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\TitleEnemyTofu.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
   </ItemGroup>
