@@ -52,8 +52,8 @@ protected:
     void Jump(const float& jumpSpeed);
 
 protected:
-    void UpdateVelocity(const float& elapsedTime);          // 速力処理更新処理
-    void UpdateInvincibleTimer(const float& elapsedTime);   // 無敵時間更新処理
+    void UpdateVelocity(const float& elapsedTime);              // 速力処理更新処理
+    void UpdateInvincibleTimer(const float& elapsedTime);       // 無敵時間更新処理
 
 protected:
     virtual void OnLanding()  {}                             // 着地したときに呼ばれる  

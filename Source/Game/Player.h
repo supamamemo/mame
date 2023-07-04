@@ -17,6 +17,13 @@ public:
 
     void DrawDebug() override;              // デバッグ描画
 
+public:
+    // ダメージを与える
+    bool ApplyDamage(
+        const int& damage, 
+        const float& invincibleTime
+    ) override;
+
 private: // 入力処理関数関連   
     const float GetMoveVecX() const;                        // 左スティック入力値から移動X方向ベクトルを取得   
     const float GetMoveVecY() const;                        // 左スティック入力値から移動Y方向ベクトルを取得   
@@ -24,10 +31,11 @@ private: // 入力処理関数関連
     const bool  InputJump();                                // ジャンプ入力処理
 
 private: // 衝突判定関数関連       
-    void CollisionPlayerVsEnemies();                        // プレイヤーとエネミーの衝突判定
+    void CollisionPlayerVsEnemies();                            // プレイヤーとエネミーの衝突判定
 
 private: // 更新処理関数関連
-    void  UpdateDashCoolTimer(const float& elapsedTime);    // ダッシュクールタイム更新処理
+    void UpdateDashCoolTimer(const float& elapsedTime);         // ダッシュクールタイム更新処理
+    void UpdateBounceInvincibleTimer(const float& elapsedTime); // バウンス無敵時間更新
 
 private: // 瞬間的に呼ばれる関数関連
     void OnLanding()    override;                       // 着地したときに呼ばれる   
@@ -56,7 +64,7 @@ private: // ステート関数関連
     void TransitionHipDropState();                      // ヒップドロップステートへ遷移   
     void UpdateHipDropState(const float& elapsedTime);  // ヒップドロップステート更新処理    
     
-    void TransitionDeathState();                    // 死亡ステートへ遷移   
+    void TransitionDeathState();                        // 死亡ステートへ遷移   
     void UpdateDeathState(const float& elapsedTime);    // 死亡ステート更新処理
 
 private: // enum関連
@@ -113,7 +121,8 @@ private: // 変数関連
     float   bounceSpeedX            =  defaultBounceSpeedX; // バウンスX速度
     float   bounceSpeedY            =  defaultBounceSpeedY; // バウンスY速度
     float   bounceScaleX            =  0.8f;                // バウンスX速度にかける値
-    float   bounceScaleY            =  0.8f;               // バウンスY速度にかける値
+    float   bounceScaleY            =  0.8f;                // バウンスY速度にかける値
+    float   bounceInvincibleTimer_  =  0.0f;                // バウンス無敵タイマー(点滅させないように別で追加)
 
     float   deathGravity_           = -0.5f;                // 死亡ステート時の重力
 
