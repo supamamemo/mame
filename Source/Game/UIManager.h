@@ -35,6 +35,16 @@ public:
     const int GetUICount()const { return static_cast<int>(UIs.size()); }
     UI* GetUI(int index) { return UIs.at(index); }
 
+    // hp^‚ñ’†‚És‚­ˆ—‚Ég‚¤
+    void SetUiCenter(bool s) { isUiCenter = s; }
+    bool GetUiCenter() { return isUiCenter; }
+    bool isUiCenter = false;
+
+    void SetUiTimer(float t) { timer = t; }
+    float GetUiTimer() { return timer; }
+    float timer = 0.0f;
+
+
 private:
     std::vector<UI*> UIs;
     std::set<UI*>removes;

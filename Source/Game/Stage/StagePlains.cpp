@@ -1,10 +1,13 @@
 #include "StagePlains.h"
 
+#include "../../Mame/Graphics/Graphics.h"
 #include "../../Mame/Graphics/Camera.h"
 #include "../EnemyManager.h"
 #include "../EnemyTofu.h"
 #include "../Terrain/TerrainManager.h"
 #include "../Terrain/TerrainPlains.h"
+
+#include "../UIManager.h"
 
 // コンストラクタ
 StagePlains::StagePlains()
@@ -54,6 +57,16 @@ StagePlains::StagePlains()
         {
             enemyManager.Register(new EnemyTofu());
         }        
+    }
+
+    // UI
+    {
+        UIManager& uiManager = UIManager::Instance();
+
+        uiManager.Register(new UI(L"./resources/ui/baseMameHp.png"));
+        uiManager.Register(new UI(L"./resources/ui/mameLeft.png"));
+        uiManager.Register(new UI(L"./resources/ui/mameCenter.png"));
+        uiManager.Register(new UI(L"./resources/ui/mameRight.png"));
     }
 }
 
@@ -153,6 +166,23 @@ void StagePlains::Initialize()
 
         enemyManager.Initialize();
     }
+
+    // UI
+    {
+        UIManager::Instance().GetUI(UISPRITE::BaseMameHp)->SetPosition(playerUiPos);
+        UIManager::Instance().GetUI(UISPRITE::BaseMameHp)->SetSize(playerUiSize);
+        UIManager::Instance().GetUI(UISPRITE::mameHpLeft)->SetPosition(playerUiPos);
+        UIManager::Instance().GetUI(UISPRITE::mameHpLeft)->SetSize(playerUiSize);
+        UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetPosition(playerUiPos);
+        UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetSize(playerUiSize);
+        UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetPosition(playerUiPos);
+        UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetSize(playerUiSize);
+
+        UIManager::Instance().GetUI(UISPRITE::BaseMameHp)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::mameHpLeft)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetIsRender(true);
+    }
     
 }
 
@@ -169,6 +199,10 @@ void StagePlains::Finalize()
     // terrain終了化
     TerrainManager::Instance().Finalize();
     TerrainManager::Instance().Clear();
+
+    // uimanager
+    UIManager::Instance().Finalize();
+    UIManager::Instance().Clear();
 }
 
 // Updateの前に呼ばれる処理
@@ -198,6 +232,10 @@ void StagePlains::Update(const float& elapsedTime)
 
     // terrain更新
     TerrainManager::Instance().Update(elapsedTime);
+
+    // UI
+    UIManager::Instance().Update(elapsedTime);
+    PlayerHpUiUpdate(elapsedTime);
 }
 
 // Updateの後に呼ばれる処理
@@ -216,6 +254,9 @@ void StagePlains::End()
 // 描画処理
 void StagePlains::Render(const float& elapsedTime)
 {
+    Graphics& graphics = Graphics::Instance();
+    Shader* shader = graphics.GetShader();
+
     // player描画
     PlayerManager::Instance().Render(elapsedTime);
 
@@ -235,6 +276,13 @@ void StagePlains::Render(const float& elapsedTime)
     //    if (vecX < 40.0f) block->Render(elapsedTime);
     //}
     TerrainManager::Instance().Render(elapsedTime);
+
+    // UI
+    {
+        shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
+
+        UIManager::Instance().Render(elapsedTime);
+    }
 }
 
 // debug用
@@ -250,5 +298,99 @@ void StagePlains::DrawDebug()
     // terrain
     TerrainManager::Instance().DrawDebug();
 
+    // ui
+    UIManager::Instance().DrawDebug();
+
 #endif
+}
+
+void StagePlains::PlayerHpUiUpdate(float elapsedTime)
+{
+    int health = PlayerManager::Instance().GetPlayer()->GetHealth();
+    
+    if (UIManager::Instance().GetUiCenter())
+    {
+        SetUiState();
+        UIManager::Instance().SetUiCenter(false);
+    }
+    UpdateUi(3, 1.0f, uiState);
+    
+
+    switch (health)
+    {
+    case 0:
+        UIManager::Instance().GetUI(UISPRITE::mameHpLeft)->SetIsRender(false);
+        break;
+    case 1:
+        UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetIsRender(false);
+        break;
+    case 2:
+        UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetIsRender(false);
+        break;
+    }
+}
+
+void StagePlains::UpdateUi(int uiCount, float speed,int state)
+{
+    switch (state)
+    {
+    case 0:
+        for (int i = 0; i < uiCount; ++i)
+        {
+            DirectX::XMFLOAT2 pos = UIManager::Instance().GetUI(i)->GetPosition();
+            DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
+
+#if 0
+            float s = speed * 2;
+            pos.x += s * 1.76f;
+            pos.y += s;
+            size.x += s * 2.15;
+            size.y += s;
+#else
+            pos.x += speed * 1.76f;
+            pos.y += speed;
+            size.x += speed * 2.15;
+            size.y += speed;
+#endif
+
+            if (pos.x >= 450.0f)pos.x = 450.0f;
+            if (pos.y >= 260.0f)pos.y = 260.0f;
+            if (size.x >= 430.0f)size.x = 430.0f;
+            if (size.y >= 200.0f)size.y = 200.0f;
+
+            UIManager::Instance().GetUI(i)->SetPosition(pos);
+            UIManager::Instance().GetUI(i)->SetSize(size);
+
+            if ((pos.x >= 450.0f) && (pos.y >= 260.0f) && (size.x >= 430.0f) && (size.y >= 200.0f))
+            {
+                uiState = 1;
+            }
+        }
+        break;
+    case 1:
+        for (int i = 0; i < uiCount; ++i)
+        {
+            DirectX::XMFLOAT2 pos = UIManager::Instance().GetUI(i)->GetPosition();
+            DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
+
+            pos.x -= speed * 1.76f;
+            pos.y -= speed;
+            size.x -= speed * 2.15;
+            size.y -= speed;
+
+            if (pos.x <= 10.0f)pos.x = 10.0f;
+            if (pos.y <= 10.0f)pos.y = 10.0f;
+            if (size.x <= 334.0f)size.x = 334.0f;
+            if (size.y <= 160.0f)size.y = 160.0f;
+
+            UIManager::Instance().GetUI(i)->SetPosition(pos);
+            UIManager::Instance().GetUI(i)->SetSize(size);
+
+            if ((pos.x <= 10.0f) && (pos.y <= 10.0f) && (size.x <= 334.0f) && (size.y <= 160.0f))
+            {
+                uiState = -1;
+            }
+        }
+        break;
+    }
 }

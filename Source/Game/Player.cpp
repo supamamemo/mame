@@ -7,6 +7,8 @@
 #include "OperatorXMFLOAT3.h"
 #include "EnemyManager.h"
 
+#include "UIManager.h"
+
 Player::Player()
 {
     Graphics& graphics = Graphics::Instance();
@@ -299,6 +301,9 @@ bool Player::ApplyDamage(const int& damage, const float& invincibleTime)
 
     // –³“GŠÔ‚ğİ’è
     invincibleTimer = invincibleTime;
+
+    // ui
+    UIManager::Instance().SetUiCenter(true);
 
     // €–S’Ê’m
     if (health <= 0) OnDead();

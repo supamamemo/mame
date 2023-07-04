@@ -22,6 +22,25 @@ public:
 
 
 private:
+    enum UISPRITE
+    {
+        Bubble,         // 吹き出し
+        BubbleStick,    // 吹き出しスティック
+        StickBase,      // base
+        StickCenter,    // center
+        StickRight,     // right
+        StickLeft,      // left
+        GamePadA,
+        GamePadB,
+        GamePadX,
+        GamePadY,
+        KeyBoardA,
+        KeyBoardD,
+        KeyBoardS,
+        KeyBoardSHIFT,
+        KeyBoardSPACE,
+    };
+
     enum STATE
     {
         MoveReception,  // 移動受付

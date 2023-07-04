@@ -278,6 +278,12 @@ namespace BOSS
         }
         
         //owner->GetTransform()->SetPosition(ownerPos);
+
+        // “–‚½‚è”»’è
+        if(Collision::IntersectAABBVsAABB(PlayerManager::Instance().GetPlayer()->aabb_, owner->aabb_))
+        { 
+           // todo : “–‚½‚è”»’è 
+        }
     }
 
     // I—¹
