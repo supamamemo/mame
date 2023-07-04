@@ -155,3 +155,10 @@ void Boss::OnDead()
     // 自分を消去
     Destroy();
 }
+
+
+void Boss::OnHitWall()
+{
+    SetMoveDirectionX(-GetMoveDirectionX());    // 移動方向を反転
+    GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));  // 反動ステートへ遷移
+}

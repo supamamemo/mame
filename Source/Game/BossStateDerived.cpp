@@ -222,26 +222,6 @@ namespace BOSS
         owner->SetMoveSpeed(owner->GetMoveDirectionX() * speed);
         transform->AddPositionX(owner->GetMoveSpeed() * elapsedTime);
 
-        // 壁にぶつかったら反動ステートへ
-        //if (ownerPos.x > 9.0f)
-        if (transform->GetPosition().x > 9.0f)
-        {
-            //ownerPos.x = 9.0f;
-            //owner->GetStateMachine()->SetMoveRight(false);
-            transform->SetPositionX(9.0f);
-            owner->SetMoveDirectionX(-owner->GetMoveDirectionX());
-            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Recoil));
-        }
-        if (transform->GetPosition().x < -9.0f)
-        {
-            //ownerPos.x = -9.0f;
-            //owner->GetStateMachine()->SetMoveRight(true);
-            transform->SetPositionX(-9.0f);
-            owner->SetMoveDirectionX(-owner->GetMoveDirectionX());
-            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Recoil));
-        }
-        //owner->GetTransform()->SetPosition(ownerPos);
-
         owner->CollisionEnemyVsPlayer();    // プレイヤーとの衝突判定処理
     }
 
