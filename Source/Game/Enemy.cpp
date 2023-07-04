@@ -33,7 +33,9 @@ void Enemy::Destroy()
 
 
 void Enemy::CollisionEnemyVsPlayer()
-{    
+{   
+    //return;
+
     // €‚ñ‚Å‚¢‚é‚Æ‚«‚Íˆ—‚ğs‚í‚È‚¢
     if (health <= 0) return;
 
