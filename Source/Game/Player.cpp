@@ -776,7 +776,7 @@ void Player::UpdateJumpState(const float& elapsedTime)
     }
 
     // 下方向に押されていたら
-    if (GetMoveVecY() < 0.0f)
+    if (GetMoveVecY() < -0.9f)
     {      
         // ジャンプ開始時のY位置と現在のY位置からジャンプした高さを算出
         const float jumpHeight = fabsf(GetTransform()->GetPosition().y - jumpedPositionY);
