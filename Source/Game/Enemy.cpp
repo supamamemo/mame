@@ -35,6 +35,9 @@ void Enemy::Destroy()
 
 void Enemy::CollisionEnemyVsPlayer()
 {    
+    // €‚ñ‚Å‚¢‚é‚Æ‚«‚Íˆ—‚ğs‚í‚È‚¢
+    if (health <= 0) return;
+
     const std::unique_ptr<Player>& player = PlayerManager::Instance().GetPlayer();
     if (Collision::IntersectAABBVsAABB(this->aabb_, player->aabb_))
     {    

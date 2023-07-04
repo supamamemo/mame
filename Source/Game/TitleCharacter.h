@@ -21,9 +21,9 @@ public:
 
 protected:
     // ‰~‰^“®s“®ˆ—
-    void CircularMotion(const float elapsedTime);
+    virtual void CircularMotion(const float elapsedTime);
 
-    void Turn(
+    virtual void Turn(
         const float elapsedTime,
         NO_CONST float vx,
         NO_CONST float vz,

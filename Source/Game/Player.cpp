@@ -87,11 +87,10 @@ void Player::Update(const float& elapsedTime)
     // プレイヤーと敵の衝突判定
     CollisionPlayerVsEnemies();
 
-
     // 無敵時間中のキャラクターの点滅
     if (invincibleTimer > 0.0f)
     {
-        modelColorAlpha = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 0.7f : 0.0f;
+        modelColorAlpha = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 1.0f : 0.1f;
     }
     else
     {
@@ -100,6 +99,9 @@ void Player::Update(const float& elapsedTime)
 
     // 無敵時間更新
     UpdateInvincibleTimer(elapsedTime);
+
+    // バウンス無敵時間更新
+    UpdateBounceInvincibleTimer(elapsedTime);
 
     // ダッシュクールタイム更新
     UpdateDashCoolTimer(elapsedTime);
@@ -274,11 +276,48 @@ const bool Player::InputJump()
 }
 
 
+bool Player::ApplyDamage(const int& damage, const float& invincibleTime)
+{
+    // ダメージが0の場合は健康状態を変更する必要がない
+    if (damage <= 0) return false;
+
+    // 死亡している場合は健康状態を変更しない
+    if (health <= 0) return false;
+
+    // 無敵時間が残っていたら健康状態を変更しない
+    if (invincibleTimer > 0.0f) return false;
+
+    //　バウンス無敵時間が残っていたら健康状態を変更しない
+    if (bounceInvincibleTimer_ > 0.0f) return false;
+
+    // 無敵モードなら健康状態を変更しない
+    if (isInvincible) return false;
+
+    // ダメージ処理
+    const int damagedHealth = health - damage;
+    health = (damagedHealth > 0) ? damagedHealth : 0;
+
+    // 無敵時間を設定
+    invincibleTimer = invincibleTime;
+
+    // 死亡通知
+    if (health <= 0) OnDead();
+    // ダメージ通知
+    else OnDamaged();
+
+    // 健康状態が変更した場合はtrueを返す
+    return true;
+}
+
+
 void Player::CollisionPlayerVsEnemies()
 {
     //if (invincibleTimer > 0.0f) return;
 
-    // バウンス時のみ処理を行う
+    // 死んでいるときは処理を行わない
+    if (health <= 0) return;
+
+    // バウンス時でなければ処理を行わない
     if (!isBounce) return;
 
     bool isHit = false;
@@ -312,14 +351,22 @@ void Player::UpdateDashCoolTimer(const float& elapsedTime)
 }
 
 
+// バウンス無敵時間更新処理
+void Player::UpdateBounceInvincibleTimer(const float& elapsedTime)
+{
+    //　バウンス無敵時間がなければ飛ばす
+    if (bounceInvincibleTimer_ <= 0.0f) return;
+
+    // バウンス無敵時間を減らす
+    bounceInvincibleTimer_ -= elapsedTime;
+}
+
+
 // 着地したときに呼ばれる関数
 void Player::OnLanding()
 {
     // ジャンプ回数リセット
     jumpCount = 0;
-
-    // 着地アニメーション再生
-    PlayAnimation(Anim_JumpEnd, false, 0.5f, 0.5f);
 
     // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
     if (moveSpeed_ == runMoveSpeed)
@@ -330,6 +377,9 @@ void Player::OnLanding()
     // 待機ステートへ遷移
     else
     {
+        // 着地アニメーション再生
+        PlayAnimation(Anim_JumpEnd, false, 0.5f, 0.5f);
+
         TransitionIdleState();
         return;
     }
@@ -463,7 +513,6 @@ void Player::UpdateIdleState(const float& elapsedTime)
     if (!IsPlayAnimation())
     {
         PlayAnimation(Anim_Idle, true);
-        isInvincible = false;    // 着地アニメーションが終わったタイミングで無敵モード解除
     }
 
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
@@ -614,8 +663,8 @@ void Player::TransitionRunState()
     // 走行用保存移動ベクトルに移動ベクトルを保存
     if (runMoveVecX == 0.0f) runMoveVecX = moveVecX_;
 
-    // 着地アニメーションが再生されていなければ走行アニメーション再生
-     if (model->GetCurrentAnimationIndex() != Anim_JumpEnd) PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
+    // 走行アニメーション再生
+    PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
 }
 
 // 走行ステート更新処理
@@ -625,7 +674,6 @@ void Player::UpdateRunState(const float& elapsedTime)
     if (!IsPlayAnimation()) 
     {
         PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
-        isInvincible = false;    // 着地アニメーションが終わったタイミングで無敵モード解除
     }
 
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
@@ -750,7 +798,12 @@ void Player::TransitionHipDropState()
 
     gravity         = hipDropGravity;  // 落下速度を上昇
     isBounce        = true;            // バウンスさせる
-    isInvincible    = true;            // ヒップドロップバウンス中は無敵モードにする
+
+#if 0
+    invincibleTimer        = 1.1f;            // 無敵時間を設定(確認用)
+#else 
+    bounceInvincibleTimer_ = 1.1f;            // バウンド無敵時間を設定
+#endif
 
     PlayAnimation(Anim_HipDrop, true);
 }
@@ -782,7 +835,7 @@ void Player::TransitionDeathState()
     velocity = {};
 
     // 正面を向くように設定
-    GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10.0f), ToRadian(180.0f), 0, 0));
+    GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(-5.0f), ToRadian(180.0f), 0, 0));
     
     Jump(jumpSpeed_ * 2.0f);    // 飛び上がらせる
 
