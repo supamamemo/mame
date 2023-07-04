@@ -43,6 +43,8 @@ void Camera::Update(float elapsedTime)
             cameraMoveY = 1;
         if (playerPos.x > 60.0f)
             cameraMoveY = 0;
+        if (playerPos.x > 95.5f && playerPos.y > 7.4f)
+            cameraMoveY = 2;
         if (playerPos.x > 140.0f && playerPos.y > 7.0f)
             cameraMoveY = 1;
 
@@ -59,7 +61,7 @@ void Camera::Update(float elapsedTime)
             break;
         case 2:
             cameraPos.y += elapsedTime * 5;
-            if (cameraPos.y >= 11.0f)cameraPos.y = 11.0f;
+            if (cameraPos.y >= 10.0f)cameraPos.y = 10.0f;
             break;
         }
 
