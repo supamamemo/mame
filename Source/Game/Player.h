@@ -112,8 +112,8 @@ private: // 変数関連
     float   defaultBounceSpeedY     =  10.0f;               // バウンスY速度初期値
     float   bounceSpeedX            =  defaultBounceSpeedX; // バウンスX速度
     float   bounceSpeedY            =  defaultBounceSpeedY; // バウンスY速度
-    float   bounceScaleX            =  0.75f;               // バウンスX速度にかける値
-    float   bounceScaleY            =  0.75f;               // バウンスY速度にかける値
+    float   bounceScaleX            =  0.8f;                // バウンスX速度にかける値
+    float   bounceScaleY            =  0.8f;               // バウンスY速度にかける値
 
     float   deathGravity_           = -0.5f;                // 死亡ステート時の重力
 
