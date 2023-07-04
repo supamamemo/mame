@@ -97,8 +97,8 @@ void StagePlains::Initialize()
             terrainManager.GetTerrain(18)->GetTransform()->SetPosition(DirectX::XMFLOAT3(138.0f, -1.0f, posZ));
             terrainManager.GetTerrain(19)->GetTransform()->SetPosition(DirectX::XMFLOAT3(144.0f, 1.0f, posZ));
             terrainManager.GetTerrain(20)->GetTransform()->SetPosition(DirectX::XMFLOAT3(150.0f, 3.0f, posZ));
-            terrainManager.GetTerrain(21)->GetTransform()->SetPosition(DirectX::XMFLOAT3(156.0f, -6.0f, posZ));
-            terrainManager.GetTerrain(22)->GetTransform()->SetPosition(DirectX::XMFLOAT3(162.0f, -6.0f, posZ));
+            terrainManager.GetTerrain(21)->GetTransform()->SetPosition(DirectX::XMFLOAT3(156.0f, -5.0f, posZ));
+            terrainManager.GetTerrain(22)->GetTransform()->SetPosition(DirectX::XMFLOAT3(162.0f, -5.0f, posZ));
 
             terrainManager.GetTerrain(23)->GetTransform()->SetPosition(DirectX::XMFLOAT3(168.0f, -3.0f, posZ));
             terrainManager.GetTerrain(24)->GetTransform()->SetPosition(DirectX::XMFLOAT3(174.0f, -1.0f, posZ));
