@@ -800,9 +800,9 @@ void Player::TransitionHipDropState()
     isBounce        = true;            // バウンスさせる
 
 #if 0
-    invincibleTimer        = 1.3f;            // 無敵時間を設定(確認用)
+    invincibleTimer        = 1.1f;            // 無敵時間を設定(確認用)
 #else 
-    bounceInvincibleTimer_ = 1.3f;            // バウンド無敵時間を設定
+    bounceInvincibleTimer_ = 1.1f;            // バウンド無敵時間を設定
 #endif
 
     PlayAnimation(Anim_HipDrop, true);
