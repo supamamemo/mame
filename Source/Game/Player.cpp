@@ -316,6 +316,9 @@ void Player::OnLanding()
     // ジャンプ回数リセット
     jumpCount = 0;
 
+    // 着地アニメーション再生
+    PlayAnimation(Anim_JumpEnd, false, 0.5f, 0.5f);
+
     // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
     if (moveSpeed_ == runMoveSpeed)
     {
@@ -325,9 +328,6 @@ void Player::OnLanding()
     // 待機ステートへ遷移
     else
     {
-        // 着地アニメーション再生
-        PlayAnimation(Anim_JumpEnd, false, 0.5f, 0.5f);
-
         TransitionIdleState();
         return;
     }
@@ -345,8 +345,10 @@ void Player::OnDash()
 // バウンス時に呼ばれる関数
 void Player::OnBounce()
 {
+    ++bounceCount; // バウンスカウント加算
+
     // 最大バウンスカウント以上ならバウンス終了させる
-    if (bounceCount >= bounceLimit)
+    if (bounceCount > bounceLimit)
     {
         velocity.y      = 0.0f;                 // Y速度リセット
         bounceSpeedX    = defaultBounceSpeedX;  // バウンスX速度リセット
@@ -355,8 +357,7 @@ void Player::OnBounce()
         isBounce        = false;                // バウンス終了
      
         OnLanding();                // 着地時の処理を行う
-        isGround_        = true;     // 着地した
-        isInvincible    = false;    // 無敵モード解除
+        isGround_        = true;    // 着地した
     }
     // バウンスさせる
     else
@@ -365,7 +366,6 @@ void Player::OnBounce()
         velocity.y    = bounceSpeedY;   // バウンスY速度を代入
         bounceSpeedX *= bounceScaleX;   // バウンスX速度を減少
         bounceSpeedY *= bounceScaleY;   // バウンスY速度を減少
-        ++bounceCount;                  // バウンスカウント加算
     }
 }
 
@@ -396,6 +396,8 @@ void Player::OnDead()
 // 落下死・落下ミスしたときに呼ばれる
 void Player::OnFallDead()
 {
+    health -= 1; // 体力減少
+
     // 死んでいたらreturn
     if (health <= 0) return;
 
@@ -417,7 +419,6 @@ void Player::OnFallDead()
         UpdateAABB();           // 忘れずにAABB更新
     }
 
-    health          -=  1;      // 体力減少
     invincibleTimer  =  1.0f;   // 無敵時間設定
 
     // 走行中・ジャンプ中・バウンス中に落ちたときのためにリセットする
@@ -457,7 +458,11 @@ void Player::TransitionIdleState()
 void Player::UpdateIdleState(const float& elapsedTime)
 {
     // 着地アニメーションが終了したら待機アニメーション再生（ループしない着地アニメーションのときのみ処理が行われる）
-    if (!IsPlayAnimation()) PlayAnimation(Anim_Idle, true);
+    if (!IsPlayAnimation())
+    {
+        PlayAnimation(Anim_Idle, true);
+        isInvincible = false;    // 着地アニメーションが終わったタイミングで無敵モード解除
+    }
 
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
     if (InputJump())
@@ -607,15 +612,19 @@ void Player::TransitionRunState()
     // 走行用保存移動ベクトルに移動ベクトルを保存
     if (runMoveVecX == 0.0f) runMoveVecX = moveVecX_;
 
-    // 走行アニメーション再生
-    PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
+    // 着地アニメーションが再生されていなければ走行アニメーション再生
+     if (model->GetCurrentAnimationIndex() != Anim_JumpEnd) PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
 }
 
 // 走行ステート更新処理
 void Player::UpdateRunState(const float& elapsedTime)
 {
-    // ブレーキアニメーションが終わったら走行アニメーションに戻る
-    if(!IsPlayAnimation()) PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
+    // ブレーキ・着地アニメーションが終わったら走行アニメーションに戻る
+    if (!IsPlayAnimation()) 
+    {
+        PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
+        isInvincible = false;    // 着地アニメーションが終わったタイミングで無敵モード解除
+    }
 
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
     if (InputJump())
