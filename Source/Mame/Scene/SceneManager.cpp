@@ -65,7 +65,7 @@ namespace Mame::Scene
                 currentScene->End();
             }
             // pose’†
-            else
+            else if (GetPose())
             {
                 switch (currentScene->GetSceneType())
                 {

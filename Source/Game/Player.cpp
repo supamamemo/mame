@@ -368,9 +368,6 @@ void Player::OnLanding()
     // ジャンプ回数リセット
     jumpCount = 0;
 
-    // 着地アニメーション再生
-    PlayAnimation(Anim_JumpEnd, false, 0.5f, 0.5f);
-
     // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
     if (moveSpeed_ == runMoveSpeed)
     {
@@ -380,6 +377,9 @@ void Player::OnLanding()
     // 待機ステートへ遷移
     else
     {
+        // 着地アニメーション再生
+        PlayAnimation(Anim_JumpEnd, false, 0.5f, 0.5f);
+
         TransitionIdleState();
         return;
     }
@@ -663,8 +663,8 @@ void Player::TransitionRunState()
     // 走行用保存移動ベクトルに移動ベクトルを保存
     if (runMoveVecX == 0.0f) runMoveVecX = moveVecX_;
 
-    // 着地アニメーションが再生されていなければ走行アニメーション再生
-     if (model->GetCurrentAnimationIndex() != Anim_JumpEnd) PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
+    // 走行アニメーション再生
+    PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
 }
 
 // 走行ステート更新処理

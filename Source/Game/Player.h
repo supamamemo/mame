@@ -100,13 +100,13 @@ private: // 変数関連
     State   state                   = State::Idle;          // 現在のステート
 
     float   dashAcceleration        =  20.0f;               // ダッシュ時のX速度
-    float   defaultDashTime         =  0.1f;                // ダッシュ時間初期値
+    float   defaultDashTime         =  0.05f;                // ダッシュ時間初期値
     float   dashTimer               =  defaultDashTime;     // ダッシュタイマー(ダッシュ時の操作制限時間を管理する)
     float   dashFinishScale         =  0.5f;                // ダッシュが終わって別のステート遷移前に速度を減速させる値
     float   dashCoolTime            =  0.2f;
     float   dashCoolTimer           =  dashCoolTime;        // ダッシュを連発されないようクールタイムを設定
 
-    float   runMoveSpeed            =  15.0f;               // 走行時の移動速度(moveSpeedに代入する)
+    float   runMoveSpeed            =  11.0f;               // 走行時の移動速度(moveSpeedに代入する)
     float   runAcceleration         =  0.5f;                // 走行時の加速力
     float   runFriction             =  0.1f;                // 走行時の摩擦力
     float   runMoveVecX             =  0.0f;                // moveVecXを保存する（ブレーキアニメ―ションのときに使う）
