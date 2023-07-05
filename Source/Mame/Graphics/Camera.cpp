@@ -88,18 +88,35 @@ void Camera::UpdateTitle(float elapsedTime)
 
 void Camera::UpdateTutorial(float elapsedTime, int state)
 {
+    DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
+
+    float leftLimit = 0.0f;
+
     switch (state)
     {
     case STATE::MoveReception:
+        leftLimit = -10.4f;
         break;
     case STATE::JumpReception:
+        leftLimit = -10.4f;
+        break;
+    case STATE::HipDorop:
+        leftLimit = 0.0f;
+
+        cameraPos.x += elapsedTime * 10;
+        if (cameraPos.x >= 9.0f)cameraPos.x = 9.0f;
+        break;
+    default:
+        leftLimit = -10.4f;
         break;
     }
+
+    GetTransform()->SetPosition(cameraPos);
 
     // ‰æ–Ê¶’[‚ÍŽ~‚Ü‚é‚æ‚¤‚É‚·‚é
     {
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
-        if (playerPos.x <= -10.4f)playerPos.x = -10.4f;
+        if (playerPos.x <= leftLimit)playerPos.x = leftLimit;
 
         PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
     }

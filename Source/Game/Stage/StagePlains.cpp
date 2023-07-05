@@ -352,7 +352,7 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state,float elapsedTime)
 
             DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
 
-            displayUiPosition = { playerPos.x,playerPos.y + 3.0f };
+            displayUiPosition = { playerPos.x, playerPos.y + 3.0f };
 
             //pos = { 450.0f, 260.0f };
             //UIManager::Instance().GetUI(i)->SetPosition(pos);

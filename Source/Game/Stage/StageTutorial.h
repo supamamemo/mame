@@ -45,6 +45,7 @@ private:
     {
         MoveReception,  // 移動受付
         JumpReception,  // ジャンプ受付
+        HipDorop,
     };
 
     void TutorialStateUpdate(float elapsedTime);

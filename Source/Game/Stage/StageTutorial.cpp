@@ -113,7 +113,7 @@ void StageTutorial::Initialize()
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
     // ŠÅ”Â
-    signboard->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 3.0f, 10.0f));
+    signboard->GetTransform()->SetPosition(DirectX::XMFLOAT3(3.0f, 6.0f, 11.0f));
 
     // —U“±—p
     tutorialState = STATE::MoveReception;
@@ -303,6 +303,8 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
+    DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+
     switch (tutorialState)
     {
     case STATE::MoveReception:
@@ -314,7 +316,6 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         StickState(elapsedTime);
 
         // ŽŸ‚És‚­ðŒ
-        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
         if (playerPos.x > -3.8f)
         {
             UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
@@ -335,14 +336,24 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         effect[0]->SetPosition(DirectX::XMFLOAT3(2.0f, 5.5f, 10.0f));
         effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
 
-
-
-        if (gamePad.GetButton() & GamePad::BTN_A)
+        // ŽŸ‚És‚­ðŒ
+        if (playerPos.x >= 1.0f)
         {
-            //StageManager::Instance().ChangeStage(new StagePlains);
-            //effect->Stop(handle);
+            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
+
+            effect[0]->Stop(effect[0]->handle);
+            effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 200.0f);
+            effect[1]->Stop(effect[1]->handle);
+            effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetColor(), 200.0f);
+
+            tutorialState = STATE::HipDorop;
         }
 
+        break;
+        
+    case STATE::HipDorop:
         break;
 
     }
