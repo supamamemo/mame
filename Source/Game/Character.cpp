@@ -414,7 +414,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
     if (dist > 0.0f)
     {
         // –€ŽC—Í
-        float friction = this->friction * elapsedFrame;
+        float friction = this->friction_ * elapsedFrame;
         // ‹ó’†‚É‚¢‚é‚Æ‚«‚Í–€ŽC—Í‚ðŒ¸‚ç‚·
         if (!isGround_) friction *= airControl;
 
@@ -447,7 +447,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
         if (moveVecDist > 0.0f)
         {
             // ‰Á‘¬—Í
-            float acceleration = this->acceleration * elapsedFrame;
+            float acceleration = this->acceleration_ * elapsedFrame;
 
             // ‹ó’†‚É‚¢‚é‚Æ‚«‚Í‰Á‘¬—Í‚ðŒ¸‚ç‚·
             if (!isGround_) acceleration *= airControl;

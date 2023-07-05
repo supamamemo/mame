@@ -147,10 +147,10 @@ void Player::DrawDebug()
     {
         ImGui::InputFloat3("velocity",         &velocity.x);                      // 速度(確認用)
 
-        ImGui::SliderFloat("acceleration",     &acceleration,     0.0f, 5.0f);    // 加速力
+        ImGui::SliderFloat("acceleration",     &acceleration_,     0.0f, 5.0f);    // 加速力
         ImGui::SliderFloat("d_Gravity",        &defaultGravity,   0.0f, 5.0f);    // 重力(バウンス後に反映)
         ImGui::SliderFloat("hipDropGravity",   &hipDropGravity,   1.0f, -10.0f);  // ヒップドロップ時の重力
-        ImGui::SliderFloat("friction",         &friction,         0.0f, 5.0f);    // 摩擦力（停止する力）
+        ImGui::SliderFloat("friction",         &friction_,         0.0f, 5.0f);    // 摩擦力（停止する力）
         ImGui::SliderFloat("airControl",       &airControl,       0.0f, 1.0f);    // 空中での身動きのしやすさ
 
         ImGui::SliderFloat("dashAcceleration", &dashAcceleration, 0.0f, 60.0f);   // ダッシュ時の加速力
@@ -340,6 +340,12 @@ void Player::CollisionPlayerVsEnemies()
             // ダメージを受けなければreturn
             if (!enemy->ApplyDamage(1, 1.0f)) return;
 
+            // プレイヤーの移動方向保存ベクトルを取得
+            const float length = fabsf(saveMoveVecX_);
+            const float saveMoveVecX_n = (length > 0.0f) ? (saveMoveVecX_ / length) : 1.0f; // 単位ベクトル化(ゼロベクトルの予防込み)
+
+            enemy->SetMoveDirectionX(saveMoveVecX_n); // プレイヤーの攻撃方向に吹っ飛ぶようにする
+
             Camera::Instance().PlayShake();
         }
     }
@@ -478,14 +484,16 @@ void Player::OnFallDead()
 
     invincibleTimer  =  1.0f;   // 無敵時間設定
 
+    Camera::Instance().GetTransform()->SetPositionX(GetTransform()->GetPosition().x);
+    Camera::Instance().GetTransform()->SetPositionY(GetTransform()->GetPosition().y);
      // ui
     UIManager::Instance().SetUiCenter(true);
 
     // 走行中・ジャンプ中・バウンス中に落ちたときのためにリセットする
     {
         moveSpeed_      =   defaultMoveSpeed;       // 移動速度リセット
-        acceleration    =   defaultAcceleration;    // 加速力リセット
-        friction        =   defaultFriction;        // 摩擦力リセット
+        acceleration_    =   defaultAcceleration;    // 加速力リセット
+        friction_        =   defaultFriction;        // 摩擦力リセット
 
         velocity.x      =   0.0f;                   // X速度リセット
         velocity.y      =   0.0f;                   // Y速度リセット
@@ -665,8 +673,8 @@ void Player::TransitionRunState()
 
     // 走行時の速度パラメータを設定
     moveSpeed_      = runMoveSpeed;
-    acceleration    = runAcceleration;
-    friction        = runFriction;
+    acceleration_    = runAcceleration;
+    friction_        = runFriction;
 
     // 走行用保存移動ベクトルに移動ベクトルを保存
     if (runMoveVecX == 0.0f) runMoveVecX = moveVecX_;
@@ -687,8 +695,8 @@ void Player::UpdateRunState(const float& elapsedTime)
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
     if (InputJump())
     {   
-        acceleration = defaultAcceleration;
-        friction     = defaultFriction;
+        acceleration_ = defaultAcceleration;
+        friction_     = defaultFriction;
 
         runMoveVecX = moveVecX_; // 移動ベクトル保存を更新しておく（ダッシュジャンプして着地する寸前に方向転換するとカメラ目線になるため）
 
@@ -714,8 +722,8 @@ void Player::UpdateRunState(const float& elapsedTime)
         {
             // 速度パラメータをリセット
             moveSpeed_    = defaultMoveSpeed;
-            acceleration = defaultAcceleration;
-            friction     = defaultFriction;
+            acceleration_ = defaultAcceleration;
+            friction_     = defaultFriction;
             TransitionWalkState();
             return;
         }
@@ -726,8 +734,8 @@ void Player::UpdateRunState(const float& elapsedTime)
     else
     {
         //moveSpeed = defaultMoveSpeed; // 移動速度をリセット(待機ステートでリセットするか決める)
-        acceleration = defaultAcceleration;
-        friction     = defaultFriction;
+        acceleration_ = defaultAcceleration;
+        friction_     = defaultFriction;
         TransitionIdleState();
         return;
     }

@@ -37,6 +37,8 @@ void EnemyTofu::Initialize()
     turnSpeed_  = ToRadian(90.0f);  // 旋回速度設定(ステートで変わるので最初だけ)
     jumpSpeed_  = 12.0f;            // ジャンプ速度設定
 
+    enemyType_ = EnemyType::Tofu;
+
     // ステートマシン
     {
         // 現在のX位置を移動範囲の中心に設定
@@ -140,13 +142,7 @@ void EnemyTofu::OnDamaged()
 
 void EnemyTofu::OnDead()
 {
-    // プレイヤーの移動方向保存ベクトルを取得
-    const float plSaveMoveVecX   = PlayerManager::Instance().GetPlayer()->GetSaveMoveVecX();
-    const float length           = fabsf(plSaveMoveVecX);
-    const float plSaveMoveVecX_n = (length > 0.0f) ? (plSaveMoveVecX / length) : 1.0f; // 単位ベクトル化(ゼロベクトルの予防込み)
-
-    moveDirectionX_ = plSaveMoveVecX_n; // プレイヤーの攻撃方向に吹っ飛ぶようにする
-
+    // 死亡ステートへ遷移
     GetStateMachine()->ChangeState(static_cast<int>(TOFU::STATE::Death));
 }
 

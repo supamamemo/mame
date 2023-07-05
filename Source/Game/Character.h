@@ -110,6 +110,7 @@ public: // 取得・設定関数関連
     // 速度の設定
     void SetVelocityX(const float velocityX) { velocity.x = velocityX; }
     void SetVelocityY(const float velocityY) { velocity.y = velocityY; }
+    void SetVelocityZ(const float velocityZ) { velocity.z = velocityZ; }
 
     // モデルカラーの取得・設定
     const DirectX::XMFLOAT4& GetModelColor() const { return modelColor; }
@@ -121,7 +122,15 @@ public: // 取得・設定関数関連
 
     // 移動速度の取得・設定
     const float GetMoveSpeed() const { return moveSpeed_; }
-    void SetMoveSpeed(const float speed) { moveSpeed_ = speed; }
+    void SetMoveSpeed(const float speed) { moveSpeed_ = speed; }    
+    
+    // 加速度の取得・設定
+    const float GetAcceleration() const { return acceleration_; }
+    void SetAcceleration(const float acceleration) { acceleration_ = acceleration; }    
+    
+    // 摩擦の取得・設定
+    const float GetFriction() const { return friction_; }
+    void SetFriction(const float friction) { friction_ = friction; }
 
     // 旋回速度の取得・設定
     const float GetTurnSpeed() const { return turnSpeed_; }
@@ -169,11 +178,11 @@ protected:
     float       saveMoveVecX_        =   1.0f;                       // 移動ベクトルを保存するベクトルX（最初は右を向かせておく）
 
     float       defaultAcceleration =   1.0f;                       // 加速力の初期値
-    float       acceleration        =   defaultAcceleration;        // 加速力
+    float       acceleration_       =   defaultAcceleration;        // 加速力
     float       defaultGravity      =  -1.0f;                       // 重力初期値
     float       gravity             =   defaultGravity;             // 重力
     float       defaultFriction     =   0.5f;                       // 摩擦力の初期値
-    float       friction            =   0.5f;                       // 摩擦力
+    float       friction_           =   0.5f;                       // 摩擦力
     float       airControl          =   0.3f;                       // 空中制御
 
     float       defaultMoveSpeed    =  5.0f;                        // 移動速度初期値
