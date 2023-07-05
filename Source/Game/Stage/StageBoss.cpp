@@ -28,6 +28,9 @@ StageBoss::StageBoss()
         TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
 
         TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
+
+
+        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
     }
 
     // player生成
@@ -60,13 +63,13 @@ StageBoss::StageBoss()
 void StageBoss::Initialize()
 {
     Camera& camera = Camera::Instance();
-    camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
+    camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
 
 
     // 背景仮
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 2.0f, 32.0f));
-    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 17.0f, 8.0f));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 18.0f, 8.0f));
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
     // ステージ初期設定
@@ -84,7 +87,7 @@ void StageBoss::Initialize()
             terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 11, 10));
             terrainManager.GetTerrain(3)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.72f, 1.0f, 1.0f));
 
-            terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10));
+            terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 8, 10));
             terrainManager.GetTerrain(4)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
             // terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10)); // しまった後
            
@@ -92,6 +95,7 @@ void StageBoss::Initialize()
             terrainManager.GetTerrain(5)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
             // terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10)); // 空いた後
             
+            terrainManager.GetTerrain(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-24.0f, 1.0f, 10.0f));
         }
         
         // materialColor
@@ -104,7 +108,7 @@ void StageBoss::Initialize()
     }
 
     // player初期化
-    PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 1.0f, 10.0f));
+    PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-28.0f, 1.0f, 10.0f));
     PlayerManager::Instance().Initialize();
 
     // boss初期化   
@@ -174,8 +178,21 @@ void StageBoss::Update(const float& elapsedTime)
         PlayerManager& playerManager = PlayerManager::Instance();
         playerManager.Update(elapsedTime);
 
-        // enemy更新
-        EnemyManager::Instance().Update(elapsedTime);
+        if (PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x >= -11.0f
+            && Camera::Instance().GetTransform()->GetPosition().x == 0.0f)
+        {
+            // enemy更新
+            EnemyManager::Instance().Update(elapsedTime);
+        }
+    }
+
+    // ドア
+    if (PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x > -9.0f)
+    {
+        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(4)->GetTransform()->GetPosition();
+        terrainPos.y -= elapsedTime;
+        if (terrainPos.y <= 4.0f)terrainPos.y = 4.0f;
+        TerrainManager::Instance().GetTerrain(4)->GetTransform()->SetPosition(terrainPos);
     }
 
     // playerHp
@@ -312,7 +329,7 @@ void StageBoss::UpdateUi(int uiCount, float speed, int state, float elapsedTime)
             DirectX::XMFLOAT3 pos = UIManager::Instance().GetUI(i)->GetPosition();
             DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
 
-            pos.x -= speed * 1.76f;
+            pos.x -= speed * 1.63;
             pos.y -= speed;
             size.x -= speed * 2.15f;
             size.y -= speed;

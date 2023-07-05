@@ -126,6 +126,23 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
 void Camera::UpdateBoss(const float elapsedTime)
 {
     UpdateShake(elapsedTime);   // ‰æ–ÊU“®XV
+
+    DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+
+    if (playerPos.x >= -10.0f)
+        cameraMoveY = 1;
+
+    switch (cameraMoveY)
+    {
+    case 1:
+        cameraPos.x += elapsedTime * 5;
+        if (cameraPos.x >= 0.0f)cameraPos.x = 0.0f;
+
+        break;
+    }
+
+    GetTransform()->SetPosition(cameraPos);
 }
 
 

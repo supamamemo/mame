@@ -244,6 +244,9 @@ void StageTutorial::Render(const float& elapsedTime)
 {
     Graphics& graphics = Graphics::Instance(); 
 
+    // ”wŒi‰¼
+    back->Render(elapsedTime);
+
     // terrain
     TerrainManager::Instance().Render(elapsedTime);
 
@@ -253,8 +256,6 @@ void StageTutorial::Render(const float& elapsedTime)
     // enemy
     EnemyManager::Instance().Render(elapsedTime);
 
-    // ”wŒi‰¼
-    back->Render(elapsedTime);
 
     // ŠÅ”Â
     signboard->Render(elapsedTime);

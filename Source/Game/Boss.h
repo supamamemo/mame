@@ -6,10 +6,13 @@ enum class BossAnimation
 {
     Attack,         // UŒ‚
     Recoil,         // •Ç‚É“–‚½‚é
+    Confusion,      // ¬—
+    DeConfusion,    // ¬—‚ª‰ğ‚¯‚é
     Idle,           // ‘Ò‹@
     AttackBefore,   // —\”õ“®ì
     GetAttack,      // ‚­‚ç‚¢
     Dead,           // ‚â‚ç‚ê
+    Fall,           // K‚à‚¿i“|‚ê‚éj
     Cry,            // ‚È‚­
     Turn,
 };

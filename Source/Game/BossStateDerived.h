@@ -125,6 +125,10 @@ namespace BOSS
         float recoilLength        = 1.25f;   // ”½“®‹——£
         float currentRecoilLength = 0.0f;   // ¡‚Ç‚ê‚¾‚¯”½“®‚Å”ò‚ñ‚Å‚¢‚é‚©
         float speed = 2.0f;
+
+        int state = 0;
+        
+        float confusionTime = 1.5f;
     };
 
     class DamageState : public State
@@ -147,6 +151,9 @@ namespace BOSS
         void Enter()override;
         void Execute(float elapsedTime)override;
         void Exit()override;
+
+    private:
+        int state = 0;
     };
 }
 
