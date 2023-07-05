@@ -407,6 +407,8 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
         UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(true);
 
         break;
+    case STATE::HipDorop:
+        break;
     }
 }
 

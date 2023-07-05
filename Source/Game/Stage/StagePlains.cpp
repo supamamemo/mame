@@ -359,6 +359,10 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state,float elapsedTime)
     switch (state)
     {
     case 0:
+        SetUiTimer(0.6f);
+        uiState = 1;
+        break;
+    case 1:
         for (int i = 0; i < uiCount; ++i)
         {
             DirectX::XMFLOAT2 pos  = UIManager::Instance().GetUI(i)->GetPosition();
@@ -399,40 +403,7 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state,float elapsedTime)
             //UIManager::Instance().GetUI(i)->SetPosition(pos);
 
             UIManager::Instance().GetUI(i)->SetPosition(displayUiPosition);
-            
-            SetUiTimer(0.6f);
-            uiState = 1;
-
-#if 0
-#if 0
-            float s = speed * 2;
-            pos.x += s * 1.76f;
-            pos.y += s;
-            size.x += s * 2.15;
-            size.y += s;
-#else
-            pos.x += speed * 1.76f;
-            pos.y += speed;
-            size.x += speed * 2.15f;
-            size.y += speed;
-#endif
-
-            if (pos.x >= 450.0f)pos.x = 450.0f;
-            if (pos.y >= 260.0f)pos.y = 260.0f;
-            if (size.x >= 430.0f)size.x = 430.0f;
-            if (size.y >= 200.0f)size.y = 200.0f;
-
-            UIManager::Instance().GetUI(i)->SetPosition(pos);
-            UIManager::Instance().GetUI(i)->SetSize(size);
-
-            if ((pos.x >= 450.0f) && (pos.y >= 260.0f) && (size.x >= 430.0f) && (size.y >= 200.0f))
-            {
-                uiState = 1;
-            }
-#endif
         }
-        break;
-    case 1:
         subtractUiTimer(elapsedTime);
         if (GetUiTimer() <= 0.0f)uiState = 2;
 
