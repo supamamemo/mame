@@ -111,9 +111,9 @@ public: // 取得・設定関数関連
     void SetVelocityX(const float velocityX) { velocity.x = velocityX; }
     void SetVelocityY(const float velocityY) { velocity.y = velocityY; }
 
-    // モデルの不透明度の取得・設定
-    const float GetModelColorAlpha() const { return modelColor; }
-    void SetModelColor(const float colorAlpha) { modelColor.w = colorAlpha; }
+    // モデルカラーの取得・設定
+    const DirectX::XMFLOAT4& GetModelColor() const { return modelColor; }
+    const float GetModelColorAlpha(const float colorAlpha) { modelColor.w = colorAlpha; }
     void SetModelColorAlpha(const float colorAlpha) { modelColor.w = colorAlpha; }
 
     // 保存した移動方向ベクトルの取得

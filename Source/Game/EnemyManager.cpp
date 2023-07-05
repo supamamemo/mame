@@ -149,8 +149,8 @@ void EnemyManager::CollisionEnemyVsEnemy()
 
             if (Collision::IntersectAABBVsAABB(enemyA->aabb_, enemyB->aabb_))
             {
-                // 
-                if (enemyA->GetModelColorAlpha->)
+                //// 
+                //if (enemyA->GetModelColorAlpha->)
 
 
                 // ã‰º¶‰E‚Ì‚»‚ê‚¼‚êd‚È‚Á‚Ä‚¢‚é’l‚ð‹‚ß‚é
