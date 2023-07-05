@@ -5,7 +5,7 @@
 #include "../PlayerManager.h"
 #include "../GrassBlock.h"
 
-
+#include "../Box.h"
 
 class StagePlains : public Stage
 {
@@ -20,6 +20,9 @@ public:
     void End()                              override;   // 毎フレーム一番最後に呼ばれる
     void Render(const float& elapsedTime)   override;   // 描画処理
     void DrawDebug()                        override;   // デバッグ描画
+
+private:
+    std::unique_ptr<Box>back = nullptr;
 
 public:
     // UI関連（急ぎで作ってるからコメントなしでごめん。。）

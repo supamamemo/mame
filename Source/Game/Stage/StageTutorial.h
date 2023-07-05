@@ -61,6 +61,7 @@ private:
     int stickMoveState = 0; // スティック動き
     float stickTime = 0;
     void StickState(float elapsedTime);
+    void StickStateDown(float elapsedTime);
 
 private:
     std::unique_ptr<Box> back = nullptr;

@@ -69,6 +69,9 @@ StagePlains::StagePlains()
         }        
     }
 
+    // îwåi
+    back = std::make_unique<Box>("./resources/back.fbx");
+
     // UI
     {
         UIManager& uiManager = UIManager::Instance();
@@ -177,6 +180,11 @@ void StagePlains::Initialize()
         enemyManager.Initialize();
     }
 
+    // îwåi
+    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 5, 12));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 12, 6));
+    back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
+
     // UI
     {
         UIManager::Instance().GetUI(UISPRITE::BaseMameHp)->SetPosition(playerUiPos);
@@ -236,6 +244,9 @@ void StagePlains::Update(const float& elapsedTime)
 {
     if (!Mame::Scene::SceneManager::Instance().isHitStop_)
     {
+        //îwåi
+        back->BackUpdate(elapsedTime);
+
         // cameraçXêV
         Camera::Instance().Update(elapsedTime);
 
@@ -276,6 +287,9 @@ void StagePlains::Render(const float& elapsedTime)
     Graphics& graphics = Graphics::Instance();
     Shader* shader = graphics.GetShader();
 
+    // îwåi
+    back->Render(elapsedTime);
+
     // playerï`âÊ
     PlayerManager::Instance().Render(elapsedTime);
 
@@ -315,6 +329,9 @@ void StagePlains::DrawDebug()
 
     // ui
     UIManager::Instance().DrawDebug();
+
+    // îwåi
+    back->DrawDebug();
 
 #endif
 }

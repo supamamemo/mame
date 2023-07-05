@@ -77,3 +77,13 @@ void Box::DrawDebug()
     ImGui::End();
 #endif
 }
+
+void Box::BackUpdate(float elapsedTime)
+{
+    DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 cameraPos = Camera::Instance().GetTransform()->GetPosition();
+
+    pos.x = cameraPos.x;
+
+    GetTransform()->SetPosition(pos);
+}

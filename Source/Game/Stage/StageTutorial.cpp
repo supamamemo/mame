@@ -90,7 +90,7 @@ void StageTutorial::Initialize()
         terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f));
         terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(32.0f, 0.0f, 10.0f));
 
-        terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(2.0f, 1.0f, 10.0f));
+        terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(1.9f, 1.0f, 10.0f));
 
         terrainManager.Initialize();
     }
@@ -120,38 +120,6 @@ void StageTutorial::Initialize()
     // 誘導用
     tutorialState = STATE::MoveReception;
 
-    // UI
-    {
-        float uiZ = 20.0f;
-        // stick
-        {
-            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(135, 275, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetSize(DirectX::XMFLOAT2(150, 150));
-
-            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
-
-            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetSize(DirectX::XMFLOAT2(100, 100));
-
-            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetSize(DirectX::XMFLOAT2(100, 100));
-
-            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetSize(DirectX::XMFLOAT2(100, 100));
-
-            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetSize(DirectX::XMFLOAT2(100, 100));
-        }
-
-        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(60, 280, uiZ));
-        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(300, 150));
-
-        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT3(100, 300, uiZ));
-        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetSize(DirectX::XMFLOAT2(100, 100));
-        UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT3(210, 300, uiZ));
-        UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetSize(DirectX::XMFLOAT2(100, 100));
-    }
 
     // エフェクト読み込み
     effect[0] = new Effect("./resources/effect/box.efk");
@@ -218,6 +186,9 @@ void StageTutorial::Update(const float& elapsedTime)
     // UI
     UIManager::Instance().Update(elapsedTime);
 
+    // 背景
+    back->BackUpdate(elapsedTime);
+
     GamePad& gamePad = Input::Instance().GetGamePad();
     if (gamePad.GetButtonDown() & GamePad::BTN_X)
     {
@@ -263,9 +234,7 @@ void StageTutorial::Render(const float& elapsedTime)
     TutorialStateRender(elapsedTime);
 
     // UI
-    UIManager::Instance().Render(elapsedTime);
-    
-    
+    UIManager::Instance().Render(elapsedTime);   
 }
 
 // debug用
@@ -309,6 +278,8 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
     DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
 
+    float uiZ = 20.0f;
+
     switch (tutorialState)
     {
     case STATE::MoveReception:
@@ -318,6 +289,27 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
         // UI
         StickState(elapsedTime);
+
+        // UIの位置
+        {
+            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(135, 275, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetSize(DirectX::XMFLOAT2(150, 150));
+
+            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetSize(DirectX::XMFLOAT2(100, 100));
+        }
 
         // 次に行く条件
         if (playerPos.x > -3.8f)
@@ -337,8 +329,22 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         break;
     case STATE::JumpReception:
         // effect
-        effect[0]->SetPosition(DirectX::XMFLOAT3(2.0f, 5.5f, 10.0f));
+        effect[0]->SetPosition(DirectX::XMFLOAT3(1.9f, 5.5f, 10.0f));
         effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
+
+        // UIの位置
+        {
+            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(7, 280, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(350, 150));
+
+            UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT3(40, 300, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetSize(DirectX::XMFLOAT2(100, 100));
+            UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT3(215, 300, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetPosition(DirectX::XMFLOAT3(140, 350, uiZ));
+            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetSize(DirectX::XMFLOAT2(80, 80));
+        }
 
         // 次に行く条件
         if (playerPos.x >= 1.0f)
@@ -346,6 +352,7 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
             UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
             UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
             UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
 
             effect[0]->Stop(effect[0]->handle);
             effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 200.0f);
@@ -358,14 +365,19 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         break;
         
     case STATE::HipDorop:
-        UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(450, 90, 10));
-        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
-        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
-        UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+        // UIの位置
+        {
+            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(450, 90, 10));
+            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+        }
+        
+        // UI
+        StickStateDown(elapsedTime);
         
 
         break;
-
     }
 }
 
@@ -415,6 +427,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
         UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(true);
 
         break;
     case STATE::HipDorop:
@@ -422,8 +435,6 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
         // UI
         UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
 
         break;
     }
@@ -484,6 +495,40 @@ void StageTutorial::StickState(float elapsedTime)
             stickTime = 0;
             stickMoveState = 0;
         }
+        break;
+    }
+}
+
+void StageTutorial::StickStateDown(float elapsedTime)
+{
+    stickTime += elapsedTime;
+
+    switch (stickMoveState)
+    {
+    case 0:
+        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
+
+        if (stickTime > 1.0f)
+        {
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(true);
+
+            stickTime = 0;
+            stickMoveState = 1;
+        }
+        break;
+    case 1:
+            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(true);
+
+            if (stickTime > 1.0f)
+            {
+                UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
+
+                stickTime = 0;
+                stickMoveState = 0;
+            }
+
         break;
     }
 }

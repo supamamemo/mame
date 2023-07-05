@@ -25,6 +25,8 @@ public:
 
     static float renderLengthXLimit_;   // box‚ğ•`‰æ‚·‚é‹——£§ŒÀ
 
+    void BackUpdate(float elapsedTime);
+
 public:
     // Imgui–¼‘O”í‚è–h~‚Ì‚½‚ß‚Ì‚â‚Â //
     static int nameNum;

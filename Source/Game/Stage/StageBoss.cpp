@@ -68,8 +68,8 @@ void StageBoss::Initialize()
 
 
     // ”wŒi‰¼
-    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 2.0f, 32.0f));
-    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 18.0f, 8.0f));
+    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 6.0f, 12.0f));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 10.0f, 4.0f));
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
     // ƒXƒe[ƒW‰ŠúÝ’è
@@ -225,6 +225,9 @@ void StageBoss::Render(const float& elapsedTime)
     Graphics& graphics = Graphics::Instance();
     Shader* shader = graphics.GetShader();
 
+    // ”wŒi‰¼
+    back->Render(elapsedTime);
+
     // terrain
     TerrainManager::Instance().Render(elapsedTime);
 
@@ -233,9 +236,6 @@ void StageBoss::Render(const float& elapsedTime)
 
     // boss•`‰æ
     EnemyManager::Instance().Render(elapsedTime);
-
-    // ”wŒi‰¼
-    back->Render(elapsedTime);
 
     //playerHp
     UIManager::Instance().Render(elapsedTime);

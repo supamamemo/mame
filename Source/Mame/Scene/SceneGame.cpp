@@ -61,8 +61,8 @@ void SceneGame::Initialize()
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
     //StageManager::Instance().ChangeStage(new StagePlains);
-    StageManager::Instance().ChangeStage(new StageBoss);
-    //StageManager::Instance().ChangeStage(new StageTutorial);
+    //StageManager::Instance().ChangeStage(new StageBoss);
+    StageManager::Instance().ChangeStage(new StageTutorial);
 }
 
 // èIóπâª
