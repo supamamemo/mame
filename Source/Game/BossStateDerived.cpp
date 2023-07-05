@@ -844,13 +844,13 @@ namespace RED_TOFU
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.4f));
 
         // 速度を設定
-        owner->SetMoveSpeed(2.0f);
+        owner->SetMoveSpeed(5.0f);
 
         // 回転速度を設定
         owner->SetTurnSpeed(ToRadian(540.0f));
 
-        // 追跡時間を設定
-        SetTimer(3.0f);
+        //// 追跡時間を設定
+        //SetTimer(3.0f);
 
         owner->PlayAnimation(TofuAnimation::Walk, true);
         owner->SetAnimationSpeed(1.25f); // アニメーション速度を速めに設定
@@ -881,34 +881,36 @@ namespace RED_TOFU
         // 旋回処理
         owner->Turn(elapsedTime, owner->GetMoveDirectionX(), owner->GetTurnSpeed());
 
-        // プレイヤーが索敵範囲から外れたら追跡時間を減少し、
-        // 追跡時間が終わったら旋回ステートへ遷移する(通常時に戻る)
-        if (player->GetHealth() <= 0 || !FindPlayer())
         {
-            SubtractTime(elapsedTime);
-            if (GetTimer() <= 0.0f)
-            {
-                // 移動方向の設定
-                {
-                    // 自分から移動範囲の中心へ向かう単位ベクトルを移動方向に設定
-                    const float moveRangeCenterX = owner->GetMoveRangeCenterX();
-                    const float positionX        = owner->GetTransform()->GetPosition().x;
-                    const float vec              = (moveRangeCenterX - positionX);
-                    const float vec_n            = (vec / fabsf(vec));
-                    owner->SetMoveDirectionX(vec_n);
-                }
+            //// プレイヤーが索敵範囲から外れたら追跡時間を減少し、
+            //// 追跡時間が終わったら旋回ステートへ遷移する(通常時に戻る)
+            //if (player->GetHealth() <= 0 || !FindPlayer())
+            //{
+            //    SubtractTime(elapsedTime);
+            //    if (GetTimer() <= 0.0f)
+            //    {
+            //        // 移動方向の設定
+            //        {
+            //            // 自分から移動範囲の中心へ向かう単位ベクトルを移動方向に設定
+            //            const float moveRangeCenterX = owner->GetMoveRangeCenterX();
+            //            const float positionX        = owner->GetTransform()->GetPosition().x;
+            //            const float vec              = (moveRangeCenterX - positionX);
+            //            const float vec_n            = (vec / fabsf(vec));
+            //            owner->SetMoveDirectionX(vec_n);
+            //        }
 
-                // 旋回速度を通常に戻す
-                owner->SetTurnSpeed(ToRadian(90.0f));
+            //        // 旋回速度を通常に戻す
+            //        owner->SetTurnSpeed(ToRadian(90.0f));
 
-                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
-                return;
-            }
-        }
-        // プレイヤーが索敵範囲にいれば追跡時間を設定
-        else
-        {
-            SetTimer(3.0f);
+            //        owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
+            //        return;
+            //    }
+            //}
+            //// プレイヤーが索敵範囲にいれば追跡時間を設定
+            //else
+            //{
+            //    SetTimer(3.0f);
+            //}
         }
     }
 

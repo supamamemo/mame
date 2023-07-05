@@ -34,10 +34,14 @@ namespace RED_TOFU
         // ※ここの初期回転値によって振り向きの方向が変わるので注意
         GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
 
-        health = 1;                     // 体力設定
-        moveSpeed_ = 1.0f;              // 移動速度設定(ステートで変わるので最初だけ)
-        turnSpeed_ = ToRadian(90.0f);   // 旋回速度設定(ステートで変わるので最初だけ)
-        jumpSpeed_ = 12.0f;             // ジャンプ速度設定
+        modelColor = DirectX::XMFLOAT4(1.0f, 0.25f, 0.25f, 1.0f); // 赤色に設定
+
+        health      = 1;                // 体力設定
+        moveSpeed_  = 2.0f;             // 移動速度設定(ステートで変わるので最初だけ)
+        turnSpeed_  = ToRadian(180.0f); // 旋回速度設定(ステートで変わるので最初だけ)
+        jumpSpeed_  = 12.0f;            // ジャンプ速度設定
+
+        enemyType_ = EnemyType::RedTofu;    // 敵の種類を設定
 
         // ステートマシン
         {

@@ -115,11 +115,11 @@ void Boss::Update(const float& elapsedTime)
     {
         if (invincibleTimer > 0.0f)
         {
-            modelColorAlpha = (static_cast<int>(invincibleTimer * 100.0f) & 0x04) ? 0.7f : 0.0f;
+            modelColor.w = (static_cast<int>(invincibleTimer * 100.0f) & 0x04) ? 0.7f : 0.0f;
         }
         else
         {
-            modelColorAlpha = 1.0f;
+            modelColor.w = 1.0f;
         }
     }
 

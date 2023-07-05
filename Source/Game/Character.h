@@ -111,9 +111,10 @@ public: // 取得・設定関数関連
     void SetVelocityX(const float velocityX) { velocity.x = velocityX; }
     void SetVelocityY(const float velocityY) { velocity.y = velocityY; }
 
-    // モデルの不透明度の取得・設定
-    const float GetModelColorAlpha() const { return modelColorAlpha; }
-    void SetModelColorAlpha(const float colorAlpha) { modelColorAlpha = colorAlpha; }
+    // モデルカラーの取得・設定
+    const DirectX::XMFLOAT4& GetModelColor() const { return modelColor; }
+    const float GetModelColorAlpha(const float colorAlpha) { modelColor.w = colorAlpha; }
+    void SetModelColorAlpha(const float colorAlpha) { modelColor.w = colorAlpha; }
 
     // 保存した移動方向ベクトルの取得
     const float GetSaveMoveVecX() const { return saveMoveVecX_; }
@@ -157,12 +158,11 @@ public:
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders;
 
+    DirectX::XMFLOAT4 modelColor    =   { 1.0f, 1.0f, 1.0f, 1.0f }; // モデルカラー
     DirectX::XMFLOAT4 materialColor =   { 1.0f, 0.0f, 0.0f, 0.4f }; // マテリアルカラー
 
     DirectX::XMFLOAT3 velocity      =   { 0,0,0 };                  // 速度
          
-    float       modelColorAlpha     =   1.0f;
-
     float       stepOffset          =   1.0f;                       // 位置補正(Y位置がキャラクターの中心になるように調整)
                                         
     float       moveVecX_           =   0.0f;                       // 移動ベクトルX

@@ -5,6 +5,7 @@
 #include "../../Mame/Scene/SceneManager.h"
 #include "../EnemyManager.h"
 #include "../EnemyTofu.h"
+#include "../EnemyRedTofu.h"
 #include "../Terrain/TerrainManager.h"
 #include "../Terrain/TerrainPlains.h"
 
@@ -56,7 +57,8 @@ StagePlains::StagePlains()
         // 23体生成
         for (int i = 0; i < 23; ++i)
         {
-            enemyManager.Register(new EnemyTofu());
+            //enemyManager.Register(new EnemyTofu());
+            enemyManager.Register(new RED_TOFU::EnemyRedTofu());
         }        
     }
 
@@ -342,17 +344,56 @@ void StagePlains::PlayerHpUiUpdate(float elapsedTime)
 
 void StagePlains::UpdateUi(int uiCount, float speed,int state,float elapsedTime)
 {
+    Graphics& graphics = Graphics::Instance();
+
+    // ビューポート
+    NO_CONST D3D11_VIEWPORT viewport = {};
+    NO_CONST UINT			numViewports = 1;
+    graphics.GetDeviceContext()->RSGetViewports(&numViewports, &viewport);
+
+    // 変換行列
+    const DirectX::XMMATRIX View       = Camera::Instance().GetV();
+    const DirectX::XMMATRIX Projection = Camera::Instance().GetP();
+    const DirectX::XMMATRIX World      = DirectX::XMMatrixIdentity();
+
     switch (state)
     {
     case 0:
         for (int i = 0; i < uiCount; ++i)
         {
-            DirectX::XMFLOAT2 pos = UIManager::Instance().GetUI(i)->GetPosition();
+            DirectX::XMFLOAT2 pos  = UIManager::Instance().GetUI(i)->GetPosition();
             DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
 
-            DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
 
-            displayUiPosition = { playerPos.x, playerPos.y + 3.0f };
+
+            // スクリーン座標変換
+            NO_CONST DirectX::XMFLOAT3 screenPlPos = {};
+            {
+                // プレイヤーのワールド座標を取得
+                NO_CONST DirectX::XMFLOAT3 worldPlPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+                worldPlPos.y += 3.0f; // プレイヤーの頭上を座標に設定
+
+                // ワールド座標をスクリーン座標に変換
+                const DirectX::XMVECTOR WorldPlPos = DirectX::XMLoadFloat3(&worldPlPos);
+                const DirectX::XMVECTOR ScreenPlPos = {
+                    DirectX::XMVector3Project(
+                        WorldPlPos,
+                        viewport.TopLeftX, viewport.TopLeftY,
+                        viewport.Width,    viewport.Height,
+                        viewport.MinDepth, viewport.MaxDepth,
+                        Projection, View, World
+                    )
+                };
+
+                // XMFLOAT型に変換
+                DirectX::XMStoreFloat3(&screenPlPos, ScreenPlPos);
+            }
+
+            // スプライトの中心座標を左上から中央に調整
+            const float sizeHalfX = size.x * 0.5f;
+            const float sizeHalfY = size.y * 0.5f;
+            displayUiPosition = { (screenPlPos.x - sizeHalfX), (screenPlPos.y - sizeHalfY) };
+
 
             //pos = { 450.0f, 260.0f };
             //UIManager::Instance().GetUI(i)->SetPosition(pos);
