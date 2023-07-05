@@ -91,15 +91,7 @@ void EnemyTofu::Update(const float& elapsedTime)
 
     UpdateAABB();                       // AABBの更新処理
 
-#if 0
-    static bool ONNNNNNNN = true;
-    ImGui::Begin("ONNNNNNNNNNNNNNNNNNNNNnn");
-    ImGui::Checkbox("ONNNNNNNNNNNNNNNNNNNN", &ONNNNNNNN);
-    ImGui::End();
-    if (ONNNNNNNN) UpdateVelocity(elapsedTime);        // 速力処理更新処理
-#else
     UpdateVelocity(elapsedTime);        // 速力処理更新処理
-#endif
 
     CollisionEnemyVsPlayer();           // プレイヤーとの衝突判定処理
  
@@ -128,8 +120,6 @@ void EnemyTofu::DrawDebug()
     GetTransform()->DrawDebug();
 
     if (stateMachine)GetStateMachine()->DrawDebug();
-
-    ImGui::Checkbox("isONNNNNNNNNNNNFRIENDDDDDDDDD", &isOnFriend_);
 
     ImGui::End();
 #endif // USE_IMGUI

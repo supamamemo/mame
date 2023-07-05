@@ -214,6 +214,7 @@
     <ClCompile Include="Source\Game\Enemy.cpp" />
     <ClCompile Include="Source\Game\EnemyCannon.cpp" />
     <ClCompile Include="Source\Game\EnemyManager.cpp" />
+    <ClCompile Include="Source\Game\EnemyRedTofu.cpp" />
     <ClCompile Include="Source\Game\EnemyTofu.cpp" />
     <ClCompile Include="Source\Game\GrassBlock.cpp" />
     <ClCompile Include="Source\Game\Mathf.cpp" />
@@ -288,6 +289,7 @@
     <ClInclude Include="Source\Game\Enemy.h" />
     <ClInclude Include="Source\Game\EnemyCannon.h" />
     <ClInclude Include="Source\Game\EnemyManager.h" />
+    <ClInclude Include="Source\Game\EnemyRedTofu.h" />
     <ClInclude Include="Source\Game\EnemyTofu.h" />
     <ClInclude Include="Source\Game\GrassBlock.h" />
     <ClInclude Include="Source\Game\Mathf.h" />

@@ -30,6 +30,19 @@ namespace TOFU
     };
 }
 
+namespace RED_TOFU
+{
+    enum class STATE
+    {
+        Walk,
+        Turn,
+        Find,
+        Track,
+        IdleBattle,
+        Death,
+    };
+}
+
 namespace CANNON
 {
     enum class STATE
@@ -38,6 +51,7 @@ namespace CANNON
         Attack,
     };
 }
+
 
 namespace BOSS
 {
@@ -112,6 +126,7 @@ namespace BOSS
     };
 }
 
+
 namespace TOFU
 {
     class WalkState : public State
@@ -185,7 +200,86 @@ namespace TOFU
         void Execute(float elapsedTime) override;
         void Exit()                     override;
     };
+
+
 }
+
+
+namespace RED_TOFU
+{
+    class WalkState : public State
+    {
+    public:
+        WalkState(Enemy* _tofu) :State(_tofu, "walk") {}
+        ~WalkState() {}
+
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
+    };
+
+    class TurnState :public State
+    {
+    public:
+        TurnState(Enemy* _tofu) :State(_tofu, "turn") {}
+        ~TurnState() {}
+
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
+    };
+
+    class FindState :public State
+    {
+    public:
+        FindState(Enemy* _tofu) :State(_tofu, "find") {}
+        ~FindState() {}
+
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+
+    private:
+        int state = 0;
+    };
+
+    class TrackState :public State
+    {
+    public:
+        TrackState(Enemy* _tofu) :State(_tofu, "track") {}
+        ~TrackState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+    };
+
+    // 戦闘待機ステート
+    class IdleBattleState : public State
+    {
+    public:
+        IdleBattleState(Enemy* _tofu) :State(_tofu, "idleBattle") {}
+        ~IdleBattleState() {}
+
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
+    };    
+    
+    // 死亡ステート
+    class DeathState : public State
+    {
+    public:
+        DeathState(Enemy* _tofu) :State(_tofu, "death") {}
+        ~DeathState() {}
+
+        void Enter()                    override;
+        void Execute(float elapsedTime) override;
+        void Exit()                     override;
+    };
+}
+
 
 namespace CANNON
 {
