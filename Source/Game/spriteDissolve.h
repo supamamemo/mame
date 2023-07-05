@@ -26,7 +26,7 @@ public:
     // load用
     void FadeIn(float elapsedTime);
     void FadeOut(float elapsedTime);
-    void SetFadeInTexture(DirectX::XMFLOAT2 position, DirectX::XMFLOAT2 textureSize, float delay, int textureType)
+    void SetFadeInTexture(DirectX::XMFLOAT3 position, DirectX::XMFLOAT2 textureSize, float delay, int textureType)
     {
         spr_dissolve.pos                = position;
         spr_dissolve.posD               = textureSize;
@@ -34,7 +34,7 @@ public:
         spr_dissolve.mask_texture_value = textureType;
         spr_dissolve.dissolve_value1    = 1.5f;
     }
-    void SetFadeOutTexture(DirectX::XMFLOAT2 position, DirectX::XMFLOAT2 textureSize, float delay, int textureType)
+    void SetFadeOutTexture(DirectX::XMFLOAT3 position, DirectX::XMFLOAT2 textureSize, float delay, int textureType)
     {
         spr_dissolve.pos                = position;
         spr_dissolve.posD               = textureSize;
@@ -47,8 +47,8 @@ public:
     bool IsFade() { return isFade; } // fadeするのかの判断に使う
     void SetFade(bool fade) { isFade = fade; }
 
-    void SetPosition(DirectX::XMFLOAT2 pos) { spr_dissolve.pos = pos; }
-    DirectX::XMFLOAT2 GetPosition() { return spr_dissolve.pos; }
+    void SetPosition(DirectX::XMFLOAT3 pos) { spr_dissolve.pos = pos; }
+    DirectX::XMFLOAT3 GetPosition() { return spr_dissolve.pos; }
     void SetSize(DirectX::XMFLOAT2 size) { spr_dissolve.posD = size; }
     DirectX::XMFLOAT2 GetSize() { return spr_dissolve.posD; }
 
@@ -56,7 +56,7 @@ public:
     // デバッグ用
     bool debug_initialize = false;
 
-
+    int DS = 0;
     
 private:
     struct dissolve_constants
@@ -70,7 +70,7 @@ private:
 
     struct SprDissolve
     {
-        DirectX::XMFLOAT2 pos       = { 600.0f, 420.0f };
+        DirectX::XMFLOAT3 pos = { 600.0f, 420.0f ,0.0f };
         DirectX::XMFLOAT2 posD      = { 300.0f, 300.0f };
 
         int      mask_texture_value = 0;

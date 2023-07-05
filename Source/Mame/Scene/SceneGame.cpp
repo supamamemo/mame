@@ -39,11 +39,11 @@ void SceneGame::Initialize()
     {
     case 0:
         spriteDissolve[0]->Initialize();
-        spriteDissolve[0]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
+        spriteDissolve[0]->SetFadeInTexture({ 0,0 ,0}, { 1280,720 }, 0.4f, 2);
         break;
     case 1:
         spriteDissolve[0]->Initialize();
-        spriteDissolve[0]->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
+        spriteDissolve[0]->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
         break;
     }
     
@@ -60,8 +60,8 @@ void SceneGame::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
-    StageManager::Instance().ChangeStage(new StagePlains);
-    //StageManager::Instance().ChangeStage(new StageBoss);
+    //StageManager::Instance().ChangeStage(new StagePlains);
+    StageManager::Instance().ChangeStage(new StageBoss);
     //StageManager::Instance().ChangeStage(new StageTutorial);
 }
 
@@ -210,13 +210,13 @@ void SceneGame::DrawDebug()
     ImGui::SliderInt("textureType", &textureType, 0, 11);
     if (ImGui::Button("fadeIn"))
     {
-        spriteDissolve[0]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve[0]->SetFadeInTexture({ 0,0,0 }, { 1280,720 }, 0.4f, textureType);
         spriteDissolve[0]->SetFade(true);
         fadeType = 0;
     }
     if (ImGui::Button("fadeOut"))
     {
-        spriteDissolve[0]->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve[0]->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, textureType);
         spriteDissolve[0]->SetFade(true);
         fadeType = 1;
     }

@@ -30,6 +30,7 @@ private:
         StickCenter,    // center
         StickRight,     // right
         StickLeft,      // left
+        StickDown,
         GamePadA,
         GamePadB,
         GamePadX,
@@ -39,6 +40,7 @@ private:
         KeyBoardS,
         KeyBoardSHIFT,
         KeyBoardSPACE,
+        SpriteOR,       // or
     };
 
     enum STATE
@@ -53,7 +55,7 @@ private:
 
     int tutorialState = 0;
 
-
+    
 
 private:
     int stickMoveState = 0; // スティック動き

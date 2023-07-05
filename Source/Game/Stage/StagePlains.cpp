@@ -290,11 +290,7 @@ void StagePlains::Render(const float& elapsedTime)
     TerrainManager::Instance().Render(elapsedTime);
 
     // UI
-    {
-        shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
-
-        UIManager::Instance().Render(elapsedTime);
-    }
+    UIManager::Instance().Render(elapsedTime);
 }
 
 // debug用
@@ -365,7 +361,7 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state,float elapsedTime)
     case 1:
         for (int i = 0; i < uiCount; ++i)
         {
-            DirectX::XMFLOAT2 pos  = UIManager::Instance().GetUI(i)->GetPosition();
+            DirectX::XMFLOAT3 pos  = UIManager::Instance().GetUI(i)->GetPosition();
             DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
 
 
@@ -396,7 +392,7 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state,float elapsedTime)
             // スプライトの中心座標を左上から中央に調整
             const float sizeHalfX = size.x * 0.5f;
             const float sizeHalfY = size.y * 0.5f;
-            displayUiPosition = { (screenPlPos.x - sizeHalfX), (screenPlPos.y - sizeHalfY) };
+            displayUiPosition = { (screenPlPos.x - sizeHalfX), (screenPlPos.y - sizeHalfY),0 };
 
 
             //pos = { 450.0f, 260.0f };
@@ -411,7 +407,7 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state,float elapsedTime)
     case 2:
         for (int i = 0; i < uiCount; ++i)
         {
-            DirectX::XMFLOAT2 pos = UIManager::Instance().GetUI(i)->GetPosition();
+            DirectX::XMFLOAT3 pos = UIManager::Instance().GetUI(i)->GetPosition();
             DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
 
             pos.x -= speed * 1.76f;

@@ -252,6 +252,9 @@ namespace BOSS
 
         // アニメーションセット
         owner->PlayAnimation(static_cast<int>(BossAnimation::Recoil), true);
+
+        // タイマーセット
+        SetTimer(1.0f);
     }
 
     // 更新
@@ -278,12 +281,6 @@ namespace BOSS
         }
         
         //owner->GetTransform()->SetPosition(ownerPos);
-
-        // 当たり判定
-        if(Collision::IntersectAABBVsAABB(PlayerManager::Instance().GetPlayer()->aabb_, owner->aabb_))
-        { 
-           // todo : 当たり判定 
-        }
     }
 
     // 終了
@@ -294,6 +291,54 @@ namespace BOSS
     }
 }
 
+// damageState
+namespace BOSS
+{
+    // 初期化
+    void DamageState::Enter()
+    {
+        owner->PlayAnimation(static_cast<int>(BossAnimation::GetAttack), true);        
+    }
+
+    // 更新
+    void DamageState::Execute(float elapsedTime)
+    {
+        SubtractTime(elapsedTime);
+
+        if (GetTimer() <= 0.0f)
+        {
+            if (owner->GetHealth() > 0)
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+            else
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Cry));
+        }
+    }
+
+    // 終了
+    void DamageState::Exit()
+    {
+    }
+}
+
+// cryState
+namespace BOSS
+{
+    // 初期化
+    void CryState::Enter()
+    {
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Cry), true);
+    }
+
+    // 更新
+    void CryState::Execute(float elapsedTime)
+    {
+    }
+
+     // 終了
+    void CryState::Exit()
+    {
+    }
+}
 
 // WalkState
 namespace TOFU

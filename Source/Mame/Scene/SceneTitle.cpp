@@ -56,7 +56,7 @@ void SceneTitle::Initialize()
     // fadeout—p
 #if FADE
     spriteDissolve->Initialize();
-    spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
+    spriteDissolve->SetFadeInTexture({ 0,0,0}, { 1280,720 }, 0.4f, 2);
 #else
     spriteDissolve->Initialize();
     spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);

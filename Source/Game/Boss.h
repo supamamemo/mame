@@ -32,6 +32,9 @@ public:
 
     void OnDead()                         override; // Ž€–S‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
     void OnHitWall()                      override; // •Ç‚É“–‚½‚Á‚½Žž‚ÉŒÄ‚Î‚ê‚é
+
+    void OnDamaged()override;
+
 public:
     // Imgui–¼‘O”í‚è–hŽ~‚Ì‚½‚ß‚Ì‚â‚Â //
     static int nameNum;

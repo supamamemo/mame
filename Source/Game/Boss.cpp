@@ -24,6 +24,8 @@ Boss::Boss()
     GetStateMachine()->RegisterState(new BOSS::TurnState(this));
     GetStateMachine()->RegisterState(new BOSS::AttackState(this));
     GetStateMachine()->RegisterState(new BOSS::RecoilState(this));
+    GetStateMachine()->RegisterState(new BOSS::DamageState(this));
+    GetStateMachine()->RegisterState(new BOSS::CryState(this));
 
     GetStateMachine()->SetState(static_cast<int>(BOSS::STATE::Idle));
 
@@ -113,14 +115,14 @@ void Boss::Update(const float& elapsedTime)
 
     // 無敵時間中のキャラクターの点滅(ダメージを受けたかの確認用)
     {
-        if (invincibleTimer > 0.0f)
-        {
-            modelColor.w = (static_cast<int>(invincibleTimer * 100.0f) & 0x04) ? 0.7f : 0.0f;
-        }
-        else
-        {
-            modelColor.w = 1.0f;
-        }
+        //if (invincibleTimer > 0.0f)
+        //{
+        //    modelColor.w = (static_cast<int>(invincibleTimer * 100.0f) & 0x04) ? 0.7f : 0.0f;
+        //}
+        //else
+        //{
+        //    modelColor.w = 1.0f;
+        //}
     }
 
     UpdateAnimation(elapsedTime);       // アニメーション更新
@@ -152,8 +154,11 @@ void Boss::DrawDebug()
 
 void Boss::OnDead()
 {
+    stateMachine->ChangeState(static_cast<int>(BOSS::STATE::Damage));
+    stateMachine->GetCurrentState()->SetTimer(1.0f);
+
     // 自分を消去
-    Destroy();
+    //Destroy();
 }
 
 
@@ -161,4 +166,10 @@ void Boss::OnHitWall()
 {
     SetMoveDirectionX(-GetMoveDirectionX());    // 移動方向を反転
     GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));  // 反動ステートへ遷移
+}
+
+void Boss::OnDamaged()
+{
+    stateMachine->ChangeState(static_cast<int>(BOSS::STATE::Damage));
+    stateMachine->GetCurrentState()->SetTimer(1.0f);
 }

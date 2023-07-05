@@ -44,6 +44,37 @@ private:
         DirectX::XMFLOAT2 texPos{ 100,100 };
     }spr;
 
+public:
+    // UI関連（急ぎで作ってるからコメントなしでごめん。。）
+    void PlayerHpUiUpdate(float elapsedTime);    // プレイヤーhpUI管理
+    void UpdateUi(int uiCount, float speed, int state, float elapsedTime);
+
+    int uiState = -1;
+    void SetUiState() { uiState = 0; }
+
+    DirectX::XMFLOAT3 GetPlayerUiPosition() { return playerUiPos; }
+    void SetPlayerUiPosition(DirectX::XMFLOAT3 pos) { playerUiPos = pos; }
+    DirectX::XMFLOAT2 GetPlayerUiSize() { return playerUiSize; }
+    void SetPlayerUiSize(DirectX::XMFLOAT2 size) { playerUiSize = size; }
+
+    DirectX::XMFLOAT3 playerUiPos = { 10, 10 ,10 };
+    DirectX::XMFLOAT2 playerUiSize = { 344, 160 };
+
+    void subtractUiTimer(float time) { uiTimer -= time; }
+    void SetUiTimer(float time) { uiTimer = time; }
+    float GetUiTimer() { return uiTimer; }
+    float uiTimer = 0.0f;
+
+    DirectX::XMFLOAT3 displayUiPosition{};
+
+private:
+    enum UISPRITE
+    {
+        BaseMameHp,
+        mameHpLeft,
+        mameHpCenter,
+        mameHpRight,
+    };
 
 };
 

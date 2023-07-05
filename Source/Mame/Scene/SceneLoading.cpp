@@ -20,7 +20,7 @@ void SceneLoading::Initialize()
     //spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/load.png");
     //spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/fade.jpg");
     
-    spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
+    spriteDissolve->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
     //spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
 
     // スレッド開始

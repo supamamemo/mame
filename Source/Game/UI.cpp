@@ -40,7 +40,7 @@ void UI::DrawDebug()
 
     if (ImGui::TreeNode("UI"))
     {
-        ImGui::DragFloat2("pos", &spr.pos.x);
+        ImGui::DragFloat3("pos", &spr.pos.x);
         ImGui::DragFloat2("size", &spr.size.x);
 
         ImGui::TreePop();
