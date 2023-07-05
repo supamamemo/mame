@@ -136,6 +136,7 @@ void EnemyManager::CollisionEnemyVsEnemy()
     for (int a = 0; a < enemyCount; ++a)
     {
         Enemy* enemyA = enemyManager.GetEnemy(a);
+        if (enemyA->GetHealth() <= 0) continue;
 
         //// Aの味方の上に乗っかっているかフラグを最初にリセットする
         //enemyA->SetIsOnFriend(false);
@@ -144,6 +145,7 @@ void EnemyManager::CollisionEnemyVsEnemy()
         for (int b = a + 1; b < enemyCount; ++b)
         {
             Enemy* enemyB = enemyManager.GetEnemy(b);
+            if (enemyB->GetHealth() <= 0) continue;
 
             //// Bの味方の上に乗っかっているかフラグを最初にリセットする
             //enemyB->SetIsOnFriend(false);
@@ -151,7 +153,8 @@ void EnemyManager::CollisionEnemyVsEnemy()
             if (Collision::IntersectAABBVsAABB(enemyA->aabb_, enemyB->aabb_))
             {
                 // エネミーAが赤豆腐で追跡中ならエネミーBを吹き飛ばす
-                if (enemyA->enemyType_ == EnemyType::RedTofu)
+                if (enemyA->enemyType_ == EnemyType::RedTofu &&
+                    enemyB->enemyType_ == EnemyType::Tofu)
                 {
                     if (enemyA->GetStateMachine()->GetStateIndex() == static_cast<int>(RED_TOFU::STATE::Track))
                     {
@@ -160,7 +163,8 @@ void EnemyManager::CollisionEnemyVsEnemy()
                     }
                 }
                 // エネミーBが赤豆腐で追跡中ならエネミーAを吹き飛ばす
-                if (enemyB->enemyType_ == EnemyType::RedTofu)
+                if (enemyB->enemyType_ == EnemyType::RedTofu &&
+                    enemyA->enemyType_ == EnemyType::Tofu)
                 {
                     if (enemyB->GetStateMachine()->GetStateIndex() == static_cast<int>(RED_TOFU::STATE::Track))
                     {

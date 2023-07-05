@@ -381,7 +381,7 @@ namespace TOFU
     void WalkState::Enter()
     {
         // 移動速度設定
-        owner->SetMoveSpeed(1.0f);        
+        owner->SetMoveSpeed(1.0f);    
 
         // 旋回速度設定
         owner->SetTurnSpeed(ToRadian(90.0f));
@@ -744,6 +744,12 @@ namespace RED_TOFU
         // 移動速度設定
         owner->SetMoveSpeed(2.0f);
 
+        // 加速力設定
+        owner->SetAcceleration(1.0f);
+
+        // 摩擦力設定
+        owner->SetFriction(0.5f);
+
         // 旋回速度設定
         owner->SetTurnSpeed(ToRadian(180.0f));
 
@@ -923,7 +929,13 @@ namespace RED_TOFU
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.4f));
 
         // 速度を設定
-        owner->SetMoveSpeed(5.0f);
+        owner->SetMoveSpeed(4.0f);
+
+        // 加速力設定(弱めに設定)
+        owner->SetAcceleration(0.7f);        
+        
+        // 摩擦力設定(弱めに設定)
+        owner->SetFriction(0.1f);
 
         // 回転速度を設定
         owner->SetTurnSpeed(ToRadian(540.0f));
@@ -932,13 +944,18 @@ namespace RED_TOFU
         //SetTimer(3.0f);
 
         owner->PlayAnimation(TofuAnimation::Walk, true);
-        owner->SetAnimationSpeed(1.25f); // アニメーション速度を速めに設定
+        owner->SetAnimationSpeed(1.5f); // アニメーション速度を速めに設定
     }
 
     // 更新
     void TrackState::Execute(float elapsedTime)
     {
         const std::unique_ptr<Player>& player = PlayerManager::Instance().GetPlayer();
+
+        if (player->GetHealth() <= 0)
+        {
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::IdleBattle));
+        }
 
         // プレイヤーへ向かう方向を算出して移動方向に設定
         {
@@ -960,37 +977,6 @@ namespace RED_TOFU
         // 旋回処理
         owner->Turn(elapsedTime, owner->GetMoveDirectionX(), owner->GetTurnSpeed());
 
-        {
-            //// プレイヤーが索敵範囲から外れたら追跡時間を減少し、
-            //// 追跡時間が終わったら旋回ステートへ遷移する(通常時に戻る)
-            //if (player->GetHealth() <= 0 || !FindPlayer())
-            //{
-            //    SubtractTime(elapsedTime);
-            //    if (GetTimer() <= 0.0f)
-            //    {
-            //        // 移動方向の設定
-            //        {
-            //            // 自分から移動範囲の中心へ向かう単位ベクトルを移動方向に設定
-            //            const float moveRangeCenterX = owner->GetMoveRangeCenterX();
-            //            const float positionX        = owner->GetTransform()->GetPosition().x;
-            //            const float vec              = (moveRangeCenterX - positionX);
-            //            const float vec_n            = (vec / fabsf(vec));
-            //            owner->SetMoveDirectionX(vec_n);
-            //        }
-
-            //        // 旋回速度を通常に戻す
-            //        owner->SetTurnSpeed(ToRadian(90.0f));
-
-            //        owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
-            //        return;
-            //    }
-            //}
-            //// プレイヤーが索敵範囲にいれば追跡時間を設定
-            //else
-            //{
-            //    SetTimer(3.0f);
-            //}
-        }
     }
 
     // 終了
@@ -1023,8 +1009,9 @@ namespace RED_TOFU
 
         if (GetTimer() > 0.0f) return;
 
-        // プレイヤーが範囲内にいたら発見ステートへ遷移
-        if (FindPlayer())
+        // プレイヤーが生きていたら発見ステートへ遷移
+        const std::unique_ptr<Player>& player = PlayerManager::Instance().GetPlayer();
+        if (player->GetHealth() > 0)
         {
             // 地面か敵の上に乗っていたら遷移させるようにする(空中ジャンプ防止)
             if (owner->GetIsGround() || owner->GetIsOnFriend())
@@ -1033,7 +1020,7 @@ namespace RED_TOFU
                 return;
             }
         }
-        // プレイヤーが範囲内にいなくて待機時間が終了していれば旋回ステートへ遷移(通常時に戻る)
+        // プレイヤーが死んでいたら旋回ステートへ遷移(通常時に戻る)
         else 
         {
             // 移動方向の設定

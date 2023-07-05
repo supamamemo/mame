@@ -6,6 +6,13 @@
 #include "../Transform.h"
 #include "../../Game/Common.h"
 
+enum class ShakeType
+{
+    None = -1,
+    HorizontalShake,    // 横揺れ
+    VerticalShake       // 縦揺れ
+};
+
 class Camera
 {
 private: // シングルトン化
@@ -54,7 +61,14 @@ public:
 #endif // _DEBUG
 
 public:
-    void PlayShake() { isShake_ = true; }      // 画面を揺らす
+    // 画面を揺らす
+    void PlayShake(const ShakeType shakeType, const int loopCount = 2)
+    {
+        isShake_                = true;
+        currentShakeLoopCount_  = 0;            // 現在のループ回数をリセット
+        shakeLoopCount_         = loopCount;    // 繰り返す回数を設定
+        shakeType_              = shakeType;    // シェイクの種類を設定
+    }
     void UpdateShake(const float elapsedTime); // 画面振動更新処理
 
 public:
@@ -71,10 +85,13 @@ private:
     float angle    = 0.0f;
     float addAngle = ToRadian(15.0f);
 
-    float   defaultShakeTime_   = 0.05f;                // 揺れる時間
-    float   shakeTimer_         = defaultShakeTime_;    // 振動タイマー
-    int     shakeState_         = 0;                    // 揺れるステート
-    bool    isShake_            = false;                // 揺らすかどうか
+    ShakeType   shakeType_              = ShakeType::None;      // シェイクの種類
+    float       defaultShakeTime_       = 0.025f;                // 揺れる時間(速度調整)
+    float       shakeTimer_             = defaultShakeTime_;    // 振動タイマー
+    int         shakeState_             = 0;                    // 揺れるステート
+    int         currentShakeLoopCount_  = 0;                    // 現在のシェイクカウント
+    int         shakeLoopCount_         = 0;                    // 設定するシェイクカウント
+    bool        isShake_                = false;                // 揺らすかどうか
 
     // StagePlains用
     int cameraMoveY = 0;

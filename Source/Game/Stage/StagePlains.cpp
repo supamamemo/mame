@@ -59,6 +59,13 @@ StagePlains::StagePlains()
         {
             //enemyManager.Register(new EnemyTofu());
             enemyManager.Register(new RED_TOFU::EnemyRedTofu());
+        }             
+        // 23ëÃê∂ê¨
+        for (int i = 0; i < 23; ++i)
+        {
+            EnemyTofu* enemyTofu = new EnemyTofu();
+            enemyTofu->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.2f, 0.5f, 10.0f));
+            enemyManager.Register(enemyTofu);
         }        
     }
 

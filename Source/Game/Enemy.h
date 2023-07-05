@@ -5,6 +5,7 @@
 
 enum class EnemyType
 {
+    Tofu,       // ì§ïÖ
     RedTofu,    // ê‘ì§ïÖ
 };
 

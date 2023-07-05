@@ -53,7 +53,7 @@ void Character::Render(const float& /*elapsedTime*/)
     }
     
     // AABB描画
-    //geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
+    geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
 
     // ラスタライザ再設定(ソリッド・後ろカリング)
     graphics.GetShader()->SetState(graphics.GetDeviceContext(), 0, 0, 0);
@@ -414,7 +414,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
     if (dist > 0.0f)
     {
         // 摩擦力
-        float friction = this->friction * elapsedFrame;
+        float friction = this->friction_ * elapsedFrame;
         // 空中にいるときは摩擦力を減らす
         if (!isGround_) friction *= airControl;
 
@@ -447,7 +447,7 @@ void Character::UpdateHorizontalVelocity(const float& elapsedFrame)
         if (moveVecDist > 0.0f)
         {
             // 加速力
-            float acceleration = this->acceleration * elapsedFrame;
+            float acceleration = this->acceleration_ * elapsedFrame;
 
             // 空中にいるときは加速力を減らす
             if (!isGround_) acceleration *= airControl;

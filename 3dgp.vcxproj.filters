@@ -289,7 +289,12 @@
     <ClCompile Include="Source\Game\Stage\StageTutorial.cpp">
       <Filter>mamelib\Game\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\EnemyRedTofu.cpp" />
+    <ClCompile Include="Source\Game\EnemyRedTofu.cpp">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Terrain\TerrainFall.cpp">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -531,7 +536,12 @@
     <ClInclude Include="Source\Game\Stage\StageTutorial.h">
       <Filter>mamelib\Game\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\EnemyRedTofu.h" />
+    <ClInclude Include="Source\Game\EnemyRedTofu.h">
+      <Filter>mamelib\Game\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Terrain\TerrainFall.h">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">
