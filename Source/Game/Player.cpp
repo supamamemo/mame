@@ -346,7 +346,7 @@ void Player::CollisionPlayerVsEnemies()
 
             enemy->SetMoveDirectionX(saveMoveVecX_n); // ƒvƒŒƒCƒ„[‚ÌUŒ‚•ûŒü‚É‚Á”ò‚Ô‚æ‚¤‚É‚·‚é
 
-            Camera::Instance().PlayShake();
+            Camera::Instance().PlayShake(ShakeType::VerticalShake);
         }
     }
 }

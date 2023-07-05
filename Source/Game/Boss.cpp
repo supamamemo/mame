@@ -1,5 +1,6 @@
 #include "Boss.h"
 #include "../Mame/Graphics/Graphics.h"
+#include "../Mame/Graphics/Camera.h"
 #include "../Mame/Input/Input.h"
 
 #include "BossStateDerived.h"
@@ -159,6 +160,7 @@ void Boss::OnDead()
 
 void Boss::OnHitWall()
 {
+    Camera::Instance().PlayShake(ShakeType::HorizontalShake);
     SetMoveDirectionX(-GetMoveDirectionX());    // 移動方向を反転
     GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));  // 反動ステートへ遷移
 }

@@ -248,41 +248,86 @@ void Camera::SetDebugCamera1()
 
 void Camera::UpdateShake(const float elapsedTime)
 {
-    if (!isShake_)
-    {
-        return; // 画面振動していなければreturn
-    }
+    if (!isShake_) return; // 画面振動していなければreturn
 
     shakeTimer_ -= elapsedTime;
     if (shakeTimer_ > 0.0f) return;
     else shakeTimer_ = defaultShakeTime_;
 
     const float posX = 0.25f;
-    switch (shakeState_)
+    const float posY = 0.25f;
+    switch (shakeType_)
     {
-    case 0: 
-        transform.SetPosition(DirectX::XMFLOAT3( posX, 10.0f, -12.0f));
-        ++shakeState_;
+    case ShakeType::HorizontalShake:
+#if 1
+        switch (shakeState_)
+        {
+        case 0:
+            transform.SetPosition(DirectX::XMFLOAT3(posX, 10.0f, -12.0f));
+            ++shakeState_;
+            break;
+        case 1:
+            transform.SetPosition(DirectX::XMFLOAT3(-posX, 10.0f, -12.0f));
+            ++shakeState_;
+            break;
+        case 2:
+            // 指定ループ回数までループ
+            if (currentShakeLoopCount_ < shakeLoopCount_)
+            {
+                shakeState_ = 0;
+                ++currentShakeLoopCount_;
+                break;
+            }
+
+            // シェイク終了
+            transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
+            shakeType_              = ShakeType::None;
+            shakeState_             = 0;
+            currentShakeLoopCount_  = 0;
+            shakeLoopCount_         = 0;
+            isShake_                = false;
+            break;
+        }
         break;
-    case 1: 
-        transform.SetPosition(DirectX::XMFLOAT3(-posX, 10.0f, -12.0f));
-        ++shakeState_;
+#endif
         break;
-    case 2: 
-        transform.SetPosition(DirectX::XMFLOAT3( posX, 10.0f, -12.0f));
-        ++shakeState_;
+    case ShakeType::VerticalShake:
+#if 1
+        switch (shakeState_)
+        {
+        case 0:
+            transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f + -posY, -12.0f));
+            ++shakeState_;
+            break;
+        case 1:
+            transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f + posY, -12.0f));
+            ++shakeState_;
+            break;
+        case 2:
+            // 指定ループ回数までループ
+            if (currentShakeLoopCount_ < shakeLoopCount_)
+            {
+                shakeState_ = 0;
+                ++currentShakeLoopCount_;
+                break;
+            }
+
+            // シェイク終了
+            transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
+
+            shakeType_              = ShakeType::None;
+            shakeState_             = 0;
+            currentShakeLoopCount_  = 0;
+            shakeLoopCount_         = 0;
+            isShake_                = false;
+            break;
+        }
         break;
-    case 3:
-        transform.SetPosition(DirectX::XMFLOAT3(-posX, 10.0f, -12.0f));
-        ++shakeState_;
+#endif
+    default:
+        isShake_ = false;
         break;
-    case 4: // シェイク終了
-        transform.SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
-        shakeState_ = 0;
-        shakeTimer_ = defaultShakeTime_;
-        isShake_    = false;
-        break;
-    }   
+    }
 
 }
 
