@@ -478,6 +478,9 @@ void Player::OnFallDead()
 
     invincibleTimer  =  1.0f;   // 無敵時間設定
 
+     // ui
+    UIManager::Instance().SetUiCenter(true);
+
     // 走行中・ジャンプ中・バウンス中に落ちたときのためにリセットする
     {
         moveSpeed_      =   defaultMoveSpeed;       // 移動速度リセット

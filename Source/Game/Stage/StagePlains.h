@@ -22,8 +22,9 @@ public:
     void DrawDebug()                        override;   // デバッグ描画
 
 public:
+    // UI関連（急ぎで作ってるからコメントなしでごめん。。）
     void PlayerHpUiUpdate(float elapsedTime);    // プレイヤーhpUI管理
-    void UpdateUi(int uiCount, float speed, int state);
+    void UpdateUi(int uiCount, float speed, int state, float elapsedTime);
 
     int uiState = -1;
     void SetUiState() { uiState = 0; }
@@ -35,6 +36,13 @@ public:
 
     DirectX::XMFLOAT2 playerUiPos = { 10, 10 };
     DirectX::XMFLOAT2 playerUiSize = { 344, 160 };
+
+    void subtractUiTimer(float time) { uiTimer -= time; }
+    void SetUiTimer(float time) { uiTimer = time; }
+    float GetUiTimer() { return uiTimer; }
+    float uiTimer = 0.0f;
+    
+    DirectX::XMFLOAT2 displayUiPosition{};
 
 private:
     enum UISPRITE
