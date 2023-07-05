@@ -1,6 +1,7 @@
 #include "StageBoss.h"
 
 #include "../../Mame/Graphics/Graphics.h"
+#include "../../Mame/Scene/SceneManager.h"
 
 #include "../EnemyManager.h"
 
@@ -121,44 +122,53 @@ void StageBoss::Finalize()
 // Updateの前に呼ばれる
 void StageBoss::Begin()
 {
-    // terrain
-    TerrainManager::Instance().Begin();
+    if (!Mame::Scene::SceneManager::Instance().isHitStop_)
+    {
+        // terrain
+        TerrainManager::Instance().Begin();
 
-    // player
-    PlayerManager::Instance().Begin();
+        // player
+        PlayerManager::Instance().Begin();
 
-    // boss
-    EnemyManager::Instance().Begin();
+        // boss
+        EnemyManager::Instance().Begin();
+    }
 }
 
 // 更新処理
 void StageBoss::Update(const float& elapsedTime)
 {
-    Camera::Instance().UpdateBoss(elapsedTime);
+    if (!Mame::Scene::SceneManager::Instance().isHitStop_)
+    {
+        Camera::Instance().UpdateBoss(elapsedTime);
 
-    // terrain更新
-    TerrainManager::Instance().Update(elapsedTime);
+        // terrain更新
+        TerrainManager::Instance().Update(elapsedTime);
 
-    // player更新
-    PlayerManager& playerManager = PlayerManager::Instance();
-    playerManager.Update(elapsedTime);
-    
-    // enemy更新
-    EnemyManager::Instance().Update(elapsedTime);
+        // player更新
+        PlayerManager& playerManager = PlayerManager::Instance();
+        playerManager.Update(elapsedTime);
+
+        // enemy更新
+        EnemyManager::Instance().Update(elapsedTime);
+    }
 }
 
 // Updateの後に呼ばれる処理
 void StageBoss::End()
 {
-    // terrain
-    TerrainManager::Instance().End();
+    if (!Mame::Scene::SceneManager::Instance().isHitStop_)
+    {
+        // terrain
+        TerrainManager::Instance().End();
 
-    // player
-    PlayerManager::Instance().End();
+        // player
+        PlayerManager::Instance().End();
 
-    // boss
-    //boss->End();
-    EnemyManager::Instance().End();
+        // boss
+        //boss->End();
+        EnemyManager::Instance().End();
+    }
 }
 
 // 描画処理

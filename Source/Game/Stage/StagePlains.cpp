@@ -2,6 +2,7 @@
 
 #include "../../Mame/Graphics/Graphics.h"
 #include "../../Mame/Graphics/Camera.h"
+#include "../../Mame/Scene/SceneManager.h"
 #include "../EnemyManager.h"
 #include "../EnemyTofu.h"
 #include "../Terrain/TerrainManager.h"
@@ -208,30 +209,36 @@ void StagePlains::Finalize()
 // Updateの前に呼ばれる処理
 void StagePlains::Begin()
 {
-    // player
-    PlayerManager::Instance().Begin();
+    if (!Mame::Scene::SceneManager::Instance().isHitStop_)
+    {
+        // player
+        PlayerManager::Instance().Begin();
 
-    // enemy
-    EnemyManager::Instance().Begin();
+        // enemy
+        EnemyManager::Instance().Begin();
 
-    // terrain
-    TerrainManager::Instance().Begin();
+        // terrain
+        TerrainManager::Instance().Begin();
+    }
 }
 
 // 更新処理
 void StagePlains::Update(const float& elapsedTime)
 {
-    // camera更新
-    Camera::Instance().Update(elapsedTime);
+    if (!Mame::Scene::SceneManager::Instance().isHitStop_)
+    {
+        // camera更新
+        Camera::Instance().Update(elapsedTime);
 
-    // player更新
-    PlayerManager::Instance().Update(elapsedTime);
+        // player更新
+        PlayerManager::Instance().Update(elapsedTime);
 
-    // enemy更新
-    EnemyManager::Instance().Update(elapsedTime);
+        // enemy更新
+        EnemyManager::Instance().Update(elapsedTime);
 
-    // terrain更新
-    TerrainManager::Instance().Update(elapsedTime);
+        // terrain更新
+        TerrainManager::Instance().Update(elapsedTime);
+    }
 
     // UI
     UIManager::Instance().Update(elapsedTime);
@@ -241,14 +248,17 @@ void StagePlains::Update(const float& elapsedTime)
 // Updateの後に呼ばれる処理
 void StagePlains::End()
 {
-    // player
-    PlayerManager::Instance().End();
+    if (!Mame::Scene::SceneManager::Instance().isHitStop_)
+    {
+        // player
+        PlayerManager::Instance().End();
 
-    // enemy
-    EnemyManager::Instance().End();
+        // enemy
+        EnemyManager::Instance().End();
 
-    // terrain
-    TerrainManager::Instance().End();
+        // terrain
+        TerrainManager::Instance().End();
+    }
 }
 
 // 描画処理
@@ -355,7 +365,7 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state)
 #else
             pos.x += speed * 1.76f;
             pos.y += speed;
-            size.x += speed * 2.15;
+            size.x += speed * 2.15f;
             size.y += speed;
 #endif
 
@@ -382,7 +392,7 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state)
 
             pos.x -= speed * 1.76f;
             pos.y -= speed;
-            size.x -= speed * 2.15;
+            size.x -= speed * 2.15f;
             size.y -= speed;
 
             if (pos.x <= 10.0f)pos.x = 10.0f;

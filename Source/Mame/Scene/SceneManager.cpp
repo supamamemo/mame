@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 
+#include "../../Game/Common.h"
 #include "../Graphics/Graphics.h"
 
 #include "../Input/Input.h"
@@ -45,27 +46,18 @@ namespace Mame::Scene
 
         if (currentScene)
         {
-            //bool hitStopTiming = false;
-            if (hitStopTimer_ > 0.0f)
-            {
-                hitStopTimer_ -= elapsedTime;
-                //hitStopTiming = (hitStopTimer_ > 0.8f) || (static_cast<int>(hitStopTimer_ * 10.0f) % 2 == 0);
-            } 
-            else
-            {
-                isHitStop_ = false;
-            }
+            if (hitStopTimer_ > 0.0f) hitStopTimer_ -= elapsedTime;
+            else isHitStop_ = false;
 
             // pose’†‚¶‚á‚È‚¢
-            //if (!GetPose() && !hitStopTiming)
-            if (!GetPose() && !isHitStop_)
+            if (!GetPose())
             {
                 currentScene->Begin();
                 currentScene->Update(elapsedTime);
                 currentScene->End();
             }
             // pose’†
-            else if (GetPose())
+            else
             {
                 switch (currentScene->GetSceneType())
                 {
@@ -142,8 +134,7 @@ namespace Mame::Scene
         if (!currentScene)return;
         
         currentScene->Finalize();
-        delete currentScene;
-        currentScene = nullptr;
+        SafeDelete(currentScene);
     }
 
 
