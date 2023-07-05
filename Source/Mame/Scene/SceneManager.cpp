@@ -1,5 +1,6 @@
 #include "SceneManager.h"
 
+#include "../../Game/Common.h"
 #include "../Graphics/Graphics.h"
 
 #include "../Input/Input.h"
@@ -133,8 +134,7 @@ namespace Mame::Scene
         if (!currentScene)return;
         
         currentScene->Finalize();
-        delete currentScene;
-        currentScene = nullptr;
+        SafeDelete(currentScene);
     }
 
 

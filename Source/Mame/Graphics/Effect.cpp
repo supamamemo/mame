@@ -2,6 +2,8 @@
 #include "Effect.h"
 #include "EffectManager.h"
 
+int Effect::nameNum = 0;
+
 // コンストラクタ
 Effect::Effect(const char* filename)
 {
@@ -15,6 +17,11 @@ Effect::Effect(const char* filename)
 
     // Effekseerエフェクトを読み込み
     effekseerEffect = Effekseer::Effect::Create(effekseerManager, (EFK_CHAR*)utf16Filename);
+
+    // imgui名前かぶり起きないように...
+    name = "Effect" + std::to_string(nameNum);
+    SetName(name.c_str());
+    ++nameNum;
 }
 
 // 再生
@@ -65,7 +72,7 @@ void Effect::SetScale(Effekseer::Handle handle, const DirectX::XMFLOAT3& scale)
 
 void Effect::DrawDebug()
 {
-    ImGui::Begin("effect");
+    ImGui::Begin(GetName());
     
     ImGui::DragInt("drawTime", &drawTime);
 

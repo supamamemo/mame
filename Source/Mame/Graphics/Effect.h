@@ -53,5 +53,15 @@ private:
     int drawTime = 0;
 
     float timer = 4.5f; // ‚±‚êğŒ‚Ì‚â‚Â
+
+public:
+    // Imgui–¼‘O”í‚è–h~‚Ì‚½‚ß‚Ì‚â‚Â //
+    static int nameNum;
+    const char* GetName() const { return name.c_str(); }
+    void SetName(const char* n) { name = n; }
+    // Imgui–¼‘O”í‚è–h~‚Ì‚½‚ß‚Ì‚â‚Â //    
+
+private:
+    std::string name;   // Imgui—p
 };
 

@@ -32,6 +32,7 @@ StageTutorial::StageTutorial()
 
         terrainManager.Register(new TerrainPlains("./resources/stage/1.fbx"));  // 0
         terrainManager.Register(new TerrainPlains("./resources/stage/1.fbx"));  // 1
+        terrainManager.Register(new TerrainPlains("./resources/stage/3.fbx"));  // 2
     }
 
     // player生成
@@ -86,6 +87,9 @@ void StageTutorial::Initialize()
         TerrainManager& terrainManager = TerrainManager::Instance();
         terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 0.0f, 10.0f));
         terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(32.0f, 0.0f, 10.0f));
+
+        terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(2.0f, 1.0f, 10.0f));
+
         terrainManager.Initialize();
     }
 
@@ -199,19 +203,14 @@ void StageTutorial::Update(const float& elapsedTime)
     // enemy更新
     EnemyManager::Instance().Update(elapsedTime);
 
-    // 画面端で止まるようにする
-    {
-        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
-        if (playerPos.x <= -10.4f)playerPos.x = -10.4f;
+    // tutorialstate
+    TutorialStateUpdate(elapsedTime);
 
-        PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
-    }
+    // camera
+    Camera::Instance().UpdateTutorial(elapsedTime, tutorialState);
 
     // UI
     UIManager::Instance().Update(elapsedTime);
-
-    // tutorialstate
-    TutorialStateUpdate(elapsedTime);
 
     GamePad& gamePad = Input::Instance().GetGamePad();
     if (gamePad.GetButtonDown() & GamePad::BTN_X)
@@ -307,18 +306,12 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
     switch (tutorialState)
     {
     case STATE::MoveReception:
+        // effect
+        effect[0]->SetPosition(DirectX::XMFLOAT3(-2.5f, 2.0f, 10.0f));
+        effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
+
         // UI
         StickState(elapsedTime);
-
-        // effect(緑の範囲)
-        //if (effect->GetTimer() > 4.7f)
-        if (effect[0]->GetTimer() > 3.0f)
-        {
-            effect[0]->handle = effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 110.0f);
-            //handle = effect->Play(effect->GetPosition(), effect->GetScale(), effect->GetColor());
-            effect[0]->SetTimer(0.0f);
-        }
-        effect[0]->AddTimer(elapsedTime);
 
         // 次に行く条件
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
@@ -338,19 +331,11 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
         break;
     case STATE::JumpReception:
+        // effect
+        effect[0]->SetPosition(DirectX::XMFLOAT3(2.0f, 5.5f, 10.0f));
+        effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
 
-        // effect(上に徐々に上がる)
-        if (effect[1]->GetTimer() > 0.5f)
-        {
-            DirectX::XMFLOAT3 pos = effect[1]->GetPosition();
-            pos.y += 1;
-            if (pos.y > 7.0f)pos.y = 3.0f;
-            effect[1]->SetPosition(pos);
 
-            effect[1]->handle = effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetColor(), 0.0f);
-            effect[1]->SetTimer(0.0f);
-        }
-        effect[1]->AddTimer(elapsedTime);
 
         if (gamePad.GetButton() & GamePad::BTN_A)
         {
@@ -369,12 +354,42 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
     switch (tutorialState)
     {
     case STATE::MoveReception:
+        // effect(緑の範囲)
+        if (effect[0]->GetTimer() > 3.0f)
+        {
+            effect[0]->handle = effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 110.0f);
+            effect[0]->SetTimer(0.0f);
+        }
+        effect[0]->AddTimer(elapsedTime);
+        
+        
         // UI
         UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
 
         break;
     case STATE::JumpReception:
+        // effect(緑の範囲)
+        if (effect[0]->GetTimer() > 3.0f)
+        {
+            effect[0]->handle = effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 110.0f);
+            effect[0]->SetTimer(0.0f);
+        }
+        effect[0]->AddTimer(elapsedTime);
+
+        // effect(上に徐々に上がる)
+        if (effect[1]->GetTimer() > 0.5f)
+        {
+            DirectX::XMFLOAT3 pos = effect[1]->GetPosition();
+            pos.y += 1;
+            if (pos.y > 7.0f)pos.y = 3.0f;
+            effect[1]->SetPosition(pos);
+
+            effect[1]->handle = effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetColor(), 0.0f);
+            effect[1]->SetTimer(0.0f);
+        }
+        effect[1]->AddTimer(elapsedTime);
+
         // UI
         UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);

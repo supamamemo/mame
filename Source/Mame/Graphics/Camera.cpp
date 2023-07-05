@@ -86,6 +86,25 @@ void Camera::UpdateTitle(float elapsedTime)
     GetTransform()->SetPosition(vec);
 }
 
+void Camera::UpdateTutorial(float elapsedTime, int state)
+{
+    switch (state)
+    {
+    case STATE::MoveReception:
+        break;
+    case STATE::JumpReception:
+        break;
+    }
+
+    // ‰æ–Ê¶’[‚ÍŽ~‚Ü‚é‚æ‚¤‚É‚·‚é
+    {
+        DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+        if (playerPos.x <= -10.4f)playerPos.x = -10.4f;
+
+        PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
+    }
+}
+
 
 void Camera::UpdateBoss(const float elapsedTime)
 {
