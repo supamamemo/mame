@@ -340,6 +340,12 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state)
             DirectX::XMFLOAT2 pos = UIManager::Instance().GetUI(i)->GetPosition();
             DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
 
+            pos = { 450.0f, 260.0f };
+
+            UIManager::Instance().GetUI(i)->SetPosition(pos);
+            uiState = 1;
+
+#if 0
 #if 0
             float s = speed * 2;
             pos.x += s * 1.76f;
@@ -365,6 +371,7 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state)
             {
                 uiState = 1;
             }
+#endif
         }
         break;
     case 1:

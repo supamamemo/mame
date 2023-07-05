@@ -24,7 +24,7 @@ public:
     void Update(float elapsedTime);
 
     void UpdateTitle(float elapsedTime);
-
+    void UpdateTutorial(float elapsedTime, int state);
     void UpdateBoss(const float elapsedTime);
 
     void SetPerspectiveFov(ID3D11DeviceContext* dc);
@@ -81,5 +81,12 @@ private:
     bool cameraUp = false; // カメラ上昇するか
     bool cameraDown = false;
 
+private:
+    // チュートリアル用
+    enum STATE
+    {
+        MoveReception,  // 移動受付
+        JumpReception,  // ジャンプ受付
+    };
 };
 
