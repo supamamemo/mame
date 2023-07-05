@@ -332,15 +332,15 @@ namespace TOFU
 
         // 地形の端を超えそうになったら旋回ステートへ遷移
         {
-            if (owner->lastLandingTerrainAABBMaxX != 0.0f && 
-                owner->aabb_.max.x > owner->lastLandingTerrainAABBMaxX)
+            if (owner->lastLandingTerrainAABB_.max.x != 0.0f && 
+                owner->aabb_.max.x > owner->lastLandingTerrainAABB_.max.x)
             {
                 owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
                 return;
             }
-            else if (owner->lastLandingTerrainAABBMinX != 0.0f &&
-                owner->aabb_.min.x < owner->lastLandingTerrainAABBMinX)
+            else if (owner->lastLandingTerrainAABB_.min.x != 0.0f &&
+                owner->aabb_.min.x < owner->lastLandingTerrainAABB_.min.x)
             {
                 owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
@@ -699,15 +699,15 @@ namespace RED_TOFU
 
         // 地形の端を超えそうになったら旋回ステートへ遷移
         {
-            if (owner->lastLandingTerrainAABBMaxX != 0.0f &&
-                owner->aabb_.max.x > owner->lastLandingTerrainAABBMaxX)
+            if (owner->lastLandingTerrainAABB_.max.x != 0.0f &&
+                owner->aabb_.max.x > owner->lastLandingTerrainAABB_.max.x)
             {
                 owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));
                 return;
             }
-            else if (owner->lastLandingTerrainAABBMinX != 0.0f &&
-                owner->aabb_.min.x < owner->lastLandingTerrainAABBMinX)
+            else if (owner->lastLandingTerrainAABB_.min.x != 0.0f &&
+                owner->aabb_.min.x < owner->lastLandingTerrainAABB_.min.x)
             {
                 owner->SetMoveDirectionX(-owner->GetMoveDirectionX());  // 移動方向を反転
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Turn));

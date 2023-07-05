@@ -68,6 +68,21 @@ void Player::Begin()
 
 void Player::Update(const float& elapsedTime)
 {  
+    // 地形を保存していたら
+    if (saveTerrain_)
+    {
+        // プレイヤーが地形の両端を超えていたら保存した地形情報を消去
+        if ((aabb_.max.x < saveTerrain_->aabb_.min.x) ||
+            (aabb_.min.x > saveTerrain_->aabb_.max.x))
+        {
+            saveTerrain_ = nullptr;
+        }
+        else
+        {
+            GetTransform()->SetPositionY(saveTerrain_->aabb_.max.y); // 地形の頭上をプレイヤーのY位置に代入
+        }
+    }
+
     // ステート分岐処理
     switch (state)
     {
@@ -467,17 +482,17 @@ void Player::OnFallDead()
     // 最後に着地した地形の端っこに戻す
     {
         // 落ちた位置によって地形の左右どちらの端に復活するか決める
-        if (aabb_.min.x <= lastLandingTerrainAABBMinX)
+        if (aabb_.min.x <= lastLandingTerrainAABB_.min.x)
         {
-            GetTransform()->SetPositionX(lastLandingTerrainAABBMinX + ((aabb_.max.x - aabb_.min.x) * 0.5f));
+            GetTransform()->SetPositionX(lastLandingTerrainAABB_.min.x + fabsf((aabb_.max.x - aabb_.min.x)));
         }
-        else if (aabb_.max.x >= lastLandingTerrainAABBMaxX)
+        else if (aabb_.max.x >= lastLandingTerrainAABB_.max.x)
         {
-            GetTransform()->SetPositionX(lastLandingTerrainAABBMaxX - ((aabb_.max.x - aabb_.min.x) * 0.5f));
+            GetTransform()->SetPositionX(lastLandingTerrainAABB_.max.x - fabsf((aabb_.max.x - aabb_.min.x)));
         }
 
         // 地形の頭上をY位置に設定
-        GetTransform()->SetPositionY(lastLandingTerrainAABBMaxY);
+        GetTransform()->SetPositionY(lastLandingTerrainAABB_.max.y);
 
         UpdateAABB();           // 忘れずにAABB更新
     }

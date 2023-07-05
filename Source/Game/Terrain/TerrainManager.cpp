@@ -19,16 +19,6 @@ void TerrainManager::Finalize()
     }
 }
 
-
-void TerrainManager::Begin()
-{
-    for (Terrain*& terrain : terrains)
-    {
-        terrain->Begin();
-    }
-}
-
-
 // 更新処理
 void TerrainManager::Update(const float& elapsedTime)
 {
@@ -57,16 +47,6 @@ void TerrainManager::Update(const float& elapsedTime)
     // 破棄リストをクリア
     removes.clear();
 }
-
-
-void TerrainManager::End()
-{
-    for (Terrain*& terrain : terrains)
-    {
-        terrain->End();
-    }
-}
-
 
 // 描画処理
 void TerrainManager::Render(const float& elapsedTime)

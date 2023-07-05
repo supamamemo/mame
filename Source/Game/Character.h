@@ -18,6 +18,8 @@
 
 #include "Collision.h"
 
+#include "Terrain/Terrain.h"
+
 class Character
 {
 public:
@@ -159,10 +161,9 @@ public:
     std::unique_ptr<Model> model    =  nullptr;                     // モデル
 
     std::unique_ptr<GeometricPrimitive> geometricAABB_ = nullptr;   // 当たり判定AABB描画用ジオメトリックプリミティブ
-    Collision::AABB aabb_               = {};                       // 当たり判定AABB
-    float lastLandingTerrainAABBMinX    = {};                       // 最後に着地した地形のAABBのminX（落下ミスの復活時に使用）
-    float lastLandingTerrainAABBMaxX    = {};                       // 最後に着地した地形のAABBのmaxX（落下ミスの復活時に使用）
-    float lastLandingTerrainAABBMaxY    = {};                       // 最後に着地した地形のAABBのmaxY（落下ミスの復活時に使用）
+    Collision::AABB aabb_                   = {};                   // 当たり判定AABB
+    Collision::AABB lastLandingTerrainAABB_ = {};                   // 最後に着地した地形のAABB（落下ミスの復活時に使用）
+    Terrain*        saveTerrain_            = nullptr;              // 地形を保存するポインタ
 
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders;

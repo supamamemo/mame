@@ -181,9 +181,6 @@ void StageTutorial::Finalize()
 // Update‚Ì‘O‚ÉŒÄ‚Î‚ê‚é
 void StageTutorial::Begin()
 {
-    // terrain
-    TerrainManager::Instance().Begin();
-
     // player
     PlayerManager::Instance().Begin();
 
@@ -223,9 +220,6 @@ void StageTutorial::Update(const float& elapsedTime)
 // Update‚ÌŒã‚ÉŒÄ‚Î‚ê‚é
 void StageTutorial::End()
 {
-    // terrain
-    TerrainManager::Instance().End();
-
     // player
     PlayerManager::Instance().End();
 

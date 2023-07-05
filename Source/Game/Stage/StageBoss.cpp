@@ -124,9 +124,6 @@ void StageBoss::Begin()
 {
     if (!Mame::Scene::SceneManager::Instance().isHitStop_)
     {
-        // terrain
-        TerrainManager::Instance().Begin();
-
         // player
         PlayerManager::Instance().Begin();
 
@@ -159,9 +156,6 @@ void StageBoss::End()
 {
     if (!Mame::Scene::SceneManager::Instance().isHitStop_)
     {
-        // terrain
-        TerrainManager::Instance().End();
-
         // player
         PlayerManager::Instance().End();
 

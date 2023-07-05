@@ -11,23 +11,16 @@ TerrainBoss::~TerrainBoss()
 
 void TerrainBoss::Initialize()
 {
+    terrainType_ = Terrain::Type::Normal; // 普通の地形タイプに設定
 }
 
 void TerrainBoss::Finalize()
 {
 }
 
-void TerrainBoss::Begin()
-{
-}
-
 void TerrainBoss::Update(const float& elapsedTime)
 {
     UpdateAABB();   // AABBの更新処理
-}
-
-void TerrainBoss::End()
-{
 }
 
 void TerrainBoss::Render(const float& elapsedTime)

@@ -11,7 +11,15 @@ public:
 
     void Initialize()                       override;   // 初期化
     void Finalize()                         override {} // 終了化
-    void Begin()                            override {} // 毎フレーム一番最初に呼ばれる
     void Update(const float& elapsedTime)   override;   // 更新処理
-    void End()                              override {} // 毎フレーム一番最後に呼ばれる
+    void Render(const float& elapsedTime)   override;   // 描画処理
+    void DrawDebug()                        override;
+
+    void OnRiding()                         override;   // 乗られたときに呼ばれる
+
+private:
+    float   fallAcceleration_   = -0.025f;  // 落下加速力
+    float   fallVelocityMax_    = -25.0f;   // 最大落下速度
+    bool    isFall_             = false;    // 落下するかどうか
+
 };

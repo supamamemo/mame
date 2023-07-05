@@ -79,14 +79,14 @@ void EnemyTofu::Update(const float& elapsedTime)
 
     // ’nŒ`‚Ì’[‚ð’´‚¦‚Ä—Ž‚¿‚»‚¤‚É‚È‚Á‚½‚çC³
     {
-        if (lastLandingTerrainAABBMaxX != 0.0f && aabb_.max.x > lastLandingTerrainAABBMaxX)
+        if (lastLandingTerrainAABB_.max.x != 0.0f && aabb_.max.x > lastLandingTerrainAABB_.max.x)
         {
-            const float fixLeft = -fabsf(aabb_.max.x - lastLandingTerrainAABBMaxX);
+            const float fixLeft = -fabsf(aabb_.max.x - lastLandingTerrainAABB_.max.x);
             GetTransform()->AddPositionX(fixLeft);
         }
-        else if (lastLandingTerrainAABBMinX != 0.0f && aabb_.min.x < lastLandingTerrainAABBMinX)
+        else if (lastLandingTerrainAABB_.min.x != 0.0f && aabb_.min.x < lastLandingTerrainAABB_.min.x)
         {
-            const float fixRight = fabsf(aabb_.min.x - lastLandingTerrainAABBMinX);
+            const float fixRight = fabsf(aabb_.min.x - lastLandingTerrainAABB_.min.x);
             GetTransform()->AddPositionX(fixRight);
         }
     }

@@ -8,6 +8,7 @@
 #include "../EnemyRedTofu.h"
 #include "../Terrain/TerrainManager.h"
 #include "../Terrain/TerrainPlains.h"
+#include "../Terrain/TerrainFall.h"
 
 #include "../UIManager.h"
 
@@ -24,8 +25,8 @@ StagePlains::StagePlains()
         terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx" )); // 4
         terrainManager.Register(new TerrainPlains("./resources/stage/6.fbx" )); // 5
         terrainManager.Register(new TerrainPlains("./resources/stage/6.fbx" )); // 6
-        terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx" )); // 7
-        terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx" )); // 8
+        terrainManager.Register(new TerrainFall("./resources/stage/8.fbx" )); // 7
+        terrainManager.Register(new TerrainFall("./resources/stage/8.fbx" )); // 8
         terrainManager.Register(new TerrainPlains("./resources/stage/2.fbx" )); // 9
         terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx" )); // 10
 
@@ -225,9 +226,6 @@ void StagePlains::Begin()
 
         // enemy
         EnemyManager::Instance().Begin();
-
-        // terrain
-        TerrainManager::Instance().Begin();
     }
 }
 
@@ -264,9 +262,6 @@ void StagePlains::End()
 
         // enemy
         EnemyManager::Instance().End();
-
-        // terrain
-        TerrainManager::Instance().End();
     }
 }
 
