@@ -64,10 +64,10 @@ public:
     // 画面を揺らす
     void PlayShake(const ShakeType shakeType, const int loopCount = 2)
     {
-        isShake_        = true;
-        currentShakeLoopCount_ = 0;    // 繰り返す回数を設定
-        shakeLoopCount_ = loopCount;    // 繰り返す回数を設定
-        shakeType_      = shakeType;    // シェイクの種類を設定
+        isShake_                = true;
+        currentShakeLoopCount_  = 0;            // 現在のループ回数をリセット
+        shakeLoopCount_         = loopCount;    // 繰り返す回数を設定
+        shakeType_              = shakeType;    // シェイクの種類を設定
     }
     void UpdateShake(const float elapsedTime); // 画面振動更新処理
 
