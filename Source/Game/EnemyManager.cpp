@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include "../Game/Common.h"
+#include "../Game/BossStateDerived.h"
 
 
 void EnemyManager::Initialize()
@@ -149,9 +150,24 @@ void EnemyManager::CollisionEnemyVsEnemy()
 
             if (Collision::IntersectAABBVsAABB(enemyA->aabb_, enemyB->aabb_))
             {
-                //// 
-                //if (enemyA->GetModelColorAlpha->)
-
+                // エネミーAが赤豆腐で追跡中ならエネミーBを吹き飛ばす
+                if (enemyA->enemyType_ == EnemyType::RedTofu)
+                {
+                    if (enemyA->GetStateMachine()->GetStateIndex() == static_cast<int>(RED_TOFU::STATE::Track))
+                    {
+                        enemyB->SetMoveDirectionX(enemyA->GetMoveDirectionX());
+                        enemyB->ApplyDamage(1, 1.0f);
+                    }
+                }
+                // エネミーBが赤豆腐で追跡中ならエネミーAを吹き飛ばす
+                if (enemyB->enemyType_ == EnemyType::RedTofu)
+                {
+                    if (enemyB->GetStateMachine()->GetStateIndex() == static_cast<int>(RED_TOFU::STATE::Track))
+                    {
+                        enemyA->SetMoveDirectionX(enemyB->GetMoveDirectionX());
+                        enemyA->ApplyDamage(1, 1.0f);
+                    }
+                }
 
                 // 上下左右のそれぞれ重なっている値を求める
                 // 符号がマイナスでもプラスの距離が求められるように絶対値にする

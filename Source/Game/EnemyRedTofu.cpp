@@ -41,6 +41,8 @@ namespace RED_TOFU
         turnSpeed_  = ToRadian(180.0f); // 旋回速度設定(ステートで変わるので最初だけ)
         jumpSpeed_  = 12.0f;            // ジャンプ速度設定
 
+        enemyType_ = EnemyType::RedTofu;    // 敵の種類を設定
+
         // ステートマシン
         {
             // 現在のX位置を移動範囲の中心に設定

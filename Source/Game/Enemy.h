@@ -3,6 +3,10 @@
 #include "StateMachine.h"
 #include "CannonBallManager.h"
 
+enum class EnemyType
+{
+    RedTofu,    // 赤豆腐
+};
 
 class Enemy : public Character
 {
@@ -92,6 +96,8 @@ public:
     std::unique_ptr<StateMachine> stateMachine{ nullptr };  // ステートマシン
 
     CannonBallManager cannonBallManager = {};               // 大砲の弾マネージャー
+
+    EnemyType enemyType_    = {};                           // 敵の種類(識別用)
 
 protected:
     float destination_      =    0.0f;     // 目的地

@@ -844,7 +844,7 @@ namespace RED_TOFU
         owner->SetMaterialColor(DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 0.4f));
 
         // ‘¬“x‚ðÝ’è
-        owner->SetMoveSpeed(2.0f);
+        owner->SetMoveSpeed(5.0f);
 
         // ‰ñ“]‘¬“x‚ðÝ’è
         owner->SetTurnSpeed(ToRadian(540.0f));
