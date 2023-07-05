@@ -149,6 +149,10 @@ void EnemyManager::CollisionEnemyVsEnemy()
 
             if (Collision::IntersectAABBVsAABB(enemyA->aabb_, enemyB->aabb_))
             {
+                // 
+                if (enemyA->GetModelColorAlpha->)
+
+
                 // 上下左右のそれぞれ重なっている値を求める
                 // 符号がマイナスでもプラスの距離が求められるように絶対値にする
                 const float overlapUp     = fabsf(enemyA->aabb_.min.y - enemyB->aabb_.max.y); // 上からめり込んでいる

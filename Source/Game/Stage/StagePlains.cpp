@@ -5,6 +5,7 @@
 #include "../../Mame/Scene/SceneManager.h"
 #include "../EnemyManager.h"
 #include "../EnemyTofu.h"
+#include "../EnemyRedTofu.h"
 #include "../Terrain/TerrainManager.h"
 #include "../Terrain/TerrainPlains.h"
 
@@ -56,7 +57,8 @@ StagePlains::StagePlains()
         // 23‘Ì¶¬
         for (int i = 0; i < 23; ++i)
         {
-            enemyManager.Register(new EnemyTofu());
+            //enemyManager.Register(new EnemyTofu());
+            enemyManager.Register(new RED_TOFU::EnemyRedTofu());
         }        
     }
 

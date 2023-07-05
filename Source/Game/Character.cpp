@@ -23,11 +23,11 @@ void Character::Render(const float& /*elapsedTime*/)
     // model•`‰æ
     if (&model->keyframe)
     {
-        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, modelColorAlpha), &model->keyframe);
+        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, modelColor, &model->keyframe);
     }
     else
     {
-        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, DirectX::XMFLOAT4(1, 1, 1, modelColorAlpha), nullptr);
+        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, modelColor, nullptr);
     }
 
 #if _DEBUG

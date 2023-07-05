@@ -92,11 +92,11 @@ void Player::Update(const float& elapsedTime)
     // 無敵時間中のキャラクターの点滅
     if (invincibleTimer > 0.0f)
     {
-        modelColorAlpha = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 1.0f : 0.1f;
+        modelColor.w = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 1.0f : 0.1f;
     }
     else
     {
-        modelColorAlpha = 1.0f;
+        modelColor.w = 1.0f;
     }
 
     // 無敵時間更新
