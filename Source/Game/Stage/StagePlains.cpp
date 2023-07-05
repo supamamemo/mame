@@ -325,7 +325,7 @@ void StagePlains::PlayerHpUiUpdate(float elapsedTime)
         SetUiState();
         UIManager::Instance().SetUiCenter(false);
     }
-    UpdateUi(3, 1.0f, uiState);
+    UpdateUi(3, 1.0f, uiState, elapsedTime);
     
 
     switch (health)
@@ -342,7 +342,7 @@ void StagePlains::PlayerHpUiUpdate(float elapsedTime)
     }
 }
 
-void StagePlains::UpdateUi(int uiCount, float speed,int state)
+void StagePlains::UpdateUi(int uiCount, float speed,int state,float elapsedTime)
 {
     switch (state)
     {
@@ -352,9 +352,16 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state)
             DirectX::XMFLOAT2 pos = UIManager::Instance().GetUI(i)->GetPosition();
             DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
 
-            pos = { 450.0f, 260.0f };
+            DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
 
-            UIManager::Instance().GetUI(i)->SetPosition(pos);
+            displayUiPosition = { playerPos.x,playerPos.y + 3.0f };
+
+            //pos = { 450.0f, 260.0f };
+            //UIManager::Instance().GetUI(i)->SetPosition(pos);
+
+            UIManager::Instance().GetUI(i)->SetPosition(displayUiPosition);
+            
+            SetUiTimer(0.6f);
             uiState = 1;
 
 #if 0
@@ -387,6 +394,11 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state)
         }
         break;
     case 1:
+        subtractUiTimer(elapsedTime);
+        if (GetUiTimer() <= 0.0f)uiState = 2;
+
+        break;
+    case 2:
         for (int i = 0; i < uiCount; ++i)
         {
             DirectX::XMFLOAT2 pos = UIManager::Instance().GetUI(i)->GetPosition();
