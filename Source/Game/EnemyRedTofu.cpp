@@ -192,8 +192,8 @@ namespace RED_TOFU
             return;
         }        
 #else // •Ç‚ð‚æ‚¶“o‚é
-        // ’ÇÕƒXƒe[ƒg‚Ì‚Æ‚«‚Í•Ç‚ð‚æ‚¶“o‚é
-        else if (currentStateIndex == stateTrack)
+        // ’ÇÕƒXƒe[ƒg‚Ì‚Æ‚«‚Í•Ç‚ð‚æ‚¶“o‚é(—Ž‰º’†‚Í“o‚ê‚È‚¢)
+        else if (currentStateIndex == stateTrack && velocity.y >= 0.0f)
         {         
             Jump(jumpSpeed_ * 0.8f);
             return;
