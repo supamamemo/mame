@@ -47,6 +47,11 @@ public:
     bool IsFade() { return isFade; } // fadeするのかの判断に使う
     void SetFade(bool fade) { isFade = fade; }
 
+    void SetPosition(DirectX::XMFLOAT2 pos) { spr_dissolve.pos = pos; }
+    DirectX::XMFLOAT2 GetPosition() { return spr_dissolve.pos; }
+    void SetSize(DirectX::XMFLOAT2 size) { spr_dissolve.posD = size; }
+    DirectX::XMFLOAT2 GetSize() { return spr_dissolve.posD; }
+
 public:
     // デバッグ用
     bool debug_initialize = false;

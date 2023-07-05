@@ -2,6 +2,8 @@
 
 #include "../sprite.h"
 
+#include "spriteDissolve.h"
+
 #include <string>
 #include <memory>
 
@@ -36,7 +38,8 @@ private:
     }spr;
 
 private:
-    std::unique_ptr<Sprite>uiSprite;
+    std::unique_ptr<SpriteDissolve>uiSprite;
+    //std::unique_ptr<Sprite>uiSprite;
     std::string name;
 
     bool isRender = false;

@@ -8,7 +8,9 @@ UI::UI(const wchar_t* filename)
 {
     Graphics& graphics = Graphics::Instance();
 
-    uiSprite = std::make_unique<Sprite>(graphics.GetDevice(), filename);
+    uiSprite = std::make_unique<SpriteDissolve>(filename);
+
+    uiSprite->Initialize();
 
     // imgui–¼‘O‚©‚Ô‚è‹N‚«‚È‚¢‚æ‚¤‚É...
     name = "UI" + std::to_string(nameNum);
@@ -24,7 +26,11 @@ void UI::Render()
 {
     Graphics& graphics = Graphics::Instance();
 
-    uiSprite->render(graphics.GetDeviceContext(), spr.pos.x, spr.pos.y, spr.size.x, spr.size.y);
+    uiSprite->SetPosition(spr.pos);
+    uiSprite->SetSize(spr.size);
+
+    uiSprite->Render();
+    //uiSprite->render(graphics.GetDeviceContext(), spr.pos.x, spr.pos.y, spr.size.x, spr.size.y);
 }
 
 void UI::DrawDebug()
