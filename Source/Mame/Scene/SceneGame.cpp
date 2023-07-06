@@ -230,11 +230,20 @@ void SceneGame::DrawDebug()
     //}
 
     if (ImGui::Button("tutorial"))
+    {
+        Terrain::nameNum = 0;   // 番号リセット
         ChangeStage(static_cast<int>(Mame::Scene::STAGE::Tutorial));
+    }
     if (ImGui::Button("plains"))
+    {
+        Terrain::nameNum = 0;   // 番号リセット
         ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
+    }
     if (ImGui::Button("boss"))
+    {
+        Terrain::nameNum = 0;   // 番号リセット
         ChangeStage(static_cast<int>(Mame::Scene::STAGE::Boss));
+    }
 
     ImGui::Begin("renderLengthXLimit_");
     ImGui::SliderFloat("renderLengthXLimit_", &Terrain::renderLengthXLimit_, 0.0f, 50.0f);
