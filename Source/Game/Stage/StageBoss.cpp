@@ -146,6 +146,10 @@ void StageBoss::Finalize()
     // terrain終了化
     TerrainManager::Instance().Finalize();
     TerrainManager::Instance().Clear(); // vectorクリア
+
+    // ui終了化
+    UIManager::Instance().Finalize();
+    UIManager::Instance().Clear();
 }
 
 // Updateの前に呼ばれる

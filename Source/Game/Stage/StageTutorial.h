@@ -41,6 +41,7 @@ private:
         KeyBoardSHIFT,
         KeyBoardSPACE,
         SpriteOR,       // or
+        Plus,           // +
     };
 
     enum STATE
@@ -48,6 +49,8 @@ private:
         MoveReception,  // 移動受付
         JumpReception,  // ジャンプ受付
         HipDorop,
+        Run,
+        Free,
     };
 
     void TutorialStateUpdate(float elapsedTime);

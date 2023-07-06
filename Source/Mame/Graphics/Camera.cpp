@@ -89,6 +89,7 @@ void Camera::UpdateTitle(float elapsedTime)
 void Camera::UpdateTutorial(float elapsedTime, int state)
 {
     DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
 
     float leftLimit = 0.0f;
 
@@ -105,7 +106,70 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
 
         cameraPos.x += elapsedTime * 10;
         if (cameraPos.x >= 9.0f)cameraPos.x = 9.0f;
+
+        tutorialState = 0;
         break;
+    case STATE::Run:
+        leftLimit = 16.0f;
+
+        switch (tutorialState)
+        {
+        case 0:
+            cameraPos.x += elapsedTime * 10;
+            if (cameraPos.x >= 25.0f)
+            {
+                cameraPos.x = 25.0f;
+                tutorialState = 1;
+            }
+            break;
+        case 1:
+            if (playerPos.x >= 26.0f)
+            {
+                cameraPos.x += elapsedTime * 10;
+
+                if (playerPos.x + 6.0f <= cameraPos.x)cameraPos.x = playerPos.x + 6.0f;
+            }
+            else
+            {
+                cameraPos.x -= elapsedTime * 10;
+                if (cameraPos.x <= 25.0f)cameraPos.x = 25.0f;
+            }
+            break;
+        }
+
+
+        break;
+    case STATE::Free:
+        leftLimit = 35.0f;
+
+        switch (tutorialState)
+        {
+        case 0:
+            cameraPos.x += elapsedTime * 10;
+            if (cameraPos.x >= 45.0f)
+            {
+                cameraPos.x = 45.0f;
+                tutorialState = 1;
+            }
+            break;
+        case 1:
+            if (playerPos.x >= 45.0f)
+            {
+                cameraPos.x += elapsedTime * 10;
+                if (cameraPos.x >= playerPos.x + 6.0f)cameraPos.x = playerPos.x + 6.0f;
+            }
+            else
+            {
+                cameraPos.x -= elapsedTime * 10;
+                if (cameraPos.x <= 45.0f)cameraPos.x = 45.0f;
+            }
+            break;
+        }
+
+
+
+        break;
+
     default:
         leftLimit = -10.4f;
         break;
