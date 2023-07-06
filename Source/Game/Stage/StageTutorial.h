@@ -69,6 +69,7 @@ private:
 private:
     std::unique_ptr<Box> back = nullptr;
     std::unique_ptr<Box> signboard = nullptr;
+    //std::unique_ptr<Box> signboard1 = nullptr;
 
     // UI
     Effect* effect[4];

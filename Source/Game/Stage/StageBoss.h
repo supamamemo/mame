@@ -4,6 +4,7 @@
 
 #include "../PlayerManager.h"
 #include "../Boss.h"
+#include "../Box.h"
 
 #include "../CannonBall.h"
 
@@ -30,8 +31,8 @@ public:
 private:
     //static const int TERRAIN_COUNT = 3;
 
-    // ‰¼‚ÉbossƒNƒ‰ƒX‚Å•\Ž¦‚µ‚Ä‚é
-    std::unique_ptr<Boss> back;
+    
+    std::unique_ptr<Box> back;
 
 
     std::unique_ptr<EnemyTofu> tofu;

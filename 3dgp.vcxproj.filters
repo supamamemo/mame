@@ -301,6 +301,9 @@
     <ClCompile Include="Source\Game\Terrain\TerrainMoveUp.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Stage\StageSelection.cpp">
+      <Filter>mamelib\Game\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -553,6 +556,9 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Terrain\TerrainMoveUp.h">
       <Filter>mamelib\Game\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\StageSelection.h">
+      <Filter>mamelib\Game\Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -43,7 +43,7 @@ StageBoss::StageBoss()
     chefHat = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/chefHat.png");
 
     // îwåiâº
-    back = std::make_unique<Boss>("./resources/back.fbx");
+    back = std::make_unique<Box>("./resources/back.fbx");
 
     // UI
     {
@@ -69,8 +69,7 @@ void StageBoss::Initialize()
 
     // îwåiâº
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 6.0f, 12.0f));
-    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 10.0f, 4.0f));
-    back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
     // ÉXÉeÅ[ÉWèâä˙ê›íË
     {
@@ -224,7 +223,7 @@ void StageBoss::Render(const float& elapsedTime)
     Shader* shader = graphics.GetShader();
 
     // îwåiâº
-    back->Render(elapsedTime);
+    back->Render(elapsedTime, 1.0f);
 
     // terrain
     TerrainManager::Instance().Render(elapsedTime);

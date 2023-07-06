@@ -16,6 +16,7 @@ namespace Mame::Scene
         Tutorial,
         Plains,
         Boss,
+        Select,
     };
 
     class BaseScene
@@ -57,15 +58,19 @@ namespace Mame::Scene
         bool GetChangeStageTutorial() { return changeStageTutorial; }
         bool GetChangeStagePlains() { return changeStagePlains; }
         bool GetChangeStageBoss() { return changeStageBoss; }
+        bool GetChangeStageSelect() { return changeStageSelect; }
         void SetChangeStageTutorial() { changeStageTutorial = false; }
         void SetChangeStagePlains() { changeStagePlains = false; }
         void SetChangeStageBoss() { changeStageBoss = false; }
+        void SetChangeStageSelect() { changeStageSelect = false; }
+
 
     private:
         // stageを変更するいい方法が思いつかなかったので、とりあえずここで。。。
         bool changeStageTutorial = false;
         bool changeStagePlains = false;
         bool changeStageBoss = false;
+        bool changeStageSelect = false;
 
     };
 }

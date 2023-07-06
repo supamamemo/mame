@@ -38,16 +38,41 @@ void Box::Update(const float& elapsedTime)
 // •`‰æˆ—
 void Box::Render(const float& elapsedTime)
 {
+    Render(elapsedTime, 0.01f);
+}
+
+// •`‰æˆ—
+void Box::Render(const float& elapsedTime, float size)
+{
     Graphics& graphics = Graphics::Instance();
 
     // DrawColl‚ð­‚È‚­‚·‚é‚½‚ß‚Éplayer‚©‚ç‹ß‚¢‚à‚Ì‚¾‚¯•`‰æ‚·‚é
     {
-        const float& boxPosX    = GetTransform()->GetPosition().x;
+        const float& boxPosX = GetTransform()->GetPosition().x;
         const float& playerPosX = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x;
-        const float  lengthX    = fabsf(boxPosX - playerPosX);
+        const float  lengthX = fabsf(boxPosX - playerPosX);
 
         if (lengthX > renderLengthXLimit_) return;
     }
+
+    // worlds—ñXV
+    NO_CONST DirectX::XMFLOAT4X4 transform = {};
+    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(size));
+
+    // model•`‰æ
+    if (&model->keyframe)
+    {
+        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, GetMaterialColor(), &model->keyframe);
+    }
+    else
+    {
+        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, GetMaterialColor(), nullptr);
+    }
+}
+
+void Box::Render(const float& elapsedTime, bool noPlayer)
+{
+    Graphics& graphics = Graphics::Instance();
 
     // worlds—ñXV
     NO_CONST DirectX::XMFLOAT4X4 transform = {};
@@ -76,6 +101,16 @@ void Box::DrawDebug()
 
     ImGui::End();
 #endif
+}
+
+void Box::SelectBossInitialize()
+{
+    model->PlayAnimation(4, true);
+}
+
+void Box::SelectBossUpdate(float elapsedTime)
+{
+    model->UpdateAnimation(elapsedTime);
 }
 
 void Box::BackUpdate(float elapsedTime)

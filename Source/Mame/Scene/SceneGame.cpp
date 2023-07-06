@@ -11,6 +11,7 @@
 #include "../../Game/Stage/StagePlains.h"
 #include "../../Game/Stage/StageBoss.h"
 #include "../../Game/Stage/StageTutorial.h"
+#include "../../Game/Stage/StageSelection.h"
 
 #include "../../Game/Terrain/Terrain.h"
 
@@ -61,9 +62,10 @@ void SceneGame::Initialize()
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
     Terrain::nameNum = 0;   // 番号リセット
-    StageManager::Instance().ChangeStage(new StagePlains);
+    //StageManager::Instance().ChangeStage(new StagePlains);
     //StageManager::Instance().ChangeStage(new StageBoss);
     //StageManager::Instance().ChangeStage(new StageTutorial);
+    StageManager::Instance().ChangeStage(new StageSelection);
 }
 
 // 終了化
@@ -93,6 +95,12 @@ void SceneGame::Begin()
         StageManager::Instance().Clear();
         StageManager::Instance().ChangeStage(new StageBoss);
         SetChangeStageBoss();
+    }
+    if (GetChangeStageSelect())
+    {
+        StageManager::Instance().Clear();
+        StageManager::Instance().ChangeStage(new StageSelection);
+        SetChangeStageSelect();
     }
 }
 
@@ -235,6 +243,8 @@ void SceneGame::DrawDebug()
         ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
     if (ImGui::Button("boss"))
         ChangeStage(static_cast<int>(Mame::Scene::STAGE::Boss));
+    if (ImGui::Button("select"))
+        ChangeStage(static_cast<int>(Mame::Scene::STAGE::Select));
 
     ImGui::Begin("renderLengthXLimit_");
     ImGui::SliderFloat("renderLengthXLimit_", &Terrain::renderLengthXLimit_, 0.0f, 50.0f);

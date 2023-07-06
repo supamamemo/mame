@@ -58,6 +58,7 @@ StageTutorial::StageTutorial()
 
     // ŠÅ”Â
     signboard = std::make_unique<Box>("./resources/flag_drop.fbx");
+    //signboard1 = std::make_unique<Box>("./resources/flag_drop_kawai.fbx");
     //signboard = std::make_unique<Box>("./resources/flag_yazi.fbx");
     //signboard = std::make_unique<Box>("./resources/frag.fbx");
 
@@ -148,6 +149,10 @@ void StageTutorial::Initialize()
     // ŠÅ”Â
     signboard->GetTransform()->SetPosition(DirectX::XMFLOAT3(3.0f, 6.0f, 11.0f));
     signboard->GetTransform()->SetScale(DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f));
+    signboard->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(180), 0.0f, 0.0f));
+
+    //signboard1->GetTransform()->SetPosition(DirectX::XMFLOAT3(3.0f, 6.0f, 11.0f));
+    //signboard1->GetTransform()->SetScale(DirectX::XMFLOAT3(2.0f, 2.0f, 2.0f));
 
     // —U“±—p
     tutorialState = STATE::MoveReception;
@@ -256,6 +261,7 @@ void StageTutorial::Render(const float& elapsedTime)
 
     // ŠÅ”Â
     signboard->Render(elapsedTime);
+    //signboard1->Render(elapsedTime);
 
     TutorialStateRender(elapsedTime);
 
@@ -282,6 +288,7 @@ void StageTutorial::DrawDebug()
 
     // ŠÅ”Â
     signboard->DrawDebug();
+    //signboard1->DrawDebug();
 
     // ui
     UIManager::Instance().DrawDebug();
