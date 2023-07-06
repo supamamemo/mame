@@ -68,6 +68,7 @@ void Player::Begin()
 
 void Player::Update(const float& elapsedTime)
 {  
+    Transform* transform = GetTransform();
     // 地形を保存していたら
     if (saveTerrain_)
     {
@@ -79,7 +80,7 @@ void Player::Update(const float& elapsedTime)
         }
         else
         {
-            GetTransform()->SetPositionY(saveTerrain_->aabb_.max.y); // 地形の頭上をプレイヤーのY位置に代入
+            transform->SetPositionY(saveTerrain_->aabb_.max.y); // 地形の頭上をプレイヤーのY位置に代入
         }
     }
 

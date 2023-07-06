@@ -287,12 +287,6 @@ void Character::VerticalFall(const float& fallSpeed)
                     {
                         lastLandingTerrainAABB_ = terrain->aabb_;
                     }                   
-#ifdef USE_TERRAIN_MOVE_POSITION_MODIFY
-                    else if (terrain->terrainType_ == Terrain::Type::Move)
-                    {
-                        saveTerrain_ = terrain;
-                    }
-#endif
 
                     // バウンス中ならバウンスさせる
                     // バウンス回数をループ文で消費させないためにbreakしておく
@@ -301,6 +295,12 @@ void Character::VerticalFall(const float& fallSpeed)
                         OnBounce();
                         break;
                     }
+#ifdef USE_TERRAIN_MOVE_POSITION_MODIFY
+                    else if (terrain->terrainType_ == Terrain::Type::Move)
+                    {
+                        saveTerrain_ = terrain;
+                    }
+#endif
 
                     continue;
                 }
@@ -324,13 +324,6 @@ void Character::VerticalFall(const float& fallSpeed)
                     {
                         lastLandingTerrainAABB_ = terrain->aabb_;
                     }
-#ifdef USE_TERRAIN_MOVE_POSITION_MODIFY
-                    else if (terrain->terrainType_ == Terrain::Type::Move)
-                    {
-                        saveTerrain_ = terrain;
-                    }
-#endif
-#undef USE_TERRAIN_MOVE_FIX_POSITION
 
                     if (this == PlayerManager::Instance().GetPlayer().get())
                     {
@@ -348,6 +341,15 @@ void Character::VerticalFall(const float& fallSpeed)
                         // 着地した
                         if (!isGround_) OnLanding();
                         isGround_ = true;
+
+#ifdef USE_TERRAIN_MOVE_POSITION_MODIFY
+                        if (terrain->terrainType_ == Terrain::Type::Move)
+                        {
+                            saveTerrain_ = terrain;
+                        }
+#endif
+#undef USE_TERRAIN_MOVE_FIX_POSITION
+
                         break;
                     }
                 }

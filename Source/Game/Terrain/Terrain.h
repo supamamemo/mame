@@ -20,7 +20,7 @@ public:
     Terrain(const char* const filename);
     virtual ~Terrain() = default;
 
-    virtual void Initialize()                     {}     // ‰Šú‰»
+    virtual void Initialize();                           // ‰Šú‰»
     virtual void Finalize()                       {}     // I—¹‰»
     virtual void Update(const float& elapsedTime) {}     // XVˆ—
     virtual void Render(const float& elapsedTime);       // •`‰æˆ—
@@ -61,6 +61,7 @@ protected:
     DirectX::XMFLOAT4   materialColor       = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     DirectX::XMFLOAT3   velocity_           = {};
+    DirectX::XMFLOAT3   originPosition_     = {};
 
 private:
     // Imgui–¼‘O”í‚è–h~‚Ì‚½‚ß‚Ì‚â‚Â //    

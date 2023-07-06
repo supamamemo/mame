@@ -295,6 +295,12 @@
     <ClCompile Include="Source\Game\Terrain\TerrainFall.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Terrain\TerrainMoveDown.cpp">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Terrain\TerrainMoveUp.cpp">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -540,6 +546,12 @@
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Terrain\TerrainFall.h">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Terrain\TerrainMoveDown.h">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Terrain\TerrainMoveUp.h">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClInclude>
   </ItemGroup>

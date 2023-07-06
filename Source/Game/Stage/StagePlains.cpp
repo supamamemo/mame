@@ -9,6 +9,8 @@
 #include "../Terrain/TerrainManager.h"
 #include "../Terrain/TerrainPlains.h"
 #include "../Terrain/TerrainFall.h"
+#include "../Terrain/TerrainMoveUp.h"
+#include "../Terrain/TerrainMoveDown.h"
 
 #include "../UIManager.h"
 
@@ -25,8 +27,8 @@ StagePlains::StagePlains()
         terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx" )); // 4
         terrainManager.Register(new TerrainPlains("./resources/stage/6.fbx" )); // 5
         terrainManager.Register(new TerrainPlains("./resources/stage/6.fbx" )); // 6
-        terrainManager.Register(new TerrainFall("./resources/stage/8.fbx" )); // 7
-        terrainManager.Register(new TerrainFall("./resources/stage/8.fbx" )); // 8
+        terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx" )); // 7
+        terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx" )); // 8
         terrainManager.Register(new TerrainPlains("./resources/stage/2.fbx" )); // 9
         terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx" )); // 10
 

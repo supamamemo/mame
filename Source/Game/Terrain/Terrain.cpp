@@ -28,6 +28,12 @@ Terrain::Terrain(const char* filename)
 }
 
 
+void Terrain::Initialize()
+{
+    originPosition_ = GetTransform()->GetPosition();    // ‰ŠúˆÊ’u‚ğ•Û‘¶
+}
+
+
 void Terrain::Render(const float& elapsedTime)
 {
     // DrawColl‚ğ­‚È‚­‚·‚é‚½‚ß‚Éplayer‚©‚ç‹ß‚¢‚à‚Ì‚¾‚¯•`‰æ‚·‚é

@@ -1,4 +1,5 @@
 #include "TerrainFall.h"
+#include "../PlayerManager.h"
 
 TerrainFall::TerrainFall(const char* const filename)
     : Terrain(filename)
@@ -7,6 +8,8 @@ TerrainFall::TerrainFall(const char* const filename)
 
 void TerrainFall::Initialize()
 {
+    Terrain::Initialize();
+
     terrainType_ = Terrain::Type::Move; // 動く地形タイプに設定
 }
 
@@ -17,24 +20,51 @@ void TerrainFall::Update(const float& elapsedTime)
     // 落下フラグが立っている場合は落下処理を行う
     if (isFall_)
     {
-        velocity_.y += (fallAcceleration_ * elapsedTime); // 落下速度を加算
+        velocity_.y += (fallAcceleration_ * elapsedTime);   // 落下速度を加算
         if (velocity_.y < fallVelocityMax_) velocity_.y = fallVelocityMax_;
-        transform->AddPositionY(velocity_.y);       // 落下
+        transform->AddPositionY(velocity_.y);               // 落下
 
-        // 一定まで落下したら自分を削除する
-        if (transform->GetPosition().y < -10.0f)
+        // 一定まで落下したら初期位置に戻ってリセットする
+        if (transform->GetPosition().y < -20.0f)
         {
-            Destroy();  
+            transform->SetPositionY(originPosition_.y);
+            velocity_.y = 0.0f;
+            isFall_     = false;
+            blinkTimer_ = defaultBlinkTime_;
+
+            // プレイヤーが保存している地形情報の地形が自分だったらその地形情報を消去
+            // (リセット時にプレイヤーがついてこないようにするため)
+            PlayerManager& playerManager = PlayerManager::Instance();
+            if (this == playerManager.GetPlayer()->saveTerrain_)
+            {
+                playerManager.GetPlayer()->saveTerrain_ = nullptr;
+            }
+        }
+    }
+
+    // 点滅タイマーが設定されていれば点滅させる
+    if (blinkTimer_ > 0.0f)
+    {
+        blinkTimer_ -= elapsedTime;
+
+        if (blinkTimer_ <= 0.0f)
+        {
+            blinkTimer_     = 0.0f;
+            materialColor   = { 1,1,1,1 };
+        }
+        else if (static_cast<int>(blinkTimer_ * 100.0f) & 0x08)
+        {
+            materialColor = { 1.5f, 1.5f, 1.5f, 1.0f };
+        }
+        else
+        {
+            materialColor = { 1,1,1,1 };
         }
     }
 
     UpdateAABB();   // AABBの更新処理
 }
 
-void TerrainFall::Render(const float& elapsedTime)
-{
-    Terrain::Render(elapsedTime);
-}
 
 void TerrainFall::DrawDebug()
 {
