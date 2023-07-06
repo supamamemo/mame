@@ -11,23 +11,16 @@ TerrainPlains::~TerrainPlains()
 
 void TerrainPlains::Initialize()
 {
+    terrainType_ = Terrain::Type::Normal; // 普通の地形タイプに設定
 }
 
 void TerrainPlains::Finalize()
 {
 }
 
-void TerrainPlains::Begin()
-{
-}
-
 void TerrainPlains::Update(const float& elapsedTime)
 {
     UpdateAABB();   // AABBの更新処理
-}
-
-void TerrainPlains::End()
-{
 }
 
 void TerrainPlains::Render(const float& elapsedTime)

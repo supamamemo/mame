@@ -1,6 +1,7 @@
 #include "Terrain.h"
 #include "../../Mame/Graphics/Graphics.h"
 #include "../PlayerManager.h"
+#include "TerrainManager.h"
 
 int   Terrain::nameNum             = 0;
 float Terrain::renderLengthXLimit_ = 40.0f;
@@ -10,12 +11,12 @@ Terrain::Terrain(const char* filename)
     Graphics& graphics = Graphics::Instance();
 
     {
-        model = std::make_unique<Model>(graphics.GetDevice(), filename, true);
+        model_ = std::make_unique<Model>(graphics.GetDevice(), filename, true);
 
         create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/wireframe.cso", pixel_shaders.GetAddressOf());
 
-        defaultMin_ = model->skinned_meshes->boundingBox[0] * 0.01f;
-        defaultMax_ = model->skinned_meshes->boundingBox[1] * 0.01f;
+        defaultMin_ = model_->skinned_meshes->boundingBox[0] * 0.01f;
+        defaultMax_ = model_->skinned_meshes->boundingBox[1] * 0.01f;
         geometricAABB_ = std::make_unique<GeometricAABB>(graphics.GetDevice(), defaultMin_, defaultMax_);
         UpdateAABB();
     }
@@ -24,6 +25,12 @@ Terrain::Terrain(const char* filename)
     name = "Terrain" + std::to_string(nameNum);
     SetName(name.c_str());
     ++nameNum;
+}
+
+
+void Terrain::Initialize()
+{
+    originPosition_ = GetTransform()->GetPosition();    // 初期位置を保存
 }
 
 
@@ -43,16 +50,16 @@ void Terrain::Render(const float& elapsedTime)
 
     // world行列更新
     NO_CONST DirectX::XMFLOAT4X4 transform = {};
-    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
+    DirectX::XMStoreFloat4x4(&transform, model_->GetTransform()->CalcWorldMatrix(0.01f));
 
     // model描画
-    if (&model->keyframe)
+    if (&model_->keyframe)
     {
-        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, GetMaterialColor(), &model->keyframe);
+        model_->skinned_meshes->render(graphics.GetDeviceContext(), transform, GetMaterialColor(), &model_->keyframe);
     }
     else
     {
-        model->skinned_meshes->render(graphics.GetDeviceContext(), transform, GetMaterialColor(), nullptr);
+        model_->skinned_meshes->render(graphics.GetDeviceContext(), transform, GetMaterialColor(), nullptr);
     }
 
 
@@ -143,6 +150,11 @@ void Terrain::DrawDebug()
     GetTransform()->DrawDebug();
 }
 
+
+void Terrain::Destroy()
+{
+    TerrainManager::Instance().Remove(this); // 自分を削除リストに追加
+}
 
 void Terrain::UpdateAABB()
 {

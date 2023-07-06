@@ -99,8 +99,8 @@ private: // enum関連
 private: // 変数関連
     State   state                   = State::Idle;          // 現在のステート
 
-    float   dashAcceleration        =  20.0f;               // ダッシュ時のX速度
-    float   defaultDashTime         =  0.05f;                // ダッシュ時間初期値
+    float   dashAcceleration        =  15.0f;               // ダッシュ時のX速度
+    float   defaultDashTime         =  0.025f;                // ダッシュ時間初期値
     float   dashTimer               =  defaultDashTime;     // ダッシュタイマー(ダッシュ時の操作制限時間を管理する)
     float   dashFinishScale         =  0.5f;                // ダッシュが終わって別のステート遷移前に速度を減速させる値
     float   dashCoolTime            =  0.2f;
@@ -114,7 +114,7 @@ private: // 変数関連
     float   jumpedPositionY         =  0.0f;                // ジャンプ開始時の位置を保存する
 
     float   hipDropGravity          = -2.0f;                // ヒップドロップ時の重力
-    float   needHipDropHeight       =  2.5f;                // ヒップドロップに必要な高さ
+    float   needHipDropHeight       =  1.5f;                // ヒップドロップに必要な高さ
 
     float   defaultBounceSpeedX     =  15.0f;               // バウンスX速度初期値
     float   defaultBounceSpeedY     =  10.0f;               // バウンスY速度初期値

@@ -1,6 +1,7 @@
 #include "Character.h"
 #include "../Mame/Graphics/Graphics.h"
 #include "Terrain/TerrainManager.h"
+#include "PlayerManager.h"
 
 Character::Character()
 {
@@ -53,7 +54,7 @@ void Character::Render(const float& /*elapsedTime*/)
     }
     
     // AABB描画
-    geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
+    //geometricAABB_->render(graphics.GetDeviceContext(), noRotationTransform, materialColor);
 
     // ラスタライザ再設定(ソリッド・後ろカリング)
     graphics.GetShader()->SetState(graphics.GetDeviceContext(), 0, 0, 0);
@@ -167,6 +168,8 @@ void Character::Jump(const float& jumpSpeed)
 {
     // 上方向の力を設定
     velocity.y = jumpSpeed;
+
+    if (saveTerrain_) saveTerrain_ = nullptr; // 保存した地形情報を消去
 }
 
 
@@ -242,6 +245,7 @@ void Character::UpdateVerticalMove(const float& elapsedTime)
     }
 }
 
+#define USE_TERRAIN_MOVE_POSITION_MODIFY    // 動く地形に乗った時の位置修正オンオフ
 
 // 垂直落下処理
 void Character::VerticalFall(const float& fallSpeed)
@@ -255,7 +259,7 @@ void Character::VerticalFall(const float& fallSpeed)
         const int terrainCount = terrainManager.GetTerrainCount();
         for (int i = 0; i < terrainCount; ++i)
         {
-            const Terrain* terrain = terrainManager.GetTerrain(i);
+            NO_CONST Terrain* terrain = terrainManager.GetTerrain(i);
 
             if (Collision::IntersectAABBVsAABB(this->aabb_, terrain->aabb_))
             {
@@ -278,10 +282,11 @@ void Character::VerticalFall(const float& fallSpeed)
                     isHitY     = true; // 当たっている         
                     velocity.y = 0.0f; // Y速度をリセット
 
-                    // 着地した地形AABBのmin・maxのX位置・maxのY位置を保存
-                    lastLandingTerrainAABBMinX = terrain->aabb_.min.x;
-                    lastLandingTerrainAABBMaxX = terrain->aabb_.max.x;
-                    lastLandingTerrainAABBMaxY = terrain->aabb_.max.y;
+                    // 着地した地形のAABBを保存
+                    if (terrain->terrainType_ == Terrain::Type::Normal)
+                    {
+                        lastLandingTerrainAABB_ = terrain->aabb_;
+                    }                   
 
                     // バウンス中ならバウンスさせる
                     // バウンス回数をループ文で消費させないためにbreakしておく
@@ -290,6 +295,12 @@ void Character::VerticalFall(const float& fallSpeed)
                         OnBounce();
                         break;
                     }
+#ifdef USE_TERRAIN_MOVE_POSITION_MODIFY
+                    else if (terrain->terrainType_ == Terrain::Type::Move)
+                    {
+                        saveTerrain_ = terrain;
+                    }
+#endif
 
                     continue;
                 }
@@ -308,10 +319,16 @@ void Character::VerticalFall(const float& fallSpeed)
                     // 押し戻し後のAABBの最小座標と最大座標を更新
                     UpdateAABB();
 
-                    // 着地した地形AABBのmin・maxのX位置・maxのY位置を保存
-                    lastLandingTerrainAABBMinX = terrain->aabb_.min.x;
-                    lastLandingTerrainAABBMaxX = terrain->aabb_.max.x;
-                    lastLandingTerrainAABBMaxY = terrain->aabb_.max.y;
+                    // 着地した地形のAABBを保存
+                    if (terrain->terrainType_ == Terrain::Type::Normal)
+                    {
+                        lastLandingTerrainAABB_ = terrain->aabb_;
+                    }
+
+                    if (this == PlayerManager::Instance().GetPlayer().get())
+                    {
+                        terrain->OnRiding();    // 地形の乗られた時の処理を行う
+                    }
 
                     // バウンス中は跳ねさせる
                     if (isBounce)
@@ -324,6 +341,15 @@ void Character::VerticalFall(const float& fallSpeed)
                         // 着地した
                         if (!isGround_) OnLanding();
                         isGround_ = true;
+
+#ifdef USE_TERRAIN_MOVE_POSITION_MODIFY
+                        if (terrain->terrainType_ == Terrain::Type::Move)
+                        {
+                            saveTerrain_ = terrain;
+                        }
+#endif
+#undef USE_TERRAIN_MOVE_FIX_POSITION
+
                         break;
                     }
                 }
