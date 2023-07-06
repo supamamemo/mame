@@ -729,7 +729,7 @@ void Player::UpdateRunState(const float& elapsedTime)
         };
         if (isPlayBreakAnimation)
         {
-            PlayAnimation(Anim_Break, false, 1.75f, 0.5f);
+            PlayAnimation(Anim_Break, false, 1.8f, 0.5f);
         }
 
         // 走行キー入力がなければ歩行ステートへ
@@ -767,7 +767,7 @@ void Player::TransitionJumpState()
     jumpedPositionY = GetTransform()->GetPosition().y;
     
     // ジャンプ開始アニメーション再生
-    PlayAnimation(Anim_JumpInit, false, 1.5f);
+    PlayAnimation(Anim_JumpInit, false, 1.0f);
 }
 
 // ジャンプステート更新処理
