@@ -90,7 +90,8 @@ void StageSelection::Initialize()
     // playerèâä˙âª
     {
         PlayerManager& playerManager = PlayerManager::Instance();
-        playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1.5f, 0.0f));
+        playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7.0, 2.4f, 0.0f));
+        //playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1.5f, 0.0f));
         playerManager.Initialize();
     }
 }
@@ -121,7 +122,7 @@ void StageSelection::Update(const float& elapsedTime)
     TerrainManager::Instance().Update(elapsedTime);
 
     // playerçXêV
-    PlayerManager::Instance().Update(elapsedTime);
+    PlayerManager::Instance().UpdateSelectStage(elapsedTime);
 
     // âÒì]
     {
@@ -194,6 +195,15 @@ void StageSelection::DrawDebug()
     PlayerManager::Instance().DrawDebug();
 
 #endif
+}
+
+void StageSelection::PointUpdate()
+{
+    switch (Mame::Scene::SceneManager::Instance().selectState)
+    {
+    case POINTSTATE::Tutorial:
+        break;
+    }
 }
 
 void StageSelection::PointRender(const float& elapsedTime)

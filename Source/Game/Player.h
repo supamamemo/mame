@@ -17,6 +17,8 @@ public:
 
     void DrawDebug() override;              // デバッグ描画
 
+    void UpdateSelectStage(const float& elapsedTime);
+
 public:
     // ダメージを与える
     bool ApplyDamage(

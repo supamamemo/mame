@@ -17,6 +17,7 @@ public:
     void Render(const float& elapsedTime)   override;   // 描画処理
     void DrawDebug()                        override;   // デバッグ描画
 
+    void PointUpdate();
     void PointRender(const float& elapsedTime);
 
 private:

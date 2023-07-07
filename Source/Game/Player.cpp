@@ -65,6 +65,14 @@ void Player::Begin()
     
 }
 
+void Player::UpdateSelectStage(const float& elapsedTime)
+{
+    // AABB更新処理
+    UpdateAABB();
+
+    // アニメーション更新
+    UpdateAnimation(elapsedTime);
+}
 
 void Player::Update(const float& elapsedTime)
 {  
@@ -210,6 +218,8 @@ void Player::DrawDebug()
 
     ImGui::End();
 }
+
+
 
 
 // 左スティック入力値から移動X方向ベクトルを取得

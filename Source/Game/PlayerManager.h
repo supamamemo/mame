@@ -26,6 +26,8 @@ public:
     // ƒvƒŒƒCƒ„[æ“¾
     NO_CONST std::unique_ptr<Player>& GetPlayer() { return player; }
 
+    void UpdateSelectStage(const float& elapsedTime);
+
 private:
     std::unique_ptr<Player> player = nullptr;
 

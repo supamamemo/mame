@@ -57,7 +57,7 @@ StageTutorial::StageTutorial()
     back = std::make_unique<Box>("./resources/back.fbx");
 
     // ŠÅ”Â
-    signboard = std::make_unique<Box>("./resources/flag_drop.fbx");
+    signboard = std::make_unique<Box>("./resources/stage/flag_drop.fbx");
     //signboard1 = std::make_unique<Box>("./resources/flag_drop_kawai.fbx");
     //signboard = std::make_unique<Box>("./resources/flag_yazi.fbx");
     //signboard = std::make_unique<Box>("./resources/frag.fbx");
