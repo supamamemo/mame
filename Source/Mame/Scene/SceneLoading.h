@@ -26,8 +26,22 @@ private:
     // ローディングスレッド
     static void LoadingThread(SceneLoading* scene);
 
+    struct Animation
+    {
+        DirectX::XMFLOAT2 position = {};
+        DirectX::XMFLOAT2 size = {};
+        DirectX::XMFLOAT2 texPos = {};
+        DirectX::XMFLOAT2 texSize = {};
+        int animationTime = 0;
+        int animationFrame = 0;
+
+        void PlayAnimation(const int& frameTime, const int& totalAnimationFrame);
+
+    }anime;
+
 private:
-    std::unique_ptr<SpriteDissolve> spriteDissolve;
+    std::unique_ptr<SpriteDissolve> spriteDissolve = nullptr;
+    std::unique_ptr<Sprite> spriteLoadMameo = nullptr;
 
     BaseScene*      nextScene   = nullptr;
     std::thread*    thread      = nullptr;

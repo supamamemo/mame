@@ -28,6 +28,7 @@ public:
     // fadeout
     void FadeOutEffect(Effekseer::Handle handle, const float time);
     Effekseer::Handle FadeOutEffect(const DirectX::XMFLOAT3& position, DirectX::XMFLOAT3 scale, DirectX::XMFLOAT4 color, const float time);
+    Effekseer::Handle FadeOutEffect(const DirectX::XMFLOAT3& position, DirectX::XMFLOAT3 scale, DirectX::XMFLOAT3 rotate, DirectX::XMFLOAT4 color, const float time);
 
 public:
     void SetTimer(float t) { timer = t; }
@@ -36,18 +37,27 @@ public:
 
     void SetPosition(DirectX::XMFLOAT3 p) { pos = p; }
     void SetScale(DirectX::XMFLOAT3 s) { scale = s; }
+    void SetRotate(DirectX::XMFLOAT3 r) { rotate = r; }
     void SetColor(DirectX::XMFLOAT4 c) { color = c; }
 
     DirectX::XMFLOAT3 GetPosition() { return pos; }
     DirectX::XMFLOAT3 GetScale() { return scale; }
+    DirectX::XMFLOAT3 GetRotate() { return rotate; }
     DirectX::XMFLOAT4 GetColor() { return color; }
 
     Effekseer::Handle handle;
+
+    float angle = 0;
+    void SetAngle(float a) { angle = a; }
+    float GetAngle() { return angle; }
+    void SubtractAngle(float a) { angle -= a; }
+
 private:
     Effekseer::EffectRef effekseerEffect;
 
     DirectX::XMFLOAT3 pos{ -2.5,2,10 };             // à íu
     DirectX::XMFLOAT3 scale{ 1.0f,1.0f,1.0f };      // ëÂÇ´Ç≥
+    DirectX::XMFLOAT3 rotate{ 0,0,0 };
     DirectX::XMFLOAT4 color{ 0.0f,1.0f,0.0f,1.0f }; // êF
 
     int drawTime = 0;

@@ -15,6 +15,9 @@ namespace Mame::Scene
         case static_cast<int>(Mame::Scene::STAGE::Boss):
             changeStageBoss = true;
             break;
+        case static_cast<int>(Mame::Scene::STAGE::Select):
+            changeStageSelect = true;
+            break;
         }
     }
 }

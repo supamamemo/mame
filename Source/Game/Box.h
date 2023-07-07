@@ -16,7 +16,13 @@ public:
     void Update(const float& elapsedTime);    // XVˆ—
     void End() {}                               // –ˆƒtƒŒ[ƒ€ˆê”ÔÅŒã‚ÉŒÄ‚Î‚ê‚é
     void Render(const float& elapsedTime);    // •`‰æˆ—
+    void Render(const float& elapsedTime, float size);    // •`‰æˆ—
+    void Render(const float& elapsedTime, bool noPlayer);    // •`‰æˆ—(player‚¢‚È‚¢‚Æ‚«—p)
     void DrawDebug();                         // ƒfƒoƒbƒO•`‰æ
+
+    // ‚±‚ê‚Í‰¼‚·‚¬‚é‚ª‚±‚Ì‚Ü‚Ü‚Å
+    void SelectBossInitialize();
+    void SelectBossUpdate(float elapsedTime);
 
 public:
     Transform* GetTransform() { return model->GetTransform(); }
@@ -24,6 +30,8 @@ public:
     DirectX::XMFLOAT4 GetMaterialColor() { return materialColor; }
 
     static float renderLengthXLimit_;   // box‚ğ•`‰æ‚·‚é‹——£§ŒÀ
+
+    void BackUpdate(float elapsedTime);
 
 public:
     // Imgui–¼‘O”í‚è–h~‚Ì‚½‚ß‚Ì‚â‚Â //

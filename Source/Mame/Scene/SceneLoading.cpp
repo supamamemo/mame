@@ -4,10 +4,14 @@
 
 SceneLoading::SceneLoading(BaseScene* nextScene) :nextScene(nextScene) 
 {
+    Graphics& graphics = Graphics::Instance();
+
     // シーンの属性を設定
     SetSceneType(static_cast<int>(Mame::Scene::TYPE::LOAD));
 
     spriteDissolve = std::make_unique<SpriteDissolve>();
+
+    spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet.png");
 }
 
 // 初期化
@@ -20,8 +24,15 @@ void SceneLoading::Initialize()
     //spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/load.png");
     //spriteDissolve.Initialize(static_cast<int>(Dissolve::Fade), L"./resources/fade.jpg");
     
-    spriteDissolve->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
+    spriteDissolve->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
     //spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
+
+    
+    anime.position = { 800.0f,555.0f };
+    anime.size = { 450.0f,183.5f };
+    anime.texSize = { 900.0f,367.0f };
+    anime.animationFrame = 0;
+    anime.animationTime = 0;
 
     // スレッド開始
     thread = new std::thread(LoadingThread, this);
@@ -48,6 +59,8 @@ void SceneLoading::Begin()
 void SceneLoading::Update(const float& elapsedTime)
 {
     spriteDissolve->Update();
+
+    anime.PlayAnimation(10, 30);
 
     //spriteDissolve.fadeOut(elapsedTime);
     //spriteDissolve->FadeIn(elapsedTime);
@@ -87,6 +100,10 @@ void SceneLoading::Render(const float& elapsedTime)
     // fade out
     {
         spriteDissolve->Render();
+
+        spriteLoadMameo->render(graphics.GetDeviceContext(), anime.position.x, anime.position.y,
+            anime.size.x, anime.size.y, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            anime.texPos.x, anime.texPos.y, anime.texSize.x, anime.texSize.y);
     }
 }
 
@@ -94,6 +111,14 @@ void SceneLoading::DrawDebug()
 {
 #ifdef USE_IMGUI
     spriteDissolve->DrawDebug();
+
+    ImGui::Begin("animation");
+
+    ImGui::DragFloat2("pos", &anime.position.x);
+    ImGui::DragFloat2("size", &anime.size.x);
+
+    ImGui::End();
+
 #endif// USE_IMGUI
 }
 
@@ -111,4 +136,19 @@ void SceneLoading::LoadingThread(SceneLoading* scene)
 
     // 次のシーンの準備完了設定
     scene->nextScene->SetReady();
+}
+
+void SceneLoading::Animation::PlayAnimation(const int& frameTime,const int& totalAnimationFrame)
+{
+    animationFrame = animationTime / frameTime;
+
+    if (animationFrame >= totalAnimationFrame)
+    {
+        animationFrame = 0;
+        animationTime = 0;
+    }
+
+    texPos.y = texSize.y * animationFrame;
+
+    ++animationTime;
 }

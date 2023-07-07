@@ -17,6 +17,11 @@ public:
 
     void DrawDebug() override;              // デバッグ描画
 
+    void UpdateSelectStage(const float& elapsedTime,int* state);
+    bool isAnimationSet = false;
+    void SetIsAnimationSet(bool a) { isAnimationSet = a; }
+    bool GetIsAnimationSet() { return isAnimationSet; }
+
 public:
     // ダメージを与える
     bool ApplyDamage(
@@ -94,6 +99,18 @@ private: // enum関連
         Anim_HipDrop,   // ヒップドロップ
         Anim_Walk,      // 歩行
         Anim_Max,       // アニメーション最大数
+    };
+
+    // ステージ選択
+    enum SELECT
+    {
+        TutorialStage,  // チュートリアル
+        Move_T_P,       // チュートリアル->野原
+        Move_P_T,       // 野原->チュートリアル
+        PlainsStage,    // 野原
+        Move_P_B,       // 野原->ボス
+        Move_B_P,       // ボス->野原
+        BossStage,      // ボス
     };
 
 private: // 変数関連

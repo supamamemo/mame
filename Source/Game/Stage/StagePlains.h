@@ -2,11 +2,12 @@
 
 #include "Stage.h"
 
-#include "../GrassBlock.h"
-
 #include "../Terrain/TerrainManager.h"
 #include "../PlayerManager.h"
 #include "../EnemyManager.h"
+
+#include "../GrassBlock.h"
+#include "../Box.h"
 
 class StagePlains : public Stage
 {
@@ -22,6 +23,9 @@ public:
     void Render(const float& elapsedTime)   override;   // 描画処理
     void DrawDebug()                        override;   // デバッグ描画
 
+private:
+    std::unique_ptr<Box>back = nullptr;
+
 public:
     // UI関連（急ぎで作ってるからコメントなしでごめん。。）
     void PlayerHpUiUpdate(float elapsedTime);    // プレイヤーhpUI管理
@@ -30,12 +34,12 @@ public:
     int uiState = -1;
     void SetUiState() { uiState = 0; }
 
-    DirectX::XMFLOAT2 GetPlayerUiPosition() { return playerUiPos; }
-    void SetPlayerUiPosition(DirectX::XMFLOAT2 pos) { playerUiPos = pos; }
+    DirectX::XMFLOAT3 GetPlayerUiPosition() { return playerUiPos; }
+    void SetPlayerUiPosition(DirectX::XMFLOAT3 pos) { playerUiPos = pos; }
     DirectX::XMFLOAT2 GetPlayerUiSize() { return playerUiSize; }
     void SetPlayerUiSize(DirectX::XMFLOAT2 size) { playerUiSize = size; }
 
-    DirectX::XMFLOAT2 playerUiPos = { 10, 10 };
+    DirectX::XMFLOAT3 playerUiPos = { 10, 10 ,10 };
     DirectX::XMFLOAT2 playerUiSize = { 344, 160 };
 
     void subtractUiTimer(float time) { uiTimer -= time; }
@@ -43,7 +47,7 @@ public:
     float GetUiTimer() { return uiTimer; }
     float uiTimer = 0.0f;
     
-    DirectX::XMFLOAT2 displayUiPosition{};
+    DirectX::XMFLOAT3 displayUiPosition{};
 
 private:
     void RegisterTerrains(TerrainManager& terrainManager);  // 地形生成

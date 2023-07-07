@@ -11,6 +11,7 @@
 #include "../../Game/Stage/StagePlains.h"
 #include "../../Game/Stage/StageBoss.h"
 #include "../../Game/Stage/StageTutorial.h"
+#include "../../Game/Stage/StageSelection.h"
 
 #include "../../Game/Terrain/Terrain.h"
 
@@ -39,11 +40,11 @@ void SceneGame::Initialize()
     {
     case 0:
         spriteDissolve[0]->Initialize();
-        spriteDissolve[0]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
+        spriteDissolve[0]->SetFadeInTexture({ 0,0 ,0}, { 1280,720 }, 0.4f, 2);
         break;
     case 1:
         spriteDissolve[0]->Initialize();
-        spriteDissolve[0]->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, 2);
+        spriteDissolve[0]->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
         break;
     }
     
@@ -63,6 +64,7 @@ void SceneGame::Initialize()
     StageManager::Instance().ChangeStage(new StagePlains);
     //StageManager::Instance().ChangeStage(new StageBoss);
     //StageManager::Instance().ChangeStage(new StageTutorial);
+    //StageManager::Instance().ChangeStage(new StageSelection);
 }
 
 // 終了化
@@ -92,6 +94,12 @@ void SceneGame::Begin()
         StageManager::Instance().Clear();
         StageManager::Instance().ChangeStage(new StageBoss);
         SetChangeStageBoss();
+    }
+    if (GetChangeStageSelect())
+    {
+        StageManager::Instance().Clear();
+        StageManager::Instance().ChangeStage(new StageSelection);
+        SetChangeStageSelect();
     }
 }
 
@@ -210,13 +218,13 @@ void SceneGame::DrawDebug()
     ImGui::SliderInt("textureType", &textureType, 0, 11);
     if (ImGui::Button("fadeIn"))
     {
-        spriteDissolve[0]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve[0]->SetFadeInTexture({ 0,0,0 }, { 1280,720 }, 0.4f, textureType);
         spriteDissolve[0]->SetFade(true);
         fadeType = 0;
     }
     if (ImGui::Button("fadeOut"))
     {
-        spriteDissolve[0]->SetFadeOutTexture({ 0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve[0]->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, textureType);
         spriteDissolve[0]->SetFade(true);
         fadeType = 1;
     }
@@ -242,6 +250,12 @@ void SceneGame::DrawDebug()
     {
         Terrain::nameNum = 0;   // 番号リセット
         ChangeStage(static_cast<int>(Mame::Scene::STAGE::Boss));
+
+    }
+    if (ImGui::Button("select"))
+    {
+        Terrain::nameNum = 0;   // 番号リセット
+        ChangeStage(static_cast<int>(Mame::Scene::STAGE::Select));
     }
 
     ImGui::Begin("renderLengthXLimit_");

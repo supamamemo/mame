@@ -6,10 +6,13 @@ enum class BossAnimation
 {
     Attack,         // UŒ‚
     Recoil,         // •Ç‚É“–‚½‚é
+    Confusion,      // ¬—
+    DeConfusion,    // ¬—‚ª‰ğ‚¯‚é
     Idle,           // ‘Ò‹@
     AttackBefore,   // —\”õ“®ì
     GetAttack,      // ‚­‚ç‚¢
     Dead,           // ‚â‚ç‚ê
+    Fall,           // K‚à‚¿i“|‚ê‚éj
     Cry,            // ‚È‚­
     Turn,
 };
@@ -32,6 +35,9 @@ public:
 
     void OnDead()                         override; // €–S‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
     void OnHitWall()                      override; // •Ç‚É“–‚½‚Á‚½‚ÉŒÄ‚Î‚ê‚é
+
+    void OnDamaged()override;
+
 public:
     // Imgui–¼‘O”í‚è–h~‚Ì‚½‚ß‚Ì‚â‚Â //
     static int nameNum;

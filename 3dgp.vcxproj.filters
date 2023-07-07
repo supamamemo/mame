@@ -303,6 +303,8 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Terrain\TerrainNoClimb.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
+    <ClCompile Include="Source\Game\Stage\StageSelection.cpp">
+      <Filter>mamelib\Game\Stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -559,6 +561,8 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Terrain\TerrainNoClimb.h">
       <Filter>mamelib\Game\Terrain</Filter>
+    <ClInclude Include="Source\Game\Stage\StageSelection.h">
+      <Filter>mamelib\Game\Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

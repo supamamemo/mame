@@ -30,6 +30,7 @@ private:
         StickCenter,    // center
         StickRight,     // right
         StickLeft,      // left
+        StickDown,
         GamePadA,
         GamePadB,
         GamePadX,
@@ -39,12 +40,17 @@ private:
         KeyBoardS,
         KeyBoardSHIFT,
         KeyBoardSPACE,
+        SpriteOR,       // or
+        Plus,           // +
     };
 
     enum STATE
     {
         MoveReception,  // 移動受付
         JumpReception,  // ジャンプ受付
+        HipDorop,
+        Run,
+        Free,
     };
 
     void TutorialStateUpdate(float elapsedTime);
@@ -52,16 +58,18 @@ private:
 
     int tutorialState = 0;
 
-
+    
 
 private:
     int stickMoveState = 0; // スティック動き
     float stickTime = 0;
     void StickState(float elapsedTime);
+    void StickStateDown(float elapsedTime);
 
 private:
     std::unique_ptr<Box> back = nullptr;
     std::unique_ptr<Box> signboard = nullptr;
+    //std::unique_ptr<Box> signboard1 = nullptr;
 
     // UI
     Effect* effect[4];

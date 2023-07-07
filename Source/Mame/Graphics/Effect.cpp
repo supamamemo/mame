@@ -31,7 +31,6 @@ Effekseer::Handle Effect::Play(const DirectX::XMFLOAT3& position, DirectX::XMFLO
 
     Effekseer::Handle handle = effekseerManager->Play(effekseerEffect, position.x, position.y, position.z);
     effekseerManager->SetScale(handle, scale.x, scale.y, scale.z);
-    
 
     // colorê›íË
     {
@@ -45,6 +44,7 @@ Effekseer::Handle Effect::Play(const DirectX::XMFLOAT3& position, DirectX::XMFLO
 
     return handle;
 }
+
 
 // í‚é~
 void Effect::Stop(Effekseer::Handle handle)
@@ -78,6 +78,18 @@ void Effect::DrawDebug()
 
     ImGui::DragFloat3("pos", &pos.x);
     ImGui::DragFloat3("scale", &scale.x);
+
+    DirectX::XMFLOAT3 r{};
+    r.x = DirectX::XMConvertToDegrees(rotate.x);
+    r.y = DirectX::XMConvertToDegrees(rotate.y);
+    r.z = DirectX::XMConvertToDegrees(rotate.z);
+    
+    ImGui::DragFloat3("rotate", &r.x);
+
+    rotate.x = DirectX::XMConvertToRadians(r.x);
+    rotate.y = DirectX::XMConvertToRadians(r.y);
+    rotate.z = DirectX::XMConvertToRadians(r.z);
+    
     ImGui::ColorEdit4("color", &color.x);
     ImGui::DragFloat("timer", &timer);
     ImGui::End();
@@ -94,6 +106,33 @@ Effekseer::Handle Effect::FadeOutEffect(const DirectX::XMFLOAT3& position, Direc
     Effekseer::Handle handle = effekseerManager->Play(effekseerEffect, p, time);
     effekseerManager->SetScale(handle, scale.x, scale.y, scale.z);
 
+
+    // colorê›íË
+    {
+        //EffekseerÇÃcolorÇÕ0~255ÇÁÇµÇ¢
+        Effekseer::Color col{ static_cast<unsigned char>(color.x * 255),
+            static_cast<unsigned char>(color.y * 255),
+        static_cast<unsigned char>(color.z * 255),
+        static_cast<unsigned char>(color.w * 255) };
+        effekseerManager->SetAllColor(handle, col);
+    }
+
+    return handle;
+}
+
+Effekseer::Handle Effect::FadeOutEffect(const DirectX::XMFLOAT3& position, DirectX::XMFLOAT3 scale, DirectX::XMFLOAT3 rotate, DirectX::XMFLOAT4 color, const float time)
+{
+
+    Effekseer::ManagerRef effekseerManager = EffectManager::Instance().GetEffekseerManager();
+
+
+    Effekseer::Vector3D p{ pos.x, pos.y, pos.z };
+
+    Effekseer::Handle handle = effekseerManager->Play(effekseerEffect, p, time);
+    effekseerManager->SetScale(handle, scale.x, scale.y, scale.z);
+    
+
+    effekseerManager->SetRotation(handle, rotate.x, rotate.y, rotate.z);
 
     // colorê›íË
     {

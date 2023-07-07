@@ -243,15 +243,17 @@ namespace BOSS
         
         // 現在の反動距離をリセット
         currentRecoilLength = 0.0f;
-        
-        //SetRecoil(owner->GetStateMachine()->GetMoveRight() ? 1.0f : -1.0f);
-        //SetRecoil(owner->GetMoveDirectionX());
 
         // 無敵状態を無くす
         owner->SetIsInvincible(false);
 
         // アニメーションセット
         owner->PlayAnimation(static_cast<int>(BossAnimation::Recoil), true);
+
+        // タイマーセット
+        SetTimer(1.0f);
+
+        state = 0;
     }
 
     // 更新
@@ -259,31 +261,46 @@ namespace BOSS
     {
         Transform* transform = owner->GetTransform();
 
-        //owner->SetMoveSpeed(owner->GetStateMachine()->GetMoveRight() ? speed : -speed);
-
-        //if (owner->GetStateMachine()->GetMoveRight())
-        if (currentRecoilLength < recoilLength)
+        switch (state)
         {
+        case 0:
             owner->SetMoveSpeed(owner->GetMoveDirectionX() * speed);
 
             transform->AddPositionX(owner->GetMoveSpeed() * elapsedTime);
             currentRecoilLength += fabsf(owner->GetMoveSpeed() * elapsedTime);
 
-            if (currentRecoilLength >= recoilLength) SetTimer(1.0f);
-        }
-        else
-        {
-            SubtractTime(elapsedTime);
-            if (GetTimer() <= 0.0f) owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
-        }
-        
-        //owner->GetTransform()->SetPosition(ownerPos);
+            if (currentRecoilLength >= recoilLength)
+            {
+                state = 1;
+                owner->PlayAnimation(static_cast<int>(BossAnimation::Confusion), true);
+                SetTimer(confusionTime);
+            }
 
-        // 当たり判定
-        if(Collision::IntersectAABBVsAABB(PlayerManager::Instance().GetPlayer()->aabb_, owner->aabb_))
-        { 
-           // todo : 当たり判定 
+            break;
+        case 1:
+            SubtractTime(elapsedTime);
+            if (GetTimer() <= 0.0f)
+            {
+                owner->PlayAnimation(static_cast<int>(BossAnimation::DeConfusion), false);
+                state = 2;
+            }
+
+            break;
+        case 2:
+            if (!owner->IsPlayAnimation())state = 3;
+
+            break;
+        case 3:
+            owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+
+            break;
         }
+
+
+        
+
+        
+       
     }
 
     // 終了
@@ -294,6 +311,68 @@ namespace BOSS
     }
 }
 
+// damageState
+namespace BOSS
+{
+    // 初期化
+    void DamageState::Enter()
+    {
+        owner->PlayAnimation(static_cast<int>(BossAnimation::GetAttack), false);        
+    }
+
+    // 更新
+    void DamageState::Execute(float elapsedTime)
+    {
+        SubtractTime(elapsedTime);
+
+        if (GetTimer() <= 0.0f)
+        {
+            if (owner->GetHealth() > 0)
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+            else
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Cry));
+        }
+    }
+
+    // 終了
+    void DamageState::Exit()
+    {
+    }
+}
+
+// cryState
+namespace BOSS
+{
+    // 初期化
+    void CryState::Enter()
+    {
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Fall), false);
+    }
+
+    // 更新
+    void CryState::Execute(float elapsedTime)
+    {
+        switch (state)
+        {
+        case 0:
+            if (!owner->IsPlayAnimation())
+            {
+                owner->PlayAnimation(static_cast<int>(BossAnimation::Cry), true);
+                state = 1;
+            }
+
+            break;
+        case 1:
+
+            break;
+        }
+    }
+
+     // 終了
+    void CryState::Exit()
+    {
+    }
+}
 
 // WalkState
 namespace TOFU

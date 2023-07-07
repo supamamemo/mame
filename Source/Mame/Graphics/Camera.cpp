@@ -88,18 +88,99 @@ void Camera::UpdateTitle(float elapsedTime)
 
 void Camera::UpdateTutorial(float elapsedTime, int state)
 {
+    DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+
+    float leftLimit = 0.0f;
+
     switch (state)
     {
     case STATE::MoveReception:
+        leftLimit = -10.4f;
         break;
     case STATE::JumpReception:
+        leftLimit = -10.4f;
+        break;
+    case STATE::HipDorop:
+        leftLimit = 0.0f;
+
+        cameraPos.x += elapsedTime * 10;
+        if (cameraPos.x >= 9.0f)cameraPos.x = 9.0f;
+
+        tutorialState = 0;
+        break;
+    case STATE::Run:
+        leftLimit = 16.0f;
+
+        switch (tutorialState)
+        {
+        case 0:
+            cameraPos.x += elapsedTime * 10;
+            if (cameraPos.x >= 25.0f)
+            {
+                cameraPos.x = 25.0f;
+                tutorialState = 1;
+            }
+            break;
+        case 1:
+            if (playerPos.x >= 26.0f)
+            {
+                cameraPos.x += elapsedTime * 10;
+
+                if (playerPos.x + 6.0f <= cameraPos.x)cameraPos.x = playerPos.x + 6.0f;
+            }
+            else
+            {
+                cameraPos.x -= elapsedTime * 10;
+                if (cameraPos.x <= 25.0f)cameraPos.x = 25.0f;
+            }
+            break;
+        }
+
+
+        break;
+    case STATE::Free:
+        leftLimit = 35.0f;
+
+        switch (tutorialState)
+        {
+        case 0:
+            cameraPos.x += elapsedTime * 10;
+            if (cameraPos.x >= 45.0f)
+            {
+                cameraPos.x = 45.0f;
+                tutorialState = 1;
+            }
+            break;
+        case 1:
+            if (playerPos.x >= 45.0f)
+            {
+                cameraPos.x += elapsedTime * 10;
+                if (cameraPos.x >= playerPos.x + 6.0f)cameraPos.x = playerPos.x + 6.0f;
+            }
+            else
+            {
+                cameraPos.x -= elapsedTime * 10;
+                if (cameraPos.x <= 45.0f)cameraPos.x = 45.0f;
+            }
+            break;
+        }
+
+
+
+        break;
+
+    default:
+        leftLimit = -10.4f;
         break;
     }
+
+    GetTransform()->SetPosition(cameraPos);
 
     // ‰æ–Ê¶’[‚ÍŽ~‚Ü‚é‚æ‚¤‚É‚·‚é
     {
         DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
-        if (playerPos.x <= -10.4f)playerPos.x = -10.4f;
+        if (playerPos.x <= leftLimit)playerPos.x = leftLimit;
 
         PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
     }
@@ -109,6 +190,23 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
 void Camera::UpdateBoss(const float elapsedTime)
 {
     UpdateShake(elapsedTime);   // ‰æ–ÊU“®XV
+
+    DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+
+    if (playerPos.x >= -10.0f)
+        cameraMoveY = 1;
+
+    switch (cameraMoveY)
+    {
+    case 1:
+        cameraPos.x += elapsedTime * 5;
+        if (cameraPos.x >= 0.0f)cameraPos.x = 0.0f;
+
+        break;
+    }
+
+    GetTransform()->SetPosition(cameraPos);
 }
 
 

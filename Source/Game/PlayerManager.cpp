@@ -35,3 +35,8 @@ void PlayerManager::DrawDebug()
 {
     player->DrawDebug();
 }
+
+void PlayerManager::UpdateSelectStage(const float& elapsedTime,int* state)
+{
+    player->UpdateSelectStage(elapsedTime, state);
+}

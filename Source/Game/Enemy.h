@@ -32,6 +32,8 @@ public:
 
     void CollisionEnemyVsPlayer();                          // エネミーとプレイヤーの衝突判定処理  
 
+
+
 public:
     // 移動処理
     void Move(const float vx, const float moveSpeed)

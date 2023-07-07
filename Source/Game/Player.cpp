@@ -65,6 +65,131 @@ void Player::Begin()
     
 }
 
+void Player::UpdateSelectStage(const float& elapsedTime, int* state)
+{
+    GamePad& gamePad = Input::Instance().GetGamePad();
+    float ax = gamePad.GetAxisLX();
+    const float moveSpeed = elapsedTime * 10;
+
+    // AABB更新処理
+    UpdateAABB();
+
+    // アニメーション更新
+    UpdateAnimation(elapsedTime);
+
+    DirectX::XMFLOAT3 pos = GetTransform()->GetPosition();
+    DirectX::XMFLOAT4 rot = GetTransform()->GetRotation();
+
+    switch (*state)
+    {
+        case SELECT::TutorialStage:
+            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Idle, true);
+            rot.y = DirectX::XMConvertToRadians(180);
+
+            // plainStageに行けるかどうか
+            if (Mame::Scene::SceneManager::Instance().selectState > 0)
+            {
+                // スティック右に傾けたら
+                if (ax > 0)
+                {
+                    *state = SELECT::Move_T_P;
+                    SetIsAnimationSet(false);
+                    rot.y = DirectX::XMConvertToRadians(90);
+                }
+            }
+
+            break;
+        case SELECT::Move_T_P:
+            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+            pos.x += moveSpeed;
+            if (pos.x >= 0)
+            {
+                *state = SELECT::PlainsStage;
+                pos.x = 0;
+                SetIsAnimationSet(false);
+            }
+
+            break;
+        case SELECT::Move_P_T:
+            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+            pos.x -= moveSpeed;
+            if (pos.x < -7.0f)
+            {
+                *state = SELECT::TutorialStage;
+                pos.x = -7.0f;
+                SetIsAnimationSet(false);
+            }
+
+            break;
+        case SELECT::PlainsStage:
+            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Idle, true);
+            rot.y = DirectX::XMConvertToRadians(180);
+
+            // スティック左に傾けたら
+            if (ax < 0)
+            {
+                *state = SELECT::Move_P_T;
+                SetIsAnimationSet(false);
+                rot.y = DirectX::XMConvertToRadians(270);
+            }
+
+            // bossStageに行けるかどうか
+            if (Mame::Scene::SceneManager::Instance().selectState > 1)
+            {
+                // スティック右に傾けたら
+                if (ax > 0)
+                {
+                    *state = SELECT::Move_P_B;
+                    SetIsAnimationSet(false);
+                    rot.y = DirectX::XMConvertToRadians(90);
+                }
+            }
+
+            break;
+        case SELECT::Move_P_B:
+            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+            pos.x += moveSpeed;
+            if (pos.x >= 7)
+            {
+                *state = SELECT::BossStage;
+                pos.x = 7;
+                SetIsAnimationSet(false);
+            }
+
+            break;
+        case SELECT::Move_B_P:
+            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+            pos.x -= moveSpeed;
+            if (pos.x < 0.0f)
+            {
+                *state = SELECT::PlainsStage;
+                pos.x = 0.0f;
+                SetIsAnimationSet(false);
+            }
+
+            break;
+        case SELECT::BossStage:
+            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Idle, true);
+            rot.y = DirectX::XMConvertToRadians(180);
+
+            // スティック左に傾けたら
+            if (ax < 0)
+            {
+                *state = SELECT::Move_B_P;
+                SetIsAnimationSet(false);
+                rot.y = DirectX::XMConvertToRadians(270);
+            }
+
+            break;
+    }
+
+    GetTransform()->SetPosition(pos);
+    GetTransform()->SetRotation(rot);
+}
 
 void Player::Update(const float& elapsedTime)
 {  
@@ -108,10 +233,18 @@ void Player::Update(const float& elapsedTime)
     // 無敵時間中のキャラクターの点滅
     if (invincibleTimer > 0.0f)
     {
+        //modelColor.y = 0.6f;
+        //modelColor.x = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 1.0f : 0.0f;
+        //modelColor.z = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 1.0f : 0.0f;
+
         modelColor.w = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 1.0f : 0.1f;
     }
     else
     {
+        //modelColor.x = 1.0f;
+        //modelColor.y = 1.0f;
+        //modelColor.z = 1.0f;
+
         modelColor.w = 1.0f;
     }
 
@@ -202,6 +335,8 @@ void Player::DrawDebug()
 
     ImGui::End();
 }
+
+
 
 
 // 左スティック入力値から移動X方向ベクトルを取得

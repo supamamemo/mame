@@ -16,8 +16,8 @@ public:
     void Render();
     void DrawDebug();
 
-    void SetPosition(DirectX::XMFLOAT2 p) { spr.pos = p; }
-    DirectX::XMFLOAT2 GetPosition() { return spr.pos; }
+    void SetPosition(DirectX::XMFLOAT3 p) { spr.pos = p; }
+    DirectX::XMFLOAT3 GetPosition() { return spr.pos; }
     void SetSize(DirectX::XMFLOAT2 s) { spr.size = s; }
     DirectX::XMFLOAT2 GetSize() { return spr.size; }
 
@@ -33,7 +33,7 @@ public:
 private:
     struct SpriteUi
     {
-        DirectX::XMFLOAT2 pos;
+        DirectX::XMFLOAT3 pos;
         DirectX::XMFLOAT2 size;
     }spr;
 

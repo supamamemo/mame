@@ -14,6 +14,8 @@ namespace BOSS
         Turn,
         Attack,
         Recoil,
+        Damage,
+        Cry,
     };
 }
 
@@ -123,6 +125,35 @@ namespace BOSS
         float recoilLength        = 1.25f;   // îΩìÆãóó£
         float currentRecoilLength = 0.0f;   // ç°Ç«ÇÍÇæÇØîΩìÆÇ≈îÚÇÒÇ≈Ç¢ÇÈÇ©
         float speed = 2.0f;
+
+        int state = 0;
+        
+        float confusionTime = 1.5f;
+    };
+
+    class DamageState : public State
+    {
+    public:
+        DamageState(Enemy* _boss) : State(_boss, "damage") {}
+        ~DamageState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+    };
+
+    class CryState :public State
+    {
+    public:
+        CryState(Enemy* _boss) :State(_boss, "cry") {}
+        ~CryState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
+
+    private:
+        int state = 0;
     };
 }
 

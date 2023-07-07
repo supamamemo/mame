@@ -1,5 +1,8 @@
 ﻿#include "framework.h"
 
+#include <iostream>
+#include <fstream>
+
 #pragma comment(lib, "d3d11.lib")
 
 #include "Mame/Graphics/EffectManager.h"
@@ -42,6 +45,15 @@ bool framework::initialize()
     Mame::Scene::SceneManager::Instance().Initialize();
     // シーンタイトル
     Mame::Scene::SceneManager::Instance().ChangeScene(new SceneTitle);
+
+    // ファイル操作
+    std::ifstream ifs;
+    ifs.open("mameo.saveData", std::ios::binary);
+    if (ifs)
+    {
+        ifs.read((char*)&Mame::Scene::SceneManager::Instance().selectState, sizeof(int));
+        ifs.close();
+    }
 
     return true;
 }
@@ -339,6 +351,14 @@ void framework::render(float elapsed_time/*Elapsed seconds from last frame*/)
 
 bool framework::uninitialize()
 {
+    std::ofstream ofs;
+    ofs.open("mameo.saveData", std::ios::binary);
+    if (ofs)
+    {
+        ofs.write((const char*)&Mame::Scene::SceneManager::Instance().selectState, sizeof(int));
+        ofs.close();
+    }
+    
     // シーン終了化
     Mame::Scene::SceneManager::Instance().Clear();
 

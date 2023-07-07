@@ -74,6 +74,8 @@ public:
 public:
     Transform* GetTransform() { return &transform; }
 
+    void SetTutorialState() { tutorialState = 0; }
+
 private:
     Transform transform{};
 
@@ -98,12 +100,18 @@ private:
     bool cameraUp = false; // カメラ上昇するか
     bool cameraDown = false;
 
+    // tutorial用
+    int tutorialState = 0;
+
 private:
     // チュートリアル用
     enum STATE
     {
         MoveReception,  // 移動受付
         JumpReception,  // ジャンプ受付
+        HipDorop,
+        Run,
+        Free,
     };
 };
 

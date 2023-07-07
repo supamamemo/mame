@@ -112,7 +112,7 @@ void SpriteDissolve::Render()
     ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
 
     Shader* shader = graphics.GetShader();
-    shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
+    shader->SetState(graphics.GetDeviceContext(), 3, 3, 0);
 
     if (dissolve_sprite)
     {
