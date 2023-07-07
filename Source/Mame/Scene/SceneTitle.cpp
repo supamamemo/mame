@@ -72,16 +72,19 @@ void SceneTitle::Initialize()
 #endif
     }
 
+    const float characterScale = 3.0f;
 
     // titlePlayer‰Šú‰»
     titlePlayer_->SetRotationY(ToRadian(0.0f)); // ‰ŠúˆÊ’u‚ğİ’è
+    titlePlayer_->GetTransform()->SetScale(DirectX::XMFLOAT3(characterScale, characterScale, characterScale));
     titlePlayer_->Initialize();
 
     // titleEnemyTofu‰Šú‰»
-    const float rotationY = ToRadian(10.0f); // ‰ŠúˆÊ’u(“¤•…“¯m‚ÌŠÔŠu‚É‚à‰e‹¿)
+    const float rotationY = ToRadian(20.0f); // ‰ŠúˆÊ’u(“¤•…“¯m‚ÌŠÔŠu‚É‚à‰e‹¿)
     for (int i = 0; i < ENEMY_TOFU_COUNT; ++i)
     {
         titleEnemyTofu_[i]->SetRotationY(rotationY * (i + 1)); // ‰ŠúˆÊ’u‚ğİ’è
+        titleEnemyTofu_[i]->GetTransform()->SetScale(DirectX::XMFLOAT3(characterScale, characterScale, characterScale));
         titleEnemyTofu_[i]->Initialize();
     }
 

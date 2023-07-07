@@ -3,6 +3,7 @@
 #include "../../Mame/Graphics/Graphics.h"
 #include "../../Mame/Graphics/Camera.h"
 #include "../../Mame/Scene/SceneManager.h"
+#include "../../Mame/Input/Input.h"
 
 #include "../EnemyManager.h"
 #include "../Terrain/TerrainManager.h"
@@ -56,7 +57,7 @@ void StageSelection::Initialize()
     // 城
     {
         castle->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 6, 2));
-        castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.1f, 0.1f, 0.1f));
+        castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.15f, 0.15f, 0.15f));
     }
 
     // boss
@@ -115,6 +116,8 @@ void StageSelection::Begin()
 // 更新処理
 void StageSelection::Update(const float& elapsedTime)
 {
+    GamePad& gamePad = Input::Instance().GetGamePad();
+
     // boss
     boss->SelectBossUpdate(elapsedTime);
 
@@ -122,7 +125,48 @@ void StageSelection::Update(const float& elapsedTime)
     TerrainManager::Instance().Update(elapsedTime);
 
     // player更新
-    PlayerManager::Instance().UpdateSelectStage(elapsedTime);
+    PlayerManager::Instance().UpdateSelectStage(elapsedTime, &selectState);
+
+    // ステージ選択
+    switch (selectState)
+    {
+    case SELECT::TutorialStage:
+        castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
+        TerrainManager::Instance().GetTerrain(1)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.3f, 0.3f, 0.3f));
+        boss->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+        // tutorialStageへ
+        if (gamePad.GetButtonDown() & (GamePad::BTN_A))
+        {
+            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Tutorial));
+        }
+
+        break;
+    case SELECT::PlainsStage:
+        castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.15f, 0.15f, 0.15f));
+        TerrainManager::Instance().GetTerrain(1)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.4f, 0.4f, 0.4f));
+        boss->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+        // plainsStageへ
+        if (gamePad.GetButtonDown() & (GamePad::BTN_A))
+        {
+            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
+        }
+
+        break;
+    case SELECT::BossStage:
+        castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.15f, 0.15f, 0.15f));
+        TerrainManager::Instance().GetTerrain(1)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.3f, 0.3f, 0.3f));
+        boss->GetTransform()->SetScale(DirectX::XMFLOAT3(1.3f, 1.3f, 1.3f));
+
+        // bossStageへ
+        if (gamePad.GetButtonDown() & (GamePad::BTN_A))
+        {
+            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Boss));
+        }
+
+        break;
+    }
 
     // 回転
     {

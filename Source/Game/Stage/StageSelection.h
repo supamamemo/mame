@@ -21,6 +21,9 @@ public:
     void PointRender(const float& elapsedTime);
 
 private:
+    int selectState = 0;
+
+private:
     std::unique_ptr<Box>back = nullptr;
     std::unique_ptr<Box>castle = nullptr;
     std::unique_ptr<Box>boss = nullptr;
@@ -40,6 +43,17 @@ private:
         Tutorial,
         Plains,
         Boss,
+    };
+
+    enum SELECT
+    {
+        TutorialStage,  // チュートリアル
+        Move_T_P,       // チュートリアル->野原
+        Move_P_T,       // 野原->チュートリアル
+        PlainsStage,    // 野原
+        Move_P_B,       // 野原->ボス
+        Move_B_P,       // ボス->野原
+        BossStage,      // ボス
     };
 
 };
