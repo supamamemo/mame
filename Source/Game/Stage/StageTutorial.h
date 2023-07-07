@@ -25,6 +25,8 @@ private:
     enum UISPRITE
     {
         Bubble,         // 吹き出し
+        BubbleBig,      // 大きい吹き出し
+        BubbleBigBig,   // さらに大きい吹き出し
         BubbleStick,    // 吹き出しスティック
         StickBase,      // base
         StickCenter,    // center
@@ -53,6 +55,21 @@ private:
         Free,
     };
 
+    enum tutorialTerrain
+    {
+        Zimen0,
+        Zimen1,
+        Zimen2,
+        Zimen3,
+        Zimen4,
+        Zimen5,
+        Zimen6,
+        Zimen7,
+        SignBoard_yazi0,
+        SignBoard_drop0,
+        SignBoard_dash0,
+    };
+
     void TutorialStateUpdate(float elapsedTime);
     void TutorialStateRender(float elapsedTime);
 
@@ -68,7 +85,6 @@ private:
 
 private:
     std::unique_ptr<Box> back = nullptr;
-    std::unique_ptr<Box> signboard = nullptr;
     //std::unique_ptr<Box> signboard1 = nullptr;
 
     // UI

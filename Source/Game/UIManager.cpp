@@ -3,6 +3,7 @@
 
 void UIManager::Initialize()
 {
+    SetUiCenter(false);
 }
 
 void UIManager::Finalize()

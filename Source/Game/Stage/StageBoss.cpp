@@ -47,15 +47,15 @@ StageBoss::StageBoss()
 
     // UI
     {
-        UIManager& uiManager = UIManager::Instance();
-
         // mameoHP
-        uiManager.Register(new UI(L"./resources/ui/baseMameHp.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameLeft.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameCenter.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameRight.png"));
+        UIManager::Instance().Register(new UI(L"./resources/ui/baseMameHp.png"));
+        UIManager::Instance().Register(new UI(L"./resources/ui/mameLeft.png"));
+        UIManager::Instance().Register(new UI(L"./resources/ui/mameCenter.png"));
+        UIManager::Instance().Register(new UI(L"./resources/ui/mameRight.png"));
 
         // bossHP
+
+        UIManager::Instance().Initialize();
     }
 }
 

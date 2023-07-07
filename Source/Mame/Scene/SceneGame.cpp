@@ -67,10 +67,10 @@ void SceneGame::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
-    StageManager::Instance().ChangeStage(new StagePlains);
+    //StageManager::Instance().ChangeStage(new StagePlains);
     //StageManager::Instance().ChangeStage(new StageBoss);
     //StageManager::Instance().ChangeStage(new StageTutorial);
-    //StageManager::Instance().ChangeStage(new StageSelection);
+    StageManager::Instance().ChangeStage(new StageSelection);
 }
 
 // èIóπâª

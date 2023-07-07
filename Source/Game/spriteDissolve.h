@@ -79,7 +79,7 @@ private:
 
         // mask edge
         float    edge_threshold     = 0.2f;        // ‰‚Ìè‡’l
-        DirectX::XMFLOAT4 edgeColor = { 1,0,0,1 }; // ‰‚ÌF
+        DirectX::XMFLOAT4 edgeColor = { 0,1,0,1 }; // ‰‚ÌF
 
         int      dissolve_state     = 0;           // dissolve‚Ìí—Ş
         float    delay              = 0.4f;        // fade‚Ì‚¢‚¢Š´‚¶‚É‚·‚é‚½‚ß‚Ì•Ï”
