@@ -65,6 +65,7 @@ void Player::Begin()
     
 }
 
+
 void Player::UpdateSelectStage(const float& elapsedTime, int* state)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
@@ -191,6 +192,7 @@ void Player::UpdateSelectStage(const float& elapsedTime, int* state)
     GetTransform()->SetRotation(rot);
 }
 
+
 void Player::Update(const float& elapsedTime)
 {  
     Transform* transform = GetTransform();
@@ -238,6 +240,7 @@ void Player::Update(const float& elapsedTime)
         //modelColor.z = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 1.0f : 0.0f;
 
         modelColor.w = (static_cast<int>(invincibleTimer * 100.0f) & 0x08) ? 1.0f : 0.1f;
+        //modelColor.w = 0.25f;
     }
     else
     {
@@ -249,7 +252,8 @@ void Player::Update(const float& elapsedTime)
     }
 
     // 無敵時間更新
-    UpdateInvincibleTimer(elapsedTime);
+    // バウンスしていないか、バウンス状態でバウンスを一回以上している場合に無敵時間を更新する
+    if ((!isBounce) || (isBounce && bounceCount > 0)) UpdateInvincibleTimer(elapsedTime);
 
     // バウンス無敵時間更新
     UpdateBounceInvincibleTimer(elapsedTime);
@@ -570,8 +574,16 @@ void Player::OnBounce()
         bounceCount     = 0;                    // バウンスカウントリセット
         isBounce        = false;                // バウンス終了
      
-        OnLanding();                // 着地時の処理を行う
-        isGround_        = true;    // 着地した
+        OnLanding();                            // 着地時の処理を行う
+        isGround_       = true;                 // 着地した
+
+        isInvincible    = false;                // 無敵解除
+#if 0
+        invincibleTimer = 0.4f;                 // バウンス後の猶予として無敵時間を設定(確認用)
+#else 
+        bounceInvincibleTimer_ = 0.4f;          // バウンス後の猶予として無敵時間を設定
+#endif
+
     }
     // バウンスさせる
     else
@@ -966,11 +978,7 @@ void Player::TransitionHipDropState()
     gravity         = hipDropGravity;  // 落下速度を上昇
     isBounce        = true;            // バウンスさせる
 
-#if 0
-    invincibleTimer        = 1.1f;            // 無敵時間を設定(確認用)
-#else 
-    bounceInvincibleTimer_ = 1.1f;            // バウンド無敵時間を設定
-#endif
+    isInvincible    = true;               // 無敵状態に設定
 
     PlayAnimation(Anim_HipDrop, true);
 }

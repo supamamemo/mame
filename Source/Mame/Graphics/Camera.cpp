@@ -13,6 +13,7 @@ void Camera::Initialize()
 
 void Camera::Update(float elapsedTime)
 {
+#if 0
     PlayerManager& playerManager = PlayerManager::Instance();
 
     // プレイヤーが死んでいたらreturn
@@ -20,19 +21,10 @@ void Camera::Update(float elapsedTime)
 
     // プレイヤーのxにカメラのxをあわせる
     {
+
         DirectX::XMFLOAT3 playerPos = playerManager.GetPlayer()->GetTransform()->GetPosition();
         DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
 
-        //if (cameraPos.x < playerPos.x)
-        //{
-        //    cameraPos.x += 4.f * elapsedTime;
-        //    if (cameraPos.x > playerPos.x) cameraPos.x = playerPos.x;
-        //}
-        //else if (cameraPos.x > playerPos.x)
-        //{
-        //    cameraPos.x += -4.f * elapsedTime;
-        //    if (cameraPos.x < playerPos.x) cameraPos.x = playerPos.x;
-        //}
         cameraPos.x = playerPos.x;
 
         // todo : ここどうにかしたい
@@ -57,7 +49,7 @@ void Camera::Update(float elapsedTime)
             break;
         case 1:
             cameraPos.y += elapsedTime * 5;
-                if (cameraPos.y >= 11.0f)cameraPos.y = 11.0f;
+            if (cameraPos.y >= 11.0f)cameraPos.y = 11.0f;
             break;
         case 2:
             cameraPos.y += elapsedTime * 5;
@@ -67,6 +59,55 @@ void Camera::Update(float elapsedTime)
 
         GetTransform()->SetPosition(cameraPos);
     }
+
+#else
+    
+    NO_CONST DirectX::XMFLOAT3& cameraPos = GetTransform()->GetPosition();
+
+    NO_CONST PlayerManager&  playerManager = PlayerManager::Instance();
+    const DirectX::XMFLOAT3& playerPos     = playerManager.GetPlayer()->GetTransform()->GetPosition();
+    const float plLastLandingTerrainMaxY   = playerManager.GetPlayer()->lastLandingTerrainAABB_.max.y;
+
+    // カメラのX位置をプレイヤーのX位置と同期
+    cameraPos.x = playerPos.x;
+
+    const    float moveSpeedY      = 5.0f * elapsedTime;    // 移動速度Y
+    NO_CONST float targetPositionY = 0.0f;                  // 目標位置Y
+
+    // プレイヤーが最後に着地した地形の頭上が一定より上ならカメラを移動させる
+    if (plLastLandingTerrainMaxY > 7.5f)
+    {
+        // 目標位置を設定
+        targetPositionY = plLastLandingTerrainMaxY + 1.75f;
+
+        // カメラが目標位置より下にいたら上に移動する
+        if (cameraPos.y < targetPositionY)
+        {          
+            // カメラ上移動・超過修正(右が左より小さければ右を代入)
+            cameraPos.y = (std::min)(targetPositionY, cameraPos.y + moveSpeedY);
+        }
+
+        // カメラが目標位置より上にいたら下に移動する
+        else if (cameraPos.y < targetPositionY)
+        {
+            // カメラ上移動・超過修正(右が左より大きければ右を代入)
+            cameraPos.y = (std::max)(targetPositionY, cameraPos.y - moveSpeedY);
+        }
+
+    }
+    // それ以外ならカメラをもとに戻す
+    else
+    {
+        // 目標位置を設定
+        targetPositionY = 8.0f;
+
+        // カメラ下移動・超過修正(右が左より大きければ右を代入)
+        cameraPos.y = (std::max)(targetPositionY, cameraPos.y - moveSpeedY);
+    }
+
+    GetTransform()->SetPosition(cameraPos);
+#endif
+
 }
 
 

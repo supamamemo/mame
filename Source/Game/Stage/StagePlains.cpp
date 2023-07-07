@@ -48,7 +48,7 @@ void StagePlains::Initialize()
 {
     // camera‰Šú‰»
     Camera& camera = Camera::Instance();
-    camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 10, -12));
+    camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 8.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0, 0, 0));
 
     // terrain‰Šú‰»
