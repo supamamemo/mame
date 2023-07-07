@@ -768,15 +768,22 @@ namespace RED_TOFU
 
         // 回転中ならreturn
         if (owner->Turn(elapsedTime, moveDirectionX, turnSpeed)) return;
-        
-        //// 回転が終わった後、範囲内にプレイヤーがいたら発見ステートへ遷移
-        //if (State::FindPlayer())
-        //{
-        //    owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Find));
-        //    return;
-        //}
-        //// 歩行ステートへ遷移
-        //else
+
+
+        // 地形の端を超えて落ちそうになったら修正
+        {
+            if (owner->lastLandingTerrainAABB_.max.x != 0.0f && owner->aabb_.max.x > owner->lastLandingTerrainAABB_.max.x)
+            {
+                const float fixLeft = -fabsf(owner->aabb_.max.x - owner->lastLandingTerrainAABB_.max.x);
+                owner->GetTransform()->AddPositionX(fixLeft);
+            }
+            else if (owner->lastLandingTerrainAABB_.min.x != 0.0f && owner->aabb_.min.x < owner->lastLandingTerrainAABB_.min.x)
+            {
+                const float fixRight = fabsf(owner->aabb_.min.x - owner->lastLandingTerrainAABB_.min.x);
+                owner->GetTransform()->AddPositionX(fixRight);
+            }
+        }
+
         {
             // 移動範囲の中心から移動方向に向かって移動範囲の半径分進んだ位置を目的地に設定する
             const float moveRangeCenterX = owner->GetMoveRangeCenterX();

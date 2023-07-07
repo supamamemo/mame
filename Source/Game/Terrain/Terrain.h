@@ -14,6 +14,8 @@ public:
         None    = -1,
         Normal,         // 普通の地形
         Move,           // 動く地形
+        NoClimb,        // 登れない地形
+        NoCollision,    // 当たり判定なし地形
     };
 
 public:

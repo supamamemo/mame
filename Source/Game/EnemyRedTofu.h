@@ -30,7 +30,7 @@ namespace RED_TOFU
 
     public:
         // Imgui–¼‘O”í‚è–hŽ~‚Ì‚½‚ß‚Ì‚â‚Â //
-        static int nameNum;
+        //static int nameNum;
         const char* GetName() const { return name.c_str(); }
         void SetName(const char* n) { name = n; }
         // Imgui–¼‘O”í‚è–hŽ~‚Ì‚½‚ß‚Ì‚â‚Â //

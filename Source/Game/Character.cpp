@@ -529,7 +529,7 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
         const int terrainCount = terrainManager.GetTerrainCount();
         for (int i = 0; i < terrainCount; ++i)
         {
-            const Terrain* terrain = terrainManager.GetTerrain(i);
+            NO_CONST Terrain* terrain = terrainManager.GetTerrain(i);
 
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
             {
@@ -579,7 +579,11 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
                 UpdateAABB();
 
                 // ï«Ç…ìñÇΩÇ¡ÇΩéûÇÃèàóù
-                if (!isHitWall_) OnHitWall();
+                if (!isHitWall_)
+                {
+                    saveWall_ = terrain; // ìñÇΩÇ¡ÇΩï«ÇÃAABBÇï€ë∂
+                    OnHitWall();
+                }
                 isHitWall_ = true;
 
                 break;

@@ -164,6 +164,7 @@ public:
     Collision::AABB aabb_                   = {};                   // 当たり判定AABB
     Collision::AABB lastLandingTerrainAABB_ = {};                   // 最後に着地した地形のAABB（落下ミスの復活時に使用）
     Terrain*        saveTerrain_            = nullptr;              // 地形を保存するポインタ
+    Terrain*        saveWall_               = nullptr;              // 壁のAABBを保存するAABB
 
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders;

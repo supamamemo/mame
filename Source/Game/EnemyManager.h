@@ -46,7 +46,7 @@ public:
     Enemy* GetEnemy(int index) { return enemies.at(index); }
 
 private:
-    std::vector<Enemy*> enemies;
-    std::set<Enemy*> removes;
+    std::vector<Enemy*> enemies = {};
+    std::set<Enemy*>    removes = {};
 };
 
