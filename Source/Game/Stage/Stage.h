@@ -17,6 +17,5 @@ public:
     virtual void End()                              = 0; // 毎フレーム一番最後に呼ばれる
     virtual void Render(const float& elapsedTime)   = 0; // 描画処理
     virtual void DrawDebug()                        = 0; // デバッグ描画
-
 };
 

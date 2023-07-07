@@ -4,10 +4,11 @@
 
 #include "BossStateDerived.h"
 #include "PlayerManager.h"
+#include "EnemyTofu.h"
 
 namespace RED_TOFU
 {
-    int EnemyRedTofu::nameNum = 0;
+    //int EnemyRedTofu::nameNum = 0;
 
     // コンストラクタ
     EnemyRedTofu::EnemyRedTofu()
@@ -18,9 +19,9 @@ namespace RED_TOFU
         //model = std::make_unique<Model>(graphics.GetDevice(), "./resources/touhuwalk.fbx", true);
 
         // imgui名前かぶりが起きないように...
-        name = "EnemyTofu" + std::to_string(nameNum);
+        name = "EnemyTofu" + std::to_string(EnemyTofu::nameNum);    // 白豆腐のnaneNumを使う
         SetName(name.c_str());
-        ++nameNum;
+        ++EnemyTofu::nameNum;
     }
 
     // デストラクタ
@@ -42,8 +43,8 @@ namespace RED_TOFU
         jumpSpeed_  = 12.0f;            // ジャンプ速度設定
 
         moveRangeRadius_ = 8.0f;        // 移動範囲の半径
-        searchLengthX_   = 8.0f;        // X軸で索敵できる距離
-        searchLengthY_   = 4.0f;        // Y軸で索敵できる距離
+        searchLengthX_   = 6.0f;        // X軸で索敵できる距離
+        searchLengthY_   = 6.0f;        // Y軸で索敵できる距離
 
         enemyType_ = EnemyType::RedTofu;    // 敵の種類を設定
 
@@ -192,10 +193,11 @@ namespace RED_TOFU
             return;
         }        
 #else // 壁をよじ登る
-        // 追跡ステートのときは壁をよじ登る(落下中は登れない)
-        else if (currentStateIndex == stateTrack && velocity.y >= 0.0f)
+        // 追跡ステートのときは壁をよじ登る(落下中・登れないタイプの地形なら登れない)
+        else if (currentStateIndex == stateTrack && velocity.y >= 0.0f &&
+            saveWall_->terrainType_ != Terrain::Type::NoClimb)
         {         
-            Jump(jumpSpeed_ * 0.8f);
+            Jump(jumpSpeed_ * 0.5f);
             return;
         }
 #endif

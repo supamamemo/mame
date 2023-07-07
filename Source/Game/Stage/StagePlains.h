@@ -2,9 +2,11 @@
 
 #include "Stage.h"
 
+#include "../Terrain/TerrainManager.h"
 #include "../PlayerManager.h"
-#include "../GrassBlock.h"
+#include "../EnemyManager.h"
 
+#include "../GrassBlock.h"
 #include "../Box.h"
 
 class StagePlains : public Stage
@@ -46,6 +48,13 @@ public:
     float uiTimer = 0.0f;
     
     DirectX::XMFLOAT3 displayUiPosition{};
+
+private:
+    void RegisterTerrains(TerrainManager& terrainManager);  // 地形生成
+    void RegisterEnemies(EnemyManager& enemyManager);       // エネミー生成
+
+    void SetTerrains(TerrainManager& terrainManager);       // 地形設定
+    void SetEnemies(EnemyManager& enemyManager);            // エネミー設定
 
 private:
     enum UISPRITE

@@ -8,8 +8,8 @@
 class EnemyManager
 {
 private:
-    EnemyManager() {};
-    ~EnemyManager() {};
+    EnemyManager() {}
+    ~EnemyManager() {}
 
 public:
     // 唯一のインスタンス取得
@@ -46,7 +46,7 @@ public:
     Enemy* GetEnemy(int index) { return enemies.at(index); }
 
 private:
-    std::vector<Enemy*> enemies;
-    std::set<Enemy*> removes;
+    std::vector<Enemy*> enemies = {};
+    std::set<Enemy*>    removes = {};
 };
 

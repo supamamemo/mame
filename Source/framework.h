@@ -53,14 +53,6 @@ private:
 
 public:
 
-	// XAUDIO2
-	Microsoft::WRL::ComPtr<IXAudio2> xAudio2;
-	IXAudio2MasteringVoice* masterVoice = nullptr;
-	std::unique_ptr<Audio> bgm[8];
-	std::unique_ptr<Audio> se[8];
-
-
-
 	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> depth_stencil_states[4]; // ID3D11DepthStencilStateインターフェイス
 	// 深度ステンシル状態インターフェイスは、
 	// 出力マージャーステージにバインドできる深度ステンシル状態の説明を保持します

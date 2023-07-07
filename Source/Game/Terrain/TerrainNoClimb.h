@@ -2,11 +2,11 @@
 
 #include "Terrain.h"
 
-class TerrainPlains : public Terrain
+class TerrainNoClimb : public Terrain
 {
 public:
-    TerrainPlains(const char* const filename);
-    ~TerrainPlains() override;
+    TerrainNoClimb(const char* const filename);
+    ~TerrainNoClimb() override;
 
     void Initialize()                       override; // ‰Šú‰»
     void Finalize()                         override; // I—¹‰»

@@ -235,7 +235,9 @@
     <ClCompile Include="Source\Game\Terrain\TerrainManager.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainMoveDown.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainMoveUp.cpp" />
-    <ClCompile Include="Source\Game\Terrain\TerrainPlains.cpp" />
+    <ClCompile Include="Source\Game\Terrain\TerrainNoClimb.cpp" />
+    <ClCompile Include="Source\Game\Terrain\TerrainNoCollision.cpp" />
+    <ClCompile Include="Source\Game\Terrain\TerrainNormal.cpp" />
     <ClCompile Include="Source\Game\TitleCharacter.cpp" />
     <ClCompile Include="Source\Game\TitleEnemyTofu.cpp" />
     <ClCompile Include="Source\Game\TitlePlayer.cpp" />
@@ -245,6 +247,7 @@
     <ClCompile Include="Source\gltf_model.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Mame\Audio.cpp" />
+    <ClCompile Include="Source\Mame\AudioManager.cpp" />
     <ClCompile Include="Source\Mame\Graphics\Camera.cpp" />
     <ClCompile Include="Source\Mame\Graphics\Effect.cpp" />
     <ClCompile Include="Source\Mame\Graphics\EffectManager.cpp" />
@@ -316,7 +319,9 @@
     <ClInclude Include="Source\Game\Terrain\TerrainManager.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainMoveDown.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainMoveUp.h" />
-    <ClInclude Include="Source\Game\Terrain\TerrainPlains.h" />
+    <ClInclude Include="Source\Game\Terrain\TerrainNoClimb.h" />
+    <ClInclude Include="Source\Game\Terrain\TerrainNoCollision.h" />
+    <ClInclude Include="Source\Game\Terrain\TerrainNormal.h" />
     <ClInclude Include="Source\Game\TitleCharacter.h" />
     <ClInclude Include="Source\Game\TitleEnemyTofu.h" />
     <ClInclude Include="Source\Game\TitlePlayer.h" />
@@ -326,6 +331,7 @@
     <ClInclude Include="Source\gltf_model.h" />
     <ClInclude Include="Source\high_resolution_timer.h" />
     <ClInclude Include="Source\Mame\Audio.h" />
+    <ClInclude Include="Source\Mame\AudioManager.h" />
     <ClInclude Include="Source\Mame\Graphics\Camera.h" />
     <ClInclude Include="Source\Mame\Graphics\Effect.h" />
     <ClInclude Include="Source\Mame\Graphics\EffectManager.h" />

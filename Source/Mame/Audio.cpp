@@ -133,7 +133,7 @@ Audio::~Audio()
     delete[] buffer.pAudioData;
 }
 
-void Audio::Play(int loopCount)
+void Audio::Play(const bool isLoop)
 {
     HRESULT hr;
 
@@ -144,7 +144,8 @@ void Audio::Play(int loopCount)
     {
         return;
     }
-
+   
+    const int loopCount = isLoop ? 255 : 0; // (255 : XAUDIO2_LOOP_INFINITE)
     buffer.LoopCount = loopCount;
     hr = sourceVoice->SubmitSourceBuffer(&buffer);
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
