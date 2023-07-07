@@ -4,6 +4,7 @@
 #include "../../Mame/Graphics/Camera.h"
 #include "../../Mame/Scene/SceneManager.h"
 #include "../../Mame/Input/Input.h"
+#include "../../Mame/AudioManager.h"
 
 #include "../EnemyManager.h"
 #include "../Terrain/TerrainManager.h"
@@ -36,6 +37,9 @@ StageSelection::StageSelection()
 
     // player生成
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::Tutorial, true); // チュートリアルBGM再生
 }
 
 // 初期化
@@ -106,6 +110,9 @@ void StageSelection::Finalize()
 
     // player終了化
     PlayerManager::Instance().Finalize();
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopAllAudio(); // 全音楽停止
 }
 
 // Updateの前に呼ばれる処理

@@ -1,10 +1,12 @@
-#include "Boss.h"
 #include "BossStateDerived.h"
+
+#include "../Mame/AudioManager.h"
 
 #include "PlayerManager.h"
 
-#include "CannonBall.h"
+#include "Boss.h"
 #include "EnemyTofu.h"
+#include "CannonBall.h"
 
 
 // playerが索敵範囲内にいるか判定する
@@ -271,9 +273,15 @@ namespace BOSS
 
             if (currentRecoilLength >= recoilLength)
             {
-                state = 1;
                 owner->PlayAnimation(static_cast<int>(BossAnimation::Confusion), true);
+
                 SetTimer(confusionTime);
+
+                AudioManager& audioManager = AudioManager::Instance();
+                audioManager.PlaySE(SE::Boss_Stun, true); // 気絶SE再生
+
+                state = 1;
+                break;
             }
 
             break;
@@ -282,24 +290,28 @@ namespace BOSS
             if (GetTimer() <= 0.0f)
             {
                 owner->PlayAnimation(static_cast<int>(BossAnimation::DeConfusion), false);
+
                 state = 2;
+                break;
             }
 
             break;
         case 2:
-            if (!owner->IsPlayAnimation())state = 3;
+            if (!owner->IsPlayAnimation())
+            {
+                AudioManager& audioManager = AudioManager::Instance();
+                audioManager.StopSE(SE::Boss_Stun); // 気絶SE停止
+
+                state = 3;
+                break;
+            }
 
             break;
         case 3:
             owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
 
             break;
-        }
-
-
-        
-
-        
+        }     
        
     }
 
@@ -317,7 +329,10 @@ namespace BOSS
     // 初期化
     void DamageState::Enter()
     {
-        owner->PlayAnimation(static_cast<int>(BossAnimation::GetAttack), false);        
+        owner->PlayAnimation(static_cast<int>(BossAnimation::GetAttack), false);   
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.StopSE(SE::Boss_Stun); // 気絶SE停止
     }
 
     // 更新
@@ -347,6 +362,9 @@ namespace BOSS
     void CryState::Enter()
     {
         owner->PlayAnimation(static_cast<int>(BossAnimation::Fall), false);
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.PlaySE(SE::Boss_Down, false); // ダウンSE再生
     }
 
     // 更新
@@ -373,6 +391,7 @@ namespace BOSS
     {
     }
 }
+
 
 // WalkState
 namespace TOFU

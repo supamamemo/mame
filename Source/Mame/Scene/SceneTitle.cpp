@@ -5,6 +5,7 @@
 
 #include "../Graphics/Graphics.h"
 #include "../Input/Input.h"
+#include "../AudioManager.h"
 
 #include "../../misc.h"
 #include "../../texture.h"
@@ -193,6 +194,9 @@ void SceneTitle::Initialize()
             //create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_ps.cso", dummy_sprite->GetPixelShaderAddress());
         }
     }
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::Title, true); // タイトルBGM再生
 }
 
 // 終了化
@@ -204,6 +208,9 @@ void SceneTitle::Finalize()
     }
 
     titlePlayer_->Finalize();
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopAllAudio(); // 全音楽停止
 }
 
 // 毎フレーム一番最初に呼ばれる

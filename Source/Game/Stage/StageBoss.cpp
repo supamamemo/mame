@@ -2,6 +2,7 @@
 
 #include "../../Mame/Graphics/Graphics.h"
 #include "../../Mame/Scene/SceneManager.h"
+#include "../../Mame/AudioManager.h"
 
 #include "../EnemyManager.h"
 
@@ -129,6 +130,9 @@ void StageBoss::Initialize()
         UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetIsRender(true);
     }
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::Boss, true); // ボスBGM再生
 }
 
 // 終了化
@@ -149,6 +153,9 @@ void StageBoss::Finalize()
     // ui終了化
     UIManager::Instance().Finalize();
     UIManager::Instance().Clear();
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopAllAudio(); // 全音楽停止
 }
 
 // Updateの前に呼ばれる
@@ -326,7 +333,7 @@ void StageBoss::UpdateUi(int uiCount, float speed, int state, float elapsedTime)
             DirectX::XMFLOAT3 pos = UIManager::Instance().GetUI(i)->GetPosition();
             DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
 
-            pos.x -= speed * 1.63;
+            pos.x -= speed * 1.63f;
             pos.y -= speed;
             size.x -= speed * 2.15f;
             size.y -= speed;

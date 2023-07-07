@@ -55,16 +55,16 @@ void SceneGame::Initialize()
     //spriteDissolve[1]->SetFade(true);
 
 
-
     // カメラを固定値にしている
     // これまたどっかやる
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
-    StageManager::Instance().ChangeStage(new StagePlains);
-    //StageManager::Instance().ChangeStage(new StageBoss);
+
+    StageManager::Instance().ChangeStage(new StageSelection);
     //StageManager::Instance().ChangeStage(new StageTutorial);
-    //StageManager::Instance().ChangeStage(new StageSelection);
+    //StageManager::Instance().ChangeStage(new StagePlains);
+    //StageManager::Instance().ChangeStage(new StageBoss);
 }
 
 // 終了化
@@ -79,24 +79,28 @@ void SceneGame::Begin()
     // ステージの切り替え
     if (GetChangeStageTutorial())
     {
+        EnemyManager::Instance().Clear();
         StageManager::Instance().Clear();
         StageManager::Instance().ChangeStage(new StageTutorial);
         SetChangeStageTutorial();
     }
     if (GetChangeStagePlains())
     {
+        EnemyManager::Instance().Clear();
         StageManager::Instance().Clear();
         StageManager::Instance().ChangeStage(new StagePlains);
         SetChangeStagePlains();
     }
     if (GetChangeStageBoss())
     {
+        EnemyManager::Instance().Clear();
         StageManager::Instance().Clear();
         StageManager::Instance().ChangeStage(new StageBoss);
         SetChangeStageBoss();
     }
     if (GetChangeStageSelect())
     {
+        EnemyManager::Instance().Clear();
         StageManager::Instance().Clear();
         StageManager::Instance().ChangeStage(new StageSelection);
         SetChangeStageSelect();

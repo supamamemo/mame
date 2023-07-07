@@ -3,6 +3,7 @@
 #include "../../Mame/Graphics/Graphics.h"
 #include "../../Mame/Graphics/Camera.h"
 #include "../../Mame/Scene/SceneManager.h"
+#include "../../Mame/AudioManager.h"
 
 #include "../Terrain/TerrainNormal.h"
 #include "../Terrain/TerrainFall.h"
@@ -17,36 +18,41 @@
 // コンストラクタ
 StagePlains::StagePlains()
 {
-    // terrain生成
-    Terrain::nameNum = 0;
-    TerrainManager& terrainManager = TerrainManager::Instance();
-    RegisterTerrains(terrainManager);
-
-    // player生成
-    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
-
-    // enemy生成
-    EnemyTofu::nameNum              = 0;
-    EnemyManager& enemyManager = EnemyManager::Instance();
-    RegisterEnemies(enemyManager);
-    
-    // 背景
-    back = std::make_unique<Box>("./resources/back.fbx");
-
-    // UI
-    {
-        UIManager& uiManager = UIManager::Instance();
-        UI::nameNum = 0;
-        uiManager.Register(new UI(L"./resources/ui/baseMameHp.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameLeft.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameCenter.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameRight.png"));
-    }
 }
 
 // 初期化
 void StagePlains::Initialize()
 {
+    // 生成
+    {
+        // terrain生成
+        Terrain::nameNum = 0;
+        TerrainManager& terrainManager = TerrainManager::Instance();
+        RegisterTerrains(terrainManager);
+
+        // player生成
+        PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+        // enemy生成
+        EnemyTofu::nameNum = 0;
+        EnemyManager& enemyManager = EnemyManager::Instance();
+        RegisterEnemies(enemyManager);
+
+        // 背景
+        back = std::make_unique<Box>("./resources/back.fbx");
+
+        // UI
+        {
+            UIManager& uiManager = UIManager::Instance();
+            UI::nameNum = 0;
+            uiManager.Register(new UI(L"./resources/ui/baseMameHp.png"));
+            uiManager.Register(new UI(L"./resources/ui/mameLeft.png"));
+            uiManager.Register(new UI(L"./resources/ui/mameCenter.png"));
+            uiManager.Register(new UI(L"./resources/ui/mameRight.png"));
+        }
+    }
+
+
     // camera初期化
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 8.0f, -12.0f));
@@ -95,6 +101,8 @@ void StagePlains::Initialize()
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetIsRender(true);
     }
     
+    // BGM再生
+    AudioManager::Instance().PlayBGM(BGM::Stage, true);
 }
 
 // 終了化
@@ -114,6 +122,9 @@ void StagePlains::Finalize()
     // uimanager
     UIManager::Instance().Finalize();
     UIManager::Instance().Clear();
+
+    // 全音楽停止
+    AudioManager::Instance().StopAllAudio();
 }
 
 // Updateの前に呼ばれる処理
@@ -390,14 +401,24 @@ void StagePlains::RegisterTerrains(TerrainManager& terrainManager)
     terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 42
 
     // 立て看板(当たり判定なし)
-    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 43
-    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 44
-    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx"));  // 45
-    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 46
-    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx"));  // 47
-    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 48
-    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 49
-    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 50
+    {
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 43
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 44
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx"));  // 45
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 46
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx"));  // 47
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 48
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 49
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 50
+    }
+
+    // 手前と奥の飾り地形
+    {
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/4.fbx"));  // 51
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/4.fbx"));  // 52
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/6.fbx"));  // 53
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/6.fbx"));  // 54
+    }
 }
 
 // エネミー生成
@@ -508,6 +529,13 @@ void StagePlains::SetTerrains(TerrainManager& terrainManager)
         terrainManager.GetTerrain(50)->GetTransform()->SetRotationY(ToRadian(180.0f));
         terrainManager.GetTerrain(50)->GetTransform()->SetRotationZ(ToRadian(25.0f));   // 最後の看板は横に少し傾ける
     }
+
+    // 手前と奥の飾り地形
+    terrainManager.GetTerrain(51)->GetTransform()->SetPosition(DirectX::XMFLOAT3(38.0f,  -1.0f, -1.0f));
+    terrainManager.GetTerrain(52)->GetTransform()->SetPosition(DirectX::XMFLOAT3(74.0f,   0.0f,  19.0f));
+    terrainManager.GetTerrain(53)->GetTransform()->SetPosition(DirectX::XMFLOAT3(79.0f,   3.0f,  24.0f));
+    terrainManager.GetTerrain(54)->GetTransform()->SetPosition(DirectX::XMFLOAT3(201.0f, -1.0f,  20.5f));
+
 }
 
 // エネミー設定

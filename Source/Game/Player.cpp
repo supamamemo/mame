@@ -3,11 +3,13 @@
 #include "../Mame/Graphics/Graphics.h"
 #include "../Mame/Input/Input.h"
 #include "../Mame/Scene/SceneManager.h"
+#include "../Mame/AudioManager.h"
 
 #include "OperatorXMFLOAT3.h"
 #include "EnemyManager.h"
 
 #include "UIManager.h"
+
 
 Player::Player()
 {
@@ -394,7 +396,7 @@ const bool Player::InputMove(const float& elapsedTime)
     }
 
     // 旋回処理(急ブレーキアニメーション再生中は処理をしない)
-    if (model->GetCurrentAnimationIndex() != Anim_Break)
+    if (model->GetCurrentAnimationIndex() != Anim_Brake)
     {
         Turn(elapsedTime, saveMoveVecX_, turnSpeed_);
     }
@@ -501,7 +503,11 @@ void Player::CollisionPlayerVsEnemies()
 
             enemy->SetMoveDirectionX(saveMoveVecX_n); // プレイヤーの攻撃方向に吹っ飛ぶようにする
 
-            Camera::Instance().PlayShake(ShakeType::VerticalShake);
+            Camera::Instance().PlayShake(ShakeType::VerticalShake); // カメラを揺らす(ボスステージのみ)
+
+            AudioManager& audioManager = AudioManager::Instance();
+            audioManager.StopSE(SE::PL_BounceHit);              // バウンスヒットSE停止
+            audioManager.PlaySE(SE::PL_BounceHit, false, true); // バウンスヒットSE再生
         }
     }
 }
@@ -533,6 +539,10 @@ void Player::OnLanding()
 {
     // ジャンプ回数リセット
     jumpCount = 0;
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopSE(SE::PL_Landing);              // 着地SE停止
+    audioManager.PlaySE(SE::PL_Landing, false, true); // 着地SE再生
 
     // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
     if (moveSpeed_ == runMoveSpeed)
@@ -592,6 +602,10 @@ void Player::OnBounce()
         velocity.y    = bounceSpeedY;   // バウンスY速度を代入
         bounceSpeedX *= bounceScaleX;   // バウンスX速度を減少
         bounceSpeedY *= bounceScaleY;   // バウンスY速度を減少
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.StopSE(SE::PL_Bounce);                // バウンスSE停止
+        audioManager.PlaySE(SE::PL_Bounce, false, true);   // バウンスSE再生
     }
 }
 
@@ -683,6 +697,9 @@ void Player::TransitionIdleState()
 
     // 着地アニメーションが再生されていなければ待機アニメーション再生
     if (model->GetCurrentAnimationIndex() != Anim_JumpEnd) PlayAnimation(Anim_Idle, true);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();    // プレイヤーの行動SE停止
 }
 
 // 待機ステート更新処理
@@ -714,6 +731,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
         // 移動速度が走行速度と同じ（走行状態）でダッシュキーが押され続けていれば走行ステートへ遷移
         else if (moveSpeed_ == runMoveSpeed && gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
+            moveSpeed_ = defaultMoveSpeed; // 移動速度をリセット
             TransitionRunState();
             return;
         }
@@ -735,6 +753,10 @@ void Player::TransitionWalkState()
     state = State::Walk;
 
     PlayAnimation(Anim_Walk, true, 1.0f, 0.25f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();        // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Walk, true); // 歩行SE再生
 }
 
 // 歩行ステート更新処理
@@ -778,6 +800,10 @@ void Player::TransitionDashState()
     dashCoolTimer = dashCoolTime;    // ダッシュクールタイムを設定
 
     PlayAnimation(Anim_Dash, false, 1.0f, 0.0f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();            // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Dash, false);    // ダッシュSE再生
 }
 
 // ダッシュステート更新処理
@@ -835,7 +861,7 @@ void Player::TransitionRunState()
     state = State::Run;
 
     // 走行時の速度パラメータを設定
-    moveSpeed_      = runMoveSpeed;
+    moveSpeed_       = runMoveSpeed;
     acceleration_    = runAcceleration;
     friction_        = runFriction;
 
@@ -844,15 +870,24 @@ void Player::TransitionRunState()
 
     // 走行アニメーション再生
     PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();        // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Run, true);  // 走行SE再生
 }
 
 // 走行ステート更新処理
 void Player::UpdateRunState(const float& elapsedTime)
 {
+    AudioManager& audioManager = AudioManager::Instance();
+
     // ブレーキ・着地アニメーションが終わったら走行アニメーションに戻る
     if (!IsPlayAnimation()) 
     {
         PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
+
+        audioManager.StopPlayerMoveSE();        // プレイヤーの行動SE停止
+        audioManager.PlaySE(SE::PL_Run, true);  // 走行SE再生
     }
 
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
@@ -876,7 +911,10 @@ void Player::UpdateRunState(const float& elapsedTime)
         };
         if (isPlayBreakAnimation)
         {
-            PlayAnimation(Anim_Break, false, 1.8f, 0.5f);
+            PlayAnimation(Anim_Brake, false, 1.8f, 0.5f);
+
+            audioManager.StopPlayerMoveSE();            // プレイヤーの行動SE停止
+            audioManager.PlaySE(SE::PL_Brake, false);   // ブレーキSE再生
         }
 
         // 走行キー入力がなければ歩行ステートへ
@@ -915,6 +953,10 @@ void Player::TransitionJumpState()
     
     // ジャンプ開始アニメーション再生
     PlayAnimation(Anim_JumpInit, false, 1.0f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();            // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Jump, false);    // ジャンプSE再生
 }
 
 // ジャンプステート更新処理
@@ -981,6 +1023,10 @@ void Player::TransitionHipDropState()
     isInvincible    = true;               // 無敵状態に設定
 
     PlayAnimation(Anim_HipDrop, true);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();            // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Dash, false);    // ダッシュSE再生(ヒップドロップSE代わり)
 }
 
 // ヒップドロップステート更新処理
@@ -1020,6 +1066,10 @@ void Player::TransitionDeathState()
 
     // ダッシュアニメ―ションを再生
     PlayAnimation(Anim_Dash, true, 1.25f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();                  // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Bounce, false, true);  // バウンスSE再生
 }
 
 void Player::UpdateDeathState(const float& elapsedTime)

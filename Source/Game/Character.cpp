@@ -1,5 +1,8 @@
 #include "Character.h"
+
 #include "../Mame/Graphics/Graphics.h"
+#include "../Mame/AudioManager.h"
+
 #include "Terrain/TerrainManager.h"
 #include "PlayerManager.h"
 
@@ -560,7 +563,11 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
                 {                  
                     horizontalSpeed = -horizontalSpeed; // 今回の速度を反転
                     velocity.x      = -velocity.x;      // 跳ね返って空中に浮いてるときのX速度も反転させる
-                    saveMoveVecX_    = -saveMoveVecX_;    // 向いている方向を逆にさせる
+                    saveMoveVecX_    = -saveMoveVecX_;  // 向いている方向を逆にさせる
+
+                    AudioManager& audioManager = AudioManager::Instance();
+                    audioManager.StopSE(SE::PL_Bounce);                 // バウンスSE停止
+                    audioManager.PlaySE(SE::PL_Bounce, false, true);    // バウンスSE再生
                 }
                 else
                 {

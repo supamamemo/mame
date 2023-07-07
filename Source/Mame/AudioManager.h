@@ -9,12 +9,31 @@
 
 enum class BGM
 {
+    Title,
+    Tutorial,
+    Stage,
+    Boss,
 
+    BGM_Max,
 };
 
 enum class SE
 {
+    PL_Walk,
+    PL_Dash,
+    PL_Run,
+    PL_Brake,
+    PL_Jump,
+    PL_Landing,
+    PL_Bounce,
+    PL_BounceHit,
+    PL_Damaged,
 
+    Boss_Stun,
+    Boss_HitWall,
+    Boss_Down,
+
+    SE_Max,
 };
 
 class AudioManager
@@ -32,6 +51,25 @@ public:
 
     void LoadAudio();                               // âπäyì«Ç›çûÇ›
 
+    // BGMçƒê∂
+    void PlayBGM(
+        const BGM& bgm, 
+        const bool isLoop = false, 
+        const bool isIgnoreQueue = false
+    );    
+
+    // SEçƒê∂
+    void PlaySE(
+        const SE& se, 
+        const bool isLoop = false, 
+        const bool isIgnoreQueue = false
+    );       
+
+    void StopBGM(const BGM& bgm);                   // BGMí‚é~
+    void StopSE(const SE& se);                      // SEí‚é~
+
+    void StopPlayerMoveSE();                     // ÉvÉåÉCÉÑÅ[ÇÃçsìÆSEí‚é~
+
     void StopAllBGM();                              // ëSBGMí‚é~
     void StopAllSE();                               // ëSSEí‚é~
     void StopAllAudio();                            // ëSâπäyí‚é~
@@ -46,8 +84,8 @@ public:
     IXAudio2MasteringVoice*          masterVoice = nullptr;
 
 private:
-    std::unique_ptr<Audio> bgm_[8] = {};
-    std::unique_ptr<Audio> se_[8]  = {};
+    std::unique_ptr<Audio> bgm_[static_cast<int>(BGM::BGM_Max)] = {};
+    std::unique_ptr<Audio> se_[static_cast<int>(SE::SE_Max)]    = {};
 
 };
 

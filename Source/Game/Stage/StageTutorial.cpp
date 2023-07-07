@@ -2,6 +2,7 @@
 
 #include "../../Mame/Graphics/Graphics.h"
 #include "../../Mame/Input/Input.h"
+#include "../../Mame/AudioManager.h"
 
 #include "../PlayerManager.h"
 
@@ -163,6 +164,10 @@ void StageTutorial::Initialize()
     effect[1] = new Effect("./resources/effect/ring.efk");
 
     effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
+
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::Tutorial, true); // チュートリアルBGM再生
 }
 
 // 終了
@@ -185,8 +190,11 @@ void StageTutorial::Finalize()
 
     effect[0]->Stop(effect[0]->handle);
     effect[1]->Stop(effect[1]->handle);
-    delete effect[0];
-    delete effect[1];
+    SafeDelete(effect[0]);
+    SafeDelete(effect[1]);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopAllAudio(); // 全音楽停止
 }
 
 // Updateの前に呼ばれる
@@ -594,7 +602,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
                 effect[1]->SetAngle(10);
             }
             effect[1]->SetPosition(pos);
-            effect[1]->SetRotate(DirectX::XMFLOAT3(0, DirectX::XMConvertToRadians(static_cast<int>(effect[1]->GetAngle())), DirectX::XMConvertToRadians(90)));
+            effect[1]->SetRotate(DirectX::XMFLOAT3(0, ToRadian(effect[1]->GetAngle()), ToRadian(90.0f)));
 
             effect[1]->handle = effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetRotate(), effect[1]->GetColor(), 0.0f);
             effect[1]->SetTimer(0.0f);

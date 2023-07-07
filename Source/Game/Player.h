@@ -91,7 +91,7 @@ private: // enum関連
         Anim_Idle,      // 待機
         Anim_Dash,      // ダッシュ（一時的な急加速）
         Anim_Run,       // 走行
-        Anim_Break,     // ブレーキ
+        Anim_Brake,     // ブレーキ
         Anim_JumpInit,  // ジャンプ開始
         Anim_Jump,      // ジャンプ
         Anim_Fall,      // 落下

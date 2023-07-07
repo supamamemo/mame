@@ -2,6 +2,7 @@
 #include "EnemyManager.h"
 #include "PlayerManager.h"
 #include "../Mame/Scene/SceneManager.h"
+#include "../Mame/AudioManager.h"
 
 float Enemy::renderLengthXLimit_ = 40.0f;
 
@@ -44,6 +45,9 @@ void Enemy::CollisionEnemyVsPlayer()
         if (!player->ApplyDamage(1, 2.0f)) return;
 
         this->OnAttacked(); // 攻撃したときに呼ばれる処理
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.PlaySE(SE::PL_Damaged, false);   // プレイヤーの被ダメージSE再生
     }
 }
 
