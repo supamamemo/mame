@@ -261,6 +261,8 @@ void Character::VerticalFall(const float& fallSpeed)
         {
             NO_CONST Terrain* terrain = terrainManager.GetTerrain(i);
 
+            if (terrain->terrainType_ == Terrain::Type::NoCollision) continue;
+
             if (Collision::IntersectAABBVsAABB(this->aabb_, terrain->aabb_))
             {
                 // 上下左右にそれぞれ重なっている値を求める（エネミーの頭からプレイヤーの足元までの距離）
@@ -393,6 +395,8 @@ void Character::VerticalRise(const float& riseSpeed)
         for (int i = 0; i < terrainCount; ++i)
         {
             const Terrain* terrain = terrainManager.GetTerrain(i);
+
+            if (terrain->terrainType_ == Terrain::Type::NoCollision) continue;
 
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
             {
@@ -530,6 +534,8 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
         for (int i = 0; i < terrainCount; ++i)
         {
             NO_CONST Terrain* terrain = terrainManager.GetTerrain(i);
+
+            if (terrain->terrainType_ == Terrain::Type::NoCollision) continue;
 
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
             {

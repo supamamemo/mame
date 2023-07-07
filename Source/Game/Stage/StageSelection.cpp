@@ -7,7 +7,7 @@
 
 #include "../EnemyManager.h"
 #include "../Terrain/TerrainManager.h"
-#include "../Terrain/TerrainPlains.h"
+#include "../Terrain/TerrainNormal.h"
 #include "../PlayerManager.h"
 
 // コンストラクタ
@@ -30,8 +30,8 @@ StageSelection::StageSelection()
     // terrain生成
     TerrainManager& terrainManager = TerrainManager::Instance();
     {
-        terrainManager.Register(new TerrainPlains("./resources/stage/1.fbx")); // 0
-        terrainManager.Register(new TerrainPlains("./resources/stage/3.fbx")); // 1
+        terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx")); // 0
+        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx")); // 1
     }
 
     // player生成

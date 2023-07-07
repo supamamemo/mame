@@ -2,11 +2,11 @@
 
 #include "Terrain.h"
 
-class TerrainPlains : public Terrain
+class TerrainNormal : public Terrain
 {
 public:
-    TerrainPlains(const char* const filename);
-    ~TerrainPlains() override;
+    TerrainNormal(const char* const filename);
+    ~TerrainNormal() override;
 
     void Initialize()                       override; // ‰Šú‰»
     void Finalize()                         override; // I—¹‰»

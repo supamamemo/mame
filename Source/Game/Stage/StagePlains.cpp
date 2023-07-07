@@ -4,9 +4,10 @@
 #include "../../Mame/Graphics/Camera.h"
 #include "../../Mame/Scene/SceneManager.h"
 
-#include "../Terrain/TerrainPlains.h"
+#include "../Terrain/TerrainNormal.h"
 #include "../Terrain/TerrainFall.h"
 #include "../Terrain/TerrainNoClimb.h"
+#include "../Terrain/TerrainNoCollision.h"
 
 #include "../EnemyTofu.h"
 #include "../EnemyRedTofu.h"
@@ -336,57 +337,67 @@ void StagePlains::UpdateUi(int uiCount, float speed,int state,float elapsedTime)
 void StagePlains::RegisterTerrains(TerrainManager& terrainManager)
 {
     
-    terrainManager.Register(new TerrainPlains("./resources/stage/1.fbx")); // 0
-    terrainManager.Register(new TerrainPlains("./resources/stage/2.fbx")); // 1
-    terrainManager.Register(new TerrainPlains("./resources/stage/3.fbx")); // 2
-    terrainManager.Register(new TerrainPlains("./resources/stage/3.fbx")); // 3
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 4
+    terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 0
+    terrainManager.Register(new TerrainNormal("./resources/stage/2.fbx"));  // 1
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 2
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 4
 
-    terrainManager.Register(new TerrainPlains("./resources/stage/6.fbx")); // 5
-    terrainManager.Register(new TerrainPlains("./resources/stage/6.fbx")); // 6
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 7
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 8
-    terrainManager.Register(new TerrainPlains("./resources/stage/2.fbx")); // 9
+    terrainManager.Register(new TerrainNormal("./resources/stage/6.fbx"));  // 5
+    terrainManager.Register(new TerrainNormal("./resources/stage/6.fbx"));  // 6
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 7
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 8
+    terrainManager.Register(new TerrainNormal("./resources/stage/2.fbx"));  // 9
 
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 10
-    terrainManager.Register(new TerrainPlains("./resources/stage/2.fbx")); // 11
-    terrainManager.Register(new TerrainPlains("./resources/stage/2.fbx")); // 12
-    terrainManager.Register(new TerrainPlains("./resources/stage/7.fbx")); // 13
-    terrainManager.Register(new TerrainPlains("./resources/stage/7.fbx")); // 14
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 10
+    terrainManager.Register(new TerrainNormal("./resources/stage/2.fbx"));  // 11
+    terrainManager.Register(new TerrainNormal("./resources/stage/2.fbx"));  // 12
+    terrainManager.Register(new TerrainNormal("./resources/stage/7.fbx"));  // 13
+    terrainManager.Register(new TerrainNormal("./resources/stage/7.fbx"));  // 14
 
-    terrainManager.Register(new TerrainPlains("./resources/stage/3.fbx")); // 15      
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 16
-    terrainManager.Register(new TerrainPlains("./resources/stage/7.fbx")); // 17
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 18
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 19
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 15      
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 16
+    terrainManager.Register(new TerrainNormal("./resources/stage/7.fbx"));  // 17
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 18
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 19
 
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx"));  // 20
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx"));  // 21
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx"));  // 22
-    terrainManager.Register(new TerrainPlains("./resources/stage/1.fbx"));  // 23
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 20
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 21
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 22
+    terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 23
     terrainManager.Register(new TerrainNoClimb("./resources/stage/5.fbx")); // 24
 
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 25
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 26
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 27
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 28
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 29
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 25
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 26
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 27
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 28
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 29
+                                                                            
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 30
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 31
+    terrainManager.Register(new TerrainNormal("./resources/stage/6.fbx"));  // 32
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 33
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 34
+                                                                            
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 35
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 36
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 37
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 38
+    terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 39
 
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 30
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 31
-    terrainManager.Register(new TerrainPlains("./resources/stage/6.fbx")); // 32
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 33
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 34
-
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 35
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 36
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 37
-    terrainManager.Register(new TerrainPlains("./resources/stage/8.fbx")); // 38
-    terrainManager.Register(new TerrainPlains("./resources/stage/4.fbx")); // 39
-
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));   // 40
+    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 40
     terrainManager.Register(new TerrainNoClimb("./resources/stage/4.fbx")); // 41
-    terrainManager.Register(new TerrainPlains("./resources/stage/1.fbx")); // 42
+    terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 42
+
+    // 立て看板(当たり判定なし)
+    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 43
+    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 44
+    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx"));  // 45
+    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 46
+    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx"));  // 47
+    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 48
+    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 49
+    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 49
 }
 
 // エネミー生成
@@ -475,6 +486,28 @@ void StagePlains::SetTerrains(TerrainManager& terrainManager)
     terrainManager.GetTerrain(41)->GetTransform()->SetPosition(DirectX::XMFLOAT3(266.2f,    11.4f,  10.0f));
     terrainManager.GetTerrain(42)->GetTransform()->SetPosition(DirectX::XMFLOAT3(279.650f, -1.2f,   10.0f));
 
+    // 立て看板
+    {
+        terrainManager.GetTerrain(43)->GetTransform()->SetPosition(DirectX::XMFLOAT3(2.75f,  3.0f, 10.6f));
+        terrainManager.GetTerrain(44)->GetTransform()->SetPosition(DirectX::XMFLOAT3(41.25f, 8.4f, 10.6f));
+        terrainManager.GetTerrain(45)->GetTransform()->SetPosition(DirectX::XMFLOAT3(57.0f,  8.4f, 10.6f));
+        terrainManager.GetTerrain(46)->GetTransform()->SetPosition(DirectX::XMFLOAT3(73.0f,  3.0f, 10.6f));
+        terrainManager.GetTerrain(47)->GetTransform()->SetPosition(DirectX::XMFLOAT3(151.2f, 9.8f, 10.6f));
+        terrainManager.GetTerrain(48)->GetTransform()->SetPosition(DirectX::XMFLOAT3(168.0f, 2.7f, 10.6f));
+        terrainManager.GetTerrain(49)->GetTransform()->SetPosition(DirectX::XMFLOAT3(208.5f, 4.5f, 10.6f));
+        terrainManager.GetTerrain(50)->GetTransform()->SetPosition(DirectX::XMFLOAT3(257.5f, 6.8f, 10.6f));
+
+        // 裏返す
+        terrainManager.GetTerrain(43)->GetTransform()->SetRotationY(ToRadian(180.0f));
+        terrainManager.GetTerrain(44)->GetTransform()->SetRotationY(ToRadian(180.0f));
+        terrainManager.GetTerrain(45)->GetTransform()->SetRotationY(ToRadian(180.0f));
+        terrainManager.GetTerrain(46)->GetTransform()->SetRotationY(ToRadian(180.0f));
+        terrainManager.GetTerrain(47)->GetTransform()->SetRotationY(ToRadian(180.0f));
+        terrainManager.GetTerrain(48)->GetTransform()->SetRotationY(ToRadian(180.0f));
+        terrainManager.GetTerrain(49)->GetTransform()->SetRotationY(ToRadian(180.0f));
+        terrainManager.GetTerrain(50)->GetTransform()->SetRotationY(ToRadian(180.0f));
+        terrainManager.GetTerrain(50)->GetTransform()->SetRotationZ(ToRadian(25.0f));   // 最後の看板は横に少し傾ける
+    }
 }
 
 // エネミー設定

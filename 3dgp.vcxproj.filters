@@ -252,7 +252,7 @@
     <ClCompile Include="Source\Game\Pose.cpp">
       <Filter>mamelib\Game</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Terrain\TerrainPlains.cpp">
+    <ClCompile Include="Source\Game\Terrain\TerrainNormal.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="Source\Mame\Graphics\Effect.cpp">
@@ -303,10 +303,11 @@
     </ClCompile>
     <ClCompile Include="Source\Game\Terrain\TerrainNoClimb.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
-	</ClCompile>
-	<ClCompile Include="Source\Game\Stage\StageSelection.cpp">
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\StageSelection.cpp">
       <Filter>mamelib\Game\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Terrain\TerrainNoCollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -511,7 +512,7 @@
     <ClInclude Include="Source\Game\Pose.h">
       <Filter>mamelib\Game</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Terrain\TerrainPlains.h">
+    <ClInclude Include="Source\Game\Terrain\TerrainNormal.h">
       <Filter>mamelib\Game\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Source\Mame\Graphics\Effect.h">
@@ -562,10 +563,11 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Terrain\TerrainNoClimb.h">
       <Filter>mamelib\Game\Terrain</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Source\Game\Stage\StageSelection.h">
       <Filter>mamelib\Game\Stage</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Terrain\TerrainNoCollision.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">

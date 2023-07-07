@@ -236,7 +236,8 @@
     <ClCompile Include="Source\Game\Terrain\TerrainMoveDown.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainMoveUp.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainNoClimb.cpp" />
-    <ClCompile Include="Source\Game\Terrain\TerrainPlains.cpp" />
+    <ClCompile Include="Source\Game\Terrain\TerrainNoCollision.cpp" />
+    <ClCompile Include="Source\Game\Terrain\TerrainNormal.cpp" />
     <ClCompile Include="Source\Game\TitleCharacter.cpp" />
     <ClCompile Include="Source\Game\TitleEnemyTofu.cpp" />
     <ClCompile Include="Source\Game\TitlePlayer.cpp" />
@@ -318,7 +319,8 @@
     <ClInclude Include="Source\Game\Terrain\TerrainMoveDown.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainMoveUp.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainNoClimb.h" />
-    <ClInclude Include="Source\Game\Terrain\TerrainPlains.h" />
+    <ClInclude Include="Source\Game\Terrain\TerrainNoCollision.h" />
+    <ClInclude Include="Source\Game\Terrain\TerrainNormal.h" />
     <ClInclude Include="Source\Game\TitleCharacter.h" />
     <ClInclude Include="Source\Game\TitleEnemyTofu.h" />
     <ClInclude Include="Source\Game\TitlePlayer.h" />
