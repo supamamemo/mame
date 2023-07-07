@@ -108,9 +108,6 @@
     <ClCompile Include="Source\Mame\Scene\BaseScene.cpp">
       <Filter>mamelib\Mame\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Boss.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Mame\Graphics\Camera.cpp">
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClCompile>
@@ -141,9 +138,6 @@
     <ClCompile Include="Source\Game\Character.cpp">
       <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Player.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Mame\Scene\SceneTitle.cpp">
       <Filter>mamelib\Mame\Scene</Filter>
     </ClCompile>
@@ -160,9 +154,6 @@
       <Filter>mamelib\Game</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Collision.cpp">
-      <Filter>mamelib\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Common.cpp">
       <Filter>mamelib\Game</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\GrassBlock.cpp">
@@ -213,32 +204,8 @@
     <ClCompile Include="Source\texture.cpp">
       <Filter>mamelib\default\source</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Mame\Audio.cpp">
-      <Filter>mamelib\Mame</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\BossStateDerived.cpp">
       <Filter>mamelib\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\PlayerManager.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\Enemy.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\EnemyCannon.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\EnemyManager.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\CannonBall.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\CannonBallManager.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\EnemyTofu.cpp">
-      <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Terrain\TerrainBoss.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
@@ -271,9 +238,6 @@
     <ClCompile Include="Source\Mame\Graphics\ResourceManager.cpp">
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\TitlePlayer.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\UIManager.cpp">
       <Filter>mamelib\Game\UI</Filter>
     </ClCompile>
@@ -283,14 +247,8 @@
     <ClCompile Include="Source\Game\TitleCharacter.cpp">
       <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\TitleEnemyTofu.cpp">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Stage\StageTutorial.cpp">
       <Filter>mamelib\Game\Stage</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Game\EnemyRedTofu.cpp">
-      <Filter>mamelib\Game\Character</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Terrain\TerrainFall.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
@@ -307,11 +265,53 @@
     <ClCompile Include="Source\Game\Stage\StageSelection.cpp">
       <Filter>mamelib\Game\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Mame\AudioManager.cpp">
-      <Filter>mamelib\Mame</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Terrain\TerrainNoCollision.cpp">
       <Filter>mamelib\Game\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Boss.cpp">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Enemy.cpp">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\EnemyCannon.cpp">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\EnemyManager.cpp">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\EnemyRedTofu.cpp">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\EnemyTofu.cpp">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\TitleEnemyTofu.cpp">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\CannonBall.cpp">
+      <Filter>mamelib\Game\Character\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\CannonBallManager.cpp">
+      <Filter>mamelib\Game\Character\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Player.cpp">
+      <Filter>mamelib\Game\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\PlayerManager.cpp">
+      <Filter>mamelib\Game\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\TitlePlayer.cpp">
+      <Filter>mamelib\Game\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mame\AudioManager.cpp">
+      <Filter>mamelib\Mame\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Mame\Audio.cpp">
+      <Filter>mamelib\Mame\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Common.cpp">
+      <Filter>mamelib\Game\ForeignBody</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -354,9 +354,6 @@
     <ClInclude Include="Source\Mame\Scene\BaseScene.h">
       <Filter>mamelib\Mame\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Boss.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Mame\Graphics\Camera.h">
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClInclude>
@@ -396,9 +393,6 @@
     <ClInclude Include="Source\Game\Character.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Player.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Mame\Scene\SceneTitle.h">
       <Filter>mamelib\Mame\Scene</Filter>
     </ClInclude>
@@ -415,9 +409,6 @@
       <Filter>mamelib\Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Collision.h">
-      <Filter>mamelib\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Common.h">
       <Filter>mamelib\Game</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\GrassBlock.h">
@@ -456,9 +447,6 @@
     <ClInclude Include="Source\misc.h">
       <Filter>mamelib\default\header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\OperatorXMFLOAT3.h">
-      <Filter>mamelib\default\header</Filter>
-    </ClInclude>
     <ClInclude Include="Source\shader.h">
       <Filter>mamelib\default\header</Filter>
     </ClInclude>
@@ -477,32 +465,8 @@
     <ClInclude Include="Source\static_mesh.h">
       <Filter>mamelib\default\header</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Mame\Audio.h">
-      <Filter>mamelib\Mame</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\BossStateDerived.h">
       <Filter>mamelib\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\PlayerManager.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Enemy.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\EnemyCannon.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\EnemyManager.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\CannonBall.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\CannonBallManager.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\EnemyTofu.h">
-      <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainBoss.h">
@@ -536,9 +500,6 @@
     <ClInclude Include="Source\Mame\Graphics\ResourceManager.h">
       <Filter>mamelib\Mame\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\TitlePlayer.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\UIManager.h">
       <Filter>mamelib\Game\UI</Filter>
     </ClInclude>
@@ -548,14 +509,8 @@
     <ClInclude Include="Source\Game\TitleCharacter.h">
       <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\TitleEnemyTofu.h">
-      <Filter>mamelib\Game\Character</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Game\Stage\StageTutorial.h">
       <Filter>mamelib\Game\Stage</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\EnemyRedTofu.h">
-      <Filter>mamelib\Game\Character</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Terrain\TerrainFall.h">
       <Filter>mamelib\Game\Terrain</Filter>
@@ -572,11 +527,56 @@
     <ClInclude Include="Source\Game\Stage\StageSelection.h">
       <Filter>mamelib\Game\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Mame\AudioManager.h">
-      <Filter>mamelib\Mame</Filter>
+    <ClInclude Include="Source\Game\Boss.h">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Enemy.h">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\EnemyCannon.h">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\EnemyManager.h">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\EnemyRedTofu.h">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\EnemyTofu.h">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\TitleEnemyTofu.h">
+      <Filter>mamelib\Game\Character\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\CannonBall.h">
+      <Filter>mamelib\Game\Character\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\CannonBallManager.h">
+      <Filter>mamelib\Game\Character\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Player.h">
+      <Filter>mamelib\Game\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\PlayerManager.h">
+      <Filter>mamelib\Game\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\TitlePlayer.h">
+      <Filter>mamelib\Game\Character\Player</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Terrain\TerrainNoCollision.h">
-      <Filter>mamelib\Game</Filter>
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mame\Audio.h">
+      <Filter>mamelib\Mame\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Mame\AudioManager.h">
+      <Filter>mamelib\Mame\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\OperatorXMFLOAT3.h">
+      <Filter>mamelib\Game\ForeignBody</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Common.h">
+      <Filter>mamelib\Game\ForeignBody</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -656,6 +656,21 @@
     </Filter>
     <Filter Include="mamelib\Game\UI">
       <UniqueIdentifier>{5f94c31f-00e4-47d7-8e8b-9f1d5b7f720b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mamelib\Game\Character\Enemy">
+      <UniqueIdentifier>{7a2c2c1b-0bac-4acd-9557-d814970744c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mamelib\Game\Character\Projectile">
+      <UniqueIdentifier>{32ac10f5-0507-4c81-8d7e-1f1a63023c74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mamelib\Game\Character\Player">
+      <UniqueIdentifier>{c7516705-738e-47ad-b8c1-d20bf7f65546}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mamelib\Mame\Audio">
+      <UniqueIdentifier>{28a48904-7b5d-4850-8db8-75727193a2fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mamelib\Game\ForeignBody">
+      <UniqueIdentifier>{ea9990b9-b0ba-4f5e-9183-09714b118485}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
