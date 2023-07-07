@@ -14,6 +14,7 @@
 StageSelection::StageSelection()
 {
     // îwåi
+    //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
     back = std::make_unique<Box>("./resources/tutorialBack.fbx");
 
     // èÈ

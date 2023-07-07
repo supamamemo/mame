@@ -65,7 +65,8 @@ void StageBoss::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
-
+    
+    camera.SetIsShake();
     camera.SetCameraMoveY();
 
     // ”wŒi‰¼
@@ -129,6 +130,8 @@ void StageBoss::Initialize()
         UIManager::Instance().GetUI(UISPRITE::mameHpLeft)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetIsRender(true);
+
+        UIManager::Instance().Initialize();
     }
 }
 

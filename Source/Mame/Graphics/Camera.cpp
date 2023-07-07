@@ -243,6 +243,9 @@ void Camera::UpdateBoss(const float elapsedTime)
     switch (cameraMoveY)
     {
     case 0:
+        GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
+        GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
+
         if (playerPos.x >= -10.0f)
             cameraMoveY = 1;
 
