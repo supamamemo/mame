@@ -66,6 +66,7 @@ void StageBoss::Initialize()
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
 
+    camera.SetCameraMoveY();
 
     // 背景仮
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 6.0f, 12.0f));
@@ -90,9 +91,9 @@ void StageBoss::Initialize()
             terrainManager.GetTerrain(4)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
             // terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10)); // しまった後
            
-            terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 4, 10));
+            terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 8, 10));
+            //terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 4, 10));
             terrainManager.GetTerrain(5)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
-            // terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10)); // 空いた後
             
             terrainManager.GetTerrain(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-24.0f, 1.0f, 10.0f));
         }
@@ -169,8 +170,6 @@ void StageBoss::Update(const float& elapsedTime)
 {
     if (!Mame::Scene::SceneManager::Instance().isHitStop_)
     {
-        Camera::Instance().UpdateBoss(elapsedTime);
-
         // terrain更新
         TerrainManager::Instance().Update(elapsedTime);
 
@@ -184,6 +183,8 @@ void StageBoss::Update(const float& elapsedTime)
             // enemy更新
             EnemyManager::Instance().Update(elapsedTime);
         }
+
+        Camera::Instance().UpdateBoss(elapsedTime);
     }
 
     // ドア
@@ -193,6 +194,23 @@ void StageBoss::Update(const float& elapsedTime)
         terrainPos.y -= elapsedTime;
         if (terrainPos.y <= 4.0f)terrainPos.y = 4.0f;
         TerrainManager::Instance().GetTerrain(4)->GetTransform()->SetPosition(terrainPos);
+    }
+    if (EnemyManager::Instance().GetEnemy(0)->GetHealth() > 0)
+    {
+        if (EnemyManager::Instance().GetEnemy(0)->GetTransform()->GetPosition().x <= 8.5f)
+        {
+            DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(5)->GetTransform()->GetPosition();
+            terrainPos.y -= elapsedTime;
+            if (terrainPos.y <= 4.0f)terrainPos.y = 4.0f;
+            TerrainManager::Instance().GetTerrain(5)->GetTransform()->SetPosition(terrainPos);
+        }
+    }
+    else
+    {
+        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(5)->GetTransform()->GetPosition();
+        terrainPos.y += elapsedTime;
+        if (terrainPos.y >= 8.0f)terrainPos.y = 8.0f;
+        TerrainManager::Instance().GetTerrain(5)->GetTransform()->SetPosition(terrainPos);
     }
 
     // playerHp

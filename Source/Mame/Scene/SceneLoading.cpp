@@ -28,7 +28,7 @@ void SceneLoading::Initialize()
     //spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
 
     
-    anime.position = { 800.0f,555.0f };
+    anime.position = { 400.0f,300.0f };
     anime.size = { 450.0f,183.5f };
     anime.texSize = { 900.0f,367.0f };
     anime.animationFrame = 0;
@@ -60,7 +60,7 @@ void SceneLoading::Update(const float& elapsedTime)
 {
     spriteDissolve->Update();
 
-    anime.PlayAnimation(10, 30);
+    anime.PlayAnimation(animationSpeed, 30);
 
     //spriteDissolve.fadeOut(elapsedTime);
     //spriteDissolve->FadeIn(elapsedTime);
@@ -116,6 +116,7 @@ void SceneLoading::DrawDebug()
 
     ImGui::DragFloat2("pos", &anime.position.x);
     ImGui::DragFloat2("size", &anime.size.x);
+    ImGui::DragInt("animationTime", &animationSpeed);
 
     ImGui::End();
 

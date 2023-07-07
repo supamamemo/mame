@@ -29,6 +29,9 @@ public:
     std::unique_ptr<Sprite> dummy_sprite                = nullptr;
     std::unique_ptr<Sprite> dissolve_sprite             = nullptr;
 
+    // mameoload
+    std::unique_ptr<Sprite> spriteLoadMameo = nullptr;
+
     Microsoft::WRL::ComPtr<ID3D11VertexShader> sprite_vertex_shader     = nullptr;
     Microsoft::WRL::ComPtr<ID3D11InputLayout>  sprite_input_layout      = nullptr;
     Microsoft::WRL::ComPtr<ID3D11PixelShader>  sprite_pixel_shader      = nullptr;

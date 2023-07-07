@@ -223,12 +223,11 @@ void StageTutorial::Update(const float& elapsedTime)
     // 背景
     back->BackUpdate(elapsedTime);
 
-    GamePad& gamePad = Input::Instance().GetGamePad();
-    if (gamePad.GetButtonDown() & GamePad::BTN_X)
-    {
-        //if(Mame::Scene::SceneManager::Instance().GetCurrentScene()->GetSceneType()==static_cast<int>(Mame::Scene::TYPE::GAME))
-        //    Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
-    }
+    //if (gamePad.GetButtonDown() & GamePad::BTN_X)
+    //{
+    //    //if(Mame::Scene::SceneManager::Instance().GetCurrentScene()->GetSceneType()==static_cast<int>(Mame::Scene::TYPE::GAME))
+    //    //    Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
+    //}
 }
 
 // Updateの後に呼ばれる
@@ -320,38 +319,60 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         effect[0]->SetPosition(DirectX::XMFLOAT3(-2.5f, 2.0f, 10.0f));
         effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
 
-        // UI
-        StickState(elapsedTime);
-
         // UIの位置
         {
-            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(135, 275, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetSize(DirectX::XMFLOAT2(150, 150));
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                StickState(elapsedTime);
 
-            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(135, 275, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetSize(DirectX::XMFLOAT2(150, 150));
 
-            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetSize(DirectX::XMFLOAT2(100, 100));
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetSize(DirectX::XMFLOAT2(100, 100));
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetSize(DirectX::XMFLOAT2(100, 100));
+                UIManager::Instance().GetUI(UISPRITE::StickRight)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::StickRight)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetSize(DirectX::XMFLOAT2(100, 100));
+                UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+                UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(160, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::StickDown)->SetSize(DirectX::XMFLOAT2(100, 100));
+            }
+            else
+            {
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(7, 280, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(350, 150));
+
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetPosition(DirectX::XMFLOAT3(60, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetPosition(DirectX::XMFLOAT3(190, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetSize(DirectX::XMFLOAT2(100, 100));
+            }
         }
 
         // 次に行く条件
         if (playerPos.x > -3.8f)
         {
-            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
+            }
+            else
+            {
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
+            }
 
             effect[0]->Stop(effect[0]->handle);
             effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 200.0f);
@@ -369,25 +390,44 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
         // UIの位置
         {
-            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(7, 280, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(350, 150));
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(7, 280, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(350, 150));
 
-            UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT3(40, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetSize(DirectX::XMFLOAT2(100, 100));
-            UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT3(215, 300, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetSize(DirectX::XMFLOAT2(100, 100));
+                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT3(40, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetSize(DirectX::XMFLOAT2(100, 100));
+                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT3(215, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetPosition(DirectX::XMFLOAT3(140, 350, uiZ));
-            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetSize(DirectX::XMFLOAT2(80, 80));
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetPosition(DirectX::XMFLOAT3(140, 350, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetSize(DirectX::XMFLOAT2(80, 80));
+            }
+            else
+            {
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(7, 280, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(350, 150));
+
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetPosition(DirectX::XMFLOAT3(60, 300, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetSize(DirectX::XMFLOAT2(240, 102.4f));
+            }
         }
 
         // 次に行く条件
         if (playerPos.x >= 1.0f)
         {
-            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
+            }
+            else
+            {
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+            }
 
             effect[0]->Stop(effect[0]->handle);
             effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 200.0f);
@@ -405,39 +445,65 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         effect[0]->SetPosition(DirectX::XMFLOAT3(17.5, 4.2f, 10.0f));
         effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
 
-        // stick
-        StickStateDown(elapsedTime);
 
         // UIの位置
         {
-            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(450, 90, 10));
-            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
-            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
-            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                // stick
+                StickStateDown(elapsedTime);
+                
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(450, 90, 10));
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+                UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
 
-            // "A or B" の表示
-            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(20, 100, 10));
-            UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT3(50, 120, 10));
-            UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT3(220, 120, 10));
-            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetPosition(DirectX::XMFLOAT3(147, 165, 10));
+                // "A or B" の表示
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(20, 100, 10));
+                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT3(50, 120, 10));
+                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT3(220, 120, 10));
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetPosition(DirectX::XMFLOAT3(147, 165, 10));
 
-            // +
-            UIManager::Instance().GetUI(UISPRITE::Plus)->SetPosition(DirectX::XMFLOAT3(360, 130, 10));
-            UIManager::Instance().GetUI(UISPRITE::Plus)->SetSize(DirectX::XMFLOAT2(100, 100));
+                // +
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetPosition(DirectX::XMFLOAT3(360, 130, 10));
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetSize(DirectX::XMFLOAT2(100, 100));
+            }
+            else
+            {
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetPosition(DirectX::XMFLOAT3(370, 120, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetPosition(DirectX::XMFLOAT3(60, 120, uiZ));
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetSize(DirectX::XMFLOAT2(240, 102.4f));
+
+                // +
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetPosition(DirectX::XMFLOAT3(285, 130, 10));
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetSize(DirectX::XMFLOAT2(100, 100));
+            }
         }        
         
         // 次に行く条件
         if (playerPos.x >= 16.0f)
         {
-            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(false);
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(false);
+            }
+            else
+            {
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(false);
+            }
 
             effect[0]->Stop(effect[0]->handle);
             effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 200.0f);
@@ -459,37 +525,51 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
         // UIの位置
         {
-            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(45, 90, 10));
-            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(70, 115, 10));
-            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetPosition(DirectX::XMFLOAT3(70, 115, 10));
-            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(70, 115, 10));
-            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetPosition(DirectX::XMFLOAT3(70, 115, 10));
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(45, 90, 10));
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(70, 115, 10));
+                UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetPosition(DirectX::XMFLOAT3(70, 115, 10));
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(70, 115, 10));
+                UIManager::Instance().GetUI(UISPRITE::StickRight)->SetPosition(DirectX::XMFLOAT3(70, 115, 10));
 
-            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(260, 100, 10));
-            UIManager::Instance().GetUI(UISPRITE::GamePadX)->SetPosition(DirectX::XMFLOAT3(290, 120, 10));
-            UIManager::Instance().GetUI(UISPRITE::GamePadX)->SetSize(DirectX::XMFLOAT2(100, 100));
-            UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetPosition(DirectX::XMFLOAT3(475, 120, 10));
-            UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetSize(DirectX::XMFLOAT2(100, 100));
-            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetPosition(DirectX::XMFLOAT3(395, 165, 10));
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(260, 100, 10));
+                UIManager::Instance().GetUI(UISPRITE::GamePadX)->SetPosition(DirectX::XMFLOAT3(290, 120, 10));
+                UIManager::Instance().GetUI(UISPRITE::GamePadX)->SetSize(DirectX::XMFLOAT2(100, 100));
+                UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetPosition(DirectX::XMFLOAT3(475, 120, 10));
+                UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetSize(DirectX::XMFLOAT2(100, 100));
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetPosition(DirectX::XMFLOAT3(395, 165, 10));
 
-            // +
-            UIManager::Instance().GetUI(UISPRITE::Plus)->SetPosition(DirectX::XMFLOAT3(185, 130, 10));
-            UIManager::Instance().GetUI(UISPRITE::Plus)->SetSize(DirectX::XMFLOAT2(100, 100));
+                // +
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetPosition(DirectX::XMFLOAT3(185, 130, 10));
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetSize(DirectX::XMFLOAT2(100, 100));
+            }
+            else
+            {
+
+            }
         }
 
         // 次に行く条件
         if (playerPos.x >= 35.0f)
         {
-            UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::GamePadX)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
-            UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(false);
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::GamePadX)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(false);
+            }
+            else
+            {
+
+            }
 
             Camera::Instance().SetTutorialState();
             tutorialState = STATE::Free;
@@ -517,8 +597,33 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
         
         
         // UI
-        UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
+        {
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                // gamepad
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
+
+                // keyboard解除
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
+            }
+            else
+            {
+                // gamepad解除
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+
+                // keyboard
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(true);
+            }
+        }
 
         break;
     case STATE::JumpReception:
@@ -545,10 +650,30 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
         effect[1]->AddTimer(elapsedTime);
 
         // UI
-        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(true);
+        {
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                // gamepad
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(true);
+
+                // keyboard解除
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+            }
+            else
+            {
+                // gamepad解除
+                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
+
+                // keyboard
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(true);
+            }
+        }
 
         break;
     case STATE::HipDorop:
@@ -562,15 +687,42 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
 
 
         // UI
-        UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
+        {
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                // gamepad
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
 
-        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
 
+                // keyboard解除
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+            }
+            else
+            {
+                // gamepad解除
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(false);                
+
+                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
+
+                // keyboard
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
+            }
+        }
         break;
     case STATE::Run:
         // effect(緑の範囲)
@@ -603,14 +755,46 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
 
 
         // UI
-        UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
+        {
+            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            {
+                // gamepad
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
 
-        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::GamePadX)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(true);
-        UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::GamePadX)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
+
+                // keyboard解除
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSHIFT)->SetIsRender(false);
+            }
+            else
+            {
+                // gamepad解除
+                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+
+                UIManager::Instance().GetUI(UISPRITE::GamePadX)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
+
+
+                // keyboard
+                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::KeyBoardSHIFT)->SetIsRender(true);
+                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
+            }
+        }
 
         break;
     }

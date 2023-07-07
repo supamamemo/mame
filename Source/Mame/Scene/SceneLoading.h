@@ -39,6 +39,8 @@ private:
 
     }anime;
 
+    int animationSpeed = 10.0f;
+
 private:
     std::unique_ptr<SpriteDissolve> spriteDissolve = nullptr;
     std::unique_ptr<Sprite> spriteLoadMameo = nullptr;

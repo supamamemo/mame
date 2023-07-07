@@ -17,10 +17,15 @@
 // コンストラクタ
 SceneTitle::SceneTitle()
 {
+    Graphics& graphics = Graphics::Instance();
+
     // シーンの属性を設定
     SetSceneType(static_cast<int>(Mame::Scene::TYPE::TITLE));
 
     spriteDissolve = std::make_unique<SpriteDissolve>();
+
+    // mameo
+    spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet.png");
 
     // titlePlayer生成
     titlePlayer_ = std::make_unique<TitlePlayer>();
@@ -362,6 +367,7 @@ void SceneTitle::Render(const float& elapsedTime)
     //sprite_dissolve->Render();
 
 
+
 #endif
 
     // title model
@@ -381,6 +387,14 @@ void SceneTitle::Render(const float& elapsedTime)
     // fadeOut
     {
         spriteDissolve->Render();
+    }
+
+    // mameo
+    if (spriteDissolve->FadeInReady(0.3f))
+    {
+        spriteLoadMameo->render(graphics.GetDeviceContext(), 400.0f, 300.0f,
+            450.0f, 183.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+            0, 0, 900.0f, 367.0f);
     }
 
 }

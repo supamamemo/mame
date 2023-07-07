@@ -24,6 +24,9 @@ public:
     // fadeOut/fadeIn用のディゾルブ
     std::unique_ptr<SpriteDissolve> spriteDissolve[2];
 
+    // mameoload
+    std::unique_ptr<Sprite> spriteLoadMameo = nullptr;
+
     // デバッグ用
     int fadeType = 1;
     int textureType = 0;

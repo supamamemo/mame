@@ -16,6 +16,7 @@ namespace BOSS
         Recoil,
         Damage,
         Cry,
+        Walk,
     };
 }
 
@@ -154,6 +155,17 @@ namespace BOSS
 
     private:
         int state = 0;
+    };
+
+    class WalkState :public State
+    {
+    public:
+        WalkState(Enemy* _boss) :State(_boss, "walk") {}
+        ~WalkState() {}
+
+        void Enter()override;
+        void Execute(float elapsedTime)override;
+        void Exit()override;
     };
 }
 

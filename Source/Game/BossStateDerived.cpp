@@ -295,12 +295,6 @@ namespace BOSS
 
             break;
         }
-
-
-        
-
-        
-       
     }
 
     // 終了
@@ -371,6 +365,46 @@ namespace BOSS
      // 終了
     void CryState::Exit()
     {
+    }
+}
+
+// walkState
+namespace BOSS
+{
+    // 初期化
+    void WalkState::Enter()
+    {
+        // アニメーションセット
+        owner->PlayAnimation(static_cast<int>(BossAnimation::Walk), true);
+    }
+
+    // 更新
+    void WalkState::Execute(float elapsedTime)
+    {
+        DirectX::XMFLOAT3 pos = owner->GetTransform()->GetPosition();
+        DirectX::XMFLOAT4 rot = owner->GetTransform()->GetRotation();
+
+        const float speed = 2.0f;
+
+        pos.x -= speed * elapsedTime;
+
+        if (pos.x <= 5.5f)
+        {
+            pos.x = 5.5f;
+            
+            rot.y -= DirectX::XMConvertToRadians(0.5f);
+            if (rot.y <= DirectX::XMConvertToRadians(180))
+                owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+        }
+
+        owner->GetTransform()->SetPosition(pos);
+        owner->GetTransform()->SetRotation(rot);
+    }
+
+    // 終了
+    void WalkState::Exit()
+    {
+
     }
 }
 

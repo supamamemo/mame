@@ -75,6 +75,7 @@ public:
     Transform* GetTransform() { return &transform; }
 
     void SetTutorialState() { tutorialState = 0; }
+    void SetCameraMoveY() { cameraMoveY = 0; }
 
 private:
     Transform transform{};
