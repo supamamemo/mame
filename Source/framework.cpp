@@ -9,6 +9,8 @@
 #include "Mame/Scene/SceneTitle.h"
 #include "Mame/Scene/SceneManager.h"
 
+#include "Mame/AudioManager.h"
+
 framework::framework(HWND hwnd)
     : hwnd(hwnd),
     graphics(hwnd),
@@ -30,17 +32,15 @@ bool framework::initialize()
     EffectManager::Instance().Initialize();
 
     // XAUDIO2
-    hr = XAudio2Create(xAudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
+    AudioManager& audioManager = AudioManager::Instance();
+    hr = XAudio2Create(audioManager.xAudio2.GetAddressOf(), 0, XAUDIO2_DEFAULT_PROCESSOR);
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-    hr = xAudio2->CreateMasteringVoice(&masterVoice);
+    hr = audioManager.xAudio2->CreateMasteringVoice(&audioManager.masterVoice);
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
-    // ここでbgmとか読み込んでるね(場所変えた方がいい)
-    bgm[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/akumanokyoku.wav");
-    se[0] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/jump.wav");
-    se[1] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/coin.wav");
-
+    // 音楽読み込み
+    audioManager.LoadAudio();
 
     Mame::Scene::SceneManager::Instance().Initialize();
     // シーンタイトル
@@ -74,6 +74,7 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
     // シーン更新処理
     Mame::Scene::SceneManager::Instance().Update(elapsed_time);
 
+#if 0
     // XAUDIO2
     if (GetAsyncKeyState('N') & 0x8000)
     {
@@ -98,6 +99,7 @@ void framework::update(float elapsed_time/*Elapsed seconds from last frame*/)
     {
         se[1]->Play();
     }
+#endif
 
 #ifdef USE_IMGUI
 

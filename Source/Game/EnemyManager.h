@@ -8,8 +8,8 @@
 class EnemyManager
 {
 private:
-    EnemyManager() {};
-    ~EnemyManager() {};
+    EnemyManager() {}
+    ~EnemyManager() {}
 
 public:
     // 唯一のインスタンス取得

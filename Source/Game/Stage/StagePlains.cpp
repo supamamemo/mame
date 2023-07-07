@@ -397,7 +397,7 @@ void StagePlains::RegisterTerrains(TerrainManager& terrainManager)
     terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx"));  // 47
     terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 48
     terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 49
-    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 49
+    terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 50
 }
 
 // エネミー生成

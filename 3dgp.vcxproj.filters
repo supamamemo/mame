@@ -307,7 +307,12 @@
     <ClCompile Include="Source\Game\Stage\StageSelection.cpp">
       <Filter>mamelib\Game\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Terrain\TerrainNoCollision.cpp" />
+    <ClCompile Include="Source\Mame\AudioManager.cpp">
+      <Filter>mamelib\Mame</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Terrain\TerrainNoCollision.cpp">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -567,7 +572,12 @@
     <ClInclude Include="Source\Game\Stage\StageSelection.h">
       <Filter>mamelib\Game\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Terrain\TerrainNoCollision.h" />
+    <ClInclude Include="Source\Mame\AudioManager.h">
+      <Filter>mamelib\Mame</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Terrain\TerrainNoCollision.h">
+      <Filter>mamelib\Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">
