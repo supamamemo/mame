@@ -15,7 +15,8 @@
 StageSelection::StageSelection()
 {
     // îwåi
-    back = std::make_unique<Box>("./resources/back.fbx");
+    //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
+    back = std::make_unique<Box>("./resources/tutorialBack.fbx");
 
     // èÈ
     castle = std::make_unique<Box>("./resources/castel.fbx");
@@ -52,10 +53,9 @@ void StageSelection::Initialize()
 
     // îwåi
     {
-        back->GetTransform()->SetPosition(DirectX::XMFLOAT3(1, 5, 12));
-        back->GetTransform()->SetScale(DirectX::XMFLOAT3(200, 800, 6));
-        back->SetMaterialColor(DirectX::XMFLOAT4(0.0f, 5.0f, 1.0f, 1.0f));
-        //back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
+        back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, -1, 20));
+        back->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 22, 8));
+        back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
     }
 
     // èÈ

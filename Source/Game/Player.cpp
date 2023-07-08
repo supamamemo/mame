@@ -54,6 +54,9 @@ void Player::Initialize()
 {
     // ※ここの初期回転値によって振り向きの方向が変わるので注意
     GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(180), 0, 0));
+
+    // エフェクトの読み込み
+    //effect[0]=new Effect("./resources/effect/")
 }
 
 

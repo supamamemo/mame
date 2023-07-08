@@ -22,6 +22,8 @@ public:
 	static const GamePadButton BTN_LEFT_TRIGGER = (1 << 14);
 	static const GamePadButton BTN_RIGHT_TRIGGER = (1 << 15);
 
+	static int GAMEPAD_OR_KEYBOARD;	// 0 : GAMEPAD, 1 : KEYBOARD
+
 public:
 	GamePad() {}
 	~GamePad() {}

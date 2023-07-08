@@ -3,6 +3,7 @@
 #include "../Input/Input.h"
 
 #include "../../Game/PlayerManager.h"
+#include "../../Game/EnemyManager.h"
 
 void Camera::Initialize()
 {
@@ -207,10 +208,13 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
             break;
         }
 
+        break;
+    case STATE::GoalState:
+        cameraPos.x += elapsedTime * 10;
 
+        if (cameraPos.x >= 63.0f)cameraPos.x = 63.0f;
 
         break;
-
     default:
         leftLimit = -10.4f;
         break;
@@ -234,20 +238,54 @@ void Camera::UpdateBoss(const float elapsedTime)
 
     DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
     DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 bossPos = EnemyManager::Instance().GetEnemy(0)->GetTransform()->GetPosition();
 
-    if (playerPos.x >= -10.0f)
-        cameraMoveY = 1;
+    float leftLimit = -30.0f;
+    float rightLimit = -5.0f;
 
     switch (cameraMoveY)
     {
-    case 1:
-        cameraPos.x += elapsedTime * 5;
-        if (cameraPos.x >= 0.0f)cameraPos.x = 0.0f;
+    case 0:
+        GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
+        GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
 
+        if (playerPos.x >= -10.0f)
+            cameraMoveY = 1;
+
+        break;
+    case 1:
+        leftLimit = -10.0f;
+
+        cameraPos.x += elapsedTime * 5;
+        if (cameraPos.x >= 0.0f)
+        {
+            cameraPos.x = 0.0f;
+            cameraMoveY = 2;
+        }
+
+        break;
+    case 2:
+        leftLimit = -10.0f;
+        if (playerPos.x <= -8.6f)
+            playerPos.x += elapsedTime;
+
+        if (bossPos.x <= 5.5)cameraMoveY = 3;
+
+        break;
+    case 3:
+        rightLimit = 100.0f;
         break;
     }
 
     GetTransform()->SetPosition(cameraPos);
+
+    // âÊñ ç∂í[ÇÕé~Ç‹ÇÈÇÊÇ§Ç…Ç∑ÇÈ
+    {
+        if (playerPos.x <= leftLimit)playerPos.x = leftLimit;
+        if (playerPos.x >= rightLimit)playerPos.x = rightLimit;
+
+        PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
+    }
 }
 
 

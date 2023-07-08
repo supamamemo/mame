@@ -1,9 +1,11 @@
 #pragma once
 #include "Stage.h"
 
-#include "../Box.h"
-
 #include "../../Mame/Graphics/Effect.h"
+
+#include "../Box.h"
+#include "../SpriteAnimation.h"
+
 
 // チュートリアルステージ
 class StageTutorial : public Stage
@@ -25,6 +27,8 @@ private:
     enum UISPRITE
     {
         Bubble,         // 吹き出し
+        BubbleBig,      // 大きい吹き出し
+        BubbleBigBig,   // さらに大きい吹き出し
         BubbleStick,    // 吹き出しスティック
         StickBase,      // base
         StickCenter,    // center
@@ -51,6 +55,25 @@ private:
         HipDorop,
         Run,
         Free,
+        GoalState,
+    };
+
+    enum tutorialTerrain
+    {
+        Zimen0,
+        Zimen1,
+        Zimen2,
+        Zimen3,
+        Zimen4,
+        Zimen5,
+        Zimen6,
+        Zimen7,
+        Zimen8,
+        SignBoard_yazi0,
+        SignBoard_drop0,
+        SignBoard_drop1,
+        SignBoard_dash0,
+        Goal,
     };
 
     void TutorialStateUpdate(float elapsedTime);
@@ -68,8 +91,9 @@ private:
 
 private:
     std::unique_ptr<Box> back = nullptr;
-    std::unique_ptr<Box> signboard = nullptr;
-    //std::unique_ptr<Box> signboard1 = nullptr;
+
+    std::unique_ptr<SpriteAnimation> spriteAnimation = nullptr;
+    int frame = 60;
 
     // UI
     Effect* effect[4];

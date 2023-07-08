@@ -221,9 +221,11 @@
     <ClCompile Include="Source\Game\Player.cpp" />
     <ClCompile Include="Source\Game\PlayerManager.cpp" />
     <ClCompile Include="Source\Game\Pose.cpp" />
+    <ClCompile Include="Source\Game\SpriteAnimation.cpp" />
     <ClCompile Include="Source\Game\spriteDissolve.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
     <ClCompile Include="Source\Game\Stage\StageBoss.cpp" />
+    <ClCompile Include="Source\Game\Stage\StageLoading.cpp" />
     <ClCompile Include="Source\Game\Stage\StageManager.cpp" />
     <ClCompile Include="Source\Game\Stage\StagePlains.cpp" />
     <ClCompile Include="Source\Game\Stage\StageSelection.cpp" />
@@ -304,9 +306,11 @@
     <ClInclude Include="Source\Game\Player.h" />
     <ClInclude Include="Source\Game\PlayerManager.h" />
     <ClInclude Include="Source\Game\Pose.h" />
+    <ClInclude Include="Source\Game\SpriteAnimation.h" />
     <ClInclude Include="Source\Game\spriteDissolve.h" />
     <ClInclude Include="Source\Game\Stage\Stage.h" />
     <ClInclude Include="Source\Game\Stage\StageBoss.h" />
+    <ClInclude Include="Source\Game\Stage\StageLoading.h" />
     <ClInclude Include="Source\Game\Stage\StageManager.h" />
     <ClInclude Include="Source\Game\Stage\StagePlains.h" />
     <ClInclude Include="Source\Game\Stage\StageSelection.h" />

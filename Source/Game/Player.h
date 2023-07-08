@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Character.h"
+#include "../Mame/Graphics/Effect.h"
 
 class Player : public Character
 {
@@ -145,5 +146,7 @@ private: // 変数関連
 
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  2;                   // 最大バウンス回数
+
+    Effect* effect[2];
 
 };

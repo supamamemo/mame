@@ -11,7 +11,7 @@ SceneLoading::SceneLoading(BaseScene* nextScene) :nextScene(nextScene)
 
     spriteDissolve = std::make_unique<SpriteDissolve>();
 
-    spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet.png");
+    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet.png");
 }
 
 // 初期化
@@ -27,12 +27,9 @@ void SceneLoading::Initialize()
     spriteDissolve->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
     //spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
 
+    spriteAnimation->Initialize(DirectX::XMFLOAT2(400.0f, 300.0f),
+        DirectX::XMFLOAT2(450.0f, 183.5f), DirectX::XMFLOAT2(900.0f, 367.0f));
     
-    anime.position = { 800.0f,555.0f };
-    anime.size = { 450.0f,183.5f };
-    anime.texSize = { 900.0f,367.0f };
-    anime.animationFrame = 0;
-    anime.animationTime = 0;
 
     // スレッド開始
     thread = new std::thread(LoadingThread, this);
@@ -60,7 +57,7 @@ void SceneLoading::Update(const float& elapsedTime)
 {
     spriteDissolve->Update();
 
-    anime.PlayAnimation(10, 30);
+    spriteAnimation->PlayAnimation(10, 30, true);
 
     //spriteDissolve.fadeOut(elapsedTime);
     //spriteDissolve->FadeIn(elapsedTime);
@@ -101,9 +98,7 @@ void SceneLoading::Render(const float& elapsedTime)
     {
         spriteDissolve->Render();
 
-        spriteLoadMameo->render(graphics.GetDeviceContext(), anime.position.x, anime.position.y,
-            anime.size.x, anime.size.y, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
-            anime.texPos.x, anime.texPos.y, anime.texSize.x, anime.texSize.y);
+        spriteAnimation->Render();
     }
 }
 
@@ -112,12 +107,7 @@ void SceneLoading::DrawDebug()
 #ifdef USE_IMGUI
     spriteDissolve->DrawDebug();
 
-    ImGui::Begin("animation");
-
-    ImGui::DragFloat2("pos", &anime.position.x);
-    ImGui::DragFloat2("size", &anime.size.x);
-
-    ImGui::End();
+    spriteAnimation->DrawDebug();
 
 #endif// USE_IMGUI
 }
@@ -136,19 +126,4 @@ void SceneLoading::LoadingThread(SceneLoading* scene)
 
     // 次のシーンの準備完了設定
     scene->nextScene->SetReady();
-}
-
-void SceneLoading::Animation::PlayAnimation(const int& frameTime,const int& totalAnimationFrame)
-{
-    animationFrame = animationTime / frameTime;
-
-    if (animationFrame >= totalAnimationFrame)
-    {
-        animationFrame = 0;
-        animationTime = 0;
-    }
-
-    texPos.y = texSize.y * animationFrame;
-
-    ++animationTime;
 }

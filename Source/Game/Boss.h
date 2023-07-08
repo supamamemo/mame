@@ -14,7 +14,7 @@ enum class BossAnimation
     Dead,           // ‚â‚ç‚ê
     Fall,           // K‚à‚¿i“|‚ê‚éj
     Cry,            // ‚È‚­
-    Turn,
+    Walk,           // •à‚«
 };
 
 class Boss : public Enemy

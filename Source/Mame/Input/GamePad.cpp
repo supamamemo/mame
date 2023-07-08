@@ -5,6 +5,8 @@
 
 #pragma comment (lib,"Xinput.lib")
 
+int GamePad::GAMEPAD_OR_KEYBOARD = 0;
+
 void GamePad::Update()
 {
 	axisLx = axisLy = 0.0f;
@@ -58,6 +60,32 @@ void GamePad::Update()
 		axisLy = static_cast<float>(pad.sThumbLY) / static_cast<float>(0x8000);
 		axisRx = static_cast<float>(pad.sThumbRX) / static_cast<float>(0x8000);
 		axisRy = static_cast<float>(pad.sThumbRY) / static_cast<float>(0x8000);
+
+
+		if (pad.wButtons & (XINPUT_GAMEPAD_DPAD_UP) ||
+			pad.wButtons & (XINPUT_GAMEPAD_DPAD_RIGHT) ||
+			pad.wButtons & (XINPUT_GAMEPAD_DPAD_DOWN) ||
+			pad.wButtons & (XINPUT_GAMEPAD_DPAD_LEFT) ||
+			pad.wButtons & (XINPUT_GAMEPAD_A) ||
+			pad.wButtons & (XINPUT_GAMEPAD_B) ||
+			pad.wButtons & (XINPUT_GAMEPAD_X) ||
+			pad.wButtons & (XINPUT_GAMEPAD_Y) ||
+			pad.wButtons & (XINPUT_GAMEPAD_START) ||
+			pad.wButtons & (XINPUT_GAMEPAD_BACK) ||
+			pad.wButtons & (XINPUT_GAMEPAD_LEFT_THUMB) ||
+			pad.wButtons & (XINPUT_GAMEPAD_RIGHT_THUMB) ||
+			pad.wButtons & (XINPUT_GAMEPAD_LEFT_SHOULDER) ||
+			pad.wButtons & (XINPUT_GAMEPAD_RIGHT_SHOULDER) ||
+			pad.bLeftTrigger > (XINPUT_GAMEPAD_TRIGGER_THRESHOLD) ||
+			pad.bRightTrigger > (XINPUT_GAMEPAD_TRIGGER_THRESHOLD) ||
+			static_cast<float>(pad.sThumbLX) / static_cast<float>(0x8000) != 0 ||
+			static_cast<float>(pad.sThumbLY) / static_cast<float>(0x8000) != 0 ||
+			static_cast<float>(pad.sThumbRX) / static_cast<float>(0x8000) != 0 ||
+			static_cast<float>(pad.sThumbRY) / static_cast<float>(0x8000) != 0
+			)
+		{
+			GAMEPAD_OR_KEYBOARD = 0;
+		}
 	}
 	else
 	{
@@ -131,7 +159,27 @@ void GamePad::Update()
 	}
 
 	// キーボードでエミュレーション
-	{
+    {
+		if ((GetAsyncKeyState('W') & 0x8000)
+			|| (GetAsyncKeyState('A') & 0x8000)
+			|| (GetAsyncKeyState('S') & 0x8000)
+			|| (GetAsyncKeyState('D') & 0x8000)
+			|| (GetAsyncKeyState('I') & 0x8000)
+			|| (GetAsyncKeyState('J') & 0x8000)
+			|| (GetAsyncKeyState('K') & 0x8000)
+			|| (GetAsyncKeyState('L') & 0x8000)
+			|| (GetAsyncKeyState(' ') & 0x8000)
+			|| (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
+			|| (GetAsyncKeyState(VK_LSHIFT) & 0x8000)
+			|| (GetAsyncKeyState(VK_UP) & 0x8000)
+			|| (GetAsyncKeyState(VK_RIGHT) & 0x8000)
+			|| (GetAsyncKeyState(VK_DOWN) & 0x8000)
+			|| (GetAsyncKeyState(VK_LEFT) & 0x8000)
+			|| (GetAsyncKeyState(VK_ESCAPE) & 0x8000))
+		{
+			GAMEPAD_OR_KEYBOARD = 1;
+		}
+
 		float lx = 0.0f;
 		float ly = 0.0f;
 		float rx = 0.0f;

@@ -1,19 +1,17 @@
 #pragma once
 
-#include "BaseScene.h"
+#include "Stage.h"
 
 #include <thread>
 
-#include "../../Game/spriteDissolve.h"
+#include "../spriteDissolve.h"
+#include "../SpriteAnimation.h"
 
-#include "../../Game/SpriteAnimation.h"
-
-class SceneLoading : public Mame::Scene::BaseScene
+class StageLoading : public Stage
 {
 public:
-    SceneLoading(BaseScene* nextScene);
-    ~SceneLoading() override {}
-
+    StageLoading(Stage* nextStage);
+    ~StageLoading() override {}
 
     void Initialize()   override;                   // 初期化
     void Finalize()     override;                   // 終了化
@@ -26,7 +24,7 @@ public:
 
 private:
     // ローディングスレッド
-    static void LoadingThread(SceneLoading* scene);
+    static void LoadingThread(StageLoading* stage);
 
 
 private:
@@ -34,7 +32,7 @@ private:
 
     std::unique_ptr<SpriteAnimation> spriteAnimation = nullptr;
 
-    BaseScene*      nextScene   = nullptr;
-    std::thread*    thread      = nullptr;
+    Stage* nextStage = nullptr;
+    std::thread* thread = nullptr;
 };
 

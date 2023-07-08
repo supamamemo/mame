@@ -75,6 +75,8 @@ public:
     Transform* GetTransform() { return &transform; }
 
     void SetTutorialState() { tutorialState = 0; }
+    void SetCameraMoveY() { cameraMoveY = 0; }
+    void SetIsShake() { isShake_ = false; }
 
 private:
     Transform transform{};
@@ -112,6 +114,7 @@ private:
         HipDorop,
         Run,
         Free,
+        GoalState,
     };
 };
 

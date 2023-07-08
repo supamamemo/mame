@@ -14,59 +14,65 @@
 // コンストラクタ
 StageBoss::StageBoss()
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // ステージ生成&登録
-    {
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
-
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
-    }
-
-    // player生成
-    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
-
-    // boss生成
-    EnemyManager::Instance().Register(new Boss());
-
-    // bossのhp用
-    chefHat = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/chefHat.png");
-
-    // 背景仮
-    back = std::make_unique<Box>("./resources/back.fbx");
-
-    // UI
-    {
-        UIManager& uiManager = UIManager::Instance();
-
-        // mameoHP
-        uiManager.Register(new UI(L"./resources/ui/baseMameHp.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameLeft.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameCenter.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameRight.png"));
-
-        // bossHP
-    }
 }
 
 // 初期化
 void StageBoss::Initialize()
 {
+    Graphics& graphics = Graphics::Instance();
+
+    // 生成
+    {
+        // ステージ生成&登録
+        {
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
+
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
+        }
+
+        // player生成
+        PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+        // boss生成
+        EnemyManager::Instance().Register(new Boss());
+
+        // bossのhp用
+        chefHat = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/chefHat.png");
+
+        // 背景仮
+        back = std::make_unique<Box>("./resources/back.fbx");
+
+        // UI
+        {
+            // mameoHP
+            UIManager::Instance().Register(new UI(L"./resources/ui/baseMameHp.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/mameLeft.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/mameCenter.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/mameRight.png"));
+
+            // bossHP
+
+            UIManager::Instance().Initialize();
+        }
+    }
+
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
-
+    
+    camera.SetIsShake();
+    camera.SetCameraMoveY();
 
     // 背景仮
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 6.0f, 12.0f));
@@ -91,9 +97,9 @@ void StageBoss::Initialize()
             terrainManager.GetTerrain(4)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
             // terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10)); // しまった後
            
-            terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 4, 10));
+            terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 8, 10));
+            //terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 4, 10));
             terrainManager.GetTerrain(5)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
-            // terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10)); // 空いた後
             
             terrainManager.GetTerrain(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-24.0f, 1.0f, 10.0f));
         }
@@ -129,6 +135,8 @@ void StageBoss::Initialize()
         UIManager::Instance().GetUI(UISPRITE::mameHpLeft)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetIsRender(true);
+
+        UIManager::Instance().Initialize();
     }
 
     AudioManager& audioManager = AudioManager::Instance();
@@ -176,8 +184,6 @@ void StageBoss::Update(const float& elapsedTime)
 {
     if (!Mame::Scene::SceneManager::Instance().isHitStop_)
     {
-        Camera::Instance().UpdateBoss(elapsedTime);
-
         // terrain更新
         TerrainManager::Instance().Update(elapsedTime);
 
@@ -191,6 +197,8 @@ void StageBoss::Update(const float& elapsedTime)
             // enemy更新
             EnemyManager::Instance().Update(elapsedTime);
         }
+
+        Camera::Instance().UpdateBoss(elapsedTime);
     }
 
     // ドア
@@ -200,6 +208,23 @@ void StageBoss::Update(const float& elapsedTime)
         terrainPos.y -= elapsedTime;
         if (terrainPos.y <= 4.0f)terrainPos.y = 4.0f;
         TerrainManager::Instance().GetTerrain(4)->GetTransform()->SetPosition(terrainPos);
+    }
+    if (EnemyManager::Instance().GetEnemy(0)->GetHealth() > 0)
+    {
+        if (EnemyManager::Instance().GetEnemy(0)->GetTransform()->GetPosition().x <= 8.5f)
+        {
+            DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(5)->GetTransform()->GetPosition();
+            terrainPos.y -= elapsedTime;
+            if (terrainPos.y <= 4.0f)terrainPos.y = 4.0f;
+            TerrainManager::Instance().GetTerrain(5)->GetTransform()->SetPosition(terrainPos);
+        }
+    }
+    else
+    {
+        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(5)->GetTransform()->GetPosition();
+        terrainPos.y += elapsedTime;
+        if (terrainPos.y >= 8.0f)terrainPos.y = 8.0f;
+        TerrainManager::Instance().GetTerrain(5)->GetTransform()->SetPosition(terrainPos);
     }
 
     // playerHp

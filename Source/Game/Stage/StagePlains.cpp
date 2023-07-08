@@ -99,6 +99,8 @@ void StagePlains::Initialize()
         UIManager::Instance().GetUI(UISPRITE::mameHpLeft)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetIsRender(true);
+
+        UIManager::Instance().Initialize();
     }
     
     // BGMÄ¶

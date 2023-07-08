@@ -28,8 +28,9 @@ Boss::Boss()
     GetStateMachine()->RegisterState(new BOSS::RecoilState(this));
     GetStateMachine()->RegisterState(new BOSS::DamageState(this));
     GetStateMachine()->RegisterState(new BOSS::CryState(this));
+    GetStateMachine()->RegisterState(new BOSS::WalkState(this));
 
-    GetStateMachine()->SetState(static_cast<int>(BOSS::STATE::Idle));
+    GetStateMachine()->SetState(static_cast<int>(BOSS::STATE::Walk));
 
 
     // imgui名前かぶり起きないように...
@@ -60,10 +61,10 @@ Boss::~Boss()
 // 初期化
 void Boss::Initialize()
 {
-    GetTransform()->SetPosition(DirectX::XMFLOAT3(3.0f, 1.5f, 10.0f));
+    GetTransform()->SetPosition(DirectX::XMFLOAT3(12.4f, 2.2f, 10.0f));
 
     // ※ここの初期回転値によって振り向きの方向が変わるので注意
-    GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, ToRadian(180.0f), 0.0f, 0.0f));
+    GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, ToRadian(270.0f), 0.0f, 0.0f));
 
     // TODO: ボスの当たり判定設定
     const DirectX::XMFLOAT3 min = { -0.6f, -0.0f, -0.6f };  // min設定
