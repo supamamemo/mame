@@ -13,55 +13,59 @@
 // ÉRÉìÉXÉgÉâÉNÉ^
 StageBoss::StageBoss()
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // ÉXÉeÅ[ÉWê∂ê¨&ìoò^
-    {
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
-
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
-    }
-
-    // playerê∂ê¨
-    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
-
-    // bossê∂ê¨
-    EnemyManager::Instance().Register(new Boss());
-
-    // bossÇÃhpóp
-    chefHat = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/chefHat.png");
-
-    // îwåiâº
-    back = std::make_unique<Box>("./resources/back.fbx");
-
-    // UI
-    {
-        // mameoHP
-        UIManager::Instance().Register(new UI(L"./resources/ui/baseMameHp.png"));
-        UIManager::Instance().Register(new UI(L"./resources/ui/mameLeft.png"));
-        UIManager::Instance().Register(new UI(L"./resources/ui/mameCenter.png"));
-        UIManager::Instance().Register(new UI(L"./resources/ui/mameRight.png"));
-
-        // bossHP
-
-        UIManager::Instance().Initialize();
-    }
 }
 
 // èâä˙âª
 void StageBoss::Initialize()
 {
+    Graphics& graphics = Graphics::Instance();
+
+    // ê∂ê¨
+    {
+        // ÉXÉeÅ[ÉWê∂ê¨&ìoò^
+        {
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
+
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
+        }
+
+        // playerê∂ê¨
+        PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+        // bossê∂ê¨
+        EnemyManager::Instance().Register(new Boss());
+
+        // bossÇÃhpóp
+        chefHat = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/chefHat.png");
+
+        // îwåiâº
+        back = std::make_unique<Box>("./resources/back.fbx");
+
+        // UI
+        {
+            // mameoHP
+            UIManager::Instance().Register(new UI(L"./resources/ui/baseMameHp.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/mameLeft.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/mameCenter.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/mameRight.png"));
+
+            // bossHP
+
+            UIManager::Instance().Initialize();
+        }
+    }
+
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));

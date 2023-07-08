@@ -25,79 +25,6 @@
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 StageTutorial::StageTutorial()
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // ƒXƒe[ƒW¶¬&“o˜^
-    {
-        TerrainManager& terrainManager = TerrainManager::Instance();
-
-        terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 0
-        terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 1
-        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 2
-        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
-        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
-        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
-        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
-        terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 1
-        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 1
-
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx")); // ŠÅ”Â
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // ŠÅ”Â
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // ŠÅ”Â
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_dash.fbx")); // ŠÅ”Â
-        
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/goal.fbx")); // ƒS[ƒ‹
-    }
-
-    // player¶¬
-    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
-
-    // enemy
-    {
-        EnemyManager::Instance().Register(new EnemyTofu());
-        EnemyManager::Instance().Register(new EnemyTofu());
-        EnemyManager::Instance().Register(new EnemyTofu());
-        EnemyManager::Instance().Register(new EnemyTofu());
-        EnemyManager::Instance().Register(new EnemyTofu());
-
-        EnemyManager::Instance().Register(new EnemyTofu());
-        EnemyManager::Instance().Register(new EnemyTofu());
-        EnemyManager::Instance().Register(new EnemyTofu());
-    }
-
-
-    // ”wŒi‰¼
-    back = std::make_unique<Box>("./resources/tutorialBack.fbx");
-    //back = std::make_unique<Box>("./resources/back.fbx");
-
-    // animation
-    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/tutorial/hipDrop.png");
-
-    // UI
-    {
-        UIManager& uiManager = UIManager::Instance();
-
-        uiManager.Register(new UI(L"./resources/tutorial/hukidasi.png"));           // hukidasi
-        uiManager.Register(new UI(L"./resources/tutorial/hukidasiBig.png"));           // hukidasi
-        uiManager.Register(new UI(L"./resources/tutorial/hukidasiBigBig.png"));           // hukidasi
-        uiManager.Register(new UI(L"./resources/tutorial/hukidasi_stick.png"));     // hukidasiPC
-        uiManager.Register(new UI(L"./resources/tutorial/stickBase.png"));          // stickbase
-        uiManager.Register(new UI(L"./resources/tutorial/stick_center.png"));       // center
-        uiManager.Register(new UI(L"./resources/tutorial/stick_right.png"));        // right
-        uiManager.Register(new UI(L"./resources/tutorial/stick_left.png"));         // left
-        uiManager.Register(new UI(L"./resources/tutorial/stick_down.png"));         // down
-        uiManager.Register(new UI(L"./resources/tutorial/GamePadA.png"));       // A
-        uiManager.Register(new UI(L"./resources/tutorial/GamePadB.png"));       // B
-        uiManager.Register(new UI(L"./resources/tutorial/GamePadX.png"));       // X
-        uiManager.Register(new UI(L"./resources/tutorial/GamePadY.png"));       // Y
-        uiManager.Register(new UI(L"./resources/tutorial/PC_A.png"));           // A_PC
-        uiManager.Register(new UI(L"./resources/tutorial/PC_D.png"));           // D_PC
-        uiManager.Register(new UI(L"./resources/tutorial/PC_S.png"));           // S_PC
-        uiManager.Register(new UI(L"./resources/tutorial/PC_shift.png"));       // SHIFT
-        uiManager.Register(new UI(L"./resources/tutorial/PC_space.png"));       // SPACE
-        uiManager.Register(new UI(L"./resources/tutorial/or.png"));             // or
-        uiManager.Register(new UI(L"./resources/tutorial/plus.png"));             // or
-    }
 }
 
 StageTutorial::~StageTutorial()
@@ -108,6 +35,82 @@ StageTutorial::~StageTutorial()
 // ‰Šú‰»
 void StageTutorial::Initialize()
 {
+    // ¶¬
+    {
+        // ƒXƒe[ƒW¶¬&“o˜^
+        {
+            TerrainManager& terrainManager = TerrainManager::Instance();
+
+            terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 0
+            terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 1
+            terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 2
+            terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
+            terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
+            terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
+            terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
+            terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 1
+            terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 1
+
+            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx")); // ŠÅ”Â
+            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // ŠÅ”Â
+            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // ŠÅ”Â
+            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_dash.fbx")); // ŠÅ”Â
+
+            terrainManager.Register(new TerrainNoCollision("./resources/stage/goal.fbx")); // ƒS[ƒ‹
+        }
+
+        // player¶¬
+        PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+        // enemy
+        {
+            EnemyManager::Instance().Register(new EnemyTofu());
+            EnemyManager::Instance().Register(new EnemyTofu());
+            EnemyManager::Instance().Register(new EnemyTofu());
+            EnemyManager::Instance().Register(new EnemyTofu());
+            EnemyManager::Instance().Register(new EnemyTofu());
+
+            EnemyManager::Instance().Register(new EnemyTofu());
+            EnemyManager::Instance().Register(new EnemyTofu());
+            EnemyManager::Instance().Register(new EnemyTofu());
+        }
+
+
+        // ”wŒi‰¼
+        back = std::make_unique<Box>("./resources/tutorialBack.fbx");
+        //back = std::make_unique<Box>("./resources/back.fbx");
+
+        // animation
+        spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/tutorial/hipDrop.png");
+
+        // UI
+        {
+            UIManager& uiManager = UIManager::Instance();
+
+            uiManager.Register(new UI(L"./resources/tutorial/hukidasi.png"));           // hukidasi
+            uiManager.Register(new UI(L"./resources/tutorial/hukidasiBig.png"));           // hukidasi
+            uiManager.Register(new UI(L"./resources/tutorial/hukidasiBigBig.png"));           // hukidasi
+            uiManager.Register(new UI(L"./resources/tutorial/hukidasi_stick.png"));     // hukidasiPC
+            uiManager.Register(new UI(L"./resources/tutorial/stickBase.png"));          // stickbase
+            uiManager.Register(new UI(L"./resources/tutorial/stick_center.png"));       // center
+            uiManager.Register(new UI(L"./resources/tutorial/stick_right.png"));        // right
+            uiManager.Register(new UI(L"./resources/tutorial/stick_left.png"));         // left
+            uiManager.Register(new UI(L"./resources/tutorial/stick_down.png"));         // down
+            uiManager.Register(new UI(L"./resources/tutorial/GamePadA.png"));       // A
+            uiManager.Register(new UI(L"./resources/tutorial/GamePadB.png"));       // B
+            uiManager.Register(new UI(L"./resources/tutorial/GamePadX.png"));       // X
+            uiManager.Register(new UI(L"./resources/tutorial/GamePadY.png"));       // Y
+            uiManager.Register(new UI(L"./resources/tutorial/PC_A.png"));           // A_PC
+            uiManager.Register(new UI(L"./resources/tutorial/PC_D.png"));           // D_PC
+            uiManager.Register(new UI(L"./resources/tutorial/PC_S.png"));           // S_PC
+            uiManager.Register(new UI(L"./resources/tutorial/PC_shift.png"));       // SHIFT
+            uiManager.Register(new UI(L"./resources/tutorial/PC_space.png"));       // SPACE
+            uiManager.Register(new UI(L"./resources/tutorial/or.png"));             // or
+            uiManager.Register(new UI(L"./resources/tutorial/plus.png"));             // or
+        }
+    }
+
+
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));

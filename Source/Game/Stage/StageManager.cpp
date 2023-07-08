@@ -14,7 +14,8 @@ void StageManager::Update(const float& elapsedTime)
         nextStage    = nullptr;
 
         // stage‰Šú‰»ˆ—
-        currentStage->Initialize();
+        if(!currentStage->IsReady())
+            currentStage->Initialize();
     }
 
     if (currentStage != nullptr)
@@ -48,8 +49,8 @@ void StageManager::Clear()
 }
 
 // stageØ‚è‘Ö‚¦
-void StageManager::ChangeStage(Stage* terrain)
+void StageManager::ChangeStage(Stage* stage)
 {
     // V‚µ‚¢stage‚ğİ’è
-    nextStage = terrain;
+    nextStage = stage;
 }

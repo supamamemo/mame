@@ -17,36 +17,40 @@
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 StagePlains::StagePlains()
 {
-    // terrain¶¬
-    Terrain::nameNum = 0;
-    TerrainManager& terrainManager = TerrainManager::Instance();
-    RegisterTerrains(terrainManager);
-
-    // player¶¬
-    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
-
-    // enemy¶¬
-    EnemyTofu::nameNum              = 0;
-    EnemyManager& enemyManager = EnemyManager::Instance();
-    RegisterEnemies(enemyManager);
-    
-    // ”wŒi
-    back = std::make_unique<Box>("./resources/back.fbx");
-
-    // UI
-    {
-        UIManager& uiManager = UIManager::Instance();
-        UI::nameNum = 0;
-        uiManager.Register(new UI(L"./resources/ui/baseMameHp.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameLeft.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameCenter.png"));
-        uiManager.Register(new UI(L"./resources/ui/mameRight.png"));
-    }
 }
 
 // ‰Šú‰»
 void StagePlains::Initialize()
 {
+    // ¶¬
+    {
+        // terrain¶¬
+        Terrain::nameNum = 0;
+        TerrainManager& terrainManager = TerrainManager::Instance();
+        RegisterTerrains(terrainManager);
+
+        // player¶¬
+        PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+        // enemy¶¬
+        EnemyTofu::nameNum = 0;
+        EnemyManager& enemyManager = EnemyManager::Instance();
+        RegisterEnemies(enemyManager);
+
+        // ”wŒi
+        back = std::make_unique<Box>("./resources/back.fbx");
+
+        // UI
+        {
+            UIManager& uiManager = UIManager::Instance();
+            UI::nameNum = 0;
+            uiManager.Register(new UI(L"./resources/ui/baseMameHp.png"));
+            uiManager.Register(new UI(L"./resources/ui/mameLeft.png"));
+            uiManager.Register(new UI(L"./resources/ui/mameCenter.png"));
+            uiManager.Register(new UI(L"./resources/ui/mameRight.png"));
+        }
+    }
+
     // camera‰Šú‰»
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 8.0f, -12.0f));

@@ -7,6 +7,11 @@ int Effect::nameNum = 0;
 // コンストラクタ
 Effect::Effect(const char* filename)
 {
+    // エフェクトを読み込みする前にロックする
+    // ※マルチスレッドでEffectを作成するとDeviceContextを同時アクセスして
+    // フリーズする可能性があるので排他制御する
+    std::lock_guard<std::mutex> lock(Graphics::Instance().GetMutex());
+
     // Effekseerのリソースを読み込む
     // EffekseerはUTF-16のファイルパス以外は対応していないため文字コードが必要
     char16_t utf16Filename[256];

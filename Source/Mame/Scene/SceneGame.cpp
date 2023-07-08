@@ -15,6 +15,7 @@
 
 #include "../../Game/Terrain/Terrain.h"
 
+#include "../../Game/Stage/StageLoading.h"
 
 // コンストラクタ
 SceneGame::SceneGame()
@@ -81,26 +82,22 @@ void SceneGame::Begin()
     // ステージの切り替え
     if (GetChangeStageTutorial())
     {
-        StageManager::Instance().Clear();
-        StageManager::Instance().ChangeStage(new StageTutorial);
+        StageManager::Instance().ChangeStage(new StageLoading(new StageTutorial));
         SetChangeStageTutorial();
     }
     if (GetChangeStagePlains())
     {
-        StageManager::Instance().Clear();
-        StageManager::Instance().ChangeStage(new StagePlains);
+        StageManager::Instance().ChangeStage(new StageLoading(new StagePlains));
         SetChangeStagePlains();
     }
     if (GetChangeStageBoss())
     {
-        StageManager::Instance().Clear();
-        StageManager::Instance().ChangeStage(new StageBoss);
+        StageManager::Instance().ChangeStage(new StageLoading(new StageBoss));
         SetChangeStageBoss();
     }
     if (GetChangeStageSelect())
     {
-        StageManager::Instance().Clear();
-        StageManager::Instance().ChangeStage(new StageSelection);
+        StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
         SetChangeStageSelect();
     }
 }
@@ -148,7 +145,7 @@ void SceneGame::Update(const float& elapsedTime)
     StageManager::Instance().Update(elapsedTime);
 
     // エフェクト更新処理
-    EffectManager::Instance().Update(elapsedTime);
+    //EffectManager::Instance().Update(elapsedTime);
 }
 
 // Updateの後に呼び出される
@@ -163,6 +160,10 @@ void SceneGame::Render(const float& elapsedTime)
     ID3D11DeviceContext* immediate_context = graphics.GetDeviceContext();
     ID3D11RenderTargetView* render_target_view = graphics.GetRenderTargetView();
     ID3D11DepthStencilView* depth_stencil_view = graphics.GetDepthStencilView();
+
+    // 別スレッド中にデバイスコンテキストが使われた場合に
+    // 同時アクセスしないように排他制御する
+    std::lock_guard<std::mutex> lock(graphics.GetMutex());
 
     FLOAT color[] = { 0.0f,0.0f,0.5f,1.0f }; // RGBA(0.0~1.0)
     immediate_context->ClearRenderTargetView(render_target_view, color);
@@ -185,7 +186,7 @@ void SceneGame::Render(const float& elapsedTime)
         DirectX::XMStoreFloat4x4(&view, camera.GetV());
         DirectX::XMStoreFloat4x4(&projection, camera.GetP());
 
-        EffectManager::Instance().Render(view, projection);
+        //EffectManager::Instance().Render(view, projection);
     }
 
     // fadeOut
