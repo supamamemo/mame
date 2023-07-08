@@ -70,40 +70,71 @@ void Camera::Update(float elapsedTime)
     const float plLastLandingTerrainMaxY   = playerManager.GetPlayer()->lastLandingTerrainAABB_.max.y;
 
     // カメラのX位置をプレイヤーのX位置と同期
-    cameraPos.x = playerPos.x;
-
-    const    float moveSpeedY      = 5.0f * elapsedTime;    // 移動速度Y
-    NO_CONST float targetPositionY = 0.0f;                  // 目標位置Y
-
-    // プレイヤーが最後に着地した地形の頭上が一定より上ならカメラを移動させる
-    if (plLastLandingTerrainMaxY > 7.5f)
+    if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
     {
-        // 目標位置を設定
-        targetPositionY = plLastLandingTerrainMaxY + 1.75f;
+        cameraPos.x = playerPos.x;
+    }
 
-        // カメラが目標位置より下にいたら上に移動する
-        if (cameraPos.y < targetPositionY)
-        {          
-            // カメラ上移動・超過修正(右が左より小さければ右を代入)
-            cameraPos.y = (std::min)(targetPositionY, cameraPos.y + moveSpeedY);
-        }
+    if (playerManager.GetPlayer()->GetState() != Player::State::Clear)
+    {
+        const    float moveSpeedY      = 5.0f * elapsedTime;    // 移動速度Y
+        NO_CONST float targetPositionY = 0.0f;                  // 目標位置Y
 
-        // カメラが目標位置より上にいたら下に移動する
-        else if (cameraPos.y < targetPositionY)
+        // プレイヤーが最後に着地した地形の頭上が一定より上ならカメラを移動させる
+        if (plLastLandingTerrainMaxY > 7.5f)
         {
-            // カメラ上移動・超過修正(右が左より大きければ右を代入)
+            // 目標位置を設定
+            targetPositionY = plLastLandingTerrainMaxY + 1.75f;
+
+            // カメラが目標位置より下にいたら上に移動する
+            if (cameraPos.y < targetPositionY)
+            {
+                // カメラ上移動・超過修正(右が左より小さければ右を代入)
+                cameraPos.y = (std::min)(targetPositionY, cameraPos.y + moveSpeedY);
+            }
+
+            // カメラが目標位置より上にいたら下に移動する
+            else if (cameraPos.y < targetPositionY)
+            {
+                // カメラ上移動・超過修正(右が左より大きければ右を代入)
+                cameraPos.y = (std::max)(targetPositionY, cameraPos.y - moveSpeedY);
+            }
+
+        }
+        // それ以外ならカメラをもとに戻す
+        else
+        {
+            // 目標位置を設定
+            targetPositionY = 8.0f;
+
+            // カメラ下移動・超過修正(右が左より大きければ右を代入)
             cameraPos.y = (std::max)(targetPositionY, cameraPos.y - moveSpeedY);
         }
-
     }
-    // それ以外ならカメラをもとに戻す
+    // プレイヤーのステートがクリアステートならカメラを寄せる
     else
     {
-        // 目標位置を設定
-        targetPositionY = 8.0f;
-
-        // カメラ下移動・超過修正(右が左より大きければ右を代入)
-        cameraPos.y = (std::max)(targetPositionY, cameraPos.y - moveSpeedY);
+        const float targetPositionY = 3.5f;
+        const float moveSpeedY      = 6.0f * elapsedTime;        
+        if (cameraPos.y < targetPositionY)
+        {
+            cameraPos.y = (std::min)(targetPositionY, (cameraPos.y + moveSpeedY));
+        }
+        if (cameraPos.y > targetPositionY)
+        {
+            cameraPos.y = (std::max)(targetPositionY, (cameraPos.y - moveSpeedY));
+        }        
+        
+        const float targetPositionZ = 0.0f;
+        const float moveSpeedZ      = 6.0f * elapsedTime;
+        if (cameraPos.z < targetPositionZ)
+        {
+            cameraPos.z = (std::min)(targetPositionZ, (cameraPos.z + moveSpeedZ));
+        }
+        if (cameraPos.z > targetPositionZ)
+        {
+            cameraPos.z = (std::max)(targetPositionZ, (cameraPos.z - moveSpeedZ));
+        }
     }
 
     GetTransform()->SetPosition(cameraPos);

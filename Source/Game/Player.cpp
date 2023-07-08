@@ -544,20 +544,10 @@ bool Player::TurnToCamera(const float elapsedTime, NO_CONST float turnSpeed)
 
     turnSpeed *= elapsedTime;
 
-    NO_CONST float vx = 0.5f;
+    const float vz = 1.0f;
 
-    // 進行ベクトルを単位ベクトル化
-    const float vLength = fabsf(vx);
-    if (vLength < 0.001f) return false;
-
-    // 単位ベクトル化
-    vx /= vLength;
-
-    // 自身の回転値から前方向を求める
-    const float frontX = sinf(rotation.y);
-
-    // 回転角を求めるため、2つの単位ベクトルの内積計算する
-    const float dot = (frontX * vx) /*+ (frontZ * vz)*/;
+    const float frontZ = cosf(rotation.y);
+    const float dot    = (-frontZ * vz); // 角度
 
     // 回転角が微小な場合は回転を行わない
     const float angle = acosf(dot); // ラジアン
@@ -569,9 +559,9 @@ bool Player::TurnToCamera(const float elapsedTime, NO_CONST float turnSpeed)
     NO_CONST float rot = 1.0f - dot;   // 補正値                    
     if (rot > turnSpeed) rot = turnSpeed;
 
-    // 左右判定を行うために2つの単位ベクトルの外積を計算する
-    const float frontZ = cosf(rotation.y);
-    const float cross = (frontZ * vx) /*- (frontX * vz)*/;
+    // 左右判定を行うために単位ベクトルの外積を計算する
+    const float frontX = sinf(rotation.y);
+    const float cross  = (frontX * vz);
 
     // 2Dの外積値が正の場合か負の場合によって左右判定が行える
     // 左右判定を行うことによって左右回転を選択する
@@ -1132,22 +1122,82 @@ void Player::TransitionClearState()
 {
     state = State::Clear;
 
-    clearState_ = 0;
+    isInvincible = true;            // 無敵状態にする
+
+    acceleration_ = clearAcceleration_; // 加速力を減らす
+
+    PlayAnimation(Anim_Idle, true); // 待機ステート再生
 }
 
 void Player::UpdateClearState(const float& elapsedTime)
 {
-    if (!isGround_) return;
+    if (!isGround_) return; // 空中にいる場合は着地するまで待つ
 
-    enum ClearState
-    {
-        LookToCamera,   // カメラの方向を見る
-    };
+    const float moveVecX = 1.0f;
 
     switch (clearState_)
     {
     case ClearState::LookToCamera:
-        TurnToCamera(elapsedTime, turnSpeed_);  // カメラの方向に体を向ける
+
+        // カメラの方向に体を向ける
+        if (TurnToCamera(elapsedTime, ToRadian(90.0f))) break;
+
+        clearTimer_ += elapsedTime;
+
+        // しばらくたったら次のステートに移る
+        if (clearTimer_ > 1.0f)
+        {
+            clearTimer_ = 0.0f;
+
+            clearState_ = ClearState::JumpForJoy;
+            break;
+        }
+
+        break;
+    case ClearState::JumpForJoy:
+
+        // 指定回数飛び跳ねさせる
+        if (clearJumpCount_ < 3)
+        {
+            PlayAnimation(Anim_HipDrop, true, 0.7f);
+            Jump(jumpSpeed_ * 1.5f);
+            ++clearJumpCount_;
+        }
+        // 跳ね終わったら次のステートに移る
+        else
+        {
+            clearJumpCount_ = 0;
+            PlayAnimation(Anim_Idle, true);
+
+            clearState_ = ClearState::MoveToLeft;
+            break;
+        }
+
+        break;
+    case ClearState::MoveToLeft:
+
+        clearTimer_ += elapsedTime;
+
+        // しばらく待つ
+        if (clearTimer_ < 1.0f) break;
+
+        // 右に向いてから少し下がる
+        if (!Turn(elapsedTime, moveVecX, ToRadian(100.0f)))
+        {
+            clearTimer_ = 0.0f;
+            velocity.x  = -12.5f;
+            PlayAnimation(Anim_Run, true);
+
+            clearState_ = ClearState::MoveToRight;
+            break;
+        }
+
+        break;
+    case ClearState::MoveToRight:
+
+        // 右に移動
+        Move(moveVecX, clearMoveSpeed_);
+
         break;
     }
 }

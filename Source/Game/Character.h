@@ -44,7 +44,7 @@ protected:
     void Move(const float& vx, const float& moveSpeed);
 
     // ù‰ñˆ—
-    void Turn(
+    bool Turn(
         const float& elapsedTime, 
         NO_CONST float vx, 
         NO_CONST float turnSpeed
