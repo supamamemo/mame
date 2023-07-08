@@ -79,27 +79,7 @@ void SceneGame::Finalize()
 // Updateの前に呼び出される
 void SceneGame::Begin()
 {
-    // ステージの切り替え
-    if (GetChangeStageTutorial())
-    {
-        StageManager::Instance().ChangeStage(new StageLoading(new StageTutorial));
-        SetChangeStageTutorial();
-    }
-    if (GetChangeStagePlains())
-    {
-        StageManager::Instance().ChangeStage(new StageLoading(new StagePlains));
-        SetChangeStagePlains();
-    }
-    if (GetChangeStageBoss())
-    {
-        StageManager::Instance().ChangeStage(new StageLoading(new StageBoss));
-        SetChangeStageBoss();
-    }
-    if (GetChangeStageSelect())
-    {
-        StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
-        SetChangeStageSelect();
-    }
+    //StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
 }
 
 // 更新処理
@@ -237,23 +217,23 @@ void SceneGame::DrawDebug()
     if (ImGui::Button("tutorial"))
     {
         Terrain::nameNum = 0;   // 番号リセット
-        ChangeStage(static_cast<int>(Mame::Scene::STAGE::Tutorial));
+        StageManager::Instance().ChangeStage(new StageLoading(new StageTutorial));
     }
     if (ImGui::Button("plains"))
     {
         Terrain::nameNum = 0;   // 番号リセット
-        ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
+        StageManager::Instance().ChangeStage(new StageLoading(new StagePlains));
     }
     if (ImGui::Button("boss"))
     {
         Terrain::nameNum = 0;   // 番号リセット
-        ChangeStage(static_cast<int>(Mame::Scene::STAGE::Boss));
+        StageManager::Instance().ChangeStage(new StageLoading(new StageBoss));
 
     }
     if (ImGui::Button("select"))
     {
         Terrain::nameNum = 0;   // 番号リセット
-        ChangeStage(static_cast<int>(Mame::Scene::STAGE::Select));
+        StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
     }
 
     ImGui::Begin("renderLengthXLimit_");
