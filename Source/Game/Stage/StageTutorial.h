@@ -73,6 +73,7 @@ private:
         SignBoard_drop0,
         SignBoard_drop1,
         SignBoard_dash0,
+        SignBoard_noTex,
         Goal,
     };
 
@@ -93,7 +94,7 @@ private:
     std::unique_ptr<Box> back = nullptr;
 
     std::unique_ptr<SpriteAnimation> spriteAnimation = nullptr;
-    int frame = 60;
+    int frame = 200;
 
     // UI
     Effect* effect[4];

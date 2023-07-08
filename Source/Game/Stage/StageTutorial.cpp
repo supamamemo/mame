@@ -55,6 +55,7 @@ void StageTutorial::Initialize()
             terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // 看板
             terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // 看板
             terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_dash.fbx")); // 看板
+            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_nomal.fbx")); // 看板
 
             terrainManager.Register(new TerrainNoCollision("./resources/stage/goal.fbx")); // ゴール
         }
@@ -153,6 +154,9 @@ void StageTutorial::Initialize()
 
         terrainManager.GetTerrain(SignBoard_dash0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(19, 5, 11));
         terrainManager.GetTerrain(SignBoard_dash0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
+
+        terrainManager.GetTerrain(SignBoard_noTex)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 3, 10.5f));
+        terrainManager.GetTerrain(SignBoard_noTex)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
 
         terrainManager.GetTerrain(Goal)->GetTransform()->SetPosition(DirectX::XMFLOAT3(68, 6, 10));
 
@@ -304,7 +308,7 @@ void StageTutorial::Render(const float& elapsedTime)
     TutorialStateRender(elapsedTime);
 
     // UI
-    //UIManager::Instance().Render(elapsedTime);   
+    UIManager::Instance().Render(elapsedTime);   
 }
 
 // debug用
@@ -473,7 +477,7 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
             effect[1]->Stop(effect[1]->handle);
             effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetColor(), 200.0f);
 
-            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.7f, 0.0f, 1.5f));
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.7f, -5.0f, 1.5f));
 
             stickTime = 0;
             tutorialState = STATE::HipDorop;
@@ -487,14 +491,14 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
 
         // 看板の位置
-        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->GetPosition();
-        terrainPos.y += elapsedTime * 10;
+        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex)->GetTransform()->GetPosition();
+        if (Camera::Instance().GetTransform()->GetPosition().x >= 9.0f)terrainPos.y += elapsedTime * 10;
         if (terrainPos.y >= 5.2f)terrainPos.y = 5.2f;
-        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetPosition(terrainPos);
+        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex)->GetTransform()->SetPosition(terrainPos);
 
         //TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.7f, 5.2f, 1.5f));
-        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 2.0f));
-        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(-10), DirectX::XMConvertToRadians(180), 0, 0));
+        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex)->GetTransform()->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 2.0f));
+        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex)->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0, 0, 0));
 
         // UIの位置
         {
@@ -799,7 +803,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
         }
         effect[0]->AddTimer(elapsedTime);
 
-        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->GetPosition();
+        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex)->GetTransform()->GetPosition();
         if (terrainPos.y >= 5.2f)
         {
             Graphics::Instance().GetShader()->SetState(Graphics::Instance().GetDeviceContext(), 3, 0, 0);

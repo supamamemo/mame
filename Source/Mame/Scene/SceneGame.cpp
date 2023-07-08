@@ -125,7 +125,7 @@ void SceneGame::Update(const float& elapsedTime)
     StageManager::Instance().Update(elapsedTime);
 
     // エフェクト更新処理
-    //EffectManager::Instance().Update(elapsedTime);
+    EffectManager::Instance().Update(elapsedTime);
 }
 
 // Updateの後に呼び出される
@@ -166,7 +166,7 @@ void SceneGame::Render(const float& elapsedTime)
         DirectX::XMStoreFloat4x4(&view, camera.GetV());
         DirectX::XMStoreFloat4x4(&projection, camera.GetP());
 
-        //EffectManager::Instance().Render(view, projection);
+        EffectManager::Instance().Render(view, projection);
     }
 
     // fadeOut
