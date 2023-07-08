@@ -59,7 +59,9 @@ void SceneLoading::Update(const float& elapsedTime)
 {
     spriteDissolve->Update();
 
-    spriteAnimation->PlayAnimation(20, 30, true,elapsedTime);
+    const float frameSpeed = 30.0f;   // フレーム速度
+    const int   totalFrame = 30;      // フレームの枚数
+    spriteAnimation->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
 
     //spriteDissolve.fadeOut(elapsedTime);
     //spriteDissolve->FadeIn(elapsedTime);

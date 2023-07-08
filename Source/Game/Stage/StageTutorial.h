@@ -94,7 +94,8 @@ private:
     std::unique_ptr<Box> back = nullptr;
 
     std::unique_ptr<SpriteAnimation> spriteAnimation = nullptr;
-    int frame = 200;
+    
+    float frameSpeed = 8.0f;    // ƒtƒŒ[ƒ€‘¬“x
 
     // UI
     Effect* effect[4];

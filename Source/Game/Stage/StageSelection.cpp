@@ -4,6 +4,7 @@
 #include "../../Mame/Graphics/Camera.h"
 #include "../../Mame/Scene/SceneManager.h"
 #include "../../Mame/Input/Input.h"
+#include "../../Mame/AudioManager.h"
 
 #include "../EnemyManager.h"
 #include "../Terrain/TerrainManager.h"
@@ -19,6 +20,34 @@
 // コンストラクタ
 StageSelection::StageSelection()
 {
+    // 背景
+    //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
+    back = std::make_unique<Box>("./resources/tutorialBack.fbx");
+
+    // 城
+    castle = std::make_unique<Box>("./resources/castel.fbx");
+
+    // boss
+    boss = std::make_unique<Box>("./resources/bossall.fbx");
+
+    // point
+    point[POINT::Black] = std::make_unique<Box>("./resources/select/pointBlack.fbx");
+    point[POINT::Red] = std::make_unique<Box>("./resources/select/pointRed.fbx");
+    point[POINT::Blue] = std::make_unique<Box>("./resources/select/pointBlue.fbx");
+
+    // terrain生成
+    TerrainManager& terrainManager = TerrainManager::Instance();
+    {
+        terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx")); // 0
+        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx")); // 1
+    }
+
+    // player生成
+    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::Tutorial, true); // チュートリアルBGM再生
+
 }
 
 // 初期化
@@ -117,6 +146,9 @@ void StageSelection::Finalize()
 
     // player終了化
     PlayerManager::Instance().Finalize();
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopAllAudio(); // 全音楽停止
 }
 
 // Updateの前に呼ばれる処理

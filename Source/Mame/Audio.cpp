@@ -133,7 +133,7 @@ Audio::~Audio()
     delete[] buffer.pAudioData;
 }
 
-void Audio::Play(const bool isLoop)
+void Audio::Play(const int loopCount)
 {
     HRESULT hr;
 
@@ -145,7 +145,6 @@ void Audio::Play(const bool isLoop)
         return;
     }
    
-    const int loopCount = isLoop ? 255 : 0; // (255 : XAUDIO2_LOOP_INFINITE)
     buffer.LoopCount = loopCount;
     hr = sourceVoice->SubmitSourceBuffer(&buffer);
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
@@ -153,6 +152,26 @@ void Audio::Play(const bool isLoop)
     hr = sourceVoice->Start(0);
     _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 }
+
+void Audio::Play(const bool isLoop, const bool isIgnoreQueue)
+{
+    HRESULT hr;
+
+    XAUDIO2_VOICE_STATE voiceState = {};
+    sourceVoice->GetState(&voiceState);
+
+    if (!isIgnoreQueue && voiceState.BuffersQueued) return;
+
+    const int loopCount = isLoop ? XAUDIO2_LOOP_INFINITE : 0;
+
+    buffer.LoopCount = loopCount;
+    hr = sourceVoice->SubmitSourceBuffer(&buffer);
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+
+    hr = sourceVoice->Start(0);
+    _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+}
+
 
 void Audio::Stop(bool playTails, size_t afterSamplesPlayed)
 {
