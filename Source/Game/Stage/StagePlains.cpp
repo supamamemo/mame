@@ -38,8 +38,14 @@ void StagePlains::Initialize()
         EnemyManager& enemyManager = EnemyManager::Instance();
         RegisterEnemies(enemyManager);
 
+
         // îwåi
+        Box::nameNum = 0;
         back = std::make_unique<Box>("./resources/back.fbx");
+
+        // ÉSÅ[Éã
+        goal_ = std::make_unique<Box>("./resources/stage/goal.fbx");
+
 
         // UI
         {
@@ -83,6 +89,9 @@ void StagePlains::Initialize()
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 5, 12));
     back->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 12, 6));
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
+
+    // ÉSÅ[Éã
+    goal_->GetTransform()->SetPosition(DirectX::XMFLOAT3(277.0f, 5.5f, 10.7f));
 
     // UI
     {
@@ -147,6 +156,9 @@ void StagePlains::Update(const float& elapsedTime)
 {
     if (!Mame::Scene::SceneManager::Instance().isHitStop_)
     {
+        PlayerManager& playerManager = PlayerManager::Instance();
+        EnemyManager& enemyManager   = EnemyManager::Instance();
+
         //îwåi
         back->BackUpdate(elapsedTime);
 
@@ -157,11 +169,24 @@ void StagePlains::Update(const float& elapsedTime)
         TerrainManager::Instance().Update(elapsedTime);
 
         // playerçXêV
-        PlayerManager::Instance().Update(elapsedTime);
+        playerManager.Update(elapsedTime);
 
         // enemyçXêV
-        EnemyManager::Instance().Update(elapsedTime);
+        enemyManager.Update(elapsedTime);
+
+        // ÉvÉåÉCÉÑÅ[Ç™ÉSÅ[ÉãÇí¥Ç¶ÇΩÇÁÉXÉeÅ[ÉWÉNÉäÉAÇ…Ç∑ÇÈ
+        const float playerPositionX = playerManager.GetPlayer()->GetTransform()->GetPosition().x;
+        const float goalPositionX   = goal_->GetTransform()->GetPosition().x;
+        if (playerPositionX >= goalPositionX)
+        {
+            enemyManager.AllKill(); // ìGÇëSàıì|Ç∑
+
+            // ÉvÉåÉCÉÑÅ[ÇÃÉXÉeÅ[ÉgÇÉNÉäÉAÉXÉeÅ[ÉgÇ÷ëJà⁄
+            const Player::State playerState = playerManager.GetPlayer()->GetState();
+            if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();              
+        }
     }
+     
 
     // UI
     UIManager::Instance().Update(elapsedTime);
@@ -193,6 +218,9 @@ void StagePlains::Render(const float& elapsedTime)
     // îwåi
     back->Render(elapsedTime);
 
+    // ÉSÅ[Éã
+    goal_->Render(elapsedTime);
+
     // playerï`âÊ
     PlayerManager::Instance().Render(elapsedTime);
 
@@ -221,6 +249,9 @@ void StagePlains::DrawDebug()
 
     // îwåi
     back->DrawDebug();
+
+    // ÉSÅ[Éã
+    goal_->DrawDebug();
 
 #endif
 }

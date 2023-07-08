@@ -121,6 +121,14 @@ void EnemyManager::DrawDebug()
     }
 }
 
+void EnemyManager::AllKill()
+{
+    for (Enemy*& enemy : enemies)
+    {
+        enemy->ApplyDamage(999, 1.0f);
+    }
+}
+
 
 // エネミー同士の衝突判定処理
 void EnemyManager::CollisionEnemyVsEnemy()

@@ -226,6 +226,7 @@ void Player::Update(const float& elapsedTime)
     case State::Jump:    UpdateJumpState(elapsedTime);    break;
     case State::HipDrop: UpdateHipDropState(elapsedTime); break;
     case State::Death:   UpdateDeathState(elapsedTime);   break;
+    case State::Clear:   UpdateClearState(elapsedTime);   break;
     }
 
     // AABB更新処理
@@ -534,6 +535,51 @@ void Player::UpdateBounceInvincibleTimer(const float& elapsedTime)
 
     // バウンス無敵時間を減らす
     bounceInvincibleTimer_ -= elapsedTime;
+}
+
+
+bool Player::TurnToCamera(const float elapsedTime, NO_CONST float turnSpeed)
+{
+    NO_CONST DirectX::XMFLOAT4 rotation = GetTransform()->GetRotation();
+
+    turnSpeed *= elapsedTime;
+
+    NO_CONST float vx = 0.5f;
+
+    // 進行ベクトルを単位ベクトル化
+    const float vLength = fabsf(vx);
+    if (vLength < 0.001f) return false;
+
+    // 単位ベクトル化
+    vx /= vLength;
+
+    // 自身の回転値から前方向を求める
+    const float frontX = sinf(rotation.y);
+
+    // 回転角を求めるため、2つの単位ベクトルの内積計算する
+    const float dot = (frontX * vx) /*+ (frontZ * vz)*/;
+
+    // 回転角が微小な場合は回転を行わない
+    const float angle = acosf(dot); // ラジアン
+    //if (fabsf(angle) <= 0.001f) return;
+    if (fabsf(angle) <= 0.01f) return false;
+
+    // 内積値は-1.0~1.0で表現されており、2つの単位ベクトルの角度が
+    // 小さいほど1.0に近づくという性質を利用して回転速度を調整する  
+    NO_CONST float rot = 1.0f - dot;   // 補正値                    
+    if (rot > turnSpeed) rot = turnSpeed;
+
+    // 左右判定を行うために2つの単位ベクトルの外積を計算する
+    const float frontZ = cosf(rotation.y);
+    const float cross = (frontZ * vx) /*- (frontX * vz)*/;
+
+    // 2Dの外積値が正の場合か負の場合によって左右判定が行える
+    // 左右判定を行うことによって左右回転を選択する
+    rotation.y += (cross < 0.0f) ? -rot : rot;
+
+    GetTransform()->SetRotation(rotation);
+
+    return true;
 }
 
 
@@ -1079,4 +1125,29 @@ void Player::UpdateDeathState(const float& elapsedTime)
 {
     // 画面に向かって来る
     GetTransform()->AddPositionZ(-15.0f * elapsedTime);
+}
+
+
+void Player::TransitionClearState()
+{
+    state = State::Clear;
+
+    clearState_ = 0;
+}
+
+void Player::UpdateClearState(const float& elapsedTime)
+{
+    if (!isGround_) return;
+
+    enum ClearState
+    {
+        LookToCamera,   // カメラの方向を見る
+    };
+
+    switch (clearState_)
+    {
+    case ClearState::LookToCamera:
+        TurnToCamera(elapsedTime, turnSpeed_);  // カメラの方向に体を向ける
+        break;
+    }
 }

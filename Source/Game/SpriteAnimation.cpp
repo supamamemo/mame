@@ -45,6 +45,24 @@ void SpriteAnimation::PlayAnimation(const int& frameTime, const int& totalAnimat
         texPos.x = texSize.x * animationFrame;
 
     ++animationTime;
+
+    {
+        //// ¦animationTime‚ğfloatŒ^‚É‚µ‚ÄelapsedTime‚ğˆø”‚É‚µ‚½ê‡‚Å‚â‚Á‚Ä‚¢‚Ü‚·
+
+        //animationFrame = static_cast<int>(animationTime) / frameTime % totalAnimationFrame;
+
+        ////if (animationFrame >= totalAnimationFrame)
+        ////{
+        ////    animationFrame = 0;
+        ////    animationTime = 0;
+        ////}
+
+        //if (animationVertical) texPos.y = texSize.y * animationFrame;
+        //else                   texPos.x = texSize.x * animationFrame;
+
+        ////++animationTime;
+        //animationTime += elapsedTime;
+    }
 }
 
 void SpriteAnimation::Render()
