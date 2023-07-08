@@ -11,9 +11,16 @@
 #include "../Terrain/TerrainNormal.h"
 #include "../PlayerManager.h"
 
+#include "StageManager.h"
+#include "StageLoading.h"
+#include "StageTutorial.h"
+#include "StagePlains.h"
+#include "StageBoss.h"
+
 // コンストラクタ
 StageSelection::StageSelection()
 {
+<<<<<<< HEAD
     // 背景
     //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
     back = std::make_unique<Box>("./resources/tutorialBack.fbx");
@@ -41,11 +48,41 @@ StageSelection::StageSelection()
 
     AudioManager& audioManager = AudioManager::Instance();
     audioManager.PlayBGM(BGM::Tutorial, true); // チュートリアルBGM再生
+=======
+>>>>>>> origin/mame_desk
 }
 
 // 初期化
 void StageSelection::Initialize()
 {
+    // 生成
+    {
+        // 背景
+        //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
+        back = std::make_unique<Box>("./resources/tutorialBack.fbx");
+
+        // 城
+        castle = std::make_unique<Box>("./resources/castel.fbx");
+
+        // boss
+        boss = std::make_unique<Box>("./resources/bossall.fbx");
+
+        // point
+        point[POINT::Black] = std::make_unique<Box>("./resources/select/pointBlack.fbx");
+        point[POINT::Red] = std::make_unique<Box>("./resources/select/pointRed.fbx");
+        point[POINT::Blue] = std::make_unique<Box>("./resources/select/pointBlue.fbx");
+
+        // terrain生成
+        TerrainManager& terrainManager = TerrainManager::Instance();
+        {
+            terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx")); // 0
+            terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx")); // 1
+        }
+
+        // player生成
+        PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+    }
+
     // camera初期化
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 16, -20));
@@ -62,6 +99,7 @@ void StageSelection::Initialize()
     {
         castle->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 6, 2));
         castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.15f, 0.15f, 0.15f));
+        castle->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(-10), 0.0f, 0.0f, 0.0f));
     }
 
     // boss
@@ -145,7 +183,7 @@ void StageSelection::Update(const float& elapsedTime)
         // tutorialStageへ
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
-            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Tutorial));
+            StageManager::Instance().ChangeStage(new StageLoading(new StageTutorial));
         }
 
         break;
@@ -157,7 +195,7 @@ void StageSelection::Update(const float& elapsedTime)
         // plainsStageへ
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
-            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
+            StageManager::Instance().ChangeStage(new StageLoading(new StagePlains));
         }
 
         break;
@@ -169,7 +207,7 @@ void StageSelection::Update(const float& elapsedTime)
         // bossStageへ
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
-            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Boss));
+            StageManager::Instance().ChangeStage(new StageLoading(new StageBoss));
         }
 
         break;

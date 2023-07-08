@@ -192,8 +192,8 @@ void StageTutorial::Initialize()
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
     // animation
-    spriteAnimation->Initialize(DirectX::XMFLOAT2(240, 300),
-        DirectX::XMFLOAT2(731, 391), DirectX::XMFLOAT2(1462, 782));
+    spriteAnimation->Initialize(DirectX::XMFLOAT2(240, 140),
+        DirectX::XMFLOAT2(731, 391), DirectX::XMFLOAT2(1451, 771));
 
     // —U“±—p
     tutorialState = STATE::MoveReception;
@@ -272,7 +272,7 @@ void StageTutorial::Update(const float& elapsedTime)
     back->BackUpdate(elapsedTime);
 
     // animation
-    spriteAnimation->PlayAnimation(frame, 10, true);
+    spriteAnimation->PlayAnimation(frame, 10, true,elapsedTime);
 
     //if (gamePad.GetButtonDown() & GamePad::BTN_X)
     //{
@@ -310,9 +310,6 @@ void StageTutorial::Render(const float& elapsedTime)
 
 
     TutorialStateRender(elapsedTime);
-
-    graphics.GetShader()->SetState(graphics.GetDeviceContext(), 3, 0, 0);
-    spriteAnimation->Render();
 
     // UI
     //UIManager::Instance().Render(elapsedTime);   
@@ -484,6 +481,8 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
             effect[1]->Stop(effect[1]->handle);
             effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetColor(), 200.0f);
 
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.7f, 0.0f, 1.5f));
+
             stickTime = 0;
             tutorialState = STATE::HipDorop;
         }
@@ -495,6 +494,15 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         effect[0]->SetPosition(DirectX::XMFLOAT3(17.5, 4.2f, 10.0f));
         effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
 
+        // ŠÅ”Â‚ÌˆÊ’u
+        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->GetPosition();
+        terrainPos.y += elapsedTime * 10;
+        if (terrainPos.y >= 5.2f)terrainPos.y = 5.2f;
+        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetPosition(terrainPos);
+
+        //TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.7f, 5.2f, 1.5f));
+        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 2.0f));
+        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(-10), DirectX::XMConvertToRadians(180), 0, 0));
 
         // UI‚ÌˆÊ’u
         {
@@ -575,6 +583,10 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
             effect[0]->Stop(effect[0]->handle);
             effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 200.0f);
             effect[1]->SetPosition(DirectX::XMFLOAT3(21.0f, 4.5f, 10.0f));
+
+            TerrainManager::Instance().GetTerrain(SignBoard_yazi0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 3, 10.5f));
+            TerrainManager::Instance().GetTerrain(SignBoard_yazi0)->GetTransform()->SetScale(DirectX::XMFLOAT3(2, 2, 2));
+            TerrainManager::Instance().GetTerrain(SignBoard_yazi0)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
 
             stickTime = 0;
             stickMoveState = 0;
@@ -795,6 +807,12 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
         }
         effect[0]->AddTimer(elapsedTime);
 
+        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->GetPosition();
+        if (terrainPos.y >= 5.2f)
+        {
+            Graphics::Instance().GetShader()->SetState(Graphics::Instance().GetDeviceContext(), 3, 0, 0);
+            spriteAnimation->Render();
+        }
 
         // UI
         {

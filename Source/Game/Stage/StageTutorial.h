@@ -58,7 +58,7 @@ private:
         GoalState,
     };
 
-    enum tutorialTerrain
+    enum TutorialTerrain
     {
         Zimen0,
         Zimen1,

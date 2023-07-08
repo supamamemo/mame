@@ -7,7 +7,9 @@ StageLoading::StageLoading(Stage* nextStage):nextStage(nextStage)
 {
     spriteDissolve = std::make_unique<SpriteDissolve>();
 
-    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet.png");
+    //spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet.png");
+    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet1.png");
+    //spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet2.png");
 }
 
 void StageLoading::Initialize()
@@ -43,7 +45,7 @@ void StageLoading::Update(const float& elapsedTime)
 {
     spriteDissolve->Update();
 
-    spriteAnimation->PlayAnimation(10, 30, true);
+    spriteAnimation->PlayAnimation(10, 30, true,elapsedTime);
 
     if (nextStage->IsReady())
         StageManager::Instance().ChangeStage(nextStage);

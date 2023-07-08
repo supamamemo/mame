@@ -11,7 +11,9 @@ SceneLoading::SceneLoading(BaseScene* nextScene) :nextScene(nextScene)
 
     spriteDissolve = std::make_unique<SpriteDissolve>();
 
-    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet.png");
+    //spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet.png");
+    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet1.png");
+    //spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet2.png");
 }
 
 // ‰Šú‰»
@@ -57,7 +59,7 @@ void SceneLoading::Update(const float& elapsedTime)
 {
     spriteDissolve->Update();
 
-    spriteAnimation->PlayAnimation(10, 30, true);
+    spriteAnimation->PlayAnimation(20, 30, true,elapsedTime);
 
     //spriteDissolve.fadeOut(elapsedTime);
     //spriteDissolve->FadeIn(elapsedTime);
