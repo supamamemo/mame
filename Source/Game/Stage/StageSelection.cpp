@@ -20,7 +20,6 @@
 // コンストラクタ
 StageSelection::StageSelection()
 {
-<<<<<<< HEAD
     // 背景
     //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
     back = std::make_unique<Box>("./resources/tutorialBack.fbx");
@@ -48,8 +47,7 @@ StageSelection::StageSelection()
 
     AudioManager& audioManager = AudioManager::Instance();
     audioManager.PlayBGM(BGM::Tutorial, true); // チュートリアルBGM再生
-=======
->>>>>>> origin/mame_desk
+
 }
 
 // 初期化

@@ -29,51 +29,43 @@ void SpriteAnimation::Initialize(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, 
     animationTime = 0;
 }
 
-void SpriteAnimation::PlayAnimation(const int& frameTime, const int& totalAnimationFrame, bool animationVertical, const float elapsedTime)
+void SpriteAnimation::PlayAnimation(
+    const float elapsedTime,
+    const float frameSpeed, 
+    const int   totalAnimationFrame, 
+    const bool  animationVertical)
 {
-    animationFrame = static_cast<int>(animationTime) / frameTime % totalAnimationFrame;
+    animationTime += frameSpeed * elapsedTime;
+
+    const int animetionTime_int = static_cast<int>(animationTime); // è¨êîì_êÿÇËéÃÇƒ
+    animationFrame = static_cast<float>(animetionTime_int);
+
+    if (animationFrame > totalAnimationFrame)
+    {
+        animationFrame = 0.0f;
+        animationTime  = 0.0f;
+    }
 
     if (animationVertical) texPos.y = texSize.y * animationFrame;
     else                   texPos.x = texSize.x * animationFrame;
 
-    animationTime += elapsedTime;
-
-<<<<<<< HEAD
-    ++animationTime;
-
     {
-        //// Å¶animationTimeÇfloatå^Ç…ÇµÇƒelapsedTimeÇà¯êîÇ…ÇµÇΩèÍçáÇ≈Ç‚Ç¡ÇƒÇ¢Ç‹Ç∑
+        //animationFrame = animationTime / frameTime;
 
-        //animationFrame = static_cast<int>(animationTime) / frameTime % totalAnimationFrame;
+        //if (animationFrame >= totalAnimationFrame)
+        //{
+        //    animationFrame = 0;
+        //    animationTime = 0;
+        //}
 
-        ////if (animationFrame >= totalAnimationFrame)
-        ////{
-        ////    animationFrame = 0;
-        ////    animationTime = 0;
-        ////}
+        //if(animationVertical)
+        //    texPos.y = texSize.y * animationFrame;
+        //else
+        //    texPos.x = texSize.x * animationFrame;
 
-        //if (animationVertical) texPos.y = texSize.y * animationFrame;
-        //else                   texPos.x = texSize.x * animationFrame;
-
-        ////++animationTime;
-        //animationTime += elapsedTime;
+        //++animationTime;
     }
-=======
-    //animationFrame = animationTime / frameTime;
 
-    //if (animationFrame >= totalAnimationFrame)
-    //{
-    //    animationFrame = 0;
-    //    animationTime = 0;
-    //}
-
-    //if(animationVertical)
-    //    texPos.y = texSize.y * animationFrame;
-    //else
-    //    texPos.x = texSize.x * animationFrame;
-
-    //++animationTime;
->>>>>>> origin/mame_desk
 }
 
 void SpriteAnimation::Render()

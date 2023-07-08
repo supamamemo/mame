@@ -17,10 +17,16 @@ public:
     /// <summary>
     /// アニメーション更新関数
     /// </summary>
-    /// <param name="frameTime">アニメーションする速さ</param>
+    /// <param name="elapsedTime">フレーム経過時間</param>
+    /// <param name="frameSpeed">アニメーションする速さ</param>
     /// <param name="totalAnimationFrame">アニメーションフレーム数</param>
     /// <param name="animationVertical">縦アニメーションの場合true</param>
-    void PlayAnimation(const int& frameTime, const int& totalAnimationFrame, bool animationVertical, const float elapsedTime);
+    void PlayAnimation(
+        const float elapsedTime,
+        const float frameSpeed,
+        const int   totalAnimationFrame,
+        const bool  animationVertical
+    );
 
     void Render();
 
@@ -46,9 +52,9 @@ private:
     DirectX::XMFLOAT2 texPos = {};
     DirectX::XMFLOAT2 texSize = {};
     DirectX::XMFLOAT4 color = { 1,1,1,1 };
-    float angle = 0;
-    float animationTime = 0;
-    int animationFrame = 0;
+    float angle = 0.0f;
+    float animationTime  = 0.0f;
+    float animationFrame = 0.0f;
 
     std::unique_ptr<Sprite> sprite = nullptr;
 

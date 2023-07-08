@@ -272,7 +272,8 @@ void StageTutorial::Update(const float& elapsedTime)
     back->BackUpdate(elapsedTime);
 
     // animation
-    spriteAnimation->PlayAnimation(frame, 10, true,elapsedTime);
+    const int totalFrame = 11;      // ƒtƒŒ[ƒ€‚Ì–‡”
+    spriteAnimation->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
 
     //if (gamePad.GetButtonDown() & GamePad::BTN_X)
     //{
@@ -335,7 +336,7 @@ void StageTutorial::DrawDebug()
     // animation
     spriteAnimation->DrawDebug();
     ImGui::Begin("animation");
-    ImGui::DragInt("frame", &frame);
+    ImGui::DragFloat("frameSpeed", &frameSpeed);
     ImGui::End();
 
     // ui

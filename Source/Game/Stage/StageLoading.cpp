@@ -45,7 +45,9 @@ void StageLoading::Update(const float& elapsedTime)
 {
     spriteDissolve->Update();
 
-    spriteAnimation->PlayAnimation(10, 30, true,elapsedTime);
+    const float frameSpeed = 30.0f;   // フレーム速度
+    const int   totalFrame = 30;      // フレームの枚数
+    spriteAnimation->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
 
     if (nextStage->IsReady())
         StageManager::Instance().ChangeStage(nextStage);
