@@ -22,7 +22,7 @@ public:
 
 public:
     // fadeOut/fadeIn用のディゾルブ
-    std::unique_ptr<SpriteDissolve> spriteDissolve[2];
+    std::unique_ptr<SpriteDissolve> spriteDissolve;
 
     // mameoload
     std::unique_ptr<Sprite> spriteLoadMameo = nullptr;

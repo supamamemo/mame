@@ -208,10 +208,13 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
             break;
         }
 
+        break;
+    case STATE::GoalState:
+        cameraPos.x += elapsedTime * 10;
 
+        if (cameraPos.x >= 63.0f)cameraPos.x = 63.0f;
 
         break;
-
     default:
         leftLimit = -10.4f;
         break;
@@ -266,8 +269,7 @@ void Camera::UpdateBoss(const float elapsedTime)
         if (playerPos.x <= -8.6f)
             playerPos.x += elapsedTime;
 
-        if (bossPos.x <= 5.5)
-            cameraMoveY = 3;
+        if (bossPos.x <= 5.5)cameraMoveY = 3;
 
         break;
     case 3:

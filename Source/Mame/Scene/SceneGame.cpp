@@ -24,8 +24,8 @@ SceneGame::SceneGame()
     // シーンの属性を設定
     SetSceneType(static_cast<int>(Mame::Scene::TYPE::GAME));
 
-    spriteDissolve[0] = std::make_unique<SpriteDissolve>();
-    spriteDissolve[1] = std::make_unique<SpriteDissolve>(L"./resources/fade.jpg");
+    spriteDissolve = std::make_unique<SpriteDissolve>();
+    
 
     // mameo
     spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet.png");
@@ -45,20 +45,16 @@ void SceneGame::Initialize()
     switch (fadeType)
     {
     case 0:
-        spriteDissolve[0]->Initialize();
-        spriteDissolve[0]->SetFadeInTexture({ 0,0 ,0}, { 1280,720 }, 0.4f, 2);
+        spriteDissolve->Initialize();
+        spriteDissolve->SetFadeInTexture({ 0,0 ,0}, { 1280,720 }, 0.4f, 2);
         break;
     case 1:
-        spriteDissolve[0]->Initialize();
-        spriteDissolve[0]->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
+        spriteDissolve->Initialize();
+        spriteDissolve->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
         break;
     }
     
-    spriteDissolve[0]->SetFade(true);
-
-    //spriteDissolve[1]->Initialize();
-    //spriteDissolve[1]->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
-    //spriteDissolve[1]->SetFade(true);
+    spriteDissolve->SetFade(true);
 
 
 
@@ -114,45 +110,33 @@ void SceneGame::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
-    spriteDissolve[0]->Update();
-    //spriteDissolve[1]->Update();
-    //if (spriteDissolve[1]->IsFade())
-    //{
-    //    spriteDissolve[1]->FadeIn(elapsedTime);
+    spriteDissolve->Update();
 
-    //    // fadeIn最後までできたら
-    //    if (spriteDissolve[1]->FadeInReady(0.0f))
-    //    {
-    //        // fadeIn判定をリセット
-    //        spriteDissolve[1]->SetFade(false);
-    //    }
-    //}
-
-    if (spriteDissolve[0]->IsFade())
+    if (spriteDissolve->IsFade())
     {
         switch (fadeType)
         {
         case 0:
-            spriteDissolve[0]->FadeIn(elapsedTime);
+            spriteDissolve->FadeIn(elapsedTime);
 
             // fadeIn最後までできたら
-            if (spriteDissolve[0]->FadeInReady(0.0f))
+            if (spriteDissolve->FadeInReady(0.0f))
             {
                 // fadeIn判定をリセット
-                spriteDissolve[0]->SetFade(false);
+                spriteDissolve->SetFade(false);
             }
             break;
         case 1:
-            spriteDissolve[0]->FadeOut(elapsedTime);
+            spriteDissolve->FadeOut(elapsedTime);
 
             // fadeOut最後までできたら
-            if (spriteDissolve[0]->FadeOutReady(2.0f))
+            if (spriteDissolve->FadeOutReady(2.0f))
             {
                 // シーンを切り替える
                 //Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
 
                 // fadeOut判定をリセット
-                spriteDissolve[0]->SetFade(false);
+                spriteDissolve->SetFade(false);
             }
             break;
         }
@@ -206,12 +190,11 @@ void SceneGame::Render(const float& elapsedTime)
 
     // fadeOut
     {
-        spriteDissolve[0]->Render();
-        //spriteDissolve[1]->Render();
+        spriteDissolve->Render();
     }
 
     // mameo
-    if (!spriteDissolve[0]->FadeOutReady(0.5f))
+    if (!spriteDissolve->FadeOutReady(0.5f))
     {
         spriteLoadMameo->render(graphics.GetDeviceContext(), 400.0f, 300.0f,
             450.0f, 183.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
@@ -227,19 +210,19 @@ void SceneGame::DrawDebug()
 
     shader->DrawDebug();
 
-    spriteDissolve[0]->DrawDebug();
+    spriteDissolve->DrawDebug();
 
     ImGui::SliderInt("textureType", &textureType, 0, 11);
     if (ImGui::Button("fadeIn"))
     {
-        spriteDissolve[0]->SetFadeInTexture({ 0,0,0 }, { 1280,720 }, 0.4f, textureType);
-        spriteDissolve[0]->SetFade(true);
+        spriteDissolve->SetFadeInTexture({ 0,0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve->SetFade(true);
         fadeType = 0;
     }
     if (ImGui::Button("fadeOut"))
     {
-        spriteDissolve[0]->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, textureType);
-        spriteDissolve[0]->SetFade(true);
+        spriteDissolve->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, textureType);
+        spriteDissolve->SetFade(true);
         fadeType = 1;
     }
 

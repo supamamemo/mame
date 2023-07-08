@@ -114,6 +114,7 @@ private:
         HipDorop,
         Run,
         Free,
+        GoalState,
     };
 };
 

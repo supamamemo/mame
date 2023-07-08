@@ -39,10 +39,14 @@ StageTutorial::StageTutorial()
         terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
         terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 3
         terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 1
+        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 1
 
         terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx")); // ŠÅ”Â
         terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // ŠÅ”Â
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // ŠÅ”Â
         terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_dash.fbx")); // ŠÅ”Â
+        
+        terrainManager.Register(new TerrainNoCollision("./resources/stage/goal.fbx")); // ƒS[ƒ‹
     }
 
     // player¶¬
@@ -55,12 +59,19 @@ StageTutorial::StageTutorial()
         EnemyManager::Instance().Register(new EnemyTofu());
         EnemyManager::Instance().Register(new EnemyTofu());
         EnemyManager::Instance().Register(new EnemyTofu());
+
+        EnemyManager::Instance().Register(new EnemyTofu());
+        EnemyManager::Instance().Register(new EnemyTofu());
+        EnemyManager::Instance().Register(new EnemyTofu());
     }
 
 
     // ”wŒi‰¼
-    back = std::make_unique<Box>("./resources/back.fbx");
+    back = std::make_unique<Box>("./resources/tutorialBack.fbx");
+    //back = std::make_unique<Box>("./resources/back.fbx");
 
+    // animation
+    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/tutorial/hipDrop.png");
 
     // UI
     {
@@ -123,6 +134,7 @@ void StageTutorial::Initialize()
         terrainManager.GetTerrain(Zimen6)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(180), 0.0f, 0.0f));
 
         terrainManager.GetTerrain(Zimen7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(80.0, 0.0f, 10.0f));
+        terrainManager.GetTerrain(Zimen8)->GetTransform()->SetPosition(DirectX::XMFLOAT3(57.0, 0.0f, 10.0f));
 
         terrainManager.GetTerrain(SignBoard_yazi0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 3, 10.5f));
         terrainManager.GetTerrain(SignBoard_yazi0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
@@ -132,8 +144,14 @@ void StageTutorial::Initialize()
         terrainManager.GetTerrain(SignBoard_drop0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
         terrainManager.GetTerrain(SignBoard_drop0)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
 
+        terrainManager.GetTerrain(SignBoard_drop1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(48, 7, 11));
+        terrainManager.GetTerrain(SignBoard_drop1)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
+        terrainManager.GetTerrain(SignBoard_drop1)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
+
         terrainManager.GetTerrain(SignBoard_dash0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(19, 5, 11));
         terrainManager.GetTerrain(SignBoard_dash0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
+
+        terrainManager.GetTerrain(Goal)->GetTransform()->SetPosition(DirectX::XMFLOAT3(68, 6, 10));
 
         terrainManager.Initialize();
     }
@@ -153,14 +171,25 @@ void StageTutorial::Initialize()
         enemyManager.GetEnemy(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.5f, 1.5f, 10.0f));
         enemyManager.GetEnemy(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(13.5f, 1.5f, 10.0f));
         enemyManager.GetEnemy(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(15.5f, 1.5f, 10.0f));
+        
+        enemyManager.GetEnemy(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(50.0f, 1.5f, 10.0f));
+        enemyManager.GetEnemy(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(52.0f, 1.5f, 10.0f));
+        enemyManager.GetEnemy(7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(54.0f, 1.5f, 10.0f));
+        
         enemyManager.Initialize();
     }
 
     // ”wŒi‰¼
-    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(45.0f, 7.0f, 32.0f));
-    back->GetTransform()->SetScale(DirectX::XMFLOAT3(85.0f, 50.0f, 3.0f));
-    back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(180), 0.0f, DirectX::XMConvertToRadians(180), 0.0f));
+    //back->GetTransform()->SetPosition(DirectX::XMFLOAT3(45.0f, 7.0f, 32.0f));
+    //back->GetTransform()->SetScale(DirectX::XMFLOAT3(85.0f, 50.0f, 3.0f));
+    //back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(180), 0.0f, DirectX::XMConvertToRadians(180), 0.0f));
+    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.0f, 32.0f));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 22.0f, 10.0f));
+    back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
+    // animation
+    spriteAnimation->Initialize(DirectX::XMFLOAT2(240, 300),
+        DirectX::XMFLOAT2(731, 391), DirectX::XMFLOAT2(1462, 782));
 
     // —U“±—p
     tutorialState = STATE::MoveReception;
@@ -231,6 +260,9 @@ void StageTutorial::Update(const float& elapsedTime)
     // ”wŒi
     back->BackUpdate(elapsedTime);
 
+    // animation
+    spriteAnimation->PlayAnimation(frame, 10, true);
+
     //if (gamePad.GetButtonDown() & GamePad::BTN_X)
     //{
     //    //if(Mame::Scene::SceneManager::Instance().GetCurrentScene()->GetSceneType()==static_cast<int>(Mame::Scene::TYPE::GAME))
@@ -268,8 +300,11 @@ void StageTutorial::Render(const float& elapsedTime)
 
     TutorialStateRender(elapsedTime);
 
+    graphics.GetShader()->SetState(graphics.GetDeviceContext(), 3, 0, 0);
+    spriteAnimation->Render();
+
     // UI
-    UIManager::Instance().Render(elapsedTime);   
+    //UIManager::Instance().Render(elapsedTime);   
 }
 
 // debug—p
@@ -288,6 +323,12 @@ void StageTutorial::DrawDebug()
 
     // ”wŒi‰¼
     back->DrawDebug();
+
+    // animation
+    spriteAnimation->DrawDebug();
+    ImGui::Begin("animation");
+    ImGui::DragInt("frame", &frame);
+    ImGui::End();
 
     // ui
     UIManager::Instance().DrawDebug();
@@ -624,6 +665,17 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
         break;
     case STATE::Free:
+        if (playerPos.x >= 57.0f)
+        {
+            tutorialState = STATE::GoalState;
+        }
+
+        break;
+    case STATE::GoalState:
+        if (playerPos.x < 57.0f)
+        {
+            tutorialState = STATE::Free;
+        }
         break;
     }
 }
