@@ -10,6 +10,7 @@
 #include "../../misc.h"
 #include "../../texture.h"
 
+#include "../../Game/UIManager.h"
 
 // todo: 後で消す
 #define FADE 1
@@ -18,33 +19,6 @@
 // コンストラクタ
 SceneTitle::SceneTitle()
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // シーンの属性を設定
-    SetSceneType(static_cast<int>(Mame::Scene::TYPE::TITLE));
-
-    spriteDissolve = std::make_unique<SpriteDissolve>();
-
-    // mameo
-    spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet.png");
-
-    // titlePlayer生成
-    titlePlayer_ = std::make_unique<TitlePlayer>();
-
-    // titleEnemyTofu生成
-    for (std::unique_ptr<TitleEnemyTofu>& titleEnemyTofu : titleEnemyTofu_)
-    {
-        titleEnemyTofu = std::make_unique<TitleEnemyTofu>();
-    }
-
-    // title model
-    {
-#if MAME
-        Graphics& graphics = Graphics::Instance();
-        castleModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
-        groundModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/ground.fbx", true);
-#endif
-    }
 }
 
 // 初期化
@@ -52,6 +26,46 @@ void SceneTitle::Initialize()
 {
     Graphics& graphics = Graphics::Instance();
     Shader* shader = graphics.GetShader();
+
+    // 生成
+    {
+        // シーンの属性を設定
+        SetSceneType(static_cast<int>(Mame::Scene::TYPE::TITLE));
+
+        spriteDissolve = std::make_unique<SpriteDissolve>();
+
+        // mameo
+        //spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet1.png");
+        spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet2.png");
+
+        // titlePlayer生成
+        titlePlayer_ = std::make_unique<TitlePlayer>();
+
+        // titleEnemyTofu生成
+        for (std::unique_ptr<TitleEnemyTofu>& titleEnemyTofu : titleEnemyTofu_)
+        {
+            titleEnemyTofu = std::make_unique<TitleEnemyTofu>();
+        }
+
+        // title model
+        {
+#if MAME
+            Graphics& graphics = Graphics::Instance();
+            castleModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/castel.fbx", true);
+            groundModel = std::make_unique<Model>(graphics.GetDevice(), "./resources/ground.fbx", true);
+#endif
+        }
+
+        // titleUI
+        {
+            UIManager& uiManager = UIManager::Instance();
+
+            uiManager.Register(new UI(L"./resources/mameoTitle.png"));  // MAMEO
+            uiManager.Register(new UI(L"./resources/title.png"));       // "ボタンを押してね"
+        }
+    }
+
+
  
     // カメラ位置リセット
     shader->Initialize();
@@ -94,110 +108,18 @@ void SceneTitle::Initialize()
         titleEnemyTofu_[i]->Initialize();
     }
 
-    HRESULT hr{ S_OK };
-
+    // UI
     {
-        D3D11_SAMPLER_DESC sampler_desc{};
-        sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-        sampler_desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-        sampler_desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-        sampler_desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-        sampler_desc.MipLODBias = 0;
-        sampler_desc.MaxAnisotropy = 16;
-        sampler_desc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-        sampler_desc.BorderColor[0] = 0;
-        sampler_desc.BorderColor[1] = 0;
-        sampler_desc.BorderColor[2] = 0;
-        sampler_desc.BorderColor[3] = 0;
-        sampler_desc.MinLOD = 0;
-        sampler_desc.MaxLOD = D3D11_FLOAT32_MAX;
-        hr = graphics.GetDevice()->CreateSamplerState(&sampler_desc, samplerState.GetAddressOf());
-    }
-    // depth_stencil_desc
-    // 深度テスト：オフ　深度ライト：オフ
-    {
-        D3D11_DEPTH_STENCIL_DESC depth_stencil_desc{};
-        depth_stencil_desc.DepthEnable = TRUE;
-        depth_stencil_desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-        depth_stencil_desc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
-        hr = graphics.GetDevice()->CreateDepthStencilState(&depth_stencil_desc, depthStencilState.GetAddressOf());
-        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-    }
-    // rasterizer_desc
-    {
-        D3D11_RASTERIZER_DESC rasterizer_desc{};
-        rasterizer_desc.FillMode = D3D11_FILL_SOLID;
-        rasterizer_desc.CullMode = D3D11_CULL_BACK;
-        rasterizer_desc.FrontCounterClockwise = FALSE;
-        rasterizer_desc.DepthBias = 0;
-        rasterizer_desc.DepthBiasClamp = 0;
-        rasterizer_desc.SlopeScaledDepthBias = 0;
-        rasterizer_desc.DepthClipEnable = TRUE;
-        rasterizer_desc.ScissorEnable = FALSE;
-        rasterizer_desc.MultisampleEnable = FALSE;
-        rasterizer_desc.AntialiasedLineEnable = FALSE;
-        hr = graphics.GetDevice()->CreateRasterizerState(&rasterizer_desc, rasterizerState.GetAddressOf());
-        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-    }
-    // blend_desc
-    {
-        // アルファブレンド
-        D3D11_BLEND_DESC blend_desc{};
-        blend_desc.AlphaToCoverageEnable = FALSE;
-        blend_desc.IndependentBlendEnable = FALSE;
-        blend_desc.RenderTarget[0].BlendEnable = TRUE;
-        blend_desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-        blend_desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-        blend_desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-        blend_desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-        blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
-        blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-        blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-        hr = graphics.GetDevice()->CreateBlendState(&blend_desc, blendState.GetAddressOf());
-        _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-    }
+        UIManager::Instance().GetUI(TITLESPRITE::MAMEO)->SetIsRender(true);
+        UIManager::Instance().GetUI(TITLESPRITE::WORD)->SetIsRender(true);
 
-    // dummy_sprtite
-    {
-        {
-            D3D11_BUFFER_DESC buffer_desc{};
-            buffer_desc.Usage = D3D11_USAGE_DEFAULT;
-            buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-            buffer_desc.CPUAccessFlags = 0;
-            buffer_desc.MiscFlags = 0;
-            buffer_desc.StructureByteStride = 0;
-            buffer_desc.ByteWidth = sizeof(scroll_constants);
-            hr = graphics.GetDevice()->CreateBuffer(&buffer_desc, nullptr, scroll_constant_buffer.GetAddressOf());
-            _ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+        UIManager::Instance().GetUI(TITLESPRITE::MAMEO)->SetPosition(DirectX::XMFLOAT3(65, -115, 0));
+        UIManager::Instance().GetUI(TITLESPRITE::MAMEO)->SetSize(DirectX::XMFLOAT2(1140, 490));
 
+        UIManager::Instance().GetUI(TITLESPRITE::WORD)->SetPosition(DirectX::XMFLOAT3(420, 560, 0));
+        UIManager::Instance().GetUI(TITLESPRITE::WORD)->SetSize(DirectX::XMFLOAT2(450, 170));
 
-        }
-
-        D3D11_INPUT_ELEMENT_DESC input_element_desc[]
-        {
-            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,
-                D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0,
-                D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0,
-                D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        };
-
-
-        //dummy_sprite = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/ground.png");
-
-
-        // dummy_sprite
-        if (dummy_sprite)
-        {
-            // シェーダー関連
-            //create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-            //create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/sprite_ps.cso", dummy_sprite->GetPixelShaderAddress());
-
-            // UVScroll
-            //create_vs_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_vs.cso", dummy_sprite->GetVertexShaderAddress(), dummy_sprite->GetInputLayoutAddress(), input_element_desc, _countof(input_element_desc));
-            //create_ps_from_cso(graphics.GetDevice(), "./resources/Shader/UVScroll_ps.cso", dummy_sprite->GetPixelShaderAddress());
-        }
+        UIManager::Instance().Initialize();
     }
 
     AudioManager& audioManager = AudioManager::Instance();
@@ -213,6 +135,10 @@ void SceneTitle::Finalize()
     }
 
     titlePlayer_->Finalize();
+
+    // uimanager
+    UIManager::Instance().Finalize();
+    UIManager::Instance().Clear();
 
     AudioManager& audioManager = AudioManager::Instance();
     audioManager.StopAllAudio(); // 全音楽停止
@@ -278,6 +204,9 @@ void SceneTitle::Update(const float& elapsedTime)
     }
 
 
+    // UI
+    UIManager::Instance().Update(elapsedTime);
+
     // UVScroll
     {
         if (gamePad.GetButton() & GamePad::BTN_X)
@@ -339,43 +268,6 @@ void SceneTitle::Render(const float& elapsedTime)
         titleEnemyTofu->Render(elapsedTime);
     }
 
-    // スプライト描画
-    shader->SetState(graphics.GetDeviceContext(), RS, DS, SS);
-    // spriteがだせなかった　
-#if 1
-    //immediate_context->OMSetBlendState(blendState.Get(), nullptr, 0xFFFFFFFF);
-    //immediate_context->OMSetDepthStencilState(depthStencilState.Get(), 1);
-    //immediate_context->RSSetState(rasterizerState.Get());
-
-
-    if(dummy_sprite)
-    {
-        immediate_context->IASetInputLayout(dummy_sprite->GetInputLayout());
-        immediate_context->VSSetShader(dummy_sprite->GetVertexShader(), nullptr, 0);
-        immediate_context->PSSetShader(dummy_sprite->GetPixelShader(), nullptr, 0);
-        immediate_context->PSSetSamplers(0, 1, samplerState.GetAddressOf());
-       // immediate_context->PSSetShaderResources(1, 1, mask_texture.GetAddressOf());
-
-        //定数バッファの更新
-        {
-            scroll_constants scroll{};
-            scroll.scroll_direction.x = scroll_direction.x;
-            scroll.scroll_direction.y = scroll_direction.y;
-            immediate_context->UpdateSubresource(scroll_constant_buffer.Get(), 0, 0, &scroll, 0, 0);
-            immediate_context->VSSetConstantBuffers(2, 1, scroll_constant_buffer.GetAddressOf());
-            immediate_context->PSSetConstantBuffers(2, 1, scroll_constant_buffer.GetAddressOf());
-        }
-
-        dummy_sprite->render(immediate_context, spr[0].pos.x, spr[0].pos.y, spr[0].posD.x, spr[0].posD.y);
-        //dummy_sprite->render(immediate_context, 0, 720 - 260, 500, 260);
-        //dummy_sprite->render(immediate_context, 256, 120, 1280 - 256 * 2, 720 - 120 * 2);
-    }
-
-    //sprite_dissolve->Render();
-
-
-
-#endif
 
     // title model
     {
@@ -391,6 +283,9 @@ void SceneTitle::Render(const float& elapsedTime)
 #endif
     }
 
+    // UI
+    UIManager::Instance().Render(elapsedTime);
+
     // fadeOut
     {
         spriteDissolve->Render();
@@ -403,7 +298,6 @@ void SceneTitle::Render(const float& elapsedTime)
             450.0f, 183.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
             0, 0, 900.0f, 367.0f);
     }
-
 }
 
 // デバッグ用
@@ -421,15 +315,8 @@ void SceneTitle::DrawDebug()
         titleEnemyTofu->DrawDebug();
     }
 
-    if (ImGui::TreeNode("State"))
-    {
-
-        ImGui::SliderInt("rasterize", &RS, 0, 3);
-        ImGui::SliderInt("depthstencil", &DS, 0, 3);
-        ImGui::SliderInt("samplerstate", &SS, 0, 2);
-
-        ImGui::TreePop();
-    }
+    // ui
+    UIManager::Instance().DrawDebug();
 
 
     if (ImGui::TreeNode("scroll"))

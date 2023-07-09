@@ -12,8 +12,8 @@ SceneLoading::SceneLoading(BaseScene* nextScene) :nextScene(nextScene)
     spriteDissolve = std::make_unique<SpriteDissolve>();
 
     //spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet.png");
-    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet1.png");
-    //spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet2.png");
+    //spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet1.png");
+    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet2.png");
 }
 
 // èâä˙âª

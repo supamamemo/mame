@@ -73,29 +73,34 @@ private:
         SignBoard_drop0,
         SignBoard_drop1,
         SignBoard_dash0,
-        SignBoard_noTex,
+        SignBoard_noTex0,
+        SignBoard_noTex1,
         Goal,
     };
 
     void TutorialStateUpdate(float elapsedTime);
     void TutorialStateRender(float elapsedTime);
 
-    int tutorialState = 0;
-
-    
-
-private:
-    int stickMoveState = 0; // スティック動き
-    float stickTime = 0;
     void StickState(float elapsedTime);
     void StickStateDown(float elapsedTime);
+   
+    void StickAnimation(float elapsedTime, int state);
 
 private:
     std::unique_ptr<Box> back = nullptr;
 
-    std::unique_ptr<SpriteAnimation> spriteAnimation = nullptr;
-    
+    std::unique_ptr<SpriteAnimation> spriteAnimation[2];
+
     float frameSpeed = 8.0f;    // フレーム速度
+    float stickTime = 0;
+    int tutorialState = 0;
+    int stickMoveState = 0; // スティック動き
+    
+
+    int signBoardState = 0;
+
+    bool isPlayerMove = false;
+    bool isDisplaySignBoard[2];
 
     // UI
     Effect* effect[4];
