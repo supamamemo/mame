@@ -13,6 +13,7 @@ enum class BGM
     Tutorial,
     Stage,
     Boss,
+    Boss_Back, // É{ÉXêÌÇÃä¬ã´âπ
 
     BGM_Max,
 };
@@ -29,9 +30,13 @@ enum class SE
     PL_BounceHit,
     PL_Damaged,
 
-    Boss_Stun,
+    Boss_Walk,
+    Boss_Run,
+    Boss_Turn,
     Boss_HitWall,
+    Boss_Stun,
     Boss_Down,
+    Boss_Cry,
 
     SE_Max,
 };

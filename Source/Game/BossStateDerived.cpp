@@ -143,6 +143,9 @@ namespace BOSS
 
         // 進む方向を設定する
         owner->SetMoveDirectionX(vecX_n);
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.PlaySE(SE::Boss_Turn, true); // 旋回SE再生
     }
 
     // 更新
@@ -179,12 +182,17 @@ namespace BOSS
             //}
             //owner->GetTransform()->SetRotation(rotation);
         }
+
         // 回転が終わったら攻撃ステートへ遷移
         const float moveDirectionX = owner->GetMoveDirectionX();
         const float turnSpeed      = owner->GetTurnSpeed();      
         if (!owner->Turn(elapsedTime, moveDirectionX, turnSpeed)) 
         {
             owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
+
+            AudioManager& audioManager = AudioManager::Instance();
+            audioManager.StopSE(SE::Boss_Turn); // ダウンSE停止
+
             return;
         }
 
@@ -211,6 +219,9 @@ namespace BOSS
         
         // アニメーションセット
         owner->PlayAnimation(static_cast<int>(BossAnimation::Attack), true);
+
+        // 走行SE再生
+        AudioManager::Instance().PlaySE(SE::Boss_Run, true);
     }
 
     // 更新
@@ -342,9 +353,16 @@ namespace BOSS
         if (GetTimer() <= 0.0f)
         {
             if (owner->GetHealth() > 0)
+            {
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+            }
             else
+            {
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Cry));
+
+                // ボス戦BGM停止
+                AudioManager::Instance().StopBGM(BGM::Boss);
+            }
         }
     }
 
@@ -375,7 +393,12 @@ namespace BOSS
             if (!owner->IsPlayAnimation())
             {
                 owner->PlayAnimation(static_cast<int>(BossAnimation::Cry), true);
+
+                AudioManager& audioManager = AudioManager::Instance();
+                audioManager.PlaySE(SE::Boss_Cry, true); // 泣きSE再生
+
                 state = 1;
+                break;
             }
 
             break;
@@ -427,7 +450,9 @@ namespace BOSS
     // 終了
     void WalkState::Exit()
     {
-
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.StopSE(SE::Boss_Walk);     // 歩行SE停止   
+        audioManager.PlayBGM(BGM::Boss, true);  // ボス戦BGM再生
     }
 }
 

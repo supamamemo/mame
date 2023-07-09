@@ -171,8 +171,10 @@ void Boss::OnHitWall()
     SetMoveDirectionX(-GetMoveDirectionX());    // 移動方向を反転
     GetStateMachine()->ChangeState(static_cast<int>(BOSS::STATE::Recoil));  // 反動ステートへ遷移
 
+    
     AudioManager& audioManager = AudioManager::Instance();
-    audioManager.PlaySE(SE::Boss_HitWall, false); // 壁衝突SE再生
+    audioManager.StopSE(SE::Boss_Run);              // 走行SE停止
+    audioManager.PlaySE(SE::Boss_HitWall, false);   // 壁衝突SE再生
 }
 
 void Boss::OnDamaged()
