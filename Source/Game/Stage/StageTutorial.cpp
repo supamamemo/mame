@@ -56,6 +56,8 @@ void StageTutorial::Initialize()
             terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // 看板
             terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // 看板
             terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_dash.fbx")); // 看板
+            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_nomal.fbx")); // 看板
+            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_nomal.fbx")); // 看板
 
             terrainManager.Register(new TerrainNoCollision("./resources/stage/goal.fbx")); // ゴール
         }
@@ -82,7 +84,10 @@ void StageTutorial::Initialize()
         //back = std::make_unique<Box>("./resources/back.fbx");
 
         // animation
-        spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/tutorial/hipDrop.png");
+        spriteAnimation[0] = std::make_unique<SpriteAnimation>(L"./resources/tutorial/jump.png");
+        spriteAnimation[1] = std::make_unique<SpriteAnimation>(L"./resources/tutorial/hipDrop.png");
+        isDisplaySignBoard[0] = false;
+        isDisplaySignBoard[1] = false;
 
         // UI
         {
@@ -155,6 +160,12 @@ void StageTutorial::Initialize()
         terrainManager.GetTerrain(SignBoard_dash0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(19, 5, 11));
         terrainManager.GetTerrain(SignBoard_dash0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
 
+        terrainManager.GetTerrain(SignBoard_noTex0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, -3, 10.5f));
+        terrainManager.GetTerrain(SignBoard_noTex0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
+
+        terrainManager.GetTerrain(SignBoard_noTex0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, -3, 10.5f));
+        terrainManager.GetTerrain(SignBoard_noTex0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
+
         terrainManager.GetTerrain(Goal)->GetTransform()->SetPosition(DirectX::XMFLOAT3(68, 6, 10));
 
         terrainManager.Initialize();
@@ -192,12 +203,17 @@ void StageTutorial::Initialize()
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
     // animation
-    spriteAnimation->Initialize(DirectX::XMFLOAT2(240, 140),
+    spriteAnimation[0]->Initialize(DirectX::XMFLOAT2(243, 145),
+        DirectX::XMFLOAT2(731, 391), DirectX::XMFLOAT2(657, 360));
+
+    spriteAnimation[1]->Initialize(DirectX::XMFLOAT2(243, 145),
         DirectX::XMFLOAT2(731, 391), DirectX::XMFLOAT2(1451, 771));
+
 
     // 誘導用
     tutorialState = STATE::MoveReception;
 
+    isPlayerMove = true;
 
     // エフェクト読み込み
     effect[0] = new Effect("./resources/effect/box.efk");
@@ -254,7 +270,8 @@ void StageTutorial::Update(const float& elapsedTime)
     TerrainManager::Instance().Update(elapsedTime);
 
     // player更新
-    PlayerManager::Instance().Update(elapsedTime);
+    if(isPlayerMove)
+        PlayerManager::Instance().Update(elapsedTime);
 
     // enemy更新
     EnemyManager::Instance().Update(elapsedTime);
@@ -273,13 +290,8 @@ void StageTutorial::Update(const float& elapsedTime)
 
     // animation
     const int totalFrame = 11;      // フレームの枚数
-    spriteAnimation->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
-
-    //if (gamePad.GetButtonDown() & GamePad::BTN_X)
-    //{
-    //    //if(Mame::Scene::SceneManager::Instance().GetCurrentScene()->GetSceneType()==static_cast<int>(Mame::Scene::TYPE::GAME))
-    //    //    Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
-    //}
+    spriteAnimation[0]->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
+    spriteAnimation[1]->PlayAnimation(elapsedTime, frameSpeed, 14, true);
 }
 
 // Updateの後に呼ばれる
@@ -313,7 +325,7 @@ void StageTutorial::Render(const float& elapsedTime)
     TutorialStateRender(elapsedTime);
 
     // UI
-    //UIManager::Instance().Render(elapsedTime);   
+    UIManager::Instance().Render(elapsedTime);   
 }
 
 // debug用
@@ -334,7 +346,8 @@ void StageTutorial::DrawDebug()
     back->DrawDebug();
 
     // animation
-    spriteAnimation->DrawDebug();
+    spriteAnimation[0]->DrawDebug();
+    spriteAnimation[1]->DrawDebug();
     ImGui::Begin("animation");
     ImGui::DragFloat("frameSpeed", &frameSpeed);
     ImGui::End();
@@ -424,6 +437,7 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
             effect[0]->Stop(effect[0]->handle);
             effect[0]->FadeOutEffect(effect[0]->GetPosition(), effect[0]->GetScale(), effect[0]->GetColor(), 200.0f);
 
+
             stickTime = 0;
             stickMoveState = 0;
             tutorialState = STATE::JumpReception;
@@ -482,7 +496,13 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
             effect[1]->Stop(effect[1]->handle);
             effect[1]->FadeOutEffect(effect[1]->GetPosition(), effect[1]->GetScale(), effect[1]->GetColor(), 200.0f);
 
-            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.7f, 0.0f, 1.5f));
+            // 入力を受け付けない
+            isPlayerMove = false;
+            signBoardState = 0;
+
+            // 看板の位置をセット
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.7f, -5.0f, 1.5f));
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(11.0f, -5.2f, 3.0f));
 
             stickTime = 0;
             tutorialState = STATE::HipDorop;
@@ -496,65 +516,256 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
 
         // 看板の位置
-        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->GetPosition();
-        terrainPos.y += elapsedTime * 10;
-        if (terrainPos.y >= 5.2f)terrainPos.y = 5.2f;
-        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetPosition(terrainPos);
+        {
+            DirectX::XMFLOAT3 terrainPos0 = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex0)->GetTransform()->GetPosition();
+            DirectX::XMFLOAT3 terrainPos1 = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex1)->GetTransform()->GetPosition();
+            DirectX::XMFLOAT4 terrainRot0 = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex0)->GetTransform()->GetRotation();
+            DirectX::XMFLOAT4 terrainRot1 = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex1)->GetTransform()->GetRotation();
 
-        //TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.7f, 5.2f, 1.5f));
-        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 2.0f));
-        TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(-10), DirectX::XMConvertToRadians(180), 0, 0));
+            switch (signBoardState)
+            {
+            case 0:
+                // カメラが到達してから更新
+                if (Camera::Instance().GetTransform()->GetPosition().x >= 9.0f)
+                {
+                    terrainPos0.y += elapsedTime * 10;
+                    terrainPos1.y += elapsedTime * 10;
+                }
+
+                // 看板の最終位置(アニメーション流し始める)
+                if (terrainPos0.y >= 5.2f)
+                {
+                    terrainPos0.y = 5.2f;
+                    isDisplaySignBoard[0] = true;
+                    signBoardState = 1;
+                }
+
+                terrainRot0 = DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0, 0, 0);
+                terrainRot1 = DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), DirectX::XMConvertToRadians(15), 0, 0);
+                break;
+            case 1:
+                // 入力
+                {
+                    if (gamePad.GetButtonDown() & GamePad::BTN_A)
+                    {
+                        isDisplaySignBoard[0] = false;
+                        signBoardState = 5;
+                    }
+
+
+                    float aLx = gamePad.GetAxisLX();
+                    if (gamePad.GetButton() & GamePad::BTN_RIGHT ||
+                        aLx >= 0.7f)
+                    {
+                        signBoardState = 2;
+                        isDisplaySignBoard[0] = false;
+                    }
+                }
+
+                break;
+
+            case 2:
+                terrainPos0.x -= elapsedTime * 10;
+                terrainPos1.x -= elapsedTime * 10;
+                terrainPos0.y -= elapsedTime * 10;
+                terrainPos1.y += elapsedTime * 10;
+                terrainPos0.z += elapsedTime * 10;
+                terrainPos1.z -= elapsedTime * 10;
+                terrainRot0.y -= DirectX::XMConvertToRadians(0.1f);
+                terrainRot1.y -= DirectX::XMConvertToRadians(0.1f);
+
+                if (terrainPos0.x <= 6.7f)terrainPos0.x = 6.7f;
+                if (terrainPos1.x <= 8.7f)terrainPos1.x = 8.7f;
+                if (terrainPos0.y <= 5.0f)terrainPos0.y = 5.0f;
+                if (terrainPos1.y >= 5.2f)terrainPos1.y = 5.2f;
+                if (terrainPos0.z >= 3.0f)terrainPos0.z = 3.0f;
+                if (terrainPos1.z <= 1.5f)terrainPos1.z = 1.5f;
+                if (terrainRot0.y <= DirectX::XMConvertToRadians(-15))terrainRot0.y = DirectX::XMConvertToRadians(-15);
+                if (terrainRot1.y <= DirectX::XMConvertToRadians(0))terrainRot1.y = DirectX::XMConvertToRadians(0);
+
+                if(terrainPos1.x <= 8.7f)
+                    isDisplaySignBoard[1] = true;
+
+                // 入力
+                {
+                    float aLx = gamePad.GetAxisLX();
+                    if (gamePad.GetButton() & GamePad::BTN_LEFT ||
+                        aLx <= -0.7f)
+                    {
+                        signBoardState = 3;
+                        isDisplaySignBoard[1] = false;
+                    }
+
+                    if (gamePad.GetButtonDown() & GamePad::BTN_A)
+                    {
+                        isDisplaySignBoard[1] = false;
+                        signBoardState = 5;
+                    }
+                }
+
+                break;
+                
+            case 3:
+                terrainPos0.x += elapsedTime * 10;
+                terrainPos1.x += elapsedTime * 10;
+                terrainPos0.y += elapsedTime * 10;
+                terrainPos1.y -= elapsedTime * 10;
+                terrainPos0.z -= elapsedTime * 10;
+                terrainPos1.z += elapsedTime * 10;
+                terrainRot0.y += DirectX::XMConvertToRadians(0.1f);
+                terrainRot1.y += DirectX::XMConvertToRadians(0.1f);
+
+                if (terrainPos0.x >= 8.7f)terrainPos0.x = 8.7f;
+                if (terrainPos1.x >= 11.0f)terrainPos1.x = 11.0f;
+                if (terrainPos0.y >= 5.2f)terrainPos0.y = 5.2f;
+                if (terrainPos1.y <= 5.0f)terrainPos1.y = 5.0f;
+                if (terrainPos0.z <= 1.5f)terrainPos0.z = 1.5f;
+                if (terrainPos1.z >= 3.0f)terrainPos1.z = 3.0f;
+                if (terrainRot0.y >= DirectX::XMConvertToRadians(0))terrainRot0.y = DirectX::XMConvertToRadians(0);
+                if (terrainRot1.y >= DirectX::XMConvertToRadians(15))terrainRot1.y = DirectX::XMConvertToRadians(15);
+
+                if (terrainPos0.x >= 8.7f)
+                    isDisplaySignBoard[0] = true;
+
+                // 入力
+                {
+                    float aLx = gamePad.GetAxisLX();
+                    if (gamePad.GetButton() & GamePad::BTN_RIGHT ||
+                        aLx >= 0.7f)
+                    {
+                        signBoardState = 2;
+                        isDisplaySignBoard[0] = false;
+                    }
+                }
+
+                break;
+
+            case 4:
+                break;
+
+            case 5:
+                terrainPos0.y -= elapsedTime * 10;
+                terrainPos1.y -= elapsedTime * 10;
+
+                if (terrainPos0.y <= -10.0f)
+                {
+                    isPlayerMove = true;
+                    terrainPos0.y = -10.0f;
+                }
+
+                break;
+            }
+
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex0)->GetTransform()->SetPosition(terrainPos0);
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex1)->GetTransform()->SetPosition(terrainPos1);
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex0)->GetTransform()->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 2.0f));
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex1)->GetTransform()->SetScale(DirectX::XMFLOAT3(7.0f, 7.0f, 2.0f));
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex0)->GetTransform()->SetRotation(terrainRot0);
+            TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_noTex1)->GetTransform()->SetRotation(terrainRot1);
+        }
 
         // UIの位置
         {
-            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            if (isPlayerMove)
             {
-                // stick
-                StickStateDown(elapsedTime);
-                
-                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(450, 90, 10));
-                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetSize(DirectX::XMFLOAT2(150, 150));
+                if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+                {
+                    // stick
+                    StickStateDown(elapsedTime);
 
-                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
-                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
+                    UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(450, 90, 10));
+                    UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetSize(DirectX::XMFLOAT2(150, 150));
 
-                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
-                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetSize(DirectX::XMFLOAT2(100, 100));
+                    UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+                    UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-                UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
-                UIManager::Instance().GetUI(UISPRITE::StickDown)->SetSize(DirectX::XMFLOAT2(100, 100));
+                    UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+                    UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-                // "A or B" の表示
-                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(20, 100, 10));
-                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(350, 150));
+                    UIManager::Instance().GetUI(UISPRITE::StickDown)->SetPosition(DirectX::XMFLOAT3(475, 115, 10));
+                    UIManager::Instance().GetUI(UISPRITE::StickDown)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT3(50, 120, 10));
-                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetSize(DirectX::XMFLOAT2(100, 100));
+                    // "A or B" の表示
+                    UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(20, 100, 10));
+                    UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(350, 150));
 
-                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT3(220, 120, 10));
-                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetSize(DirectX::XMFLOAT2(100, 100));
+                    UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT3(50, 120, 10));
+                    UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetPosition(DirectX::XMFLOAT3(147, 165, 10));
-                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetSize(DirectX::XMFLOAT2(80, 80));
+                    UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetPosition(DirectX::XMFLOAT3(220, 120, 10));
+                    UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-                // +
-                UIManager::Instance().GetUI(UISPRITE::Plus)->SetPosition(DirectX::XMFLOAT3(360, 130, 10));
-                UIManager::Instance().GetUI(UISPRITE::Plus)->SetSize(DirectX::XMFLOAT2(100, 100));
+                    UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetPosition(DirectX::XMFLOAT3(147, 165, 10));
+                    UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetSize(DirectX::XMFLOAT2(80, 80));
+
+                    // +
+                    UIManager::Instance().GetUI(UISPRITE::Plus)->SetPosition(DirectX::XMFLOAT3(360, 130, 10));
+                    UIManager::Instance().GetUI(UISPRITE::Plus)->SetSize(DirectX::XMFLOAT2(100, 100));
+                }
+                else
+                {
+                    UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetPosition(DirectX::XMFLOAT3(20, 100, uiZ));
+                    UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetSize(DirectX::XMFLOAT2(500, 150));
+
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetPosition(DirectX::XMFLOAT3(370, 120, uiZ));
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetPosition(DirectX::XMFLOAT3(60, 120, uiZ));
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetSize(DirectX::XMFLOAT2(240, 102.4f));
+
+                    // +
+                    UIManager::Instance().GetUI(UISPRITE::Plus)->SetPosition(DirectX::XMFLOAT3(285, 130, 10));
+                    UIManager::Instance().GetUI(UISPRITE::Plus)->SetSize(DirectX::XMFLOAT2(100, 100));
+                }
             }
             else
             {
-                UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetPosition(DirectX::XMFLOAT3(20, 100, uiZ));
-                UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetSize(DirectX::XMFLOAT2(500, 150));
+                if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+                {
+                    if (isDisplaySignBoard[0])
+                    {
+                        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(1050, 430, uiZ));
+                        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-                UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetPosition(DirectX::XMFLOAT3(370, 120, uiZ));
-                UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetSize(DirectX::XMFLOAT2(100, 100));
+                        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(1050, 430, uiZ));
+                        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetSize(DirectX::XMFLOAT2(100, 100));
 
-                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetPosition(DirectX::XMFLOAT3(60, 120, uiZ));
-                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetSize(DirectX::XMFLOAT2(240, 102.4f));
+                        UIManager::Instance().GetUI(UISPRITE::StickRight)->SetPosition(DirectX::XMFLOAT3(1050, 430, uiZ));
+                        UIManager::Instance().GetUI(UISPRITE::StickRight)->SetSize(DirectX::XMFLOAT2(100, 100));
+                    }
 
-                // +
-                UIManager::Instance().GetUI(UISPRITE::Plus)->SetPosition(DirectX::XMFLOAT3(285, 130, 10));
-                UIManager::Instance().GetUI(UISPRITE::Plus)->SetSize(DirectX::XMFLOAT2(100, 100));
+                    if (isDisplaySignBoard[1])
+                    {
+                        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetPosition(DirectX::XMFLOAT3(85, 430, uiZ));
+                        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetSize(DirectX::XMFLOAT2(100, 100));
+                        
+                        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetPosition(DirectX::XMFLOAT3(85, 430, uiZ));
+                        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetSize(DirectX::XMFLOAT2(100, 100));
+                        
+                        UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetPosition(DirectX::XMFLOAT3(85, 430, uiZ));
+                        UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetSize(DirectX::XMFLOAT2(100, 100));
+                    }
+
+                    UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetPosition(DirectX::XMFLOAT3(1245, 495, uiZ));
+                    UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetSize(DirectX::XMFLOAT2(-200, 200));
+
+                    UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetPosition(DirectX::XMFLOAT3(1070, 520, uiZ));
+                    UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetSize(DirectX::XMFLOAT2(150, 150));
+                }
+                else
+                {
+                    UIManager::Instance().GetUI(UISPRITE::Bubble)->SetPosition(DirectX::XMFLOAT3(1280, 540, uiZ));
+                    UIManager::Instance().GetUI(UISPRITE::Bubble)->SetSize(DirectX::XMFLOAT2(-350, 150));
+
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetPosition(DirectX::XMFLOAT3(80, 430, uiZ));
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetPosition(DirectX::XMFLOAT3(1060, 430, uiZ));
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetSize(DirectX::XMFLOAT2(100, 100));
+
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetPosition(DirectX::XMFLOAT3(985, 560, uiZ));
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetSize(DirectX::XMFLOAT2(240, 102.4f));
+                }
             }
         }        
         
@@ -808,50 +1019,162 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
         }
         effect[0]->AddTimer(elapsedTime);
 
-        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(TutorialTerrain::SignBoard_yazi0)->GetTransform()->GetPosition();
-        if (terrainPos.y >= 5.2f)
+        // 看板アニメーション
         {
-            Graphics::Instance().GetShader()->SetState(Graphics::Instance().GetDeviceContext(), 3, 0, 0);
-            spriteAnimation->Render();
+            if(isDisplaySignBoard[0])
+            {
+                Graphics::Instance().GetShader()->SetState(Graphics::Instance().GetDeviceContext(), 3, 0, 0);
+                spriteAnimation[0]->Render();
+            }
+            if (isDisplaySignBoard[1])
+            {
+                Graphics::Instance().GetShader()->SetState(Graphics::Instance().GetDeviceContext(), 3, 0, 0);
+                spriteAnimation[1]->Render();
+            }
         }
 
         // UI
         {
-            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            if (isPlayerMove)
             {
-                // gamepad
-                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
-                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
+                if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+                {
+                    // gamepad
+                    UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
+                    UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
 
-                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
-                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
-                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(true);
-                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(true);
-                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
+                    UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+                    UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
+                    UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(true);
+                    UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(true);
+                    UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
 
-                // keyboard解除
-                UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetIsRender(false);
-                UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetIsRender(false);
-                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+                    // keyboard解除
+                    UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+                }
+                else
+                {
+                    // gamepad解除
+                    UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(false);
+
+                    UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
+
+                    // keyboard
+                    UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetIsRender(true);
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetIsRender(true);
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(true);
+                    UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
+                }
+
+
             }
             else
             {
-                // gamepad解除
-                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
-                UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
-                UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
-                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
-                UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(false);                
+                // 解除
+                {
+                    // gamepad解除
+                    UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::StickDown)->SetIsRender(false);
 
-                UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
-                UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
-                UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
 
-                // keyboard
-                UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetIsRender(true);
-                UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetIsRender(true);
-                UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(true);
-                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(true);
+                    // keyboard解除
+                    UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+                }
+
+                // 登録
+                if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+                {
+                    UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+
+
+                    // jumpAnimation
+                    if (isDisplaySignBoard[0])
+                    {
+                        StickAnimation(elapsedTime, 0);
+                        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
+
+                        UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+                    }
+                    else if(!isDisplaySignBoard[1])
+                    {
+                        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+                    }
+
+                    // hipdropAnimation
+                    if (isDisplaySignBoard[1])
+                    {
+                        StickAnimation(elapsedTime, 1);
+                        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
+
+                        UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
+                        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
+                    }
+                    else if(!isDisplaySignBoard[0])
+                    {
+                        UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
+
+                        UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+                    }
+                }
+                else
+                {
+                    UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
+
+                    if (isDisplaySignBoard[0])
+                    {
+                        UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(true);
+
+                        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+                    }
+                    else
+                    {
+                        UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
+                    }
+
+                    if (isDisplaySignBoard[1])
+                    {
+                        UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(true);
+                        UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
+
+                        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
+                        UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(true);
+                    }
+                    else
+                    {                        
+                        UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+                    }
+
+                }
             }
         }
         break;
@@ -1023,5 +1346,76 @@ void StageTutorial::StickStateDown(float elapsedTime)
             }
 
         break;
+    }
+}
+
+
+void StageTutorial::StickAnimation(float elapsedTime, int state)
+{
+    stickTime += elapsedTime;
+
+    if (state == 0)
+    {
+        switch (stickMoveState)
+        {
+        case 0:
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
+
+            if (stickTime > 1.0f)
+            {
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(true);
+
+                stickTime = 0;
+                stickMoveState = 1;
+            }
+
+            break;
+        case 1:
+            UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(true);
+
+            if (stickTime > 1.0f)
+            {
+                UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
+
+                stickTime = 0;
+                stickMoveState = 0;
+            }
+
+            break;
+        }
+    }
+    else
+    {
+        switch (stickMoveState)
+        {
+        case 0:
+            UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
+
+            if (stickTime > 1.0f)
+            {
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(true);
+
+                stickTime = 0;
+                stickMoveState = 1;
+            }
+
+            break;
+        case 1:
+            UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(true);
+
+            if (stickTime > 1.0f)
+            {
+                UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
+                UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(true);
+
+                stickTime = 0;
+                stickMoveState = 0;
+            }
+
+            break;
+        }
     }
 }

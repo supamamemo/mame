@@ -5,6 +5,7 @@
 #include "../../sprite_batch.h"
 
 #include "../../Game/spriteDissolve.h"
+//#include "../../Game/SpriteAnimation.h"
 
 #include "../../Game/TitlePlayer.h"
 #include "../../Game/TitleEnemyTofu.h"
@@ -25,8 +26,6 @@ public:
     void DrawDebug()    override;
 
 public:
-    // test
-    std::unique_ptr<Sprite> dummy_sprite                = nullptr;
     std::unique_ptr<Sprite> dissolve_sprite             = nullptr;
 
     // mameoload
@@ -51,9 +50,12 @@ public:
     // fadeOut/fadeIn用のディゾルブ
     std::unique_ptr<SpriteDissolve> spriteDissolve;
 
-    int RS = 3;
-    int DS = 0;
-    int SS = 0;
+    // titleUI
+    enum TITLESPRITE
+    {
+        MAMEO,
+        WORD,
+    };
 
 
     struct Spr
