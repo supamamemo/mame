@@ -75,7 +75,7 @@ private:
         SignBoard_dash0,
         SignBoard_noTex0,
         SignBoard_noTex1,
-        Goal,
+        //Goal,
     };
 
     void TutorialStateUpdate(float elapsedTime);
@@ -88,6 +88,7 @@ private:
 
 private:
     std::unique_ptr<Box> back = nullptr;
+    std::unique_ptr<Box> goal_ = nullptr;
 
     std::unique_ptr<SpriteAnimation> spriteAnimation[2];
 
@@ -100,9 +101,11 @@ private:
     int signBoardState = 0;
 
     bool isPlayerMove = false;
-    bool isDisplaySignBoard[2];
+    bool isDisplaySignBoard[2] = {};
+
+    bool isStageClear_ = false;
 
     // UI
-    Effect* effect[4];
+    Effect* effect[4] = {};
 };
 
