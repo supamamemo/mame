@@ -36,6 +36,8 @@ StageTutorial::~StageTutorial()
 // 初期化
 void StageTutorial::Initialize()
 {
+    StageManager& stageManager = StageManager::Instance();
+
     // 生成
     {
         // ステージ生成&登録
@@ -176,6 +178,8 @@ void StageTutorial::Initialize()
         PlayerManager& playerManager = PlayerManager::Instance();
         playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-8.0f, 2.0f, 10.0f));
         playerManager.Initialize();
+
+        stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
     }
 
     // enemy初期化

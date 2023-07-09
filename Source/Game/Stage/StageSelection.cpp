@@ -20,34 +20,30 @@
 // コンストラクタ
 StageSelection::StageSelection()
 {
-    // 背景
-    //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
-    back = std::make_unique<Box>("./resources/tutorialBack.fbx");
+    //// 背景
+    ////back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
+    //back = std::make_unique<Box>("./resources/tutorialBack.fbx");
 
-    // 城
-    castle = std::make_unique<Box>("./resources/castel.fbx");
+    //// 城
+    //castle = std::make_unique<Box>("./resources/castel.fbx");
 
-    // boss
-    boss = std::make_unique<Box>("./resources/bossall.fbx");
+    //// boss
+    //boss = std::make_unique<Box>("./resources/bossall.fbx");
 
-    // point
-    point[POINT::Black] = std::make_unique<Box>("./resources/select/pointBlack.fbx");
-    point[POINT::Red] = std::make_unique<Box>("./resources/select/pointRed.fbx");
-    point[POINT::Blue] = std::make_unique<Box>("./resources/select/pointBlue.fbx");
+    //// point
+    //point[POINT::Black] = std::make_unique<Box>("./resources/select/pointBlack.fbx");
+    //point[POINT::Red] = std::make_unique<Box>("./resources/select/pointRed.fbx");
+    //point[POINT::Blue] = std::make_unique<Box>("./resources/select/pointBlue.fbx");
 
-    // terrain生成
-    TerrainManager& terrainManager = TerrainManager::Instance();
-    {
-        terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx")); // 0
-        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx")); // 1
-    }
+    //// terrain生成
+    //TerrainManager& terrainManager = TerrainManager::Instance();
+    //{
+    //    terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx")); // 0
+    //    //terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx")); // 1
+    //}
 
-    // player生成
-    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
-
-    AudioManager& audioManager = AudioManager::Instance();
-    audioManager.PlayBGM(BGM::StageSelection, true); // ステージセレクトBGM再生
-
+    //// player生成
+    //PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 }
 
 // 初期化

@@ -24,10 +24,12 @@ public:
     void DrawDebug()                        override;   // デバッグ描画
 
 private:
-    std::unique_ptr<Box> back  = nullptr;
-    std::unique_ptr<Box> goal_ = nullptr;    // ゴール
+    std::unique_ptr<Box> back          = nullptr;
+    std::unique_ptr<Box> halfwayPoint_ = nullptr;    // 中間地点
+    std::unique_ptr<Box> goal_         = nullptr;    // ゴール
 
-    bool isStageClear_ = false;
+    bool isArrivedHalfwayPoint_ = false;
+    bool isStageClear_          = false;
 
 public:
     // UI関連（急ぎで作ってるからコメントなしでごめん。。）
