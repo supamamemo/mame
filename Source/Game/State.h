@@ -23,6 +23,8 @@ public:
     void SetTimer(float time) { timer = time; }
     float GetTimer() const { return timer; }
     void SubtractTime(float time) { timer -= time; }
+public:
+    float seTimer_ = 0.0f;
 
 private:
     float timer = 0;

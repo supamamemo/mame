@@ -13,6 +13,8 @@
 
 #include "../BossStateDerived.h"
 
+#include "StageManager.h"
+
 // コンストラクタ
 StageBoss::StageBoss()
 {
@@ -22,6 +24,8 @@ StageBoss::StageBoss()
 void StageBoss::Initialize()
 {
     Graphics& graphics = Graphics::Instance();
+
+    StageManager& stageManager = StageManager::Instance();
 
     // 生成
     {
@@ -119,6 +123,7 @@ void StageBoss::Initialize()
     // player初期化
     PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-28.0f, 1.0f, 10.0f));
     PlayerManager::Instance().Initialize();
+    stageManager.savedHalfPoint_ = {};
 
     // boss初期化   
     EnemyManager::Instance().Initialize();
@@ -157,7 +162,7 @@ void StageBoss::Initialize()
     }
 
     AudioManager& audioManager = AudioManager::Instance();
-    audioManager.PlayBGM(BGM::Boss_Back, true); // ボス戦環境音BGM再生
+    audioManager.PlayBGM(BGM::StageBoss_Back, true); // ボス戦環境音BGM再生
 }
 
 // 終了化

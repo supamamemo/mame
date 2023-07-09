@@ -187,96 +187,144 @@ void Camera::UpdateTitle(float elapsedTime)
     GetTransform()->SetPosition(vec);
 }
 
+
 void Camera::UpdateTutorial(float elapsedTime, int state)
 {
-    DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
-    DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 cameraPos  = GetTransform()->GetPosition();
+    PlayerManager& playerManager = PlayerManager::Instance();
+    DirectX::XMFLOAT3 playerPos  = playerManager.GetPlayer()->GetTransform()->GetPosition();
 
     float leftLimit = 0.0f;
 
-    switch (state)
+    if (playerManager.GetPlayer()->GetState() != Player::State::Clear)
     {
-    case STATE::MoveReception:
-        leftLimit = -10.4f;
-        break;
-    case STATE::JumpReception:
-        leftLimit = -10.4f;
-        break;
-    case STATE::HipDorop:
-        leftLimit = 0.0f;
-
-        cameraPos.x += elapsedTime * 10;
-        if (cameraPos.x >= 9.0f)cameraPos.x = 9.0f;
-
-        tutorialState = 0;
-        break;
-    case STATE::Run:
-        leftLimit = 16.0f;
-
-        switch (tutorialState)
+        switch (state)
         {
-        case 0:
-            cameraPos.x += elapsedTime * 10;
-            if (cameraPos.x >= 25.0f)
-            {
-                cameraPos.x = 25.0f;
-                tutorialState = 1;
-            }
+        case STATE::MoveReception:
+            leftLimit = -10.4f;
             break;
-        case 1:
-            if (playerPos.x >= 26.0f)
-            {
-                cameraPos.x += elapsedTime * 10;
+        case STATE::JumpReception:
+            leftLimit = -10.4f;
+            break;
+        case STATE::HipDorop:
+            leftLimit = 0.0f;
 
-                if (playerPos.x + 6.0f <= cameraPos.x)cameraPos.x = playerPos.x + 6.0f;
-            }
-            else
-            {
-                cameraPos.x -= elapsedTime * 10;
-                if (cameraPos.x <= 25.0f)cameraPos.x = 25.0f;
-            }
+            cameraPos.x += elapsedTime * 10;
+            if (cameraPos.x >= 9.0f)cameraPos.x = 9.0f;
+
+            tutorialState = 0;
             break;
+        case STATE::Run:
+            leftLimit = 16.0f;
+
+            switch (tutorialState)
+            {
+            case 0:
+                cameraPos.x += elapsedTime * 10;
+                if (cameraPos.x >= 25.0f)
+                {
+                    cameraPos.x = 25.0f;
+                    tutorialState = 1;
+                }
+                break;
+            case 1:
+                if (playerPos.x >= 26.0f)
+                {
+                    cameraPos.x += elapsedTime * 10;
+
+                    if (playerPos.x + 6.0f <= cameraPos.x)cameraPos.x = playerPos.x + 6.0f;
+                }
+                else
+                {
+                    cameraPos.x -= elapsedTime * 10;
+                    if (cameraPos.x <= 25.0f)cameraPos.x = 25.0f;
+                }
+                break;
+            }
+
+
+            break;
+        case STATE::Free:
+            leftLimit = 35.0f;
+
+            switch (tutorialState)
+            {
+            case 0:
+                cameraPos.x += elapsedTime * 10;
+                if (cameraPos.x >= 45.0f)
+                {
+                    cameraPos.x = 45.0f;
+                    tutorialState = 1;
+                }
+                break;
+            case 1:
+                if (playerPos.x >= 45.0f)
+                {
+                    cameraPos.x += elapsedTime * 10;
+                    if (cameraPos.x >= playerPos.x + 6.0f)cameraPos.x = playerPos.x + 6.0f;
+                }
+                else
+                {
+                    cameraPos.x -= elapsedTime * 10;
+                    if (cameraPos.x <= 45.0f)cameraPos.x = 45.0f;
+                }
+                break;
+            }
+
+            break;
+        case STATE::GoalState:
+            //cameraPos.x += elapsedTime * 10;
+
+            //if (cameraPos.x >= 63.0f) cameraPos.x = 63.0f;
+        {
+            const float targetPositionX = playerPos.x;
+            const float moveSpeedX = 6.0f * elapsedTime;
+
+            if (cameraPos.x < targetPositionX)
+            {
+                cameraPos.x = (std::min)(targetPositionX, (cameraPos.x + moveSpeedX));
+            }
+            else if (cameraPos.x > targetPositionX)
+            {
+                cameraPos.x = (std::max)(targetPositionX, (cameraPos.x - moveSpeedX));
+            }
         }
 
-
-        break;
-    case STATE::Free:
-        leftLimit = 35.0f;
-
-        switch (tutorialState)
-        {
-        case 0:
-            cameraPos.x += elapsedTime * 10;
-            if (cameraPos.x >= 45.0f)
-            {
-                cameraPos.x = 45.0f;
-                tutorialState = 1;
-            }
             break;
-        case 1:
-            if (playerPos.x >= 45.0f)
-            {
-                cameraPos.x += elapsedTime * 10;
-                if (cameraPos.x >= playerPos.x + 6.0f)cameraPos.x = playerPos.x + 6.0f;
-            }
-            else
-            {
-                cameraPos.x -= elapsedTime * 10;
-                if (cameraPos.x <= 45.0f)cameraPos.x = 45.0f;
-            }
+        default:
+            leftLimit = -10.4f;
             break;
         }
+    }
+    else
+    {
+        // カメラのX位置をプレイヤーのX位置と同期
+        if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
+        {
+            cameraPos.x = playerPos.x;
+        }
 
-        break;
-    case STATE::GoalState:
-        cameraPos.x += elapsedTime * 10;
+        const float targetPositionY = 4.5f;
+        const float moveSpeedY      = 6.0f * elapsedTime;
+        if (cameraPos.y < targetPositionY)
+        {
+            cameraPos.y = (std::min)(targetPositionY, (cameraPos.y + moveSpeedY));
+        }
+        else if (cameraPos.y > targetPositionY)
+        {
+            cameraPos.y = (std::max)(targetPositionY, (cameraPos.y - moveSpeedY));
+        }
 
-        if (cameraPos.x >= 63.0f)cameraPos.x = 63.0f;
-
-        break;
-    default:
-        leftLimit = -10.4f;
-        break;
+        const float targetPositionZ = 0.0f;
+        const float moveSpeedZ = 6.0f * elapsedTime;
+        if (cameraPos.z < targetPositionZ)
+        {
+            cameraPos.z = (std::min)(targetPositionZ, (cameraPos.z + moveSpeedZ));
+        }
+        else if (cameraPos.z > targetPositionZ)
+        {
+            cameraPos.z = (std::max)(targetPositionZ, (cameraPos.z - moveSpeedZ));
+        }
     }
 
     GetTransform()->SetPosition(cameraPos);
@@ -288,6 +336,8 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
 
         PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
     }
+
+
 }
 
 

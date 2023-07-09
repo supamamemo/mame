@@ -17,7 +17,8 @@
 #include "../UIManager.h"
 
 #include "../Stage/StageManager.h"
-#include "../Stage/StagePlains.h"
+#include "../Stage/StageLoading.h"
+#include "../Stage/StageSelection.h"
 
 #include "../../Mame/Scene/SceneManager.h"
 
@@ -36,6 +37,8 @@ StageTutorial::~StageTutorial()
 // 初期化
 void StageTutorial::Initialize()
 {
+    StageManager& stageManager = StageManager::Instance();
+
     // 生成
     {
         // ステージ生成&登録
@@ -59,7 +62,7 @@ void StageTutorial::Initialize()
             terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_nomal.fbx")); // 看板
             terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_nomal.fbx")); // 看板
 
-            terrainManager.Register(new TerrainNoCollision("./resources/stage/goal.fbx")); // ゴール
+            //terrainManager.Register(new TerrainNoCollision("./resources/stage/goal.fbx")); // ゴール
         }
 
         // player生成
@@ -82,6 +85,9 @@ void StageTutorial::Initialize()
         // 背景仮
         back = std::make_unique<Box>("./resources/tutorialBack.fbx");
         //back = std::make_unique<Box>("./resources/back.fbx");
+
+        // ゴール
+        goal_ = std::make_unique<Box>("./resources/stage/goal.fbx");
 
         // animation
         spriteAnimation[0] = std::make_unique<SpriteAnimation>(L"./resources/tutorial/jump.png");
@@ -167,8 +173,6 @@ void StageTutorial::Initialize()
         terrainManager.GetTerrain(SignBoard_noTex0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, -3, 10.5f));
         terrainManager.GetTerrain(SignBoard_noTex0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
 
-        terrainManager.GetTerrain(Goal)->GetTransform()->SetPosition(DirectX::XMFLOAT3(68, 6, 10));
-
         terrainManager.Initialize();
     }
 
@@ -177,6 +181,8 @@ void StageTutorial::Initialize()
         PlayerManager& playerManager = PlayerManager::Instance();
         playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-8.0f, 2.0f, 10.0f));
         playerManager.Initialize();
+
+        stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
     }
 
     // enemy初期化
@@ -203,6 +209,10 @@ void StageTutorial::Initialize()
     back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 22.0f, 10.0f));
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
 
+    // ゴール
+    goal_->GetTransform()->SetPosition(DirectX::XMFLOAT3(68.0f, 6.0f, 10.7f));
+
+
     // animation
     spriteAnimation[0]->Initialize(DirectX::XMFLOAT2(243, 145),
         DirectX::XMFLOAT2(731, 391), DirectX::XMFLOAT2(657, 360));
@@ -224,7 +234,7 @@ void StageTutorial::Initialize()
 
 
     AudioManager& audioManager = AudioManager::Instance();
-    audioManager.PlayBGM(BGM::Tutorial, true); // チュートリアルBGM再生
+    audioManager.PlayBGM(BGM::StageTutorial, true); // チュートリアルBGM再生
 }
 
 // 終了
@@ -267,15 +277,17 @@ void StageTutorial::Begin()
 // 更新処理
 void StageTutorial::Update(const float& elapsedTime)
 {
+    PlayerManager& playerManager = PlayerManager::Instance();
+    EnemyManager&  enemyManager  = EnemyManager::Instance();
+
     // terrain更新
     TerrainManager::Instance().Update(elapsedTime);
 
     // player更新
-    if(isPlayerMove)
-        PlayerManager::Instance().Update(elapsedTime);
+    if (isPlayerMove) playerManager.Update(elapsedTime);
 
     // enemy更新
-    EnemyManager::Instance().Update(elapsedTime);
+    enemyManager.Update(elapsedTime);
 
     // tutorialstate
     TutorialStateUpdate(elapsedTime);
@@ -288,6 +300,59 @@ void StageTutorial::Update(const float& elapsedTime)
 
     // 背景
     back->BackUpdate(elapsedTime);
+
+    // ゴール処理
+    Transform* playerTransform = playerManager.GetPlayer()->GetTransform();
+    const float goalPositionX = goal_->GetTransform()->GetPosition().x;
+    {
+        if (!isStageClear_)
+        {
+            // プレイヤーがゴールを超えたらステージクリアにする
+            if (playerTransform->GetPosition().x >= goalPositionX)
+            {
+                enemyManager.AllKill(); // 敵を全員倒す
+                isStageClear_ = true;
+            }
+        }
+        else
+        {
+            // プレイヤーのステートをクリアステートへ遷移
+            const Player::State playerState = playerManager.GetPlayer()->GetState();
+            if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
+
+            // 位置を修正
+            if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
+            {
+                NO_CONST float playerPositionX = playerTransform->GetPosition().x;
+
+                const float targetPositionX = goalPositionX + 3.0f;
+                const float addPositionX = 10.0f * elapsedTime;
+                if (playerPositionX > targetPositionX)
+                {
+                    playerPositionX = (std::max)(targetPositionX, (playerPositionX - addPositionX));
+                }
+                else if (playerPositionX < targetPositionX)
+                {
+                    playerPositionX = (std::min)(targetPositionX, (playerPositionX + addPositionX));
+                }
+
+                playerTransform->SetPositionX(playerPositionX);
+            }
+            // 右に走り去っていったらステージセレクトに切り替える
+            else
+            {
+                const float moveLimitX = goalPositionX + 10.0f;
+                if (playerTransform->GetPosition().x > moveLimitX)
+                {
+                    playerTransform->SetPositionX(moveLimitX);
+
+                    //stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
+
+                    StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+                }
+            }
+        }
+    }
 
     // animation
     const int totalFrame = 11;      // フレームの枚数
@@ -312,6 +377,8 @@ void StageTutorial::Render(const float& elapsedTime)
 
     // 背景仮
     back->Render(elapsedTime);
+
+    goal_->Render(elapsedTime);
 
     // terrain
     TerrainManager::Instance().Render(elapsedTime);
@@ -345,6 +412,8 @@ void StageTutorial::DrawDebug()
 
     // 背景仮
     back->DrawDebug();
+
+    goal_->DrawDebug();
 
     // animation
     spriteAnimation[0]->DrawDebug();

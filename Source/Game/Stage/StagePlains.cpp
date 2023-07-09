@@ -27,6 +27,8 @@ StagePlains::StagePlains()
 // 初期化
 void StagePlains::Initialize()
 {
+    StageManager& stageManager = StageManager::Instance();
+
     // 生成
     {
         // terrain生成
@@ -47,6 +49,9 @@ void StagePlains::Initialize()
         Box::nameNum = 0;
         //back = std::make_unique<Box>("./resources/back.fbx");
         back = std::make_unique<Box>("./resources/tutorialBack.fbx");
+
+        // 中間地点
+        halfwayPoint_ = std::make_unique<Box>("./resources/stage/goal.fbx");
 
         // ゴール
         goal_ = std::make_unique<Box>("./resources/stage/goal.fbx");
@@ -79,7 +84,18 @@ void StagePlains::Initialize()
     // player初期化
     {
         PlayerManager& playerManager = PlayerManager::Instance();
-        playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1.5f, 10.0f));
+        // 保存してる中間地点がここのステージの中間地点だったら中間地点の位置をプレイヤーに代入
+        if (stageManager.savedHalfPoint_.savedHalfwayPointStage == StageManager::SavedHalfwayPointStage::StagePlains)
+        {
+            playerManager.GetPlayer()->GetTransform()->SetPosition(stageManager.savedHalfPoint_.position);
+            playerManager.GetPlayer()->GetTransform()->SetPositionZ(10.0f);
+        }
+        // 保存してる中間地点がここのステージの中間地点でなければプレイヤーに初期位置を代入し、保存した中間地点情報をリセット
+        else
+        {
+            playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1.5f, 10.0f));
+            stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
+        }
         playerManager.Initialize();
     }
 
@@ -94,6 +110,23 @@ void StagePlains::Initialize()
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 5, 12));
     back->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 12, 10));
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
+
+    // 中間地点
+    halfwayPoint_->GetTransform()->SetPosition(DirectX::XMFLOAT3(160.5f, 2.5f, 10.5f));
+    halfwayPoint_->GetTransform()->SetScale(DirectX::XMFLOAT3(0.35f, 0.35f, 0.35f));
+
+    // 保存してる中間地点がここのステージの中間地点だったら中間地点を回転済みにして到着フラグをtrueにする
+    if (stageManager.savedHalfPoint_.savedHalfwayPointStage == StageManager::SavedHalfwayPointStage::StagePlains)
+    {
+        halfwayPoint_->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, 0, 0));
+        isArrivedHalfwayPoint_ = true;
+    }
+    // 保存してる中間地点がここのステージの中間地点でなければ旗の初期回転値を代入
+    else
+    {
+        halfwayPoint_->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(-180.0f), 0, 0));
+    }
+
 
     // ゴール
     goal_->GetTransform()->SetPosition(DirectX::XMFLOAT3(277.0f, 5.5f, 10.7f));
@@ -118,7 +151,9 @@ void StagePlains::Initialize()
     }
     
     // BGM再生
-    AudioManager::Instance().PlayBGM(BGM::Stage, true);
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::StagePlains,      true);  // 草原ステージBGM再生
+    audioManager.PlayBGM(BGM::StagePlains_Back, true);  // 草原ステージの環境音BGM再生
 }
 
 // 終了化
@@ -162,7 +197,9 @@ void StagePlains::Update(const float& elapsedTime)
     if (!Mame::Scene::SceneManager::Instance().isHitStop_)
     {
         PlayerManager& playerManager = PlayerManager::Instance();
-        EnemyManager& enemyManager   = EnemyManager::Instance();
+        EnemyManager&  enemyManager  = EnemyManager::Instance();
+        StageManager&  stageManager  = StageManager::Instance();
+
 
         //背景
         back->BackUpdate(elapsedTime);
@@ -179,52 +216,93 @@ void StagePlains::Update(const float& elapsedTime)
         // enemy更新
         enemyManager.Update(elapsedTime);
 
-        // プレイヤーがゴールを超えたらステージクリアにする
+
         Transform* playerTransform  = playerManager.GetPlayer()->GetTransform();
-        const float goalPositionX   = goal_->GetTransform()->GetPosition().x;
-        if (!isStageClear_)
+
+        // 中間地点処理
+        const DirectX::XMFLOAT3 halfwayPointPos = halfwayPoint_->GetTransform()->GetPosition();
         {
-            if (playerTransform->GetPosition().x >= goalPositionX)
+            // 中間地点を超えたらその中間地点情報を保存
+            if (!isArrivedHalfwayPoint_)
             {
-                enemyManager.AllKill(); // 敵を全員倒す
-                isStageClear_ = true;
-            }
-        }
-        else
-        {
-            // プレイヤーのステートをクリアステートへ遷移
-            const Player::State playerState = playerManager.GetPlayer()->GetState();
-            if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
-
-            // 位置を修正
-            if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
-            {
-                NO_CONST float playerPositionX = playerTransform->GetPosition().x;
-
-                const float targetPositionX = goalPositionX + 3.0f;
-                const float addPositionX    = 10.0f * elapsedTime;
-                if (playerPositionX > targetPositionX)
+                if (playerTransform->GetPosition().x >= halfwayPointPos.x)
                 {
-                    playerPositionX = (std::max)(targetPositionX, (playerPositionX - addPositionX));
+                    stageManager.savedHalfPoint_.savedHalfwayPointStage = StageManager::SavedHalfwayPointStage::StagePlains;
+                    stageManager.savedHalfPoint_.position = halfwayPointPos;
+                    isArrivedHalfwayPoint_ = true;
                 }
-                else if (playerPositionX < targetPositionX)
-                {
-                    playerPositionX = (std::min)(targetPositionX, (playerPositionX + addPositionX));
-                }
-
-                playerTransform->SetPositionX(playerPositionX);
             }
-            // 右に走り去っていったらステージセレクトに切り替える
+            // 旗を回転させる
             else
             {
-                const float moveLimitX = goalPositionX + 10.0f;
-                if (playerTransform->GetPosition().x > moveLimitX)
+                NO_CONST float halfwayPointRotationY = halfwayPoint_->GetTransform()->GetRotation().y;
+                if (halfwayPointRotationY < 0.0f)
                 {
-                    playerTransform->SetPositionX(moveLimitX);
-                    StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+                    const float AddRotationY = ToRadian(540.) * elapsedTime;
+                    halfwayPointRotationY = (std::min)(0.0f, halfwayPointRotationY + AddRotationY);
+                }
+                halfwayPoint_->GetTransform()->SetRotationY(halfwayPointRotationY);
+            }
+        }
+
+        // プレイヤーがゴールを超えたらステージクリアにする
+        const float goalPositionX = goal_->GetTransform()->GetPosition().x;
+        {
+            if (!isStageClear_)
+            {
+                if (playerTransform->GetPosition().x >= goalPositionX)
+                {
+                    enemyManager.AllKill(); // 敵を全員倒す
+                    isStageClear_ = true;
+                }
+            }
+            else
+            {
+                // プレイヤーのステートをクリアステートへ遷移
+                const Player::State playerState = playerManager.GetPlayer()->GetState();
+                if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
+
+                // 位置を修正
+                if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
+                {
+                    NO_CONST float playerPositionX = playerTransform->GetPosition().x;
+
+                    const float targetPositionX = goalPositionX + 3.0f;
+                    const float addPositionX = 10.0f * elapsedTime;
+                    if (playerPositionX > targetPositionX)
+                    {
+                        playerPositionX = (std::max)(targetPositionX, (playerPositionX - addPositionX));
+                    }
+                    else if (playerPositionX < targetPositionX)
+                    {
+                        playerPositionX = (std::min)(targetPositionX, (playerPositionX + addPositionX));
+                    }
+
+                    playerTransform->SetPositionX(playerPositionX);
+                }
+                // 右に走り去っていったらステージセレクトに切り替える
+                else
+                {
+                    const float moveLimitX = goalPositionX + 10.0f;
+                    if (playerTransform->GetPosition().x > moveLimitX)
+                    {
+                        playerTransform->SetPositionX(moveLimitX);
+
+                        stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
+
+                        StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+                    }
                 }
             }
         }
+
+        // 死亡処理
+        if (playerTransform->GetPosition().z <= -50.0f ||
+            playerTransform->GetPosition().y <= -50.0f)
+        {
+            StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+        }
+
     }
      
 
@@ -258,6 +336,9 @@ void StagePlains::Render(const float& elapsedTime)
     // 背景
     back->Render(elapsedTime);
 
+    // 中間地点
+    halfwayPoint_->Render(elapsedTime);
+
     // ゴール
     goal_->Render(elapsedTime);
 
@@ -289,6 +370,9 @@ void StagePlains::DrawDebug()
 
     // 背景
     back->DrawDebug();
+
+    // 中間地点
+    halfwayPoint_->DrawDebug();
 
     // ゴール
     goal_->DrawDebug();
@@ -593,26 +677,25 @@ void StagePlains::SetTerrains(TerrainManager& terrainManager)
 
     // 立て看板
     {
-        // 位置
-        terrainManager.GetTerrain(43)->GetTransform()->SetPosition(DirectX::XMFLOAT3(2.75f,  3.0f, 10.6f));
-        terrainManager.GetTerrain(44)->GetTransform()->SetPosition(DirectX::XMFLOAT3(41.25f, 8.4f, 10.6f));
-        terrainManager.GetTerrain(45)->GetTransform()->SetPosition(DirectX::XMFLOAT3(57.0f,  8.4f, 10.6f));
-        terrainManager.GetTerrain(46)->GetTransform()->SetPosition(DirectX::XMFLOAT3(73.0f,  3.0f, 10.6f));
-        terrainManager.GetTerrain(47)->GetTransform()->SetPosition(DirectX::XMFLOAT3(151.2f, 9.8f, 10.6f));
-        terrainManager.GetTerrain(48)->GetTransform()->SetPosition(DirectX::XMFLOAT3(168.0f, 2.7f, 10.6f));
-        terrainManager.GetTerrain(49)->GetTransform()->SetPosition(DirectX::XMFLOAT3(208.5f, 4.5f, 10.6f));
-        terrainManager.GetTerrain(50)->GetTransform()->SetPosition(DirectX::XMFLOAT3(257.5f, 6.8f, 10.6f));
+        terrainManager.GetTerrain(43)->GetTransform()->SetPosition(DirectX::XMFLOAT3(2.75f,    3.5f, 10.6f));
+        terrainManager.GetTerrain(44)->GetTransform()->SetPosition(DirectX::XMFLOAT3(41.25f,   8.9f, 10.6f));
+        terrainManager.GetTerrain(45)->GetTransform()->SetPosition(DirectX::XMFLOAT3(57.0f,    8.9f, 10.6f));
+        terrainManager.GetTerrain(46)->GetTransform()->SetPosition(DirectX::XMFLOAT3(73.0f,    3.5f, 10.6f));
+        terrainManager.GetTerrain(47)->GetTransform()->SetPosition(DirectX::XMFLOAT3(151.2f,  10.0f, 10.6f));
+        terrainManager.GetTerrain(48)->GetTransform()->SetPosition(DirectX::XMFLOAT3(168.0f,   3.0f, 10.6f));
+        terrainManager.GetTerrain(49)->GetTransform()->SetPosition(DirectX::XMFLOAT3(208.5f,   4.5f, 10.6f));
+        terrainManager.GetTerrain(50)->GetTransform()->SetPosition(DirectX::XMFLOAT3(257.25f,  7.0f, 10.6f));
 
-        // サイズ
-        const float size = 2.0f;
-        terrainManager.GetTerrain(43)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
-        terrainManager.GetTerrain(44)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
-        terrainManager.GetTerrain(45)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
-        terrainManager.GetTerrain(46)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
-        terrainManager.GetTerrain(47)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
-        terrainManager.GetTerrain(48)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
-        terrainManager.GetTerrain(49)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
-        terrainManager.GetTerrain(50)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
+        // スケールを2倍にする
+        const DirectX::XMFLOAT3 scale = { 2,2,2 };
+        terrainManager.GetTerrain(43)->GetTransform()->SetScale(scale);
+        terrainManager.GetTerrain(44)->GetTransform()->SetScale(scale);
+        terrainManager.GetTerrain(45)->GetTransform()->SetScale(scale);
+        terrainManager.GetTerrain(46)->GetTransform()->SetScale(scale);
+        terrainManager.GetTerrain(47)->GetTransform()->SetScale(scale);
+        terrainManager.GetTerrain(48)->GetTransform()->SetScale(scale);
+        terrainManager.GetTerrain(49)->GetTransform()->SetScale(scale);
+        terrainManager.GetTerrain(50)->GetTransform()->SetScale(scale);
 
         // 裏返す
         terrainManager.GetTerrain(43)->GetTransform()->SetRotationY(ToRadian(180.0f));
