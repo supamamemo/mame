@@ -27,6 +27,8 @@ private:
     std::unique_ptr<Box> back  = nullptr;
     std::unique_ptr<Box> goal_ = nullptr;    // ゴール
 
+    bool isStageClear_ = false;
+
 public:
     // UI関連（急ぎで作ってるからコメントなしでごめん。。）
     void PlayerHpUiUpdate(float elapsedTime);    // プレイヤーhpUI管理

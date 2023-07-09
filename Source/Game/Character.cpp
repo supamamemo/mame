@@ -119,21 +119,21 @@ void Character::Move(
 
 
 // 旋回処理
-void Character::Turn(
+bool Character::Turn(
     const    float& elapsedTime,
     NO_CONST float vx,  
     NO_CONST float turnSpeed)
 {
     // 進行ベクトルがゼロベクトルの場合は処理する必要なし
-    if (vx == 0.0f) return;
+    if (vx == 0.0f) return false;
 
     NO_CONST DirectX::XMFLOAT4 rotation = GetTransform()->GetRotation();
 
     turnSpeed *= elapsedTime;
 
     // 進行ベクトルを単位ベクトル化
-    const float vLength = sqrtf(vx * vx);
-    if (vLength < 0.001f) return;
+    const float vLength = fabsf(vx);
+    if (vLength < 0.001f) return false;
 
     // 単位ベクトル化
     vx /= vLength;
@@ -147,7 +147,7 @@ void Character::Turn(
     // 回転角が微小な場合は回転を行わない
     const float angle = acosf(dot); // ラジアン
     //if (fabsf(angle) <= 0.001f) return;
-    if (fabsf(angle) <= 0.01f) return;
+    if (fabsf(angle) <= 0.01f) return false;
 
     // 内積値は-1.0~1.0で表現されており、2つの単位ベクトルの角度が
     // 小さいほど1.0に近づくという性質を利用して回転速度を調整する  
@@ -163,6 +163,8 @@ void Character::Turn(
     rotation.y += (cross < 0.0f) ? -rot : rot;
     
     GetTransform()->SetRotation(rotation);
+
+    return true;
 }
 
 

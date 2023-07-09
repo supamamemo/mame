@@ -3,6 +3,15 @@
 #include "Character.h"
 #include "../Mame/Graphics/Effect.h"
 
+enum ClearState
+{
+    LookToCamera,   // カメラの方向を見る
+    JumpForJoy,     // 飛び跳ねさせる
+    MoveToLeft,     // 左に下がる
+    MoveToRight,    // 右に進む
+};
+
+
 class Player : public Character
 {
 // enum関連
@@ -68,7 +77,7 @@ public:
     bool GetIsAnimationSet() { return isAnimationSet; }
 
     const State& GetState() const { return state; };
-
+    const int GetClearState() const { return clearState_; }
 public:
     // ダメージを与える
     bool ApplyDamage(
@@ -156,10 +165,15 @@ private: // 変数関連
 
     float   deathGravity_           = -0.5f;                // 死亡ステート時の重力
 
+    float   clearAcceleration_      =  0.7f;                // クリアステート時の加速力
+    float   clearMoveSpeed_         =  25.0f;               // クリアステート時の移動速度
+    float   clearTimer_             =  0.0f;                // クリアステート時のタイマー
+
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  2;                   // 最大バウンス回数
 
-    int     clearState_             =  0;
+    int     clearState_             =  0;                   // クリアステート内のステート
+    int     clearJumpCount_         =  0;                   // クリアステートのジャンプカウント
 
     Effect* effect[2];
 

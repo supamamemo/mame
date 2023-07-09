@@ -15,6 +15,10 @@
 
 #include "../UIManager.h"
 
+#include "StageManager.h"
+#include "StageLoading.h"
+#include "StageSelection.h"
+
 // コンストラクタ
 StagePlains::StagePlains()
 {
@@ -175,15 +179,50 @@ void StagePlains::Update(const float& elapsedTime)
         enemyManager.Update(elapsedTime);
 
         // プレイヤーがゴールを超えたらステージクリアにする
-        const float playerPositionX = playerManager.GetPlayer()->GetTransform()->GetPosition().x;
+        Transform* playerTransform  = playerManager.GetPlayer()->GetTransform();
         const float goalPositionX   = goal_->GetTransform()->GetPosition().x;
-        if (playerPositionX >= goalPositionX)
+        if (!isStageClear_)
         {
-            enemyManager.AllKill(); // 敵を全員倒す
-
+            if (playerTransform->GetPosition().x >= goalPositionX)
+            {
+                enemyManager.AllKill(); // 敵を全員倒す
+                isStageClear_ = true;
+            }
+        }
+        else
+        {
             // プレイヤーのステートをクリアステートへ遷移
             const Player::State playerState = playerManager.GetPlayer()->GetState();
-            if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();              
+            if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
+
+            // 位置を修正
+            if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
+            {
+                NO_CONST float playerPositionX = playerTransform->GetPosition().x;
+
+                const float targetPositionX = goalPositionX + 3.0f;
+                const float addPositionX    = 10.0f * elapsedTime;
+                if (playerPositionX > targetPositionX)
+                {
+                    playerPositionX = (std::max)(targetPositionX, (playerPositionX - addPositionX));
+                }
+                else if (playerPositionX < targetPositionX)
+                {
+                    playerPositionX = (std::min)(targetPositionX, (playerPositionX + addPositionX));
+                }
+
+                playerTransform->SetPositionX(playerPositionX);
+            }
+            // 右に走り去っていったらステージセレクトに切り替える
+            else
+            {
+                const float moveLimitX = goalPositionX + 10.0f;
+                if (playerTransform->GetPosition().x > moveLimitX)
+                {
+                    playerTransform->SetPositionX(moveLimitX);
+                    StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+                }
+            }
         }
     }
      
