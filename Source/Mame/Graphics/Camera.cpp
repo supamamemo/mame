@@ -66,8 +66,10 @@ void Camera::Update(float elapsedTime)
     NO_CONST DirectX::XMFLOAT3& cameraPos = GetTransform()->GetPosition();
 
     NO_CONST PlayerManager&  playerManager = PlayerManager::Instance();
-    const DirectX::XMFLOAT3& playerPos     = playerManager.GetPlayer()->GetTransform()->GetPosition();
+    NO_CONST DirectX::XMFLOAT3& playerPos     = playerManager.GetPlayer()->GetTransform()->GetPosition();
     const float plLastLandingTerrainMaxY   = playerManager.GetPlayer()->lastLandingTerrainAABB_.max.y;
+
+
 
     // カメラのX位置をプレイヤーのX位置と同期
     if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
@@ -164,8 +166,18 @@ void Camera::Update(float elapsedTime)
             cameraPos.z = (std::max)(targetPositionZ, (cameraPos.z - moveSpeedZ));
         }
     }
+        
+
+    float leftLimit = -8.5f;
+    float playerLeftLimit = -18.6f;
+    // 画面左端は止まるようにする
+    {
+        if (cameraPos.x <= leftLimit)cameraPos.x = leftLimit;
+        if (playerPos.x <= playerLeftLimit)playerPos.x = playerLeftLimit;
+    }
 
     GetTransform()->SetPosition(cameraPos);
+    playerManager.GetPlayer()->GetTransform()->SetPosition(playerPos);
 #endif
 
 }

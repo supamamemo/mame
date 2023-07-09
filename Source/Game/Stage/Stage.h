@@ -4,6 +4,19 @@
 #include "../../Game/Collision.h"
 #include "../../GeometricPrimitive.h"
 
+namespace Mame::Stage
+{
+    enum class TYPE
+    {
+        LOAD,
+        SELECT,
+        TUTORIAL,
+        PLAINS,
+        BOSS,
+        DUMMY,
+    };
+}
+
 class Stage
 {
 public:
@@ -26,7 +39,13 @@ public:
     // 準備完了
     void SetReady() { ready = true; }
     
+    // 今どのステージなのか
+    void SetStageType(int type) { stageType = type; }
+    int GetStageType() { return stageType; }
+
 private:
     bool ready = false;
+
+    int stageType = static_cast<int>(Mame::Stage::TYPE::SELECT);
 };
 

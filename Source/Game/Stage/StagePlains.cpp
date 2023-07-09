@@ -29,6 +29,9 @@ void StagePlains::Initialize()
 {
     StageManager& stageManager = StageManager::Instance();
 
+    // ステージの属性を設定
+    SetStageType(static_cast<int>(Mame::Stage::TYPE::PLAINS));
+
     // 生成
     {
         // terrain生成

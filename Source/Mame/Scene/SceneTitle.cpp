@@ -16,6 +16,9 @@
 #define FADE 1
 #define MAME 1
 
+#include "../../Game/Stage/StageManager.h"
+#include "../../Game/Stage/StageDummy.h"
+
 // コンストラクタ
 SceneTitle::SceneTitle()
 {
@@ -26,6 +29,8 @@ void SceneTitle::Initialize()
 {
     Graphics& graphics = Graphics::Instance();
     Shader* shader = graphics.GetShader();
+
+    StageManager::Instance().ChangeStage(new StageDummy);
 
     // 生成
     {
@@ -129,6 +134,8 @@ void SceneTitle::Initialize()
 // 終了化
 void SceneTitle::Finalize()
 {
+    StageManager::Instance().Clear();
+
     for (std::unique_ptr<TitleEnemyTofu>& titleEnemyTofu : titleEnemyTofu_)
     {
         titleEnemyTofu->Finalize();
@@ -155,6 +162,8 @@ void SceneTitle::Update(const float& elapsedTime)
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     AudioManager& audioManager = AudioManager::Instance();
+
+    StageManager::Instance().Update(elapsedTime);
 
     // camera
 #if MAME
@@ -322,8 +331,8 @@ void SceneTitle::Render(const float& elapsedTime)
     // mameo
     if (spriteDissolve->FadeInReady(0.3f))
     {
-        spriteLoadMameo->render(graphics.GetDeviceContext(), 400.0f, 300.0f,
-            450.0f, 183.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        spriteLoadMameo->render(graphics.GetDeviceContext(), 320.0f, 210.0f,
+            540.0f, 220.2f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
             0, 0, 900.0f, 367.0f);
     }
 }

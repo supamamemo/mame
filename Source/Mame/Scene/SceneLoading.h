@@ -32,7 +32,7 @@ private:
 private:
     std::unique_ptr<SpriteDissolve> spriteDissolve = nullptr;
 
-    std::unique_ptr<SpriteAnimation> spriteAnimation = nullptr;
+    std::unique_ptr<SpriteAnimation> spriteAnimation[2];
 
     BaseScene*      nextScene   = nullptr;
     std::thread*    thread      = nullptr;

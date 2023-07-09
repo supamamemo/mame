@@ -39,6 +39,11 @@ void StageTutorial::Initialize()
 {
     StageManager& stageManager = StageManager::Instance();
 
+    // ステージの属性を設定
+    SetStageType(static_cast<int>(Mame::Stage::TYPE::TUTORIAL));
+
+
+
     // 生成
     {
         // ステージ生成&登録
@@ -118,7 +123,17 @@ void StageTutorial::Initialize()
             uiManager.Register(new UI(L"./resources/tutorial/PC_shift.png"));       // SHIFT
             uiManager.Register(new UI(L"./resources/tutorial/PC_space.png"));       // SPACE
             uiManager.Register(new UI(L"./resources/tutorial/or.png"));             // or
-            uiManager.Register(new UI(L"./resources/tutorial/plus.png"));             // or
+            uiManager.Register(new UI(L"./resources/tutorial/plus.png"));           // plus
+            uiManager.Register(new UI(L"./resources/tutorial/batu.png"));           // batu
+            uiManager.Register(new UI(L"./resources/tutorial/maru.png"));           // maru
+        }
+
+        // 初期設定します
+        {
+            UIManager::Instance().GetUI(UISPRITE::Batu)->SetPosition(DirectX::XMFLOAT3(270, 160, 10));
+            UIManager::Instance().GetUI(UISPRITE::Batu)->SetSize(DirectX::XMFLOAT2(100, 100));
+            UIManager::Instance().GetUI(UISPRITE::Maru)->SetPosition(DirectX::XMFLOAT3(270, 160, 10));
+            UIManager::Instance().GetUI(UISPRITE::Maru)->SetSize(DirectX::XMFLOAT2(100, 100));
         }
     }
 
@@ -828,7 +843,9 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
                     UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetPosition(DirectX::XMFLOAT3(985, 560, uiZ));
                     UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetSize(DirectX::XMFLOAT2(240, 102.4f));
-                }
+                } 
+
+                MarkUpdate(elapsedTime);
             }
         }        
         
@@ -1167,6 +1184,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
                     {
                         StickAnimation(elapsedTime, 0);
                         UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
+                        UIManager::Instance().GetUI(UISPRITE::Batu)->SetIsRender(true);
 
                         UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
@@ -1176,6 +1194,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
                         UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::Batu)->SetIsRender(false);
                     }
 
                     // hipdropAnimation
@@ -1183,6 +1202,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
                     {
                         StickAnimation(elapsedTime, 1);
                         UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(true);
+                        UIManager::Instance().GetUI(UISPRITE::Maru)->SetIsRender(true);
 
                         UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(true);
                         UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(true);
@@ -1192,6 +1212,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
                         UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::Maru)->SetIsRender(false);
 
                         UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
@@ -1210,6 +1231,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
                     {
                         UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(true);
+                        UIManager::Instance().GetUI(UISPRITE::Batu)->SetIsRender(true);
 
                         UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
@@ -1217,12 +1239,14 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
                     else
                     {
                         UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::Batu)->SetIsRender(false);
                     }
 
                     if (isDisplaySignBoard[1])
                     {
                         UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(true);
                         UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::Maru)->SetIsRender(true);
 
                         UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(true);
                         UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(true);
@@ -1232,6 +1256,7 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
                         UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
                         UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
+                        UIManager::Instance().GetUI(UISPRITE::Maru)->SetIsRender(false);
                     }
 
                 }
@@ -1478,4 +1503,57 @@ void StageTutorial::StickAnimation(float elapsedTime, int state)
             break;
         }
     }
+}
+
+void StageTutorial::MarkUpdate(float elapsedTime)
+{
+    DirectX::XMFLOAT3 batuPos = UIManager::Instance().GetUI(UISPRITE::Batu)->GetPosition();
+    DirectX::XMFLOAT3 maruPos = UIManager::Instance().GetUI(UISPRITE::Maru)->GetPosition();
+    DirectX::XMFLOAT2 batuSize = UIManager::Instance().GetUI(UISPRITE::Batu)->GetSize();
+    DirectX::XMFLOAT2 maruSize = UIManager::Instance().GetUI(UISPRITE::Maru)->GetSize();
+
+    markTimer += elapsedTime;
+
+    switch (markState)
+    {
+    case 0:
+        batuPos.x = 270.0f;
+        batuPos.y = 160.0f;
+        maruPos.x = 270.0f;
+        maruPos.y = 160.0f;
+        batuSize.x = 100.0f;
+        batuSize.y = 100.0f;
+        maruSize.x = 100.0f;
+        maruSize.y = 100.0f;
+
+        if (markTimer >= 1.0f)
+        {
+            markTimer = 0.0f;
+            markState = 1;
+        }
+
+        break;
+    case 1:
+        batuPos.x = 245.0f;
+        batuPos.y = 135.0f;
+        maruPos.x = 245.0f;
+        maruPos.y = 135.0f;
+        batuSize.x = 150.0f;
+        batuSize.y = 150.0f;
+        maruSize.x = 150.0f;
+        maruSize.y = 150.0f;
+
+        if (markTimer >= 1.0f)
+        {
+            markTimer = 0.0f;
+            markState = 0;
+        }
+
+        break;
+    }
+
+    UIManager::Instance().GetUI(UISPRITE::Batu)->SetPosition(batuPos);
+    UIManager::Instance().GetUI(UISPRITE::Maru)->SetPosition(maruPos);
+    UIManager::Instance().GetUI(UISPRITE::Batu)->SetSize(batuSize);
+    UIManager::Instance().GetUI(UISPRITE::Maru)->SetSize(maruSize);
 }

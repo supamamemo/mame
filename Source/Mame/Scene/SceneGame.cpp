@@ -22,18 +22,6 @@
 // コンストラクタ
 SceneGame::SceneGame()
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // シーンの属性を設定
-    SetSceneType(static_cast<int>(Mame::Scene::TYPE::GAME));
-
-    spriteDissolve = std::make_unique<SpriteDissolve>();
-    
-
-    // mameo
-    //spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet1.png");
-    spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet2.png");
-
 }
 
 // 初期化
@@ -41,7 +29,18 @@ void SceneGame::Initialize()
 {
     Graphics& graphics = Graphics::Instance();
     Shader* shader = graphics.GetShader();
+
     
+    // シーンの属性を設定
+    SetSceneType(static_cast<int>(Mame::Scene::TYPE::GAME));
+
+    {
+        spriteDissolve = std::make_unique<SpriteDissolve>();
+
+        // mameo
+        spriteLoadMameo = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/mameo_Sheet2.png");
+    }
+
     // カメラの位置リセット
     shader->Initialize();
 
@@ -183,8 +182,8 @@ void SceneGame::Render(const float& elapsedTime)
     // mameo
     if (!spriteDissolve->FadeOutReady(0.5f))
     {
-        spriteLoadMameo->render(graphics.GetDeviceContext(), 400.0f, 300.0f,
-            450.0f, 183.5f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
+        spriteLoadMameo->render(graphics.GetDeviceContext(), 320.0f, 210.0f,
+            540.0f, 220.2f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f,
             0, 0, 900.0f, 367.0f);
     }
 }

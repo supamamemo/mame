@@ -46,6 +46,8 @@ private:
         KeyBoardSPACE,
         SpriteOR,       // or
         Plus,           // +
+        Batu,
+        Maru,
     };
 
     enum STATE
@@ -85,6 +87,10 @@ private:
     void StickStateDown(float elapsedTime);
    
     void StickAnimation(float elapsedTime, int state);
+
+    void MarkUpdate(float elapsedTime);
+    int markState = 0;
+    float markTimer = 0.0f;
 
 private:
     std::unique_ptr<Box> back = nullptr;

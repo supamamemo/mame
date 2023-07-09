@@ -27,6 +27,9 @@ void StageBoss::Initialize()
 
     StageManager& stageManager = StageManager::Instance();
 
+    // ステージの属性を設定
+    SetStageType(static_cast<int>(Mame::Stage::TYPE::BOSS));
+
     // 生成
     {
         // ステージ生成&登録
