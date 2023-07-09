@@ -49,9 +49,6 @@ void StageBoss::Initialize()
         // bossê∂ê¨
         EnemyManager::Instance().Register(new Boss());
 
-        // bossÇÃhpóp
-        chefHat = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/chefHat.png");
-
         // îwåiâº
         back = std::make_unique<Box>("./resources/back.fbx");
 
@@ -64,6 +61,10 @@ void StageBoss::Initialize()
             UIManager::Instance().Register(new UI(L"./resources/ui/mameRight.png"));
 
             // bossHP
+            UIManager::Instance().Register(new UI(L"./resources/ui/baseBossHp.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/bossLeft.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/bossCenter.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/bossRight.png"));
 
             UIManager::Instance().Initialize();
         }
@@ -133,10 +134,24 @@ void StageBoss::Initialize()
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetPosition(playerUiPos);
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetSize(playerUiSize);
 
+        UIManager::Instance().GetUI(UISPRITE::BaseBossHp)->SetPosition(bossUiPos);
+        UIManager::Instance().GetUI(UISPRITE::BaseBossHp)->SetSize(bossUiSize);
+        UIManager::Instance().GetUI(UISPRITE::BossHpLeft)->SetPosition(bossUiPos);
+        UIManager::Instance().GetUI(UISPRITE::BossHpLeft)->SetSize(bossUiSize);
+        UIManager::Instance().GetUI(UISPRITE::BossHpCenter)->SetPosition(bossUiPos);
+        UIManager::Instance().GetUI(UISPRITE::BossHpCenter)->SetSize(bossUiSize);
+        UIManager::Instance().GetUI(UISPRITE::BossHpRight)->SetPosition(bossUiPos);
+        UIManager::Instance().GetUI(UISPRITE::BossHpRight)->SetSize(bossUiSize);
+
         UIManager::Instance().GetUI(UISPRITE::BaseMameHp)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpLeft)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetIsRender(true);
+
+        UIManager::Instance().GetUI(UISPRITE::BaseBossHp)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::BossHpLeft)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::BossHpCenter)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::BossHpRight)->SetIsRender(true);
 
         UIManager::Instance().Initialize();
     }
@@ -250,7 +265,7 @@ void StageBoss::Update(const float& elapsedTime)
     PlayerHpUiUpdate(elapsedTime);
 
     // bossHp
-
+    BossHpUiUpdate(elapsedTime);
 }
 
 // UpdateÇÃå„Ç…åƒÇŒÇÍÇÈèàóù
@@ -285,13 +300,8 @@ void StageBoss::Render(const float& elapsedTime)
     // bossï`âÊ
     EnemyManager::Instance().Render(elapsedTime);
 
-    //playerHp
+    //playerHp & bossHp
     UIManager::Instance().Render(elapsedTime);
-
-    // bossHp
-    shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
-    chefHat->render(graphics.GetDeviceContext(), spr.pos.x, spr.pos.y, spr.texPos.x, spr.texPos.y);
-
 }
 
 // debugóp
@@ -308,20 +318,11 @@ void StageBoss::DrawDebug()
     // boss
     EnemyManager::Instance().DrawDebug();
 
-    // bossHp
-    
-
     // îwåiâº
     back->DrawDebug();
 
     // ui
     UIManager::Instance().DrawDebug();
-
-    ImGui::Begin("spr");
-    ImGui::DragFloat2("pos", &spr.pos.x);
-    ImGui::DragFloat2("texPos", &spr.texPos.x);
-    ImGui::End();
-
 #endif
 }
 
@@ -334,7 +335,7 @@ void StageBoss::PlayerHpUiUpdate(float elapsedTime)
         SetUiState();
         UIManager::Instance().SetUiCenter(false);
     }
-    UpdateUi(3, 1.0f, uiState, elapsedTime);
+    PlayerUpdateUi(3, 1.0f, uiState, elapsedTime);
 
 
     switch (health)
@@ -351,7 +352,7 @@ void StageBoss::PlayerHpUiUpdate(float elapsedTime)
     }
 }
 
-void StageBoss::UpdateUi(int uiCount, float speed, int state, float elapsedTime)
+void StageBoss::PlayerUpdateUi(int uiCount, float speed, int state, float elapsedTime)
 {
     switch (state)
     {
@@ -397,4 +398,34 @@ void StageBoss::UpdateUi(int uiCount, float speed, int state, float elapsedTime)
         }
         break;
     }
+}
+
+void StageBoss::BossHpUiUpdate(float elapsedTime)
+{
+    int health = EnemyManager::Instance().GetEnemy(0)->GetHealth();
+
+    //if (UIManager::Instance().GetUiCenter())
+    //{
+    //    SetUiState();
+    //    UIManager::Instance().SetUiCenter(false);
+    //}
+    //PlayerUpdateUi(3, 1.0f, uiState, elapsedTime);
+
+
+    switch (health)
+    {
+    case 0:
+        UIManager::Instance().GetUI(UISPRITE::BossHpLeft)->SetIsRender(false);
+        break;
+    case 1:
+        UIManager::Instance().GetUI(UISPRITE::BossHpCenter)->SetIsRender(false);
+        break;
+    case 2:
+        UIManager::Instance().GetUI(UISPRITE::BossHpRight)->SetIsRender(false);
+        break;
+    }
+}
+
+void StageBoss::BossUpdateUi(int uiCount, float speed, int state, float elapsedTime)
+{
 }

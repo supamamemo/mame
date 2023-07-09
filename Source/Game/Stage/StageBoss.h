@@ -12,7 +12,6 @@
 #include "../EnemyTofu.h"
 #include "../Terrain/Terrain.h"
 
-#include "../../sprite.h"
 
 class StageBoss : public Stage
 {
@@ -33,22 +32,15 @@ private:
     
     std::unique_ptr<Box> back;
 
-    std::unique_ptr<EnemyTofu> tofu;
-
-    std::unique_ptr<Sprite> chefHat = nullptr;
-
-    struct SpriteStruct
-    {
-        DirectX::XMFLOAT2 pos{ 440,10 };
-        DirectX::XMFLOAT2 texPos{ 100,100 };
-    }spr;
-
     bool isEnemyUpdate_ = false;
 
 public:
     // UI関連（急ぎで作ってるからコメントなしでごめん。。）
     void PlayerHpUiUpdate(float elapsedTime);    // プレイヤーhpUI管理
-    void UpdateUi(int uiCount, float speed, int state, float elapsedTime);
+    void PlayerUpdateUi(int uiCount, float speed, int state, float elapsedTime);
+
+    void BossHpUiUpdate(float elapsedTime);
+    void BossUpdateUi(int uiCount, float speed, int state, float elapsedTime);
 
     int uiState = -1;
     void SetUiState() { uiState = 0; }
@@ -60,6 +52,9 @@ public:
 
     DirectX::XMFLOAT3 playerUiPos = { 10, 10 ,10 };
     DirectX::XMFLOAT2 playerUiSize = { 344, 160 };
+
+    DirectX::XMFLOAT3 bossUiPos = { 815,30,10 };
+    DirectX::XMFLOAT2 bossUiSize = { 440,160 };
 
     void subtractUiTimer(float time) { uiTimer -= time; }
     void SetUiTimer(float time) { uiTimer = time; }
@@ -75,6 +70,10 @@ private:
         mameHpLeft,
         mameHpCenter,
         mameHpRight,
+        BaseBossHp,
+        BossHpLeft,
+        BossHpCenter,
+        BossHpRight,
     };
 
 };
