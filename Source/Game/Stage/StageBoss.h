@@ -30,10 +30,8 @@ public:
 
 private:
     //static const int TERRAIN_COUNT = 3;
-
     
     std::unique_ptr<Box> back;
-
 
     std::unique_ptr<EnemyTofu> tofu;
 
@@ -44,6 +42,8 @@ private:
         DirectX::XMFLOAT2 pos{ 440,10 };
         DirectX::XMFLOAT2 texPos{ 100,100 };
     }spr;
+
+    bool isEnemyUpdate_ = false;
 
 public:
     // UI関連（急ぎで作ってるからコメントなしでごめん。。）

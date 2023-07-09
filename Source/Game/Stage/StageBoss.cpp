@@ -11,6 +11,8 @@
 
 #include "../UIManager.h"
 
+#include "../BossStateDerived.h"
+
 // コンストラクタ
 StageBoss::StageBoss()
 {
@@ -140,7 +142,7 @@ void StageBoss::Initialize()
     }
 
     AudioManager& audioManager = AudioManager::Instance();
-    audioManager.PlayBGM(BGM::Boss, true); // ボスBGM再生
+    audioManager.PlayBGM(BGM::Boss_Back, true); // ボス戦環境音BGM再生
 }
 
 // 終了化
@@ -191,11 +193,28 @@ void StageBoss::Update(const float& elapsedTime)
         PlayerManager& playerManager = PlayerManager::Instance();
         playerManager.Update(elapsedTime);
 
-        if (PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x >= -11.0f
-            && Camera::Instance().GetTransform()->GetPosition().x == 0.0f)
+        if (!isEnemyUpdate_)
+        {
+            if (PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x >= -11.0f
+                && Camera::Instance().GetTransform()->GetPosition().x == 0.0f)
+            {
+                isEnemyUpdate_ = true;
+            }
+        }
+        else
         {
             // enemy更新
-            EnemyManager::Instance().Update(elapsedTime);
+            EnemyManager& enemyManager = EnemyManager::Instance();
+            enemyManager.Update(elapsedTime);
+
+            // ボスが歩行ステートなら歩行SE再生
+            const int bossCurrentState = enemyManager.GetEnemy(0)->GetStateMachine()->GetStateIndex();
+            const int bossStateWalk    = static_cast<int>(BOSS::STATE::Walk);
+            if (bossCurrentState == bossStateWalk)
+            {
+                AudioManager& audioManager = AudioManager::Instance();
+                audioManager.PlaySE(SE::Boss_Walk, true); // 歩行SE再生
+            }
         }
 
         Camera::Instance().UpdateBoss(elapsedTime);
