@@ -144,6 +144,7 @@ void StageTutorial::Initialize()
 
         terrainManager.GetTerrain(Zimen7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(80.0, 0.0f, 10.0f));
         terrainManager.GetTerrain(Zimen8)->GetTransform()->SetPosition(DirectX::XMFLOAT3(57.0, 0.0f, 10.0f));
+        terrainManager.GetTerrain(Zimen8)->GetTransform()->SetRotation(DirectX::XMFLOAT4(0.0f, DirectX::XMConvertToRadians(180), 0.0f, 0.0f));
 
         terrainManager.GetTerrain(SignBoard_yazi0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 3, 10.5f));
         terrainManager.GetTerrain(SignBoard_yazi0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));

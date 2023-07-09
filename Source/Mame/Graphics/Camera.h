@@ -78,6 +78,8 @@ public:
     void SetCameraMoveY() { cameraMoveY = 0; }
     void SetIsShake() { isShake_ = false; }
 
+    void SetLength(float l) { length = l; }
+
 private:
     Transform transform{};
 

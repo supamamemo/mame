@@ -580,8 +580,20 @@ void StagePlains::SetTerrains(TerrainManager& terrainManager)
     terrainManager.GetTerrain(41)->GetTransform()->SetPosition(DirectX::XMFLOAT3(266.2f,    11.4f,  10.0f));
     terrainManager.GetTerrain(42)->GetTransform()->SetPosition(DirectX::XMFLOAT3(279.650f, -1.2f,   10.0f));
 
+    // 反対向かせる
+    terrainManager.GetTerrain(4)->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180));
+    terrainManager.GetTerrain(10)->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180));
+    terrainManager.GetTerrain(16)->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180));
+    terrainManager.GetTerrain(18)->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180));
+    terrainManager.GetTerrain(20)->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180));
+    terrainManager.GetTerrain(22)->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180));
+    terrainManager.GetTerrain(35)->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180));
+    terrainManager.GetTerrain(37)->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180));
+    terrainManager.GetTerrain(39)->GetTransform()->SetRotationY(DirectX::XMConvertToRadians(180));
+
     // 立て看板
     {
+        // 位置
         terrainManager.GetTerrain(43)->GetTransform()->SetPosition(DirectX::XMFLOAT3(2.75f,  3.0f, 10.6f));
         terrainManager.GetTerrain(44)->GetTransform()->SetPosition(DirectX::XMFLOAT3(41.25f, 8.4f, 10.6f));
         terrainManager.GetTerrain(45)->GetTransform()->SetPosition(DirectX::XMFLOAT3(57.0f,  8.4f, 10.6f));
@@ -590,6 +602,17 @@ void StagePlains::SetTerrains(TerrainManager& terrainManager)
         terrainManager.GetTerrain(48)->GetTransform()->SetPosition(DirectX::XMFLOAT3(168.0f, 2.7f, 10.6f));
         terrainManager.GetTerrain(49)->GetTransform()->SetPosition(DirectX::XMFLOAT3(208.5f, 4.5f, 10.6f));
         terrainManager.GetTerrain(50)->GetTransform()->SetPosition(DirectX::XMFLOAT3(257.5f, 6.8f, 10.6f));
+
+        // サイズ
+        const float size = 2.0f;
+        terrainManager.GetTerrain(43)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
+        terrainManager.GetTerrain(44)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
+        terrainManager.GetTerrain(45)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
+        terrainManager.GetTerrain(46)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
+        terrainManager.GetTerrain(47)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
+        terrainManager.GetTerrain(48)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
+        terrainManager.GetTerrain(49)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
+        terrainManager.GetTerrain(50)->GetTransform()->SetScale(DirectX::XMFLOAT3(size, size, size));
 
         // 裏返す
         terrainManager.GetTerrain(43)->GetTransform()->SetRotationY(ToRadian(180.0f));

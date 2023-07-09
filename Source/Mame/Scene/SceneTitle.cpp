@@ -67,11 +67,11 @@ void SceneTitle::Initialize()
 
 
  
-    // カメラ位置リセット
-    shader->Initialize();
-    
+    // カメラ位置リセット    
     Camera& camera = Camera::Instance();
     camera.SetAngle(0.0f);
+    camera.GetTransform()->SetPositionY(24.0f);
+    camera.SetLength(45.0f);
 
     // fadeout用
 #if FADE
@@ -163,13 +163,38 @@ void SceneTitle::Update(const float& elapsedTime)
     spriteDissolve->Update();
 
     // ボタンを押したらfadeOut始まる
-    if (gamePad.GetButtonDown() & GamePad::BTN_A)spriteDissolve->SetFade(true);
+
+    const GamePadButton anyButton =
+        GamePad::BTN_UP
+        | GamePad::BTN_RIGHT
+        | GamePad::BTN_DOWN
+        | GamePad::BTN_LEFT
+        | GamePad::BTN_A
+        | GamePad::BTN_B
+        | GamePad::BTN_X
+        | GamePad::BTN_Y
+        | GamePad::BTN_LEFT_SHOULDER
+        | GamePad::BTN_RIGHT_SHOULDER
+        | GamePad::BTN_LEFT_THUMB
+        | GamePad::BTN_RIGHT_THUMB
+        | GamePad::BTN_LEFT_TRIGGER
+        | GamePad::BTN_RIGHT_TRIGGER;
+    const float aLx = gamePad.GetAxisLX();
+    const float aLy = gamePad.GetAxisLY();
+    const float aRx = gamePad.GetAxisRX();
+    const float aRy = gamePad.GetAxisRY();
+    if (gamePad.GetButtonDown() & anyButton ||
+        (aLx > 0.7f) || (aLx < -0.7f) || (aLy > 0.7f) || (aLy < -0.7f) ||
+        (aRx > 0.7f) || (aRx < -0.7f) || (aRy > 0.7f) || (aRy < -0.7f))
+    {
+        spriteDissolve->SetFade(true);
+    }
 
 
     // todo:後で消す
 #ifdef _DEBUG
-    if (gamePad.GetButtonDown() & GamePad::BTN_X)camera.SetDebugCamera();
-    if (gamePad.GetButtonDown() & GamePad::BTN_Y)camera.SetDebugCamera1();
+    //if (gamePad.GetButtonDown() & GamePad::BTN_X)camera.SetDebugCamera();
+    //if (gamePad.GetButtonDown() & GamePad::BTN_Y)camera.SetDebugCamera1();
 #endif // _DEBUG
 
 
