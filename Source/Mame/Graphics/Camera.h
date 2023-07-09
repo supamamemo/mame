@@ -102,6 +102,8 @@ private:
     bool cameraUp = false; // ƒJƒƒ‰ã¸‚·‚é‚©
     bool cameraDown = false;
 
+    float coordinatesY = 0;
+
     // tutorial—p
     int tutorialState = 0;
 
@@ -116,5 +118,7 @@ private:
         Free,
         GoalState,
     };
+
+
 };
 

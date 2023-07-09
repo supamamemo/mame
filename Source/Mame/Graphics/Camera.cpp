@@ -77,6 +77,7 @@ void Camera::Update(float elapsedTime)
 
     if (playerManager.GetPlayer()->GetState() != Player::State::Clear)
     {
+#if 0
         const    float moveSpeedY      = 5.0f * elapsedTime;    // 移動速度Y
         NO_CONST float targetPositionY = 0.0f;                  // 目標位置Y
 
@@ -110,6 +111,33 @@ void Camera::Update(float elapsedTime)
             // カメラ下移動・超過修正(右が左より大きければ右を代入)
             cameraPos.y = (std::max)(targetPositionY, cameraPos.y - moveSpeedY);
         }
+#endif
+
+
+
+        if (playerPos.x < 37.0f)coordinatesY = 8.0f;
+        if ((playerPos.x > 31.0f && playerPos.x <= 36.7f)&& playerPos.y > 6.1f)coordinatesY = 9.0f;
+        if ((playerPos.x > 36.7f && playerPos.x < 60.0f) && playerPos.y > 7.6f)coordinatesY = 11.0f;
+        if ((playerPos.x > 60.1f && playerPos.x < 63.5f) && playerPos.y > 6.4f)coordinatesY = 10.0f;
+        if (playerPos.x > 65.0f)coordinatesY = 8.0f;
+        if ((playerPos.x > 98.0f && playerPos.y > 7.4f))coordinatesY = 10.0f;
+        if ((playerPos.x > 121.0f && playerPos.x < 128.0f) && playerPos.y > 7.4f)coordinatesY = 10.0f;
+        if ((playerPos.x > 140.0f && playerPos.x < 145.0f) && playerPos.y > 7.0f)coordinatesY = 10.0f;
+        if ((playerPos.x > 223.0f) && playerPos.y > 7.0f)coordinatesY = 8.0f;
+        
+
+        if (cameraPos.y >= coordinatesY)
+        {
+            cameraPos.y -= elapsedTime * 5;
+            if (cameraPos.y <= coordinatesY)cameraPos.y = coordinatesY;
+        }
+        else if (cameraPos.y < coordinatesY)
+        {
+            cameraPos.y += elapsedTime * 5;
+            if (cameraPos.y >= coordinatesY)cameraPos.y = coordinatesY;
+        }
+        
+
     }
     // プレイヤーのステートがクリアステートならカメラを寄せる
     else
