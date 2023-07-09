@@ -127,6 +127,14 @@ void EnemyManager::AllKill()
     for (Enemy*& enemy : enemies)
     {
         enemy->ApplyDamage(999, 1.0f);
+
+        // ヒットSEを再生
+        if (enemy->IsInLengthPlayer(Enemy::playSELengthXLimit_))
+        {
+            AudioManager& audioManager = AudioManager::Instance();
+            audioManager.StopSE(SE::PL_BounceHit);
+            audioManager.PlaySE(SE::PL_BounceHit, false, true);
+        }
     }
 }
 
@@ -170,9 +178,13 @@ void EnemyManager::CollisionEnemyVsEnemy()
                         enemyB->SetMoveDirectionX(enemyA->GetMoveDirectionX());
                         enemyB->ApplyDamage(1, 1.0f);
 
-                        AudioManager& audioManager = AudioManager::Instance();
-                        audioManager.StopSE(SE::PL_BounceHit);              // バウンスヒットSE停止
-                        audioManager.PlaySE(SE::PL_BounceHit, false, true); // バウンスヒットSE再生
+                        // ヒットSEを再生
+                        if (enemyB->IsInLengthPlayer(Enemy::playSELengthXLimit_))
+                        {
+                            AudioManager& audioManager = AudioManager::Instance();
+                            audioManager.StopSE(SE::PL_BounceHit);              // バウンスヒットSE停止
+                            audioManager.PlaySE(SE::PL_BounceHit, false, true); // バウンスヒットSE再生
+                        }
                     }
                 }
                 // エネミーBが赤豆腐で追跡中ならエネミーAを吹き飛ばす
@@ -184,9 +196,13 @@ void EnemyManager::CollisionEnemyVsEnemy()
                         enemyA->SetMoveDirectionX(enemyB->GetMoveDirectionX());
                         enemyA->ApplyDamage(1, 1.0f);
 
-                        AudioManager& audioManager = AudioManager::Instance();
-                        audioManager.StopSE(SE::PL_BounceHit);              // バウンスヒットSE停止
-                        audioManager.PlaySE(SE::PL_BounceHit, false, true); // バウンスヒットSE再生
+                        // ヒットSEを再生
+                        if (enemyA->IsInLengthPlayer(Enemy::playSELengthXLimit_))
+                        {
+                            AudioManager& audioManager = AudioManager::Instance();
+                            audioManager.StopSE(SE::PL_BounceHit);              // バウンスヒットSE停止
+                            audioManager.PlaySE(SE::PL_BounceHit, false, true); // バウンスヒットSE再生
+                        }
                     }
                 }
 
