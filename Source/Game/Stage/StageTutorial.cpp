@@ -419,16 +419,13 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         // 次に行く条件
         if (playerPos.x > -3.8f)
         {
-            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            // UI
             {
                 UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
-            }
-            else
-            {
                 UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
@@ -478,16 +475,12 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         // 次に行く条件
         if (playerPos.x >= 1.0f)
         {
-            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            // UI
             {
                 UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
-            }
-            else
-            {
-                UIManager::Instance().GetUI(UISPRITE::Bubble)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
             }
 
@@ -772,7 +765,7 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         // 次に行く条件
         if (playerPos.x >= 16.0f)
         {
-            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            // UI
             {
                 UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
@@ -782,10 +775,6 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
                 UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::GamePadB)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
-                UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(false);
-            }
-            else
-            {
                 UIManager::Instance().GetUI(UISPRITE::BubbleBig)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::KeyBoardS)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::KeyBoardSPACE)->SetIsRender(false);
@@ -872,7 +861,7 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
         // 次に行く条件
         if (playerPos.x >= 35.0f)
         {
-            if (GamePad::GAMEPAD_OR_KEYBOARD == 0)
+            // UI
             {
                 UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
@@ -884,9 +873,6 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
                 UIManager::Instance().GetUI(UISPRITE::GamePadY)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::SpriteOR)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::Plus)->SetIsRender(false);
-            }
-            else
-            {
                 UIManager::Instance().GetUI(UISPRITE::BubbleBigBig)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::KeyBoardA)->SetIsRender(false);
                 UIManager::Instance().GetUI(UISPRITE::KeyBoardD)->SetIsRender(false);
@@ -1143,6 +1129,10 @@ void StageTutorial::TutorialStateRender(float elapsedTime)
                 }
                 else
                 {
+                    UIManager::Instance().GetUI(UISPRITE::StickBase)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::StickCenter)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::StickRight)->SetIsRender(false);
+                    UIManager::Instance().GetUI(UISPRITE::StickLeft)->SetIsRender(false);
                     UIManager::Instance().GetUI(UISPRITE::BubbleStick)->SetIsRender(false);
                     UIManager::Instance().GetUI(UISPRITE::GamePadA)->SetIsRender(false);
 

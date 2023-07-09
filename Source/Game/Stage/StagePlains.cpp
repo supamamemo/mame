@@ -45,7 +45,8 @@ void StagePlains::Initialize()
 
         // îwåi
         Box::nameNum = 0;
-        back = std::make_unique<Box>("./resources/back.fbx");
+        //back = std::make_unique<Box>("./resources/back.fbx");
+        back = std::make_unique<Box>("./resources/tutorialBack.fbx");
 
         // ÉSÅ[Éã
         goal_ = std::make_unique<Box>("./resources/stage/goal.fbx");
@@ -91,7 +92,7 @@ void StagePlains::Initialize()
 
     // îwåi
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 5, 12));
-    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 12, 6));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 12, 10));
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
 
     // ÉSÅ[Éã
