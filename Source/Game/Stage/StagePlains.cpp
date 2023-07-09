@@ -117,7 +117,9 @@ void StagePlains::Initialize()
     }
     
     // BGM再生
-    AudioManager::Instance().PlayBGM(BGM::Stage, true);
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::StagePlains,      true);  // 草原ステージBGM再生
+    audioManager.PlayBGM(BGM::StagePlains_Back, true);  // 草原ステージの環境音BGM再生
 }
 
 // 終了化

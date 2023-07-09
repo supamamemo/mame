@@ -46,7 +46,7 @@ StageSelection::StageSelection()
     PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 
     AudioManager& audioManager = AudioManager::Instance();
-    audioManager.PlayBGM(BGM::Tutorial, true); // チュートリアルBGM再生
+    audioManager.PlayBGM(BGM::StageSelection, true); // ステージセレクトBGM再生
 
 }
 
@@ -135,6 +135,10 @@ void StageSelection::Initialize()
         //playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1.5f, 0.0f));
         playerManager.Initialize();
     }
+
+    // BGM再生
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::StageSelection, true);  // ステージセレクトBGM再生
 }
 
 // 終了化
@@ -161,6 +165,8 @@ void StageSelection::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
+    AudioManager& audioManager = AudioManager::Instance();
+
     // boss
     boss->SelectBossUpdate(elapsedTime);
 
@@ -182,6 +188,10 @@ void StageSelection::Update(const float& elapsedTime)
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
             StageManager::Instance().ChangeStage(new StageLoading(new StageTutorial));
+
+            audioManager.StopSE(SE::Select);
+            audioManager.PlaySE(SE::Select, false, true); // 選択SE再生
+            break;
         }
 
         break;
@@ -194,6 +204,11 @@ void StageSelection::Update(const float& elapsedTime)
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
             StageManager::Instance().ChangeStage(new StageLoading(new StagePlains));
+
+            audioManager.StopSE(SE::Select);
+            audioManager.PlaySE(SE::Select, false, true); // 選択SE再生
+
+            break;
         }
 
         break;
@@ -206,6 +221,11 @@ void StageSelection::Update(const float& elapsedTime)
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
             StageManager::Instance().ChangeStage(new StageLoading(new StageBoss));
+
+            audioManager.StopSE(SE::Select);
+            audioManager.PlaySE(SE::Select, false, true); // 選択SE再生
+
+            break;
         }
 
         break;

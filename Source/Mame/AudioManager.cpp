@@ -6,15 +6,22 @@ void AudioManager::LoadAudio()
     {
         // BGMì«Ç›çûÇ›
         {
-            bgm_[static_cast<int>(BGM::Title)    ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/Title.wav");
-            bgm_[static_cast<int>(BGM::Tutorial) ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/Tutorial.wav");
-            bgm_[static_cast<int>(BGM::Stage)    ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/Stage.wav");
-            bgm_[static_cast<int>(BGM::Boss)     ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/Boss.wav");
-            bgm_[static_cast<int>(BGM::Boss_Back)] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/BossBackSound.wav");
+            bgm_[static_cast<int>(BGM::Title)           ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/Title.wav");
+            bgm_[static_cast<int>(BGM::StageTutorial)   ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StageTutorial.wav");
+            bgm_[static_cast<int>(BGM::StageSelection)  ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StageSelection.wav");
+            bgm_[static_cast<int>(BGM::StagePlains)     ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StagePlains.wav");
+            bgm_[static_cast<int>(BGM::StagePlains_Back)] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StagePlainsBackSound.wav");
+            bgm_[static_cast<int>(BGM::StageBoss)       ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StageBoss.wav");
+            bgm_[static_cast<int>(BGM::StageBoss_Back)  ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StageBossBackSound.wav");
+            bgm_[static_cast<int>(BGM::StageClear)      ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/Jingle/StageClear.wav");
         }
 
         // SEì«Ç›çûÇ›
         {
+            // Select
+            se_[static_cast<int>(SE::Select)      ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Select/Select.wav");
+            se_[static_cast<int>(SE::SelectStage) ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Select/SelectStage.wav");
+            
             // Player
             se_[static_cast<int>(SE::PL_Walk)     ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerWalk.wav");
             se_[static_cast<int>(SE::PL_Dash)     ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerDash.wav");
@@ -22,9 +29,15 @@ void AudioManager::LoadAudio()
             se_[static_cast<int>(SE::PL_Brake)    ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerBrake.wav");
             se_[static_cast<int>(SE::PL_Jump)     ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerJump.wav");
             se_[static_cast<int>(SE::PL_Landing)  ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerLanding.wav");
-            se_[static_cast<int>(SE::PL_Bounce)   ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerBounce1.wav");
+            se_[static_cast<int>(SE::PL_Bounce)   ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerBounce.wav");
             se_[static_cast<int>(SE::PL_BounceHit)] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerBounceHit.wav");
             se_[static_cast<int>(SE::PL_Damaged)  ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerDamaged.wav");
+            se_[static_cast<int>(SE::PL_Death)    ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Player/PlayerDeath.wav");
+            
+            // Tofu
+            //se_[static_cast<int>(SE::Tofu_Walk)   ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Tofu/TofuWalk.wav");
+            //se_[static_cast<int>(SE::Tofu_Run)    ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Tofu/TofuRun.wav");
+            se_[static_cast<int>(SE::Tofu_Find)   ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Tofu/TofuFind.wav");
 
             // Boss
             se_[static_cast<int>(SE::Boss_Walk)   ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/SE/Boss/BossWalk.wav");
@@ -41,14 +54,16 @@ void AudioManager::LoadAudio()
     {    
         // BGMâπó í≤êÆ
         {
-            bgm_[static_cast<int>(BGM::Boss)      ]->Volume(0.65f);
-            bgm_[static_cast<int>(BGM::Boss_Back) ]->Volume(0.25f);
+            bgm_[static_cast<int>(BGM::Title)           ]->Volume(0.75f);
+            bgm_[static_cast<int>(BGM::StagePlains_Back)]->Volume(0.5f);
+            bgm_[static_cast<int>(BGM::StageBoss)       ]->Volume(0.65f);
+            bgm_[static_cast<int>(BGM::StageBoss_Back)  ]->Volume(0.25f);
         }
 
         // SEâπó í≤êÆ
         {
             // Player
-            se_[static_cast<int>(SE::PL_Walk)     ]->Volume(0.5f);
+            se_[static_cast<int>(SE::PL_Walk)     ]->Volume(0.6f);
             se_[static_cast<int>(SE::PL_Dash)     ]->Volume(0.75f);
             se_[static_cast<int>(SE::PL_Run)      ]->Volume(0.75f);
             se_[static_cast<int>(SE::PL_Brake)    ]->Volume(0.5f);
@@ -57,6 +72,12 @@ void AudioManager::LoadAudio()
             se_[static_cast<int>(SE::PL_Bounce)   ]->Volume(0.5f);
             se_[static_cast<int>(SE::PL_BounceHit)]->Volume(1.0f);
             se_[static_cast<int>(SE::PL_Damaged)  ]->Volume(2.0f);
+            se_[static_cast<int>(SE::PL_Death)    ]->Volume(0.75f);
+
+            // Tofu
+            //se_[static_cast<int>(SE::Tofu_Walk)   ]->Volume(0.75f);
+            //se_[static_cast<int>(SE::Tofu_Run)    ]->Volume(0.75f);
+            se_[static_cast<int>(SE::Tofu_Find)    ]->Volume(0.5f);
 
             // Boss
             se_[static_cast<int>(SE::Boss_Walk)   ]->Volume(2.5f);
@@ -92,15 +113,16 @@ void AudioManager::StopSE(const SE& se)
 
 void AudioManager::StopPlayerMoveSE()
 {
-    se_[static_cast<int>(SE::PL_Walk)]->Stop();
-    //se_[static_cast<int>(SE::PL_Dash)]->Stop();
-    se_[static_cast<int>(SE::PL_Run)]->Stop();
+    se_[static_cast<int>(SE::PL_Walk) ]->Stop();
+    se_[static_cast<int>(SE::PL_Run)  ]->Stop();
     se_[static_cast<int>(SE::PL_Brake)]->Stop();
-    se_[static_cast<int>(SE::PL_Jump)]->Stop();
-    //se_[static_cast<int>(SE::PL_Landing)]->Stop();
-    //se_[static_cast<int>(SE::PL_Bounce)]->Stop();
-    //se_[static_cast<int>(SE::PL_BounceHit)]->Stop();
-    //se_[static_cast<int>(SE::PL_Damaged)]->Stop();
+    se_[static_cast<int>(SE::PL_Jump) ]->Stop();
+}
+
+void AudioManager::StopTofuMoveSE()
+{
+    //se_[static_cast<int>(SE::Tofu_Walk)]->Stop();
+    //se_[static_cast<int>(SE::Tofu_Run) ]->Stop();
 }
 
 

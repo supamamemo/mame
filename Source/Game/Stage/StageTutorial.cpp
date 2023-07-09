@@ -207,7 +207,7 @@ void StageTutorial::Initialize()
 
 
     AudioManager& audioManager = AudioManager::Instance();
-    audioManager.PlayBGM(BGM::Tutorial, true); // チュートリアルBGM再生
+    audioManager.PlayBGM(BGM::StageTutorial, true); // チュートリアルBGM再生
 }
 
 // 終了

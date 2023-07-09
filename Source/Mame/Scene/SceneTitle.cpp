@@ -228,6 +228,8 @@ void SceneTitle::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
+    AudioManager& audioManager = AudioManager::Instance();
+
     // camera
 #if MAME
     Camera& camera = Camera::Instance();
@@ -237,8 +239,13 @@ void SceneTitle::Update(const float& elapsedTime)
     spriteDissolve->Update();
 
     // ボタンを押したらfadeOut始まる
-    if (gamePad.GetButtonDown() & GamePad::BTN_A)spriteDissolve->SetFade(true);
+    if (gamePad.GetButtonDown() & GamePad::BTN_A)
+    {      
+        spriteDissolve->SetFade(true);
 
+        audioManager.StopSE(SE::Select);
+        audioManager.PlaySE(SE::Select, false, true); // 選択SE再生
+    }
 
     // todo:後で消す
 #ifdef _DEBUG

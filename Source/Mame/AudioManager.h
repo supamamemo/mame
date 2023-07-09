@@ -10,16 +10,23 @@
 enum class BGM
 {
     Title,
-    Tutorial,
-    Stage,
-    Boss,
-    Boss_Back, // ボス戦の環境音
+    StageTutorial,
+    StageSelection,
+    StagePlains,
+    StagePlains_Back,   // 草原ステージの環境音
+    StageBoss,
+    StageBoss_Back,     // ボスステージの環境音
+
+    StageClear,
 
     BGM_Max,
 };
 
 enum class SE
 {
+    Select,
+    SelectStage,
+
     PL_Walk,
     PL_Dash,
     PL_Run,
@@ -29,6 +36,11 @@ enum class SE
     PL_Bounce,
     PL_BounceHit,
     PL_Damaged,
+    PL_Death,
+
+    //Tofu_Walk,
+    //Tofu_Run,
+    Tofu_Find,
 
     Boss_Walk,
     Boss_Run,
@@ -73,7 +85,8 @@ public:
     void StopBGM(const BGM& bgm);                   // BGM停止
     void StopSE(const SE& se);                      // SE停止
 
-    void StopPlayerMoveSE();                     // プレイヤーの行動SE停止
+    void StopPlayerMoveSE();                        // プレイヤーの行動SE停止
+    void StopTofuMoveSE();                         // 豆腐の行動SE停止
 
     void StopAllBGM();                              // 全BGM停止
     void StopAllSE();                               // 全SE停止

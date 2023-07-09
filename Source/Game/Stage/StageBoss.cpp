@@ -142,7 +142,7 @@ void StageBoss::Initialize()
     }
 
     AudioManager& audioManager = AudioManager::Instance();
-    audioManager.PlayBGM(BGM::Boss_Back, true); // ボス戦環境音BGM再生
+    audioManager.PlayBGM(BGM::StageBoss_Back, true); // ボス戦環境音BGM再生
 }
 
 // 終了化

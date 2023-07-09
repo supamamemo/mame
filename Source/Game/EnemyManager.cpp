@@ -1,6 +1,7 @@
 #include "EnemyManager.h"
 #include "../Game/Common.h"
 #include "../Game/BossStateDerived.h"
+#include "../Mame/AudioManager.h"
 
 
 void EnemyManager::Initialize()
@@ -168,6 +169,10 @@ void EnemyManager::CollisionEnemyVsEnemy()
                     {
                         enemyB->SetMoveDirectionX(enemyA->GetMoveDirectionX());
                         enemyB->ApplyDamage(1, 1.0f);
+
+                        AudioManager& audioManager = AudioManager::Instance();
+                        audioManager.StopSE(SE::PL_BounceHit);              // バウンスヒットSE停止
+                        audioManager.PlaySE(SE::PL_BounceHit, false, true); // バウンスヒットSE再生
                     }
                 }
                 // エネミーBが赤豆腐で追跡中ならエネミーAを吹き飛ばす
@@ -178,6 +183,10 @@ void EnemyManager::CollisionEnemyVsEnemy()
                     {
                         enemyA->SetMoveDirectionX(enemyB->GetMoveDirectionX());
                         enemyA->ApplyDamage(1, 1.0f);
+
+                        AudioManager& audioManager = AudioManager::Instance();
+                        audioManager.StopSE(SE::PL_BounceHit);              // バウンスヒットSE停止
+                        audioManager.PlaySE(SE::PL_BounceHit, false, true); // バウンスヒットSE再生
                     }
                 }
 

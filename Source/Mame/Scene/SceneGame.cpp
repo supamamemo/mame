@@ -1,21 +1,23 @@
 #include "SceneGame.h"
 
-#include "../Graphics/EffectManager.h"
-
-#include "../Scene/SceneManager.h"
-#include "../Scene/SceneTitle.h"
-#include "../Graphics/Graphics.h"
-#include "../Input/Input.h"
-
 #include "../../Game/Stage/StageManager.h"
-#include "../../Game/Stage/StagePlains.h"
-#include "../../Game/Stage/StageBoss.h"
+#include "../../Game/Stage/StageLoading.h"
 #include "../../Game/Stage/StageTutorial.h"
 #include "../../Game/Stage/StageSelection.h"
+#include "../../Game/Stage/StagePlains.h"
+#include "../../Game/Stage/StageBoss.h"
 
 #include "../../Game/Terrain/Terrain.h"
 
-#include "../../Game/Stage/StageLoading.h"
+#include "../Graphics/EffectManager.h"
+#include "../Graphics/Graphics.h"
+
+#include "../Scene/SceneManager.h"
+#include "../Scene/SceneTitle.h"
+
+#include "../Input/Input.h"
+
+#include "../AudioManager.h"
 
 // コンストラクタ
 SceneGame::SceneGame()
@@ -64,9 +66,9 @@ void SceneGame::Initialize()
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
 
-    //StageManager::Instance().ChangeStage(new StageSelection);
+    StageManager::Instance().ChangeStage(new StageSelection);
     //StageManager::Instance().ChangeStage(new StageTutorial);
-    StageManager::Instance().ChangeStage(new StagePlains);
+    //StageManager::Instance().ChangeStage(new StagePlains);
     //StageManager::Instance().ChangeStage(new StageBoss);
 }
 
@@ -74,6 +76,9 @@ void SceneGame::Initialize()
 void SceneGame::Finalize()
 {
     StageManager::Instance().Clear();
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopAllAudio(); // 全音楽停止
 }
 
 // Updateの前に呼び出される
