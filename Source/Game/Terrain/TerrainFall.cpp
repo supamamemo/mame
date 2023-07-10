@@ -11,6 +11,7 @@ void TerrainFall::Initialize()
     Terrain::Initialize();
 
     terrainType_ = Terrain::Type::Move; // 動く地形タイプに設定
+
     SetMaterialColor(DirectX::XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f));
 }
 

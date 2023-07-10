@@ -308,7 +308,13 @@ void Character::VerticalFall(const float& fallSpeed)
                     {
                         lastLandingTerrainAABB_ = terrain->aabb_;
                         saveTerrain_ = nullptr;
-                    }                   
+                    }            
+
+                    // 地形の乗られた時の処理を行う
+                    if (this == PlayerManager::Instance().GetPlayer().get())
+                    {
+                        terrain->OnRiding();    
+                    }
 
                     continue;
                 }
@@ -344,7 +350,7 @@ void Character::VerticalFall(const float& fallSpeed)
                             saveTerrain_ = terrain;
                         }
 #endif
-#undef USE_TERRAIN_MOVE_FIX_POSITION
+#undef USE_TERRAIN_MOVE_POSITION_MODIFY
                     }
 
                     // 着地した地形のAABBを保存
@@ -354,9 +360,10 @@ void Character::VerticalFall(const float& fallSpeed)
                         saveTerrain_ = nullptr;
                     }
 
+                    terrain->OnRiding();    // 地形の乗られた時の処理を行う
                     if (this == PlayerManager::Instance().GetPlayer().get())
                     {
-                        terrain->OnRiding();    // 地形の乗られた時の処理を行う
+                        
                     }
                 }
             }

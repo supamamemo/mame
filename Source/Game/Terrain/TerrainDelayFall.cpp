@@ -12,6 +12,8 @@ void TerrainDelayFall::Initialize()
     Terrain::Initialize();
 
     terrainType_ = Terrain::Type::Move; // 動く地形タイプに設定
+
+    SetMaterialColor(DirectX::XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f));
 }
 
 void TerrainDelayFall::Update(const float& elapsedTime)
@@ -73,15 +75,15 @@ void TerrainDelayFall::Update(const float& elapsedTime)
         if (blinkTimer_ <= 0.0f)
         {
             blinkTimer_ = 0.0f;
-            materialColor = { 1,1,1,1 };
+            materialColor = { 0.7f, 0.7f, 0.7f, 1.0f };
         }
         else if (static_cast<int>(blinkTimer_ * 100.0f) & 0x08)
         {
-            materialColor = { 1.5f, 1.5f, 1.5f, 1.0f };
+            materialColor = { 1,1,1,1 };
         }
         else
         {
-            materialColor = { 1,1,1,1 };
+            materialColor = { 0.7f, 0.7f, 0.7f, 1.0f };
         }
     }
 
@@ -99,6 +101,8 @@ void TerrainDelayFall::DrawDebug()
 
 void TerrainDelayFall::OnRiding()
 {
+    if (isReadyFall_ || isFall_) return;    // すでに落下準備しているか、落下していたらreturn
+
     isReadyFall_ = true;   // 落下準備フラグを立てる
     blinkTimer_  = 0.5f;   // 点滅させる
 }
