@@ -6,6 +6,7 @@
 #include "../../Game/Stage/StageSelection.h"
 #include "../../Game/Stage/StagePlains.h"
 #include "../../Game/Stage/StageBoss.h"
+#include "../../Game/Stage///StageEx.h"
 
 #include "../../Game/Terrain/Terrain.h"
 
@@ -66,10 +67,11 @@ void SceneGame::Initialize()
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2, 0));
 
 
-    StageManager::Instance().ChangeStage(new StageSelection);
+    //StageManager::Instance().ChangeStage(new StageSelection);
     //StageManager::Instance().ChangeStage(new StageTutorial);
     //StageManager::Instance().ChangeStage(new StagePlains);
     //StageManager::Instance().ChangeStage(new StageBoss);
+    StageManager::Instance().ChangeStage(new StageEx);
 }
 
 // èIóπâª

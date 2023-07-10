@@ -388,12 +388,13 @@ void Camera::UpdateBoss(const float elapsedTime)
     case 2:
         leftLimit = -10.0f;
         if (playerPos.x <= -8.6f)
-            playerPos.x += elapsedTime;
+            playerPos.x += elapsedTime * 13;
 
         if (bossPos.x <= 5.5)cameraMoveY = 3;
 
         break;
     case 3:
+        leftLimit = -10.0f;
         rightLimit = 100.0f;
         break;
     }

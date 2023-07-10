@@ -11,6 +11,7 @@ void TerrainFall::Initialize()
     Terrain::Initialize();
 
     terrainType_ = Terrain::Type::Move; // 動く地形タイプに設定
+    SetMaterialColor(DirectX::XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f));
 }
 
 void TerrainFall::Update(const float& elapsedTime)
@@ -50,15 +51,15 @@ void TerrainFall::Update(const float& elapsedTime)
         if (blinkTimer_ <= 0.0f)
         {
             blinkTimer_     = 0.0f;
-            materialColor   = { 1,1,1,1 };
+            materialColor   = { 0.7f,0.7f,0.7f,1 };
         }
         else if (static_cast<int>(blinkTimer_ * 100.0f) & 0x08)
         {
-            materialColor = { 1.5f, 1.5f, 1.5f, 1.0f };
+            materialColor = { 1.0f, 1.0f, 1.0f, 1.0f };
         }
         else
         {
-            materialColor = { 1,1,1,1 };
+            materialColor = { 0.7f,0.7f,0.7f,1 };
         }
     }
 

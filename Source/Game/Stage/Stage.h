@@ -14,6 +14,7 @@ namespace Mame::Stage
         PLAINS,
         BOSS,
         DUMMY,
+        Ex,
     };
 }
 
