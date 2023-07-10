@@ -44,6 +44,9 @@ public:
     void SetStageType(int type) { stageType = type; }
     int GetStageType() { return stageType; }
 
+public:
+    bool isStageClear_ = false;
+
 private:
     bool ready = false;
 

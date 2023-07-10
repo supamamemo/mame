@@ -109,8 +109,6 @@ private:
     bool isPlayerMove = false;
     bool isDisplaySignBoard[2] = {};
 
-    bool isStageClear_ = false;
-
     // UI
     Effect* effect[4] = {};
 };

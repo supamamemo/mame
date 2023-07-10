@@ -14,6 +14,8 @@
 #include "../BossStateDerived.h"
 
 #include "StageManager.h"
+#include "StageLoading.h"
+#include "StageSelection.h"
 
 // コンストラクタ
 StageBoss::StageBoss()
@@ -83,6 +85,7 @@ void StageBoss::Initialize()
     
     camera.SetIsShake();
     camera.SetCameraMoveY();
+    camera.Initialize();
 
     // 背景仮
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 6.0f, 12.0f));
@@ -209,6 +212,8 @@ void StageBoss::Update(const float& elapsedTime)
 {
     if (!Mame::Scene::SceneManager::Instance().isHitStop_)
     {
+        Camera::Instance().UpdateBoss(elapsedTime);
+
         // terrain更新
         TerrainManager::Instance().Update(elapsedTime);
 
@@ -216,6 +221,8 @@ void StageBoss::Update(const float& elapsedTime)
         PlayerManager& playerManager = PlayerManager::Instance();
         playerManager.Update(elapsedTime);
 
+        // enemy更新
+        EnemyManager& enemyManager = EnemyManager::Instance();
         if (!isEnemyUpdate_)
         {
             if (PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x >= -11.0f
@@ -227,7 +234,6 @@ void StageBoss::Update(const float& elapsedTime)
         else
         {
             // enemy更新
-            EnemyManager& enemyManager = EnemyManager::Instance();
             enemyManager.Update(elapsedTime);
 
             // ボスが歩行ステートなら歩行SE再生
@@ -240,7 +246,46 @@ void StageBoss::Update(const float& elapsedTime)
             }
         }
 
-        Camera::Instance().UpdateBoss(elapsedTime);
+
+
+        // ステージクリア処理
+        Transform* playerTransform = playerManager.GetPlayer()->GetTransform();
+        {
+            if (isStageClear_)
+            {
+                clearTimer_ += elapsedTime;
+
+                if (clearTimer_ >= 3.0f)
+                {
+                    clearTimer_ = 3.0f;
+
+                    // プレイヤーのステートをクリアステートへ遷移
+                    const Player::State playerState = playerManager.GetPlayer()->GetState();
+                    if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
+
+                    // 右に走り去っていったらステージセレクトに切り替える
+                    if (playerManager.GetPlayer()->GetClearState() == ClearState::MoveToRight)
+                    {
+                        const float moveLimitX = 10.0f;
+                        if (playerTransform->GetPosition().x > moveLimitX)
+                        {
+                            playerTransform->SetPositionX(moveLimitX);
+
+                            //stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
+
+                            StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+                        }
+                    }
+                }
+            }
+        }
+
+        // 死亡処理
+        if (playerTransform->GetPosition().z <= -25.0f ||
+            playerTransform->GetPosition().y <= -40.0f)
+        {
+            StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+        }
     }
 
     // ドア

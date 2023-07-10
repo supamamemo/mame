@@ -29,7 +29,6 @@ private:
     std::unique_ptr<Box> goal_         = nullptr;    // ゴール
 
     bool isArrivedHalfwayPoint_ = false;
-    bool isStageClear_          = false;
 
 public:
     // UI関連（急ぎで作ってるからコメントなしでごめん。。）

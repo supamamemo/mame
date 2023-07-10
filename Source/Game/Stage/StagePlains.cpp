@@ -8,7 +8,6 @@
 #include "../Terrain/TerrainNormal.h"
 #include "../Terrain/TerrainFall.h"
 #include "../Terrain/TerrainNoClimb.h"
-#include "../Terrain/TerrainNoCollision.h"
 
 #include "../EnemyTofu.h"
 #include "../EnemyRedTofu.h"
@@ -129,7 +128,6 @@ void StagePlains::Initialize()
     {
         halfwayPoint_->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(-180.0f), 0, 0));
     }
-
 
     // ゴール
     goal_->GetTransform()->SetPosition(DirectX::XMFLOAT3(277.0f, 5.5f, 10.7f));
@@ -302,8 +300,8 @@ void StagePlains::Update(const float& elapsedTime)
         }
 
         // 死亡処理
-        if (playerTransform->GetPosition().z <= -50.0f ||
-            playerTransform->GetPosition().y <= -50.0f)
+        if (playerTransform->GetPosition().z <= -25.0f ||
+            playerTransform->GetPosition().y <= -40.0f)
         {
             StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
         }
@@ -564,22 +562,22 @@ void StagePlains::RegisterTerrains(TerrainManager& terrainManager)
 
     // 立て看板(当たり判定なし)
     {
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 43
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 44
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx"));  // 45
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 46
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx"));  // 47
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 48
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 49
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx"));  // 50
+        terrainManager.Register(new TerrainNormal("./resources/stage/flag_yazi.fbx"));  // 43
+        terrainManager.Register(new TerrainNormal("./resources/stage/flag_yazi.fbx"));  // 44
+        terrainManager.Register(new TerrainNormal("./resources/stage/flag_drop.fbx"));  // 45
+        terrainManager.Register(new TerrainNormal("./resources/stage/flag_yazi.fbx"));  // 46
+        terrainManager.Register(new TerrainNormal("./resources/stage/flag_drop.fbx"));  // 47
+        terrainManager.Register(new TerrainNormal("./resources/stage/flag_yazi.fbx"));  // 48
+        terrainManager.Register(new TerrainNormal("./resources/stage/flag_yazi.fbx"));  // 49
+        terrainManager.Register(new TerrainNormal("./resources/stage/flag_yazi.fbx"));  // 50
     }
 
     // 手前と奥の飾り地形
     {
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/4.fbx"));  // 51
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/4.fbx"));  // 52
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/6.fbx"));  // 53
-        terrainManager.Register(new TerrainNoCollision("./resources/stage/6.fbx"));  // 54
+        terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 51
+        terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 52
+        terrainManager.Register(new TerrainNormal("./resources/stage/6.fbx"));  // 53
+        terrainManager.Register(new TerrainNormal("./resources/stage/6.fbx"));  // 54
     }
 }
 
@@ -691,34 +689,40 @@ void StagePlains::SetTerrains(TerrainManager& terrainManager)
         terrainManager.GetTerrain(49)->GetTransform()->SetPosition(DirectX::XMFLOAT3(208.5f,   4.5f, 10.6f));
         terrainManager.GetTerrain(50)->GetTransform()->SetPosition(DirectX::XMFLOAT3(257.25f,  7.0f, 10.6f));
 
-        // スケールを2倍にする
-        const DirectX::XMFLOAT3 scale = { 2,2,2 };
-        terrainManager.GetTerrain(43)->GetTransform()->SetScale(scale);
-        terrainManager.GetTerrain(44)->GetTransform()->SetScale(scale);
-        terrainManager.GetTerrain(45)->GetTransform()->SetScale(scale);
-        terrainManager.GetTerrain(46)->GetTransform()->SetScale(scale);
-        terrainManager.GetTerrain(47)->GetTransform()->SetScale(scale);
-        terrainManager.GetTerrain(48)->GetTransform()->SetScale(scale);
-        terrainManager.GetTerrain(49)->GetTransform()->SetScale(scale);
-        terrainManager.GetTerrain(50)->GetTransform()->SetScale(scale);
+        const DirectX::XMFLOAT3 scale       = { 2,2,2 };
+        const float             RotationY   = ToRadian(180.0f);
 
-        // 裏返す
-        terrainManager.GetTerrain(43)->GetTransform()->SetRotationY(ToRadian(180.0f));
-        terrainManager.GetTerrain(44)->GetTransform()->SetRotationY(ToRadian(180.0f));
-        terrainManager.GetTerrain(45)->GetTransform()->SetRotationY(ToRadian(180.0f));
-        terrainManager.GetTerrain(46)->GetTransform()->SetRotationY(ToRadian(180.0f));
-        terrainManager.GetTerrain(47)->GetTransform()->SetRotationY(ToRadian(180.0f));
-        terrainManager.GetTerrain(48)->GetTransform()->SetRotationY(ToRadian(180.0f));
-        terrainManager.GetTerrain(49)->GetTransform()->SetRotationY(ToRadian(180.0f));
-        terrainManager.GetTerrain(50)->GetTransform()->SetRotationY(ToRadian(180.0f));
+        for (int i = 43; i <= 50; ++i)
+        {
+            // スケールを2倍にする
+            terrainManager.GetTerrain(i)->GetTransform()->SetScale(scale);
+
+            // 裏返す
+            terrainManager.GetTerrain(i)->GetTransform()->SetRotationY(RotationY);
+
+            // プレイヤーとエネミーとの判定をなくす
+            terrainManager.GetTerrain(i)->isCollisionPlayer_ = false;
+            terrainManager.GetTerrain(i)->isCollisionEnemy_  = false;
+        }
+
         terrainManager.GetTerrain(50)->GetTransform()->SetRotationZ(ToRadian(25.0f));   // 最後の看板は横に少し傾ける
+
     }
 
     // 手前と奥の飾り地形
-    terrainManager.GetTerrain(51)->GetTransform()->SetPosition(DirectX::XMFLOAT3(38.0f,  -1.0f, -1.0f));
-    terrainManager.GetTerrain(52)->GetTransform()->SetPosition(DirectX::XMFLOAT3(74.0f,   0.0f,  19.0f));
-    terrainManager.GetTerrain(53)->GetTransform()->SetPosition(DirectX::XMFLOAT3(79.0f,   3.0f,  24.0f));
-    terrainManager.GetTerrain(54)->GetTransform()->SetPosition(DirectX::XMFLOAT3(201.0f, -1.0f,  20.5f));
+    {
+        terrainManager.GetTerrain(51)->GetTransform()->SetPosition(DirectX::XMFLOAT3(38.0f, -1.0f, -1.0f));
+        terrainManager.GetTerrain(52)->GetTransform()->SetPosition(DirectX::XMFLOAT3(74.0f, 0.0f, 19.0f));
+        terrainManager.GetTerrain(53)->GetTransform()->SetPosition(DirectX::XMFLOAT3(79.0f, 3.0f, 24.0f));
+        terrainManager.GetTerrain(54)->GetTransform()->SetPosition(DirectX::XMFLOAT3(201.0f, -1.0f, 20.5f));
+
+        for (int i = 51; i <= 54; ++i)
+        {
+            // プレイヤーとエネミーとの判定をなくす
+            terrainManager.GetTerrain(i)->isCollisionPlayer_ = false;
+            terrainManager.GetTerrain(i)->isCollisionEnemy_ = false;
+        }
+    }
 
 }
 

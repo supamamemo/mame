@@ -266,7 +266,8 @@ void Character::VerticalFall(const float& fallSpeed)
         {
             NO_CONST Terrain* terrain = terrainManager.GetTerrain(i);
 
-            if (terrain->terrainType_ == Terrain::Type::NoCollision) continue;
+            if (characterType_ == CharacterType::Player && !terrain->isCollisionPlayer_) continue; // プレイヤーと判定しない地形なら飛ばす
+            if (characterType_ == CharacterType::Enemy  && !terrain->isCollisionEnemy_)  continue; // 敵と判定しない地形なら飛ばす
 
             if (Collision::IntersectAABBVsAABB(this->aabb_, terrain->aabb_))
             {
@@ -401,7 +402,8 @@ void Character::VerticalRise(const float& riseSpeed)
         {
             const Terrain* terrain = terrainManager.GetTerrain(i);
 
-            if (terrain->terrainType_ == Terrain::Type::NoCollision) continue;
+            if (characterType_ == CharacterType::Player && !terrain->isCollisionPlayer_) continue; // プレイヤーと判定しない地形なら飛ばす
+            if (characterType_ == CharacterType::Enemy  && !terrain->isCollisionEnemy_)  continue; // 敵と判定しない地形なら飛ばす
 
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
             {
@@ -540,7 +542,8 @@ void Character::HorizontalRightLeft(NO_CONST float horizontalSpeed)
         {
             NO_CONST Terrain* terrain = terrainManager.GetTerrain(i);
 
-            if (terrain->terrainType_ == Terrain::Type::NoCollision) continue;
+            if (characterType_ == CharacterType::Player && !terrain->isCollisionPlayer_) continue; // プレイヤーと判定しない地形なら飛ばす
+            if (characterType_ == CharacterType::Enemy  && !terrain->isCollisionEnemy_)  continue; // 敵と判定しない地形なら飛ばす
 
             if (Collision::IntersectAABBVsAABB(aabb_, terrain->aabb_))
             {
