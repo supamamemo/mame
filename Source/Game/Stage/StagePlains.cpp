@@ -6,7 +6,7 @@
 #include "../../Mame/AudioManager.h"
 
 #include "../Terrain/TerrainNormal.h"
-#include "../Terrain/TerrainFall.h"
+#include "../Terrain/TerrainDelayFall.h"
 #include "../Terrain/TerrainNoClimb.h"
 
 #include "../EnemyTofu.h"
@@ -554,7 +554,7 @@ void StagePlains::RegisterTerrains(TerrainManager& terrainManager)
     terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx"));  // 38
     terrainManager.Register(new TerrainNormal("./resources/stage/4.fbx"));  // 39
 
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 40
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 40
     terrainManager.Register(new TerrainNoClimb("./resources/stage/4.fbx")); // 41
     terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 42
 

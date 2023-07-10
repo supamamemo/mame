@@ -317,6 +317,7 @@
       <Filter>mamelib\Game\Stage</Filter>
     </ClCompile>
     <ClCompile Include="Source\Game\Stage\StageDummy.cpp" />
+    <ClCompile Include="Source\Game\Terrain\TerrainDelayFall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -586,6 +587,7 @@
       <Filter>mamelib\Game\Stage</Filter>
     </ClInclude>
     <ClInclude Include="Source\Game\Stage\StageDummy.h" />
+    <ClInclude Include="Source\Game\Terrain\TerrainDelayFall.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">

@@ -234,6 +234,7 @@
     <ClCompile Include="Source\Game\StateMachine.cpp" />
     <ClCompile Include="Source\Game\Terrain\Terrain.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainBoss.cpp" />
+    <ClCompile Include="Source\Game\Terrain\TerrainDelayFall.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainFall.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainManager.cpp" />
     <ClCompile Include="Source\Game\Terrain\TerrainMoveDown.cpp" />
@@ -320,6 +321,7 @@
     <ClInclude Include="Source\Game\StateMachine.h" />
     <ClInclude Include="Source\Game\Terrain\Terrain.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainBoss.h" />
+    <ClInclude Include="Source\Game\Terrain\TerrainDelayFall.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainFall.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainManager.h" />
     <ClInclude Include="Source\Game\Terrain\TerrainMoveDown.h" />
