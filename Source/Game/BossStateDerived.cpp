@@ -146,6 +146,14 @@ namespace BOSS
         // 進む方向を設定する
         owner->SetMoveDirectionX(vecX_n);
 
+        // ボスの残り体力によって旋回速度を上げる
+        switch (owner->GetHealth())
+        {
+        case 3: owner->SetTurnSpeed(ToRadian(135.0f)); break;
+        case 2: owner->SetTurnSpeed(ToRadian(270.0f)); break;
+        case 1: owner->SetTurnSpeed(ToRadian(540.0f)); break;
+        }
+
         AudioManager& audioManager = AudioManager::Instance();
         audioManager.PlaySE(SE::Boss_Turn, true); // 旋回SE再生
     }
@@ -218,20 +226,22 @@ namespace BOSS
 
         // 左右判定
         //owner->SetMoveSpeed(owner->GetMoveRight() ? speed : -speed);
+
+        owner->SetIsHitPlayer(false); // プレイヤーに当たったフラグをリセット
         
+        // ボスの残り体力によって移動速度を速くする
+        switch (owner->GetHealth())
+        {
+        case 3: speed = 5.0f;  break;
+        case 2: speed = 7.0f;  break;
+        case 1: speed = 10.0f; break;
+        }
+
         // アニメーションセット
         owner->PlayAnimation(static_cast<int>(BossAnimation::Attack), true);
 
         // 走行SE再生
         AudioManager::Instance().PlaySE(SE::Boss_Run, true);
-
-        // 体力によって混乱時間を減らす
-        switch (owner->GetHealth())
-        {
-        case 1: speed = 7.5f; break;
-        case 2: speed = 6.0f; break;
-        case 3: speed = 5.0f; break;
-        }
     }
 
     // 更新
@@ -267,9 +277,6 @@ namespace BOSS
         // 現在の反動距離をリセット
         currentRecoilLength = 0.0f;
 
-        // 無敵状態を無くす
-        owner->SetIsInvincible(false);
-
         // アニメーションセット
         owner->PlayAnimation(static_cast<int>(BossAnimation::Recoil), true);
 
@@ -278,12 +285,12 @@ namespace BOSS
 
         state = 0;
 
-        // 体力によって混乱時間を減らす
+        // ボスの残り体力によって混乱時間を短くする
         switch (owner->GetHealth())
         {
+        case 3: confusionTime = 2.5f; break;
+        case 2: confusionTime = 1.5f; break;
         case 1: confusionTime = 1.3f; break;
-        case 2: confusionTime = 1.5f;  break;
-        case 3: confusionTime = 2.0f;  break;
         }
     }
 
@@ -300,11 +307,24 @@ namespace BOSS
             transform->AddPositionX(owner->GetMoveSpeed() * elapsedTime);
             currentRecoilLength += fabsf(owner->GetMoveSpeed() * elapsedTime);
 
+            // 一定の距離まで下がったら
             if (currentRecoilLength >= recoilLength)
             {
+                // プレイヤーに攻撃が当たっていたら待機に戻る
+                if (owner->GetIsHitPlayer())
+                {
+                    owner->SetIsHitPlayer(false); // プレイヤーに当たったフラグをリセット
+
+                    state = 3;
+                    break;
+                }
+
                 owner->PlayAnimation(static_cast<int>(BossAnimation::Confusion), true);
 
                 SetTimer(confusionTime);
+
+                // 無敵状態を無くす
+                owner->SetIsInvincible(false);
 
                 AudioManager& audioManager = AudioManager::Instance();
                 audioManager.PlaySE(SE::Boss_Stun, true); // 気絶SE再生
@@ -331,6 +351,9 @@ namespace BOSS
                 AudioManager& audioManager = AudioManager::Instance();
                 audioManager.StopSE(SE::Boss_Stun); // 気絶SE停止
 
+                // 無敵状態にする
+                owner->SetIsInvincible(true);
+
                 state = 3;
                 break;
             }
@@ -346,8 +369,6 @@ namespace BOSS
     // 終了
     void RecoilState::Exit()
     {
-        // 無敵状態にする
-        owner->SetIsInvincible(true);
     }
 }
 

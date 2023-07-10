@@ -42,6 +42,8 @@ void Enemy::CollisionEnemyVsPlayer()
 
         this->OnAttacked(); // 攻撃したときに呼ばれる処理
 
+        isHitPlayer_ = true; // プレイヤーに当たった
+
         AudioManager& audioManager = AudioManager::Instance();
         audioManager.PlaySE(SE::PL_Damaged, false);   // プレイヤーの被ダメージSE再生
     }
