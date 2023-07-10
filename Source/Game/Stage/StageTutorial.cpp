@@ -198,6 +198,7 @@ void StageTutorial::Initialize()
     {
         PlayerManager& playerManager = PlayerManager::Instance();
         playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-8.0f, 2.0f, 10.0f));
+        playerManager.GetPlayer()->SetHealth(999);
         playerManager.Initialize();
 
         stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
@@ -298,95 +299,98 @@ void StageTutorial::Update(const float& elapsedTime)
     PlayerManager& playerManager = PlayerManager::Instance();
     EnemyManager&  enemyManager  = EnemyManager::Instance();
 
-    // terrain更新
-    TerrainManager::Instance().Update(elapsedTime);
-
-    // player更新
-    if (isPlayerMove) playerManager.Update(elapsedTime);
-
-    // enemy更新
-    enemyManager.Update(elapsedTime);
-
-    // tutorialstate
-    TutorialStateUpdate(elapsedTime);
-
-    // camera
-    Camera::Instance().UpdateTutorial(elapsedTime, tutorialState);
-
-    // UI
-    UIManager::Instance().Update(elapsedTime);
-
-    // 背景
-    back->BackUpdate(elapsedTime);
-
-    // ゴール処理
-    Transform* playerTransform = playerManager.GetPlayer()->GetTransform();
-    const float goalPositionX = goal_->GetTransform()->GetPosition().x;
+    if (!Mame::Scene::SceneManager::Instance().isHitStop_)
     {
-        if (!isStageClear_)
+        // terrain更新
+        TerrainManager::Instance().Update(elapsedTime);
+
+        // player更新
+        if (isPlayerMove) playerManager.Update(elapsedTime);
+
+        // enemy更新
+        enemyManager.Update(elapsedTime);
+
+        // tutorialstate
+        TutorialStateUpdate(elapsedTime);
+
+        // camera
+        Camera::Instance().UpdateTutorial(elapsedTime, tutorialState);
+
+        // UI
+        UIManager::Instance().Update(elapsedTime);
+
+        // 背景
+        back->BackUpdate(elapsedTime);
+
+        // ゴール処理
+        Transform* playerTransform = playerManager.GetPlayer()->GetTransform();
+        const float goalPositionX = goal_->GetTransform()->GetPosition().x;
         {
-            // プレイヤーがゴールを超えたらステージクリアにする
-            if (playerTransform->GetPosition().x >= goalPositionX)
+            if (!isStageClear_)
             {
-                enemyManager.AllKill(); // 敵を全員倒す
-                isStageClear_ = true;
-            }
-        }
-        else
-        {
-            // プレイヤーのステートをクリアステートへ遷移
-            const Player::State playerState = playerManager.GetPlayer()->GetState();
-            if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
-
-            // 位置を修正
-            if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
-            {
-                NO_CONST float playerPositionX = playerTransform->GetPosition().x;
-
-                const float targetPositionX = goalPositionX + 3.0f;
-                const float addPositionX = 10.0f * elapsedTime;
-                if (playerPositionX > targetPositionX)
+                // プレイヤーがゴールを超えたらステージクリアにする
+                if (playerTransform->GetPosition().x >= goalPositionX)
                 {
-                    playerPositionX = (std::max)(targetPositionX, (playerPositionX - addPositionX));
+                    enemyManager.AllKill(); // 敵を全員倒す
+                    isStageClear_ = true;
                 }
-                else if (playerPositionX < targetPositionX)
-                {
-                    playerPositionX = (std::min)(targetPositionX, (playerPositionX + addPositionX));
-                }
-
-                playerTransform->SetPositionX(playerPositionX);
             }
-            // 右に走り去っていったらステージセレクトに切り替える
             else
             {
-                const float moveLimitX = goalPositionX + 10.0f;
-                if (playerTransform->GetPosition().x > moveLimitX)
+                // プレイヤーのステートをクリアステートへ遷移
+                const Player::State playerState = playerManager.GetPlayer()->GetState();
+                if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
+
+                // 位置を修正
+                if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
                 {
-                    playerTransform->SetPositionX(moveLimitX);
+                    NO_CONST float playerPositionX = playerTransform->GetPosition().x;
 
-                    //stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
+                    const float targetPositionX = goalPositionX + 3.0f;
+                    const float addPositionX = 10.0f * elapsedTime;
+                    if (playerPositionX > targetPositionX)
+                    {
+                        playerPositionX = (std::max)(targetPositionX, (playerPositionX - addPositionX));
+                    }
+                    else if (playerPositionX < targetPositionX)
+                    {
+                        playerPositionX = (std::min)(targetPositionX, (playerPositionX + addPositionX));
+                    }
 
-                    Mame::Scene::SceneManager::Instance().selectState =
-                        (std::max)(Mame::Scene::SceneManager::Instance().selectState, 1);
+                    playerTransform->SetPositionX(playerPositionX);
+                }
+                // 右に走り去っていったらステージセレクトに切り替える
+                else
+                {
+                    const float moveLimitX = goalPositionX + 10.0f;
+                    if (playerTransform->GetPosition().x > moveLimitX)
+                    {
+                        playerTransform->SetPositionX(moveLimitX);
 
-                    StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+                        //stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
+
+                        Mame::Scene::SceneManager::Instance().selectState =
+                            (std::max)(Mame::Scene::SceneManager::Instance().selectState, 1);
+
+                        StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+                    }
                 }
             }
         }
+
+
+        // 死亡処理
+        if (playerTransform->GetPosition().z <= -25.0f ||
+            playerTransform->GetPosition().y <= -40.0f)
+        {
+            StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+        }
+
+        // animation
+        const int totalFrame = 11;      // フレームの枚数
+        spriteAnimation[0]->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
+        spriteAnimation[1]->PlayAnimation(elapsedTime, frameSpeed, 14, true);
     }
-
-
-    // 死亡処理
-    if (playerTransform->GetPosition().z <= -25.0f ||
-        playerTransform->GetPosition().y <= -40.0f)
-    {
-        StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
-    }
-
-    // animation
-    const int totalFrame = 11;      // フレームの枚数
-    spriteAnimation[0]->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
-    spriteAnimation[1]->PlayAnimation(elapsedTime, frameSpeed, 14, true);
 }
 
 // Updateの後に呼ばれる
@@ -637,6 +641,9 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
                 terrainRot0 = DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0, 0, 0);
                 terrainRot1 = DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), DirectX::XMConvertToRadians(15), 0, 0);
+
+                AudioManager::Instance().StopPlayerMoveSE();
+
                 break;
             case 1:
                 // 入力

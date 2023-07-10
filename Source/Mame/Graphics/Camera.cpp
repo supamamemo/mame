@@ -418,13 +418,13 @@ void Camera::UpdateBoss(const float elapsedTime)
         switch (parabolaStage_)
         {
         case 0:
-            velocityY_  += -0.03f * elapsedTime;
+            velocityY_  += -0.02f * elapsedTime;
             cameraPos.y += velocityY_;
 
 
             const float targetPositionY = 4.5f;
 
-            if (cameraPos.y >= 10.9f)
+            if (cameraPos.y >= 11.25f)
             {
                 playerManager.GetPlayer()->GetTransform()->SetPositionX(0.0f);
             }
