@@ -145,7 +145,7 @@ void Camera::Update(float elapsedTime)
     else
     {
         const float targetPositionY = 3.5f;
-        const float moveSpeedY      = 6.0f * elapsedTime;        
+        const float moveSpeedY      = 7.0f * elapsedTime;        
         if (cameraPos.y < targetPositionY)
         {
             cameraPos.y = (std::min)(targetPositionY, (cameraPos.y + moveSpeedY));
@@ -156,7 +156,7 @@ void Camera::Update(float elapsedTime)
         }        
         
         const float targetPositionZ = 0.0f;
-        const float moveSpeedZ      = 6.0f * elapsedTime;
+        const float moveSpeedZ      = 9.0f * elapsedTime;
         if (cameraPos.z < targetPositionZ)
         {
             cameraPos.z = (std::min)(targetPositionZ, (cameraPos.z + moveSpeedZ));
@@ -317,7 +317,7 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
         }
 
         const float targetPositionY = 4.5f;
-        const float moveSpeedY      = 6.0f * elapsedTime;
+        const float moveSpeedY      = 7.0f * elapsedTime;
         if (cameraPos.y < targetPositionY)
         {
             cameraPos.y = (std::min)(targetPositionY, (cameraPos.y + moveSpeedY));
@@ -328,7 +328,7 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
         }
 
         const float targetPositionZ = 0.0f;
-        const float moveSpeedZ = 6.0f * elapsedTime;
+        const float moveSpeedZ      = 9.0f * elapsedTime;
         if (cameraPos.z < targetPositionZ)
         {
             cameraPos.z = (std::min)(targetPositionZ, (cameraPos.z + moveSpeedZ));
