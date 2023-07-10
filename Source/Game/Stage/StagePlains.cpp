@@ -610,6 +610,13 @@ void StagePlains::RegisterEnemies(EnemyManager& enemyManager)
     enemyManager.Register(new RED_TOFU::EnemyRedTofu());    // 23
     enemyManager.Register(new RED_TOFU::EnemyRedTofu());    // 24
     enemyManager.Register(new RED_TOFU::EnemyRedTofu());    // 25
+
+    enemyManager.Register(new EnemyTofu());                 // 26
+    enemyManager.Register(new EnemyTofu());                 // 27
+    enemyManager.Register(new EnemyTofu());                 // 28
+    enemyManager.Register(new EnemyTofu());                 // 29
+    enemyManager.Register(new EnemyTofu());                 // 30
+
 }
 
 // ’nŒ`Ý’è
@@ -760,4 +767,11 @@ void StagePlains::SetEnemies(EnemyManager& enemyManager)
     enemyManager.GetEnemy(24)->GetTransform()->SetPosition(DirectX::XMFLOAT3(246.0f, 0.0f, 10.0f));
     
     enemyManager.GetEnemy(25)->GetTransform()->SetPosition(DirectX::XMFLOAT3(248.0f, 0.0f, 10.0f));
+    
+    
+    enemyManager.GetEnemy(26)->GetTransform()->SetPosition(DirectX::XMFLOAT3(186.6f, 0.0f, 10.0f));
+    enemyManager.GetEnemy(27)->GetTransform()->SetPosition(DirectX::XMFLOAT3(190.6f, 0.0f, 10.0f));
+    enemyManager.GetEnemy(28)->GetTransform()->SetPosition(DirectX::XMFLOAT3(194.6f, 0.0f, 10.0f));
+    enemyManager.GetEnemy(29)->GetTransform()->SetPosition(DirectX::XMFLOAT3(198.6f, 0.0f, 10.0f));
+    enemyManager.GetEnemy(30)->GetTransform()->SetPosition(DirectX::XMFLOAT3(202.6f, 0.0f, 10.0f));
 }

@@ -8,7 +8,6 @@
 #include "../Terrain/TerrainNormal.h"
 #include "../Terrain/TerrainFall.h"
 #include "../Terrain/TerrainNoClimb.h"
-#include "../Terrain/TerrainNoCollision.h"
 
 #include "../EnemyTofu.h"
 #include "../EnemyRedTofu.h"
