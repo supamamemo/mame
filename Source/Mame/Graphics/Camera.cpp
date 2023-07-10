@@ -262,7 +262,7 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
             switch (tutorialState)
             {
             case 0:
-                cameraPos.x += elapsedTime * 10;
+                cameraPos.x += elapsedTime * 15;
                 if (cameraPos.x >= 45.0f)
                 {
                     cameraPos.x = 45.0f;
@@ -272,12 +272,12 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
             case 1:
                 if (playerPos.x >= 45.0f)
                 {
-                    cameraPos.x += elapsedTime * 10;
+                    cameraPos.x += elapsedTime * 15;
                     if (cameraPos.x >= playerPos.x + 6.0f)cameraPos.x = playerPos.x + 6.0f;
                 }
                 else
                 {
-                    cameraPos.x -= elapsedTime * 10;
+                    cameraPos.x -= elapsedTime * 15;
                     if (cameraPos.x <= 45.0f)cameraPos.x = 45.0f;
                 }
                 break;
@@ -288,19 +288,23 @@ void Camera::UpdateTutorial(float elapsedTime, int state)
             //cameraPos.x += elapsedTime * 10;
 
             //if (cameraPos.x >= 63.0f) cameraPos.x = 63.0f;
-        {
-            const float targetPositionX = playerPos.x;
-            const float moveSpeedX = 6.0f * elapsedTime;
 
-            if (cameraPos.x < targetPositionX)
-            {
-                cameraPos.x = (std::min)(targetPositionX, (cameraPos.x + moveSpeedX));
-            }
-            else if (cameraPos.x > targetPositionX)
-            {
-                cameraPos.x = (std::max)(targetPositionX, (cameraPos.x - moveSpeedX));
-            }
+        {
+            //const float targetPositionX = playerPos.x;
+            //const float moveSpeedX = 6.0f * elapsedTime;
+
+            //if (cameraPos.x < targetPositionX)
+            //{
+            //    cameraPos.x = (std::min)(targetPositionX, (cameraPos.x + moveSpeedX));
+            //}
+            //else if (cameraPos.x > targetPositionX)
+            //{
+            //    cameraPos.x = (std::max)(targetPositionX, (cameraPos.x - moveSpeedX));
+            //}
         }
+
+            cameraPos.x = playerPos.x;
+
 
             break;
         default:
@@ -415,6 +419,7 @@ void Camera::UpdateBoss(const float elapsedTime)
     // プレイヤーのステートがクリアステートならクリア時のカメラワークにする
     else
     {
+        // 放物線みたいに移動
         switch (parabolaStage_)
         {
         case 0:

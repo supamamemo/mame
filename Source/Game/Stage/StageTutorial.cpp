@@ -477,6 +477,8 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
 
+    AudioManager& audioManager = AudioManager::Instance();
+
     DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
 
     float uiZ = 20.0f;
@@ -642,7 +644,7 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
                 terrainRot0 = DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), 0, 0, 0);
                 terrainRot1 = DirectX::XMFLOAT4(DirectX::XMConvertToRadians(10), DirectX::XMConvertToRadians(15), 0, 0);
 
-                AudioManager::Instance().StopPlayerMoveSE();
+                audioManager.StopPlayerMoveSE();
 
                 break;
             case 1:
@@ -654,6 +656,9 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
                     {
                         signBoardState = 2;
                         isDisplaySignBoard[0] = false;
+
+                        audioManager.StopSE(SE::SelectStage);
+                        audioManager.PlaySE(SE::SelectStage, false, true);
                     }
                 }
 
@@ -689,12 +694,18 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
                     {
                         signBoardState = 3;
                         isDisplaySignBoard[1] = false;
+
+                        audioManager.StopSE(SE::SelectStage);
+                        audioManager.PlaySE(SE::SelectStage, false, true);
                     }
 
                     if (gamePad.GetButtonDown() & GamePad::BTN_A)
                     {
                         isDisplaySignBoard[1] = false;
                         signBoardState = 5;
+
+                        audioManager.StopSE(SE::Select);
+                        audioManager.PlaySE(SE::Select, false, true);
                     }
                 }
 
@@ -730,6 +741,9 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
                     {
                         signBoardState = 2;
                         isDisplaySignBoard[0] = false;
+
+                        audioManager.StopSE(SE::SelectStage);
+                        audioManager.PlaySE(SE::SelectStage, false, true);
                     }
                 }
 
@@ -990,14 +1004,16 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
         break;
     case STATE::Free:
-        if (playerPos.x >= 57.0f)
+        //if (playerPos.x >= 57.0f)
+        if (playerPos.x >= 45.0f)
         {
             tutorialState = STATE::GoalState;
         }
 
         break;
     case STATE::GoalState:
-        if (playerPos.x < 57.0f)
+        //if (playerPos.x < 57.0f)
+        if (playerPos.x < 45.0f)
         {
             tutorialState = STATE::Free;
         }
