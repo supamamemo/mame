@@ -39,17 +39,16 @@ void StageBoss::Initialize()
             TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
 
             TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
-
             TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
 
             TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
 
             TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
-
             TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
 
-
             TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
         }
 
         // player¶¬
@@ -115,6 +114,9 @@ void StageBoss::Initialize()
             terrainManager.GetTerrain(5)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
             
             terrainManager.GetTerrain(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-24.0f, 1.0f, 10.0f));
+
+            terrainManager.GetTerrain(7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 12.5f, 10));
+            terrainManager.GetTerrain(7)->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.5f));
         }
         
         // materialColor

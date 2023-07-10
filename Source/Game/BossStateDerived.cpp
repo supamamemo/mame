@@ -224,6 +224,14 @@ namespace BOSS
 
         // 走行SE再生
         AudioManager::Instance().PlaySE(SE::Boss_Run, true);
+
+        // 体力によって混乱時間を減らす
+        switch (owner->GetHealth())
+        {
+        case 1: speed = 7.5f; break;
+        case 2: speed = 6.0f; break;
+        case 3: speed = 5.0f; break;
+        }
     }
 
     // 更新
@@ -269,6 +277,14 @@ namespace BOSS
         SetTimer(1.0f);
 
         state = 0;
+
+        // 体力によって混乱時間を減らす
+        switch (owner->GetHealth())
+        {
+        case 1: confusionTime = 1.3f; break;
+        case 2: confusionTime = 1.5f;  break;
+        case 3: confusionTime = 2.0f;  break;
+        }
     }
 
     // 更新

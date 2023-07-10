@@ -1180,7 +1180,7 @@ void Player::UpdateClearState(const float& elapsedTime)
             clearTimer_ = 0.0f;
 
             // BGM再生
-            audioManager.StopBGM(BGM::StagePlains);         // 草原ステージBGM停止
+            audioManager.StopAllBGM();         // 全BGM停止
             audioManager.PlayBGM(BGM::StageClear, false);   // ステージクリアジングル再生
 
             clearState_ = ClearState::JumpForJoy;

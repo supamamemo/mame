@@ -322,6 +322,9 @@
     <ClCompile Include="Source\Game\Stage\StageEx.cpp">
       <Filter>mamelib\Game\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Terrain\TerrainDelayFall.cpp">
+      <Filter>mamelib\Game\Terrain</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -595,6 +598,9 @@
     </ClInclude>
     <ClInclude Include="Source\Game\Stage\StageEx.h">
       <Filter>mamelib\Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Terrain\TerrainDelayFall.h">
+      <Filter>mamelib\Game\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -151,7 +151,8 @@ public: // 取得・設定関数関連
 
 
     // 体力の取得
-    const int& GetHealth() const { return health; }
+    const int GetHealth() const { return health; }
+    void SetHealth(const int hp) { health = hp; }
 
     // 地面についているかどうかの取得・設定
     const bool& GetIsGround() const { return isGround_; }

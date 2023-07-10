@@ -7,6 +7,7 @@
 
 #include "../Terrain/TerrainNormal.h"
 #include "../Terrain/TerrainFall.h"
+#include "../Terrain/TerrainDelayFall.h"
 #include "../Terrain/TerrainNoClimb.h"
 
 #include "../EnemyTofu.h"
@@ -337,10 +338,10 @@ void StageEx::RegisterTerrains(TerrainManager& terrainManager)
     terrainManager.Register(new TerrainNormal("./resources/stage/5.fbx"));  // 0
     terrainManager.Register(new TerrainNormal("./resources/stage/2.fbx"));  // 1
 
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 2
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 3
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 4
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 5
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 2
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 3
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 4
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 5
 
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 6
     terrainManager.Register(new TerrainNormal("./resources/stage/5.fbx"));  // 7
@@ -349,21 +350,21 @@ void StageEx::RegisterTerrains(TerrainManager& terrainManager)
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 10
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 11
 
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 12
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 13
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 14
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 15
-    terrainManager.Register(new TerrainFall("./resources/stage/8.fbx"));    // 16
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 12
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 13
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 14
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 15
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 16
     
-    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 17
-    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 18
-    terrainManager.Register(new TerrainNoClimb("./resources/stage/7.fbx"));  // 19
-    terrainManager.Register(new TerrainNormal("./resources/stage/7.fbx"));  // 20
-    terrainManager.Register(new TerrainFall("./resources/stage/7.fbx"));    // 21
-    terrainManager.Register(new TerrainFall("./resources/stage/7.fbx"));    // 22
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 17
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 18
+    terrainManager.Register(new TerrainNoClimb("./resources/stage/7.fbx"));   // 19
+    terrainManager.Register(new TerrainNormal("./resources/stage/7.fbx"));    // 20
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 21
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 23
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 24
-    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 25
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
 
 }
 
