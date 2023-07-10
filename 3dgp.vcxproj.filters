@@ -316,8 +316,12 @@
     <ClCompile Include="Source\Game\Stage\StageLoading.cpp">
       <Filter>mamelib\Game\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Stage\StageDummy.cpp" />
-    <ClCompile Include="Source\Game\Terrain\TerrainDelayFall.cpp" />
+    <ClCompile Include="Source\Game\Stage\StageDummy.cpp">
+      <Filter>mamelib\Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\StageEx.cpp">
+      <Filter>mamelib\Game\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -586,8 +590,12 @@
     <ClInclude Include="Source\Game\Stage\StageLoading.h">
       <Filter>mamelib\Game\Stage</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Game\Stage\StageDummy.h" />
-    <ClInclude Include="Source\Game\Terrain\TerrainDelayFall.h" />
+    <ClInclude Include="Source\Game\Stage\StageDummy.h">
+      <Filter>mamelib\Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\StageEx.h">
+      <Filter>mamelib\Game\Stage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">

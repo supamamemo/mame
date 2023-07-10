@@ -391,20 +391,23 @@ void Camera::UpdateBoss(const float elapsedTime)
         case 2:
             leftLimit = -10.0f;
             if (playerPos.x <= -8.6f)
-                playerPos.x += elapsedTime;
+                playerPos.x += elapsedTime * 13;
 
             if (bossPos.x <= 5.5)cameraMoveY = 3;
 
             break;
         case 3:
+            leftLimit = -10.0f;
             rightLimit = 100.0f;
             break;
         }
+
 
         // ‰æ–Ê¶’[‚ÍŽ~‚Ü‚é‚æ‚¤‚É‚·‚é
         {
             if (playerPos.x <= leftLimit)playerPos.x = leftLimit;
             if (playerPos.x >= rightLimit)playerPos.x = rightLimit;
+
 
             PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
         }
@@ -417,6 +420,7 @@ void Camera::UpdateBoss(const float elapsedTime)
         case 0:
             velocityY_  += -0.03f * elapsedTime;
             cameraPos.y += velocityY_;
+
 
             const float targetPositionY = 4.5f;
 
@@ -446,6 +450,7 @@ void Camera::UpdateBoss(const float elapsedTime)
         {
             cameraPos.z = (std::max)(targetPositionZ, (cameraPos.z - moveSpeedZ));
         }
+
     }
 
     GetTransform()->SetPosition(cameraPos);
