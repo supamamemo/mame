@@ -9,6 +9,8 @@
 #include "SceneGame.h"
 #include "SceneLoading.h"
 
+#include "../../Game/Stage/StageManager.h"
+
 namespace Mame::Scene
 {
     // ‰Šú‰»
@@ -82,8 +84,9 @@ namespace Mame::Scene
             GamePad& gamePad = Input::Instance().GetGamePad();
             if (gamePad.GetButtonDown() & (GamePad::BTN_START | GamePad::BTN_BACK))
             {
-                // sceneLoading‚¶‚á‚È‚©‚Á‚½‚çˆ—‚·‚é
-                if(currentScene->GetSceneType()!=static_cast<int>(Mame::Scene::TYPE::LOAD))
+                // sceneLoading,stageLoading‚¶‚á‚È‚©‚Á‚½‚çˆ—‚·‚é
+                if (currentScene->GetSceneType() != static_cast<int>(Mame::Scene::TYPE::LOAD) &&
+                    StageManager::Instance().GetCurrentStage()->GetStageType() != static_cast<int>(Mame::Stage::TYPE::LOAD))
                     Mame::Scene::SceneManager::Instance().SetPose(Mame::Scene::SceneManager::Instance().GetPose() ? false : true);
             }
         }

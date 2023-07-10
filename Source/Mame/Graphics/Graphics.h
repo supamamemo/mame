@@ -3,6 +3,7 @@
 #include <memory>
 #include <d3d11.h>
 #include <wrl.h>
+#include <mutex>
 #include "../../shader.h"
 
 class Graphics
@@ -38,6 +39,9 @@ public:
     // スクリーン高さ取得
     float GetScreenHeight() const { return screenHeight; }
 
+    // ミューテックス取得
+    std::mutex& GetMutex() { return mutex; }
+
 private:
     static Graphics* instance;
 
@@ -49,6 +53,8 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView>  depthStencilView;
 
     std::unique_ptr<Shader> shader;
+
+    std::mutex mutex;
 
     float screenWidth;
     float screenHeight;

@@ -225,6 +225,8 @@
     <ClCompile Include="Source\Game\spriteDissolve.cpp" />
     <ClCompile Include="Source\Game\Stage\Stage.cpp" />
     <ClCompile Include="Source\Game\Stage\StageBoss.cpp" />
+    <ClCompile Include="Source\Game\Stage\StageDummy.cpp" />
+    <ClCompile Include="Source\Game\Stage\StageLoading.cpp" />
     <ClCompile Include="Source\Game\Stage\StageManager.cpp" />
     <ClCompile Include="Source\Game\Stage\StagePlains.cpp" />
     <ClCompile Include="Source\Game\Stage\StageSelection.cpp" />
@@ -309,6 +311,8 @@
     <ClInclude Include="Source\Game\spriteDissolve.h" />
     <ClInclude Include="Source\Game\Stage\Stage.h" />
     <ClInclude Include="Source\Game\Stage\StageBoss.h" />
+    <ClInclude Include="Source\Game\Stage\StageDummy.h" />
+    <ClInclude Include="Source\Game\Stage\StageLoading.h" />
     <ClInclude Include="Source\Game\Stage\StageManager.h" />
     <ClInclude Include="Source\Game\Stage\StagePlains.h" />
     <ClInclude Include="Source\Game\Stage\StageSelection.h" />

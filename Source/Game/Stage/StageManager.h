@@ -2,6 +2,8 @@
 
 #include "Stage.h"
 
+#include <DirectXMath.h>
+
 class StageManager
 {
 private:
@@ -19,12 +21,28 @@ public:
     void Render(const float& elapsedTime);  // 描画処理
     void Clear();                           // クリア
   
-    void ChangeStage(Stage* terrain);       // ステージ切り替え
+    void ChangeStage(Stage* stage);       // ステージ切り替え
 
     Stage* GetCurrentStage() const { return currentStage; }
+
+public:
+    enum class SavedHalfwayPointStage
+    {
+        None,
+        StagePlains,
+    };
+
+    struct SavedHalfPoint
+    {
+        SavedHalfwayPointStage savedHalfwayPointStage = SavedHalfwayPointStage::None;
+        DirectX::XMFLOAT3 position = {};
+    };
+
+    SavedHalfPoint savedHalfPoint_ = {};
 
 private:
     Stage* currentStage = nullptr;
     Stage* nextStage    = nullptr;
+
 };
 

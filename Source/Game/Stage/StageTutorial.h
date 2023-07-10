@@ -46,6 +46,8 @@ private:
         KeyBoardSPACE,
         SpriteOR,       // or
         Plus,           // +
+        Batu,
+        Maru,
     };
 
     enum STATE
@@ -58,7 +60,7 @@ private:
         GoalState,
     };
 
-    enum tutorialTerrain
+    enum TutorialTerrain
     {
         Zimen0,
         Zimen1,
@@ -73,29 +75,43 @@ private:
         SignBoard_drop0,
         SignBoard_drop1,
         SignBoard_dash0,
-        Goal,
+        SignBoard_noTex0,
+        SignBoard_noTex1,
+        //Goal,
     };
 
     void TutorialStateUpdate(float elapsedTime);
     void TutorialStateRender(float elapsedTime);
 
-    int tutorialState = 0;
-
-    
-
-private:
-    int stickMoveState = 0; // スティック動き
-    float stickTime = 0;
     void StickState(float elapsedTime);
     void StickStateDown(float elapsedTime);
+   
+    void StickAnimation(float elapsedTime, int state);
+
+    void MarkUpdate(float elapsedTime);
+    int markState = 0;
+    float markTimer = 0.0f;
 
 private:
     std::unique_ptr<Box> back = nullptr;
+    std::unique_ptr<Box> goal_ = nullptr;
 
-    std::unique_ptr<SpriteAnimation> spriteAnimation = nullptr;
-    int frame = 60;
+    std::unique_ptr<SpriteAnimation> spriteAnimation[2];
+
+    float frameSpeed = 8.0f;    // フレーム速度
+    float stickTime = 0;
+    int tutorialState = 0;
+    int stickMoveState = 0; // スティック動き
+    
+
+    int signBoardState = 0;
+
+    bool isPlayerMove = false;
+    bool isDisplaySignBoard[2] = {};
+
+    bool isStageClear_ = false;
 
     // UI
-    Effect* effect[4];
+    Effect* effect[4] = {};
 };
 

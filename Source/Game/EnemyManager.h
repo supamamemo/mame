@@ -27,6 +27,8 @@ public:
     void Render(const float& elapsedTime);  // 描画処理
     void DrawDebug();                       // デバッグ描画
 
+    void AllKill();
+
     void CollisionEnemyVsEnemy();           // エネミー同士の衝突判定処理
 public:
     // エネミー登録

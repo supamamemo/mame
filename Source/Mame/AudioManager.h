@@ -9,12 +9,48 @@
 
 enum class BGM
 {
+    Title,
+    StageTutorial,
+    StageSelection,
+    StagePlains,
+    StagePlains_Back,   // 草原ステージの環境音
+    StageBoss,
+    StageBoss_Back,     // ボスステージの環境音
 
+    StageClear,
+
+    BGM_Max,
 };
 
 enum class SE
 {
+    Select,
+    SelectStage,
 
+    PL_Walk,
+    PL_Dash,
+    PL_Run,
+    PL_Brake,
+    PL_Jump,
+    PL_Landing,
+    PL_Bounce,
+    PL_BounceHit,
+    PL_Damaged,
+    PL_Death,
+
+    //Tofu_Walk,
+    //Tofu_Run,
+    Tofu_Find,
+
+    Boss_Walk,
+    Boss_Run,
+    Boss_Turn,
+    Boss_HitWall,
+    Boss_Stun,
+    Boss_Down,
+    Boss_Cry,
+
+    SE_Max,
 };
 
 class AudioManager
@@ -32,6 +68,26 @@ public:
 
     void LoadAudio();                               // 音楽読み込み
 
+    // BGM再生
+    void PlayBGM(
+        const BGM& bgm, 
+        const bool isLoop = false, 
+        const bool isIgnoreQueue = false
+    );    
+
+    // SE再生
+    void PlaySE(
+        const SE& se, 
+        const bool isLoop = false, 
+        const bool isIgnoreQueue = false
+    );       
+
+    void StopBGM(const BGM& bgm);                   // BGM停止
+    void StopSE(const SE& se);                      // SE停止
+
+    void StopPlayerMoveSE();                        // プレイヤーの行動SE停止
+    void StopTofuMoveSE();                         // 豆腐の行動SE停止
+
     void StopAllBGM();                              // 全BGM停止
     void StopAllSE();                               // 全SE停止
     void StopAllAudio();                            // 全音楽停止
@@ -46,8 +102,8 @@ public:
     IXAudio2MasteringVoice*          masterVoice = nullptr;
 
 private:
-    std::unique_ptr<Audio> bgm_[8] = {};
-    std::unique_ptr<Audio> se_[8]  = {};
+    std::unique_ptr<Audio> bgm_[static_cast<int>(BGM::BGM_Max)] = {};
+    std::unique_ptr<Audio> se_[static_cast<int>(SE::SE_Max)]    = {};
 
 };
 

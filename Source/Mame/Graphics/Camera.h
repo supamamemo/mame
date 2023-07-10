@@ -78,6 +78,8 @@ public:
     void SetCameraMoveY() { cameraMoveY = 0; }
     void SetIsShake() { isShake_ = false; }
 
+    void SetLength(float l) { length = l; }
+
 private:
     Transform transform{};
 
@@ -102,6 +104,8 @@ private:
     bool cameraUp = false; // ÉJÉÅÉâè„è∏Ç∑ÇÈÇ©
     bool cameraDown = false;
 
+    float coordinatesY = 0;
+
     // tutorialóp
     int tutorialState = 0;
 
@@ -116,5 +120,7 @@ private:
         Free,
         GoalState,
     };
+
+
 };
 

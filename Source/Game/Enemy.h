@@ -32,7 +32,7 @@ public:
 
     void CollisionEnemyVsPlayer();                          // エネミーとプレイヤーの衝突判定処理  
 
-
+    bool IsInLengthPlayer(const float lengthXLimit);        // プレイヤーが距離内にいるか判定する
 
 public:
     // 移動処理
@@ -94,6 +94,7 @@ public:
 
 public: // static変数
     static float renderLengthXLimit_;   // 敵を描画する距離制限
+    static float playSELengthXLimit_;   // SEを再生する距離制限
 
 public:    
     std::unique_ptr<StateMachine> stateMachine{ nullptr };  // ステートマシン

@@ -2,20 +2,17 @@
 #include "EnemyManager.h"
 #include "PlayerManager.h"
 #include "../Mame/Scene/SceneManager.h"
+#include "../Mame/AudioManager.h"
 
 float Enemy::renderLengthXLimit_ = 40.0f;
+float Enemy::playSELengthXLimit_ = 10.0f;
 
 
 void Enemy::Render(const float& elapsedTime)
 {
     // DrawCollを少なくするためにplayerから近いものだけ描画する
-    {
-        const float& enemyPosX  = GetTransform()->GetPosition().x;
-        const float& playerPosX = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x;
-        const float lengthX = fabsf(enemyPosX - playerPosX);
+    if (!IsInLengthPlayer(renderLengthXLimit_)) return;
 
-        if (lengthX > renderLengthXLimit_) return;
-    }
     Character::Render(elapsedTime);
 }
 
@@ -44,8 +41,28 @@ void Enemy::CollisionEnemyVsPlayer()
         if (!player->ApplyDamage(1, 2.0f)) return;
 
         this->OnAttacked(); // 攻撃したときに呼ばれる処理
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.PlaySE(SE::PL_Damaged, false);   // プレイヤーの被ダメージSE再生
     }
 }
+
+
+// プレイヤーが距離内にいるか判定する
+bool Enemy::IsInLengthPlayer(const float lengthXLimit)
+{
+    const float enemyPosX  = GetTransform()->GetPosition().x;
+    const float playerPosX = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x;
+    const float lengthX    = fabsf(enemyPosX - playerPosX);
+    
+    if (lengthX > lengthXLimit)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 
 bool Enemy::Turn(
     const    float elapsedTime, 

@@ -41,6 +41,7 @@ bool framework::initialize()
 
     // 音楽読み込み
     audioManager.LoadAudio();
+    audioManager.StopAllAudio(); // 全音楽停止
 
     Mame::Scene::SceneManager::Instance().Initialize();
     // シーンタイトル

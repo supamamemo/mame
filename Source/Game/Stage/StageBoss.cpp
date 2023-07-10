@@ -2,6 +2,7 @@
 
 #include "../../Mame/Graphics/Graphics.h"
 #include "../../Mame/Scene/SceneManager.h"
+#include "../../Mame/AudioManager.h"
 
 #include "../EnemyManager.h"
 
@@ -10,58 +11,72 @@
 
 #include "../UIManager.h"
 
+#include "../BossStateDerived.h"
+
+#include "StageManager.h"
+
 // コンストラクタ
 StageBoss::StageBoss()
 {
-    Graphics& graphics = Graphics::Instance();
-
-    // ステージ生成&登録
-    {
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
-
-
-        TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
-    }
-
-    // player生成
-    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
-
-    // boss生成
-    EnemyManager::Instance().Register(new Boss());
-
-    // bossのhp用
-    chefHat = std::make_unique<Sprite>(graphics.GetDevice(), L"./resources/chefHat.png");
-
-    // 背景仮
-    back = std::make_unique<Box>("./resources/back.fbx");
-
-    // UI
-    {
-        // mameoHP
-        UIManager::Instance().Register(new UI(L"./resources/ui/baseMameHp.png"));
-        UIManager::Instance().Register(new UI(L"./resources/ui/mameLeft.png"));
-        UIManager::Instance().Register(new UI(L"./resources/ui/mameCenter.png"));
-        UIManager::Instance().Register(new UI(L"./resources/ui/mameRight.png"));
-
-        // bossHP
-
-        UIManager::Instance().Initialize();
-    }
 }
 
 // 初期化
 void StageBoss::Initialize()
 {
+    Graphics& graphics = Graphics::Instance();
+
+    StageManager& stageManager = StageManager::Instance();
+
+    // ステージの属性を設定
+    SetStageType(static_cast<int>(Mame::Stage::TYPE::BOSS));
+
+    // 生成
+    {
+        // ステージ生成&登録
+        {
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
+
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
+        }
+
+        // player生成
+        PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+
+        // boss生成
+        EnemyManager::Instance().Register(new Boss());
+
+        // 背景仮
+        back = std::make_unique<Box>("./resources/back.fbx");
+
+        // UI
+        {
+            // mameoHP
+            UIManager::Instance().Register(new UI(L"./resources/ui/baseMameHp.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/mameLeft.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/mameCenter.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/mameRight.png"));
+
+            // bossHP
+            UIManager::Instance().Register(new UI(L"./resources/ui/baseBossHp.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/bossLeft.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/bossCenter.png"));
+            UIManager::Instance().Register(new UI(L"./resources/ui/bossRight.png"));
+
+            UIManager::Instance().Initialize();
+        }
+    }
+
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
@@ -85,8 +100,8 @@ void StageBoss::Initialize()
 
             terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 11, 10));
 
-            terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 11, 10));
-            terrainManager.GetTerrain(3)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.72f, 1.0f, 1.0f));
+            terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 11, 10));
+            terrainManager.GetTerrain(3)->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
             terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 8, 10));
             terrainManager.GetTerrain(4)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
@@ -111,6 +126,7 @@ void StageBoss::Initialize()
     // player初期化
     PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(-28.0f, 1.0f, 10.0f));
     PlayerManager::Instance().Initialize();
+    stageManager.savedHalfPoint_ = {};
 
     // boss初期化   
     EnemyManager::Instance().Initialize();
@@ -126,13 +142,30 @@ void StageBoss::Initialize()
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetPosition(playerUiPos);
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetSize(playerUiSize);
 
+        UIManager::Instance().GetUI(UISPRITE::BaseBossHp)->SetPosition(bossUiPos);
+        UIManager::Instance().GetUI(UISPRITE::BaseBossHp)->SetSize(bossUiSize);
+        UIManager::Instance().GetUI(UISPRITE::BossHpLeft)->SetPosition(bossUiPos);
+        UIManager::Instance().GetUI(UISPRITE::BossHpLeft)->SetSize(bossUiSize);
+        UIManager::Instance().GetUI(UISPRITE::BossHpCenter)->SetPosition(bossUiPos);
+        UIManager::Instance().GetUI(UISPRITE::BossHpCenter)->SetSize(bossUiSize);
+        UIManager::Instance().GetUI(UISPRITE::BossHpRight)->SetPosition(bossUiPos);
+        UIManager::Instance().GetUI(UISPRITE::BossHpRight)->SetSize(bossUiSize);
+
         UIManager::Instance().GetUI(UISPRITE::BaseMameHp)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpLeft)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpCenter)->SetIsRender(true);
         UIManager::Instance().GetUI(UISPRITE::mameHpRight)->SetIsRender(true);
 
+        UIManager::Instance().GetUI(UISPRITE::BaseBossHp)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::BossHpLeft)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::BossHpCenter)->SetIsRender(true);
+        UIManager::Instance().GetUI(UISPRITE::BossHpRight)->SetIsRender(true);
+
         UIManager::Instance().Initialize();
     }
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::StageBoss_Back, true); // ボス戦環境音BGM再生
 }
 
 // 終了化
@@ -153,6 +186,9 @@ void StageBoss::Finalize()
     // ui終了化
     UIManager::Instance().Finalize();
     UIManager::Instance().Clear();
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopAllAudio(); // 全音楽停止
 }
 
 // Updateの前に呼ばれる
@@ -180,11 +216,28 @@ void StageBoss::Update(const float& elapsedTime)
         PlayerManager& playerManager = PlayerManager::Instance();
         playerManager.Update(elapsedTime);
 
-        if (PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x >= -11.0f
-            && Camera::Instance().GetTransform()->GetPosition().x == 0.0f)
+        if (!isEnemyUpdate_)
+        {
+            if (PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition().x >= -11.0f
+                && Camera::Instance().GetTransform()->GetPosition().x == 0.0f)
+            {
+                isEnemyUpdate_ = true;
+            }
+        }
+        else
         {
             // enemy更新
-            EnemyManager::Instance().Update(elapsedTime);
+            EnemyManager& enemyManager = EnemyManager::Instance();
+            enemyManager.Update(elapsedTime);
+
+            // ボスが歩行ステートなら歩行SE再生
+            const int bossCurrentState = enemyManager.GetEnemy(0)->GetStateMachine()->GetStateIndex();
+            const int bossStateWalk    = static_cast<int>(BOSS::STATE::Walk);
+            if (bossCurrentState == bossStateWalk)
+            {
+                AudioManager& audioManager = AudioManager::Instance();
+                audioManager.PlaySE(SE::Boss_Walk, true); // 歩行SE再生
+            }
         }
 
         Camera::Instance().UpdateBoss(elapsedTime);
@@ -220,7 +273,7 @@ void StageBoss::Update(const float& elapsedTime)
     PlayerHpUiUpdate(elapsedTime);
 
     // bossHp
-
+    BossHpUiUpdate(elapsedTime);
 }
 
 // Updateの後に呼ばれる処理
@@ -255,13 +308,8 @@ void StageBoss::Render(const float& elapsedTime)
     // boss描画
     EnemyManager::Instance().Render(elapsedTime);
 
-    //playerHp
+    //playerHp & bossHp
     UIManager::Instance().Render(elapsedTime);
-
-    // bossHp
-    shader->SetState(graphics.GetDeviceContext(), 3, 0, 0);
-    chefHat->render(graphics.GetDeviceContext(), spr.pos.x, spr.pos.y, spr.texPos.x, spr.texPos.y);
-
 }
 
 // debug用
@@ -278,20 +326,11 @@ void StageBoss::DrawDebug()
     // boss
     EnemyManager::Instance().DrawDebug();
 
-    // bossHp
-    
-
     // 背景仮
     back->DrawDebug();
 
     // ui
     UIManager::Instance().DrawDebug();
-
-    ImGui::Begin("spr");
-    ImGui::DragFloat2("pos", &spr.pos.x);
-    ImGui::DragFloat2("texPos", &spr.texPos.x);
-    ImGui::End();
-
 #endif
 }
 
@@ -304,7 +343,7 @@ void StageBoss::PlayerHpUiUpdate(float elapsedTime)
         SetUiState();
         UIManager::Instance().SetUiCenter(false);
     }
-    UpdateUi(3, 1.0f, uiState, elapsedTime);
+    PlayerUpdateUi(3, 1.0f, uiState, elapsedTime);
 
 
     switch (health)
@@ -321,7 +360,7 @@ void StageBoss::PlayerHpUiUpdate(float elapsedTime)
     }
 }
 
-void StageBoss::UpdateUi(int uiCount, float speed, int state, float elapsedTime)
+void StageBoss::PlayerUpdateUi(int uiCount, float speed, int state, float elapsedTime)
 {
     switch (state)
     {
@@ -347,7 +386,7 @@ void StageBoss::UpdateUi(int uiCount, float speed, int state, float elapsedTime)
             DirectX::XMFLOAT3 pos = UIManager::Instance().GetUI(i)->GetPosition();
             DirectX::XMFLOAT2 size = UIManager::Instance().GetUI(i)->GetSize();
 
-            pos.x -= speed * 1.63;
+            pos.x -= speed * 1.63f;
             pos.y -= speed;
             size.x -= speed * 2.15f;
             size.y -= speed;
@@ -367,4 +406,34 @@ void StageBoss::UpdateUi(int uiCount, float speed, int state, float elapsedTime)
         }
         break;
     }
+}
+
+void StageBoss::BossHpUiUpdate(float elapsedTime)
+{
+    int health = EnemyManager::Instance().GetEnemy(0)->GetHealth();
+
+    //if (UIManager::Instance().GetUiCenter())
+    //{
+    //    SetUiState();
+    //    UIManager::Instance().SetUiCenter(false);
+    //}
+    //PlayerUpdateUi(3, 1.0f, uiState, elapsedTime);
+
+
+    switch (health)
+    {
+    case 0:
+        UIManager::Instance().GetUI(UISPRITE::BossHpLeft)->SetIsRender(false);
+        break;
+    case 1:
+        UIManager::Instance().GetUI(UISPRITE::BossHpCenter)->SetIsRender(false);
+        break;
+    case 2:
+        UIManager::Instance().GetUI(UISPRITE::BossHpRight)->SetIsRender(false);
+        break;
+    }
+}
+
+void StageBoss::BossUpdateUi(int uiCount, float speed, int state, float elapsedTime)
+{
 }

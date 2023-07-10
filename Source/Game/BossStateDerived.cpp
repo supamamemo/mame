@@ -1,10 +1,12 @@
-#include "Boss.h"
 #include "BossStateDerived.h"
+
+#include "../Mame/AudioManager.h"
 
 #include "PlayerManager.h"
 
-#include "CannonBall.h"
+#include "Boss.h"
 #include "EnemyTofu.h"
+#include "CannonBall.h"
 
 
 // playerが索敵範囲内にいるか判定する
@@ -141,6 +143,9 @@ namespace BOSS
 
         // 進む方向を設定する
         owner->SetMoveDirectionX(vecX_n);
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.PlaySE(SE::Boss_Turn, true); // 旋回SE再生
     }
 
     // 更新
@@ -177,12 +182,17 @@ namespace BOSS
             //}
             //owner->GetTransform()->SetRotation(rotation);
         }
+
         // 回転が終わったら攻撃ステートへ遷移
         const float moveDirectionX = owner->GetMoveDirectionX();
         const float turnSpeed      = owner->GetTurnSpeed();      
         if (!owner->Turn(elapsedTime, moveDirectionX, turnSpeed)) 
         {
             owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Attack));
+
+            AudioManager& audioManager = AudioManager::Instance();
+            audioManager.StopSE(SE::Boss_Turn); // ダウンSE停止
+
             return;
         }
 
@@ -209,6 +219,9 @@ namespace BOSS
         
         // アニメーションセット
         owner->PlayAnimation(static_cast<int>(BossAnimation::Attack), true);
+
+        // 走行SE再生
+        AudioManager::Instance().PlaySE(SE::Boss_Run, true);
     }
 
     // 更新
@@ -271,9 +284,15 @@ namespace BOSS
 
             if (currentRecoilLength >= recoilLength)
             {
-                state = 1;
                 owner->PlayAnimation(static_cast<int>(BossAnimation::Confusion), true);
+
                 SetTimer(confusionTime);
+
+                AudioManager& audioManager = AudioManager::Instance();
+                audioManager.PlaySE(SE::Boss_Stun, true); // 気絶SE再生
+
+                state = 1;
+                break;
             }
 
             break;
@@ -282,12 +301,21 @@ namespace BOSS
             if (GetTimer() <= 0.0f)
             {
                 owner->PlayAnimation(static_cast<int>(BossAnimation::DeConfusion), false);
+
                 state = 2;
+                break;
             }
 
             break;
         case 2:
-            if (!owner->IsPlayAnimation())state = 3;
+            if (!owner->IsPlayAnimation())
+            {
+                AudioManager& audioManager = AudioManager::Instance();
+                audioManager.StopSE(SE::Boss_Stun); // 気絶SE停止
+
+                state = 3;
+                break;
+            }
 
             break;
         case 3:
@@ -311,7 +339,10 @@ namespace BOSS
     // 初期化
     void DamageState::Enter()
     {
-        owner->PlayAnimation(static_cast<int>(BossAnimation::GetAttack), false);        
+        owner->PlayAnimation(static_cast<int>(BossAnimation::GetAttack), false);   
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.StopSE(SE::Boss_Stun); // 気絶SE停止
     }
 
     // 更新
@@ -322,9 +353,16 @@ namespace BOSS
         if (GetTimer() <= 0.0f)
         {
             if (owner->GetHealth() > 0)
+            {
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Idle));
+            }
             else
+            {
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Cry));
+
+                // ボス戦BGM停止
+                AudioManager::Instance().StopBGM(BGM::StageBoss);
+            }
         }
     }
 
@@ -341,6 +379,9 @@ namespace BOSS
     void CryState::Enter()
     {
         owner->PlayAnimation(static_cast<int>(BossAnimation::Fall), false);
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.PlaySE(SE::Boss_Down, false); // ダウンSE再生
     }
 
     // 更新
@@ -352,7 +393,12 @@ namespace BOSS
             if (!owner->IsPlayAnimation())
             {
                 owner->PlayAnimation(static_cast<int>(BossAnimation::Cry), true);
+
+                AudioManager& audioManager = AudioManager::Instance();
+                audioManager.PlaySE(SE::Boss_Cry, true); // 泣きSE再生
+
                 state = 1;
+                break;
             }
 
             break;
@@ -404,9 +450,13 @@ namespace BOSS
     // 終了
     void WalkState::Exit()
     {
-
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.StopSE(SE::Boss_Walk);     // 歩行SE停止   
+        audioManager.PlayBGM(BGM::StageBoss, true);  // ボス戦BGM再生
     }
 }
+
+
 
 // WalkState
 namespace TOFU
@@ -422,12 +472,27 @@ namespace TOFU
 
         // アニメーション設定
         owner->PlayAnimation(TofuAnimation::Walk, true);
+
+        //seTimer_ = 1.0f;
     }
 
     // 更新
     void WalkState::Execute(float elapsedTime)
     {
-        Transform* transform = owner->GetTransform();                
+        Transform* transform = owner->GetTransform();           
+
+        //seTimer_ -= elapsedTime;
+        //if (seTimer_ <= 0.0f)
+        //{
+        //    // プレイヤーが一定距離内にいたらSEを再生させる
+        //    if (!owner->IsInLengthPlayer(Enemy::playSELengthXLimit_))
+        //    {
+        //        AudioManager& audioManager = AudioManager::Instance();
+        //        audioManager.StopSE(SE::Tofu_Walk); // 歩行SE再生
+        //        audioManager.PlaySE(SE::Tofu_Walk, false, true); // 歩行SE再生
+        //    }
+        //    seTimer_ = 1.0f;
+        //}
 
         // 向いている方向に移動
         owner->Move(owner->GetMoveDirectionX(), owner->GetMoveSpeed());
@@ -492,6 +557,7 @@ namespace TOFU
     // 終了
     void WalkState::Exit()
     {
+        //seTimer_ = 0.0f;
     }
 
 }
@@ -504,6 +570,12 @@ namespace TOFU
     {
         // 旋回アニメーション設定
         owner->PlayAnimation(TofuAnimation::Turn, true);
+
+        //if (!owner->IsInLengthPlayer(Enemy::playSELengthXLimit_))
+        //{
+        //    AudioManager& audioManager = AudioManager::Instance();
+        //    audioManager.StopTofuMoveSE();
+        //}
     }
 
     // 更新
@@ -557,6 +629,14 @@ namespace TOFU
 
         // アニメーション設定
         owner->PlayAnimation(TofuAnimation::Walk, true);
+
+        // プレイヤーが一定距離内にいたらSEを再生させる
+        if (owner->IsInLengthPlayer(Enemy::playSELengthXLimit_))
+        {
+            AudioManager& audioManager = AudioManager::Instance();
+            audioManager.StopSE(SE::Tofu_Find);
+            audioManager.PlaySE(SE::Tofu_Find, false, true);  // 発見SE再生
+        }
     }
 
     // 更新
@@ -606,11 +686,25 @@ namespace TOFU
 
         owner->PlayAnimation(TofuAnimation::Walk, true);
         owner->SetAnimationSpeed(1.25f); // アニメーション速度を速めに設定
+
+        //seTimer_ = 1.0f;
     }
 
     // 更新
     void TrackState::Execute(float elapsedTime)
     {
+        //seTimer_ -= elapsedTime;
+        //if (seTimer_ <= 0.0f)
+        //{
+        //    // プレイヤーが一定距離内にいたらSEを再生させる
+        //    if (!owner->IsInLengthPlayer(Enemy::playSELengthXLimit_))
+        //    {
+        //        AudioManager& audioManager = AudioManager::Instance();
+        //        audioManager.PlaySE(SE::Tofu_Run, false, true); // 歩行SE再生
+        //    }
+        //    seTimer_ = 1.0f;
+        //}
+
         const std::unique_ptr<Player>& player = PlayerManager::Instance().GetPlayer();
 
         // プレイヤーへ向かう方向を算出して移動方向に設定
@@ -667,6 +761,7 @@ namespace TOFU
     // 終了
     void TrackState::Exit()
     {
+        //seTimer_ = 0.0f;
     }
 }
 
@@ -931,6 +1026,14 @@ namespace RED_TOFU
 
         // アニメーション設定
         owner->PlayAnimation(TofuAnimation::Walk, true);
+
+        // プレイヤーが一定距離内にいたらSEを再生させる
+        if (owner->IsInLengthPlayer(Enemy::playSELengthXLimit_))
+        {
+            AudioManager& audioManager = AudioManager::Instance();
+            audioManager.StopSE(SE::Tofu_Find);
+            audioManager.PlaySE(SE::Tofu_Find, false, true);  // 発見SE再生
+        }
     }
 
     // 更新

@@ -316,6 +316,10 @@
     <ClCompile Include="Source\Game\SpriteAnimation.cpp">
       <Filter>mamelib\Game</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Game\Stage\StageLoading.cpp">
+      <Filter>mamelib\Game\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Stage\StageDummy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="External\imgui\imconfig.h">
@@ -584,6 +588,10 @@
     <ClInclude Include="Source\Game\SpriteAnimation.h">
       <Filter>mamelib\Game</Filter>
     </ClInclude>
+    <ClInclude Include="Source\Game\Stage\StageLoading.h">
+      <Filter>mamelib\Game\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Stage\StageDummy.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Source\Shader\fullscreen_quad.hlsli">

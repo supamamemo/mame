@@ -29,22 +29,43 @@ void SpriteAnimation::Initialize(DirectX::XMFLOAT2 pos, DirectX::XMFLOAT2 size, 
     animationTime = 0;
 }
 
-void SpriteAnimation::PlayAnimation(const int& frameTime, const int& totalAnimationFrame, bool animationVertical)
+void SpriteAnimation::PlayAnimation(
+    const float elapsedTime,
+    const float frameSpeed, 
+    const int   totalAnimationFrame, 
+    const bool  animationVertical)
 {
-    animationFrame = animationTime / frameTime;
+    animationTime += frameSpeed * elapsedTime;
 
-    if (animationFrame >= totalAnimationFrame)
+    const int animetionTime_int = static_cast<int>(animationTime); // è¨êîì_êÿÇËéÃÇƒ
+    animationFrame = static_cast<float>(animetionTime_int);
+
+    if (animationFrame > totalAnimationFrame)
     {
-        animationFrame = 0;
-        animationTime = 0;
+        animationFrame = 0.0f;
+        animationTime  = 0.0f;
     }
 
-    if(animationVertical)
-        texPos.y = texSize.y * animationFrame;
-    else
-        texPos.x = texSize.x * animationFrame;
+    if (animationVertical) texPos.y = texSize.y * animationFrame;
+    else                   texPos.x = texSize.x * animationFrame;
 
-    ++animationTime;
+    {
+        //animationFrame = animationTime / frameTime;
+
+        //if (animationFrame >= totalAnimationFrame)
+        //{
+        //    animationFrame = 0;
+        //    animationTime = 0;
+        //}
+
+        //if(animationVertical)
+        //    texPos.y = texSize.y * animationFrame;
+        //else
+        //    texPos.x = texSize.x * animationFrame;
+
+        //++animationTime;
+    }
+
 }
 
 void SpriteAnimation::Render()

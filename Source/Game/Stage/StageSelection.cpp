@@ -4,44 +4,58 @@
 #include "../../Mame/Graphics/Camera.h"
 #include "../../Mame/Scene/SceneManager.h"
 #include "../../Mame/Input/Input.h"
+#include "../../Mame/AudioManager.h"
 
 #include "../EnemyManager.h"
 #include "../Terrain/TerrainManager.h"
 #include "../Terrain/TerrainNormal.h"
 #include "../PlayerManager.h"
 
+#include "StageManager.h"
+#include "StageLoading.h"
+#include "StageTutorial.h"
+#include "StagePlains.h"
+#include "StageBoss.h"
+
 // コンストラクタ
 StageSelection::StageSelection()
 {
-    // 背景
-    //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
-    back = std::make_unique<Box>("./resources/tutorialBack.fbx");
-
-    // 城
-    castle = std::make_unique<Box>("./resources/castel.fbx");
-
-    // boss
-    boss = std::make_unique<Box>("./resources/bossall.fbx");
-
-    // point
-    point[POINT::Black] = std::make_unique<Box>("./resources/select/pointBlack.fbx");
-    point[POINT::Red] = std::make_unique<Box>("./resources/select/pointRed.fbx");
-    point[POINT::Blue] = std::make_unique<Box>("./resources/select/pointBlue.fbx");
-
-    // terrain生成
-    TerrainManager& terrainManager = TerrainManager::Instance();
-    {
-        terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx")); // 0
-        terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx")); // 1
-    }
-
-    // player生成
-    PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
 }
 
 // 初期化
 void StageSelection::Initialize()
 {
+    // ステージの属性を設定
+    SetStageType(static_cast<int>(Mame::Stage::TYPE::SELECT));
+
+    // 生成
+    {
+        // 背景
+        //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
+        back = std::make_unique<Box>("./resources/tutorialBack.fbx");
+
+        // 城
+        castle = std::make_unique<Box>("./resources/castel.fbx");
+
+        // boss
+        boss = std::make_unique<Box>("./resources/bossall.fbx");
+
+        // point
+        point[POINT::Black] = std::make_unique<Box>("./resources/select/pointBlack.fbx");
+        point[POINT::Red] = std::make_unique<Box>("./resources/select/pointRed.fbx");
+        point[POINT::Blue] = std::make_unique<Box>("./resources/select/pointBlue.fbx");
+
+        // terrain生成
+        TerrainManager& terrainManager = TerrainManager::Instance();
+        {
+            terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx")); // 0
+            terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx")); // 1
+        }
+
+        // player生成
+        PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
+    }
+
     // camera初期化
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 16, -20));
@@ -58,6 +72,7 @@ void StageSelection::Initialize()
     {
         castle->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 6, 2));
         castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.15f, 0.15f, 0.15f));
+        castle->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(-10), 0.0f, 0.0f, 0.0f));
     }
 
     // boss
@@ -95,6 +110,10 @@ void StageSelection::Initialize()
         //playerManager.GetPlayer()->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1.5f, 0.0f));
         playerManager.Initialize();
     }
+
+    // BGM再生
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.PlayBGM(BGM::StageSelection, true);  // ステージセレクトBGM再生
 }
 
 // 終了化
@@ -106,6 +125,9 @@ void StageSelection::Finalize()
 
     // player終了化
     PlayerManager::Instance().Finalize();
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopAllAudio(); // 全音楽停止
 }
 
 // Updateの前に呼ばれる処理
@@ -117,6 +139,8 @@ void StageSelection::Begin()
 void StageSelection::Update(const float& elapsedTime)
 {
     GamePad& gamePad = Input::Instance().GetGamePad();
+
+    AudioManager& audioManager = AudioManager::Instance();
 
     // boss
     boss->SelectBossUpdate(elapsedTime);
@@ -138,7 +162,11 @@ void StageSelection::Update(const float& elapsedTime)
         // tutorialStageへ
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
-            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Tutorial));
+            StageManager::Instance().ChangeStage(new StageLoading(new StageTutorial));
+
+            audioManager.StopSE(SE::Select);
+            audioManager.PlaySE(SE::Select, false, true); // 選択SE再生
+            break;
         }
 
         break;
@@ -150,7 +178,12 @@ void StageSelection::Update(const float& elapsedTime)
         // plainsStageへ
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
-            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Plains));
+            StageManager::Instance().ChangeStage(new StageLoading(new StagePlains));
+
+            audioManager.StopSE(SE::Select);
+            audioManager.PlaySE(SE::Select, false, true); // 選択SE再生
+
+            break;
         }
 
         break;
@@ -162,7 +195,12 @@ void StageSelection::Update(const float& elapsedTime)
         // bossStageへ
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
-            Mame::Scene::SceneManager::Instance().GetCurrentScene()->ChangeStage(static_cast<int>(Mame::Scene::STAGE::Boss));
+            StageManager::Instance().ChangeStage(new StageLoading(new StageBoss));
+
+            audioManager.StopSE(SE::Select);
+            audioManager.PlaySE(SE::Select, false, true); // 選択SE再生
+
+            break;
         }
 
         break;

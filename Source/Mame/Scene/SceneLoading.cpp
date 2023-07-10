@@ -11,7 +11,10 @@ SceneLoading::SceneLoading(BaseScene* nextScene) :nextScene(nextScene)
 
     spriteDissolve = std::make_unique<SpriteDissolve>();
 
-    spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet.png");
+    //spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet.png");
+    //spriteAnimation = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet1.png");
+    spriteAnimation[0] = std::make_unique<SpriteAnimation>(L"./resources/mameo_Sheet2.png");
+    spriteAnimation[1] = std::make_unique<SpriteAnimation>(L"./resources/loadingsheet.png");
 }
 
 // 初期化
@@ -27,8 +30,10 @@ void SceneLoading::Initialize()
     spriteDissolve->SetFadeOutTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
     //spriteDissolve->SetFadeInTexture({ 0,0 }, { 1280,720 }, 0.4f, 6);
 
-    spriteAnimation->Initialize(DirectX::XMFLOAT2(400.0f, 300.0f),
-        DirectX::XMFLOAT2(450.0f, 183.5f), DirectX::XMFLOAT2(900.0f, 367.0f));
+    spriteAnimation[0]->Initialize(DirectX::XMFLOAT2(320.0f, 210.0f),
+        DirectX::XMFLOAT2(540.0f, 220.2f), DirectX::XMFLOAT2(900.0f, 367.0f));
+    spriteAnimation[1]->Initialize(DirectX::XMFLOAT2(400.0f, 440.0f),
+        DirectX::XMFLOAT2(450.0f, 180.0f), DirectX::XMFLOAT2(900.0f, 367.0f));
     
 
     // スレッド開始
@@ -57,7 +62,10 @@ void SceneLoading::Update(const float& elapsedTime)
 {
     spriteDissolve->Update();
 
-    spriteAnimation->PlayAnimation(10, 30, true);
+    const float frameSpeed = 30.0f;   // フレーム速度
+    const int   totalFrame = 30;      // フレームの枚数
+    spriteAnimation[0]->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
+    spriteAnimation[1]->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
 
     //spriteDissolve.fadeOut(elapsedTime);
     //spriteDissolve->FadeIn(elapsedTime);
@@ -98,7 +106,8 @@ void SceneLoading::Render(const float& elapsedTime)
     {
         spriteDissolve->Render();
 
-        spriteAnimation->Render();
+        spriteAnimation[0]->Render();
+        spriteAnimation[1]->Render();
     }
 }
 
@@ -107,7 +116,8 @@ void SceneLoading::DrawDebug()
 #ifdef USE_IMGUI
     spriteDissolve->DrawDebug();
 
-    spriteAnimation->DrawDebug();
+    spriteAnimation[0]->DrawDebug();
+    spriteAnimation[1]->DrawDebug();
 
 #endif// USE_IMGUI
 }

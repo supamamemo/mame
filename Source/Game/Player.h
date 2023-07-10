@@ -3,8 +3,61 @@
 #include "Character.h"
 #include "../Mame/Graphics/Effect.h"
 
+enum ClearState
+{
+    LookToCamera,   // カメラの方向を見る
+    JumpForJoy,     // 飛び跳ねさせる
+    MoveToLeft,     // 左に下がる
+    MoveToRight,    // 右に進む
+};
+
+
 class Player : public Character
 {
+// enum関連
+public: 
+    // ステート
+    enum class State
+    {
+        Idle,    // 待機
+        Walk,    // 歩行
+        Dash,    // ダッシュ(一時的な急加速)
+        Run,     // 走行
+        Jump,    // ジャンプ
+        HipDrop, // ヒップドロップ
+        Death,   // 死亡
+        Clear    // クリア
+    };
+
+private:
+    // アニメーション
+    enum Animation
+    {
+        Anim_Idle,      // 待機
+        Anim_Dash,      // ダッシュ（一時的な急加速）
+        Anim_Run,       // 走行
+        Anim_Brake,     // ブレーキ
+        Anim_JumpInit,  // ジャンプ開始
+        Anim_Jump,      // ジャンプ
+        Anim_Fall,      // 落下
+        Anim_JumpEnd,   // 着地（ジャンプ終了）
+        Anim_HipDrop,   // ヒップドロップ
+        Anim_Walk,      // 歩行
+        Anim_Max,       // アニメーション最大数
+    };
+
+    // ステージ選択
+    enum SELECT
+    {
+        TutorialStage,  // チュートリアル
+        Move_T_P,       // チュートリアル->野原
+        Move_P_T,       // 野原->チュートリアル
+        PlainsStage,    // 野原
+        Move_P_B,       // 野原->ボス
+        Move_B_P,       // ボス->野原
+        BossStage,      // ボス
+    };
+
 public:
     Player();
     ~Player() override;
@@ -23,6 +76,8 @@ public:
     void SetIsAnimationSet(bool a) { isAnimationSet = a; }
     bool GetIsAnimationSet() { return isAnimationSet; }
 
+    const State& GetState() const { return state; };
+    const int GetClearState() const { return clearState_; }
 public:
     // ダメージを与える
     bool ApplyDamage(
@@ -43,6 +98,9 @@ private: // 更新処理関数関連
     void UpdateDashCoolTimer(const float& elapsedTime);         // ダッシュクールタイム更新処理
     void UpdateBounceInvincibleTimer(const float& elapsedTime); // バウンス無敵時間更新
 
+private:
+    bool TurnToCamera(const float elapsedTime, NO_CONST float turnSpeed);  // カメラの方向に向く
+       
 private: // 瞬間的に呼ばれる関数関連
     void OnLanding()    override;                       // 着地したときに呼ばれる   
     void OnDash()       override;                       // ダッシュしているときに呼ばれる
@@ -71,48 +129,11 @@ private: // ステート関数関連
     void UpdateHipDropState(const float& elapsedTime);  // ヒップドロップステート更新処理    
     
     void TransitionDeathState();                        // 死亡ステートへ遷移   
-    void UpdateDeathState(const float& elapsedTime);    // 死亡ステート更新処理
-
-private: // enum関連
-    // ステート
-    enum class State
-    {
-        Idle,    // 待機
-        Walk,    // 歩行
-        Dash,    // ダッシュ(一時的な急加速)
-        Run,     // 走行
-        Jump,    // ジャンプ
-        HipDrop, // ヒップドロップ
-        Death,   // 死亡
-    };
-
-    // アニメーション
-    enum Animation
-    {
-        Anim_Idle,      // 待機
-        Anim_Dash,      // ダッシュ（一時的な急加速）
-        Anim_Run,       // 走行
-        Anim_Break,     // ブレーキ
-        Anim_JumpInit,  // ジャンプ開始
-        Anim_Jump,      // ジャンプ
-        Anim_Fall,      // 落下
-        Anim_JumpEnd,   // 着地（ジャンプ終了）
-        Anim_HipDrop,   // ヒップドロップ
-        Anim_Walk,      // 歩行
-        Anim_Max,       // アニメーション最大数
-    };
-
-    // ステージ選択
-    enum SELECT
-    {
-        TutorialStage,  // チュートリアル
-        Move_T_P,       // チュートリアル->野原
-        Move_P_T,       // 野原->チュートリアル
-        PlainsStage,    // 野原
-        Move_P_B,       // 野原->ボス
-        Move_B_P,       // ボス->野原
-        BossStage,      // ボス
-    };
+    void UpdateDeathState(const float& elapsedTime);    // 死亡ステート更新処理    
+    
+    void UpdateClearState(const float& elapsedTime);    // クリアステート更新処理
+public:
+    void TransitionClearState();                        // クリアステートへ遷移   
 
 private: // 変数関連
     State   state                   = State::Idle;          // 現在のステート
@@ -144,8 +165,15 @@ private: // 変数関連
 
     float   deathGravity_           = -0.5f;                // 死亡ステート時の重力
 
+    float   clearAcceleration_      =  0.7f;                // クリアステート時の加速力
+    float   clearMoveSpeed_         =  25.0f;               // クリアステート時の移動速度
+    float   clearTimer_             =  0.0f;                // クリアステート時のタイマー
+
     int     bounceCount             =  0;                   // バウンス回数
     int     bounceLimit             =  2;                   // 最大バウンス回数
+
+    int     clearState_             =  0;                   // クリアステート内のステート
+    int     clearJumpCount_         =  0;                   // クリアステートのジャンプカウント
 
     Effect* effect[2];
 

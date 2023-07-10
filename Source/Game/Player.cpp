@@ -3,11 +3,13 @@
 #include "../Mame/Graphics/Graphics.h"
 #include "../Mame/Input/Input.h"
 #include "../Mame/Scene/SceneManager.h"
+#include "../Mame/AudioManager.h"
 
 #include "OperatorXMFLOAT3.h"
 #include "EnemyManager.h"
 
 #include "UIManager.h"
+
 
 Player::Player()
 {
@@ -71,9 +73,11 @@ void Player::Begin()
 
 void Player::UpdateSelectStage(const float& elapsedTime, int* state)
 {
-    GamePad& gamePad = Input::Instance().GetGamePad();
-    float ax = gamePad.GetAxisLX();
-    const float moveSpeed = elapsedTime * 10;
+    const GamePad& gamePad   = Input::Instance().GetGamePad();
+    const float    ax        = gamePad.GetAxisLX();
+    const float    moveSpeed = elapsedTime * 10;
+
+    NO_CONST AudioManager& audioManager = AudioManager::Instance();
 
     // AABB更新処理
     UpdateAABB();
@@ -86,109 +90,129 @@ void Player::UpdateSelectStage(const float& elapsedTime, int* state)
 
     switch (*state)
     {
-        case SELECT::TutorialStage:
-            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Idle, true);
-            rot.y = DirectX::XMConvertToRadians(180);
+    case SELECT::TutorialStage:
+        if (!GetIsAnimationSet()) PlayAnimation(Animation::Anim_Idle, true);
+        rot.y = DirectX::XMConvertToRadians(180);
 
-            // plainStageに行けるかどうか
-            if (Mame::Scene::SceneManager::Instance().selectState > 0)
+        // plainStageに行けるかどうか
+        if (Mame::Scene::SceneManager::Instance().selectState > 0)
+        {
+            // スティック右に傾けたら
+            if (ax > 0)
             {
-                // スティック右に傾けたら
-                if (ax > 0)
-                {
-                    *state = SELECT::Move_T_P;
-                    SetIsAnimationSet(false);
-                    rot.y = DirectX::XMConvertToRadians(90);
-                }
-            }
-
-            break;
-        case SELECT::Move_T_P:
-            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
-
-            pos.x += moveSpeed;
-            if (pos.x >= 0)
-            {
-                *state = SELECT::PlainsStage;
-                pos.x = 0;
                 SetIsAnimationSet(false);
+                rot.y = DirectX::XMConvertToRadians(90);
+
+                audioManager.StopSE(SE::SelectStage);
+                audioManager.PlaySE(SE::SelectStage, false, true); // 選択SE再生
+
+                *state = SELECT::Move_T_P;
+                break;
             }
+        }
 
+        break;
+    case SELECT::Move_T_P:
+        if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+        pos.x += moveSpeed;
+        if (pos.x >= 0)
+        {
+            *state = SELECT::PlainsStage;
+            pos.x = 0;
+            SetIsAnimationSet(false);
+        }
+
+        break;
+    case SELECT::Move_P_T:
+        if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+        pos.x -= moveSpeed;
+        if (pos.x < -7.0f)
+        {
+            *state = SELECT::TutorialStage;
+            pos.x = -7.0f;
+            SetIsAnimationSet(false);
+        }
+
+        break;
+    case SELECT::PlainsStage:
+        if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Idle, true);
+        rot.y = DirectX::XMConvertToRadians(180);
+
+        // スティック左に傾けたら
+        if (ax < 0)
+        {
+            SetIsAnimationSet(false);
+            rot.y = DirectX::XMConvertToRadians(270);
+
+            audioManager.StopSE(SE::SelectStage);
+            audioManager.PlaySE(SE::SelectStage, false, true); // 選択SE再生
+
+            *state = SELECT::Move_P_T;
             break;
-        case SELECT::Move_P_T:
-            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+        }
 
-            pos.x -= moveSpeed;
-            if (pos.x < -7.0f)
+        // bossStageに行けるかどうか
+        if (Mame::Scene::SceneManager::Instance().selectState > 1)
+        {
+            // スティック右に傾けたら
+            if (ax > 0)
             {
-                *state = SELECT::TutorialStage;
-                pos.x = -7.0f;
                 SetIsAnimationSet(false);
-            }
+                rot.y = DirectX::XMConvertToRadians(90);
 
+                audioManager.StopSE(SE::SelectStage);
+                audioManager.PlaySE(SE::SelectStage, false, true); // 選択SE再生
+
+                *state = SELECT::Move_P_B;
+                break;
+            }
+        }
+
+        break;
+    case SELECT::Move_P_B:
+        if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+        pos.x += moveSpeed;
+        if (pos.x >= 7)
+        {
+            *state = SELECT::BossStage;
+            pos.x = 7;
+            SetIsAnimationSet(false);
+        }
+
+        break;
+    case SELECT::Move_B_P:
+        if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+        pos.x -= moveSpeed;
+        if (pos.x < 0.0f)
+        {
+            *state = SELECT::PlainsStage;
+            pos.x = 0.0f;
+            SetIsAnimationSet(false);
+        }
+
+        break;
+    case SELECT::BossStage:
+        if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Idle, true);
+        rot.y = DirectX::XMConvertToRadians(180);
+
+        // スティック左に傾けたら
+        if (ax < 0)
+        {
+            SetIsAnimationSet(false);
+            rot.y = DirectX::XMConvertToRadians(270);
+
+            audioManager.StopSE(SE::SelectStage);
+            audioManager.PlaySE(SE::SelectStage, false, true); // 選択SE再生
+
+            *state = SELECT::Move_B_P;
             break;
-        case SELECT::PlainsStage:
-            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Idle, true);
-            rot.y = DirectX::XMConvertToRadians(180);
+        }
 
-            // スティック左に傾けたら
-            if (ax < 0)
-            {
-                *state = SELECT::Move_P_T;
-                SetIsAnimationSet(false);
-                rot.y = DirectX::XMConvertToRadians(270);
-            }
-
-            // bossStageに行けるかどうか
-            if (Mame::Scene::SceneManager::Instance().selectState > 1)
-            {
-                // スティック右に傾けたら
-                if (ax > 0)
-                {
-                    *state = SELECT::Move_P_B;
-                    SetIsAnimationSet(false);
-                    rot.y = DirectX::XMConvertToRadians(90);
-                }
-            }
-
-            break;
-        case SELECT::Move_P_B:
-            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
-
-            pos.x += moveSpeed;
-            if (pos.x >= 7)
-            {
-                *state = SELECT::BossStage;
-                pos.x = 7;
-                SetIsAnimationSet(false);
-            }
-
-            break;
-        case SELECT::Move_B_P:
-            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
-
-            pos.x -= moveSpeed;
-            if (pos.x < 0.0f)
-            {
-                *state = SELECT::PlainsStage;
-                pos.x = 0.0f;
-                SetIsAnimationSet(false);
-            }
-
-            break;
-        case SELECT::BossStage:
-            if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Idle, true);
-            rot.y = DirectX::XMConvertToRadians(180);
-
-            // スティック左に傾けたら
-            if (ax < 0)
-            {
-                *state = SELECT::Move_B_P;
-                SetIsAnimationSet(false);
-                rot.y = DirectX::XMConvertToRadians(270);
-            }
-
-            break;
+        break;
     }
 
     GetTransform()->SetPosition(pos);
@@ -224,6 +248,7 @@ void Player::Update(const float& elapsedTime)
     case State::Jump:    UpdateJumpState(elapsedTime);    break;
     case State::HipDrop: UpdateHipDropState(elapsedTime); break;
     case State::Death:   UpdateDeathState(elapsedTime);   break;
+    case State::Clear:   UpdateClearState(elapsedTime);   break;
     }
 
     // AABB更新処理
@@ -397,7 +422,7 @@ const bool Player::InputMove(const float& elapsedTime)
     }
 
     // 旋回処理(急ブレーキアニメーション再生中は処理をしない)
-    if (model->GetCurrentAnimationIndex() != Anim_Break)
+    if (model->GetCurrentAnimationIndex() != Anim_Brake)
     {
         Turn(elapsedTime, saveMoveVecX_, turnSpeed_);
     }
@@ -504,7 +529,11 @@ void Player::CollisionPlayerVsEnemies()
 
             enemy->SetMoveDirectionX(saveMoveVecX_n); // プレイヤーの攻撃方向に吹っ飛ぶようにする
 
-            Camera::Instance().PlayShake(ShakeType::VerticalShake);
+            Camera::Instance().PlayShake(ShakeType::VerticalShake); // カメラを揺らす(ボスステージのみ)
+
+            AudioManager& audioManager = AudioManager::Instance();
+            audioManager.StopSE(SE::PL_BounceHit);              // バウンスヒットSE停止
+            audioManager.PlaySE(SE::PL_BounceHit, false, true); // バウンスヒットSE再生
         }
     }
 }
@@ -531,11 +560,50 @@ void Player::UpdateBounceInvincibleTimer(const float& elapsedTime)
 }
 
 
+bool Player::TurnToCamera(const float elapsedTime, NO_CONST float turnSpeed)
+{
+    NO_CONST DirectX::XMFLOAT4 rotation = GetTransform()->GetRotation();
+
+    turnSpeed *= elapsedTime;
+
+    const float vz = 1.0f;
+
+    const float frontZ = cosf(rotation.y);
+    const float dot    = (-frontZ * vz); // 角度
+
+    // 回転角が微小な場合は回転を行わない
+    const float angle = acosf(dot); // ラジアン
+    //if (fabsf(angle) <= 0.001f) return;
+    if (fabsf(angle) <= 0.01f) return false;
+
+    // 内積値は-1.0~1.0で表現されており、2つの単位ベクトルの角度が
+    // 小さいほど1.0に近づくという性質を利用して回転速度を調整する  
+    NO_CONST float rot = 1.0f - dot;   // 補正値                    
+    if (rot > turnSpeed) rot = turnSpeed;
+
+    // 左右判定を行うために単位ベクトルの外積を計算する
+    const float frontX = sinf(rotation.y);
+    const float cross  = (frontX * vz);
+
+    // 2Dの外積値が正の場合か負の場合によって左右判定が行える
+    // 左右判定を行うことによって左右回転を選択する
+    rotation.y += (cross < 0.0f) ? -rot : rot;
+
+    GetTransform()->SetRotation(rotation);
+
+    return true;
+}
+
+
 // 着地したときに呼ばれる関数
 void Player::OnLanding()
 {
     // ジャンプ回数リセット
     jumpCount = 0;
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopSE(SE::PL_Landing);              // 着地SE停止
+    audioManager.PlaySE(SE::PL_Landing, false, true); // 着地SE再生
 
     // 移動速度が走行移動速度と同じ(走行状態)なら走行ステートへ遷移
     if (moveSpeed_ == runMoveSpeed)
@@ -595,6 +663,10 @@ void Player::OnBounce()
         velocity.y    = bounceSpeedY;   // バウンスY速度を代入
         bounceSpeedX *= bounceScaleX;   // バウンスX速度を減少
         bounceSpeedY *= bounceScaleY;   // バウンスY速度を減少
+
+        AudioManager& audioManager = AudioManager::Instance();
+        audioManager.StopSE(SE::PL_Bounce);                // バウンスSE停止
+        audioManager.PlaySE(SE::PL_Bounce, false, true);   // バウンスSE再生
     }
 }
 
@@ -686,6 +758,9 @@ void Player::TransitionIdleState()
 
     // 着地アニメーションが再生されていなければ待機アニメーション再生
     if (model->GetCurrentAnimationIndex() != Anim_JumpEnd) PlayAnimation(Anim_Idle, true);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();    // プレイヤーの行動SE停止
 }
 
 // 待機ステート更新処理
@@ -717,6 +792,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
         // 移動速度が走行速度と同じ（走行状態）でダッシュキーが押され続けていれば走行ステートへ遷移
         else if (moveSpeed_ == runMoveSpeed && gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
+            moveSpeed_ = defaultMoveSpeed; // 移動速度をリセット
             TransitionRunState();
             return;
         }
@@ -738,6 +814,10 @@ void Player::TransitionWalkState()
     state = State::Walk;
 
     PlayAnimation(Anim_Walk, true, 1.0f, 0.25f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();        // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Walk, true); // 歩行SE再生
 }
 
 // 歩行ステート更新処理
@@ -781,6 +861,10 @@ void Player::TransitionDashState()
     dashCoolTimer = dashCoolTime;    // ダッシュクールタイムを設定
 
     PlayAnimation(Anim_Dash, false, 1.0f, 0.0f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();            // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Dash, false);    // ダッシュSE再生
 }
 
 // ダッシュステート更新処理
@@ -838,7 +922,7 @@ void Player::TransitionRunState()
     state = State::Run;
 
     // 走行時の速度パラメータを設定
-    moveSpeed_      = runMoveSpeed;
+    moveSpeed_       = runMoveSpeed;
     acceleration_    = runAcceleration;
     friction_        = runFriction;
 
@@ -847,15 +931,24 @@ void Player::TransitionRunState()
 
     // 走行アニメーション再生
     PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();                // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Run, true, true);    // 走行SE再生
 }
 
 // 走行ステート更新処理
 void Player::UpdateRunState(const float& elapsedTime)
 {
+    AudioManager& audioManager = AudioManager::Instance();
+
     // ブレーキ・着地アニメーションが終わったら走行アニメーションに戻る
     if (!IsPlayAnimation()) 
     {
         PlayAnimation(Anim_Run, true, 1.0f, 0.5f);
+
+        audioManager.StopPlayerMoveSE();        // プレイヤーの行動SE停止
+        audioManager.PlaySE(SE::PL_Run, true);  // 走行SE再生
     }
 
     // ジャンプ入力処理(ジャンプしていたらジャンプステートへ遷移)
@@ -879,7 +972,10 @@ void Player::UpdateRunState(const float& elapsedTime)
         };
         if (isPlayBreakAnimation)
         {
-            PlayAnimation(Anim_Break, false, 1.8f, 0.5f);
+            PlayAnimation(Anim_Brake, false, 1.8f, 0.5f);
+
+            audioManager.StopPlayerMoveSE();            // プレイヤーの行動SE停止
+            audioManager.PlaySE(SE::PL_Brake, false);   // ブレーキSE再生
         }
 
         // 走行キー入力がなければ歩行ステートへ
@@ -918,6 +1014,10 @@ void Player::TransitionJumpState()
     
     // ジャンプ開始アニメーション再生
     PlayAnimation(Anim_JumpInit, false, 1.0f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();            // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Jump, false);    // ジャンプSE再生
 }
 
 // ジャンプステート更新処理
@@ -984,6 +1084,10 @@ void Player::TransitionHipDropState()
     isInvincible    = true;               // 無敵状態に設定
 
     PlayAnimation(Anim_HipDrop, true);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();            // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Dash, false);    // ダッシュSE再生(ヒップドロップSE代わり)
 }
 
 // ヒップドロップステート更新処理
@@ -1023,10 +1127,113 @@ void Player::TransitionDeathState()
 
     // ダッシュアニメ―ションを再生
     PlayAnimation(Anim_Dash, true, 1.25f);
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();            // プレイヤーの行動SE停止
+    audioManager.PlaySE(SE::PL_Death, false);   // 死亡SE再生
 }
 
 void Player::UpdateDeathState(const float& elapsedTime)
 {
     // 画面に向かって来る
     GetTransform()->AddPositionZ(-15.0f * elapsedTime);
+}
+
+
+void Player::TransitionClearState()
+{
+    state = State::Clear;
+
+    isInvincible = true;            // 無敵状態にする
+
+    acceleration_ = clearAcceleration_; // 加速力を減らす
+
+    PlayAnimation(Anim_Idle, true); // 待機ステート再生
+
+    AudioManager& audioManager = AudioManager::Instance();
+    audioManager.StopPlayerMoveSE();                  // プレイヤーの行動SE停止
+    //audioManager.PlaySE(SE::PL_Bounce, false, true);  // バウンスSE再生
+}
+
+void Player::UpdateClearState(const float& elapsedTime)
+{
+    if (!isGround_) return; // 空中にいる場合は着地するまで待つ
+
+    AudioManager& audioManager = AudioManager::Instance();
+
+    const float moveVecX = 1.0f;
+
+    switch (clearState_)
+    {
+    case ClearState::LookToCamera:
+
+        // カメラの方向に体を向ける
+        if (TurnToCamera(elapsedTime, ToRadian(90.0f))) break;
+
+        clearTimer_ += elapsedTime;
+
+        // しばらくたったら次のステートに移る
+        if (clearTimer_ > 1.0f)
+        {
+            clearTimer_ = 0.0f;
+
+            // BGM再生
+            audioManager.StopBGM(BGM::StagePlains);         // 草原ステージBGM停止
+            audioManager.PlayBGM(BGM::StageClear, false);   // ステージクリアジングル再生
+
+            clearState_ = ClearState::JumpForJoy;
+            break;
+        }
+
+        break;
+    case ClearState::JumpForJoy:
+
+        // 指定回数飛び跳ねさせる
+        if (clearJumpCount_ < 3)
+        {
+            PlayAnimation(Anim_HipDrop, true, 0.7f);
+            Jump(jumpSpeed_ * 1.5f);
+            ++clearJumpCount_;
+        }
+        // 跳ね終わったら次のステートに移る
+        else
+        {
+            clearJumpCount_ = 0;
+            PlayAnimation(Anim_Idle, true);
+
+            clearState_ = ClearState::MoveToLeft;
+            break;
+        }
+
+        break;
+    case ClearState::MoveToLeft:
+
+        clearTimer_ += elapsedTime;
+
+        // しばらく待つ
+        if (clearTimer_ < 1.0f) break;
+
+        // 右に向いてから少し下がる
+        if (!Turn(elapsedTime, moveVecX, ToRadian(100.0f)))
+        {
+            clearTimer_ = 0.0f;
+            velocity.x  = -12.5f;
+            PlayAnimation(Anim_Run, true);
+
+            audioManager.PlaySE(SE::PL_Dash, false);    // ダッシュSE再生
+
+            clearState_ = ClearState::MoveToRight;
+            break;
+        }
+
+        break;
+    case ClearState::MoveToRight:
+
+        audioManager.PlaySE(SE::PL_Run, true);  // 走行SE再生
+
+        // 右に移動
+        Move(moveVecX, clearMoveSpeed_);
+
+        break;
+    }
 }
