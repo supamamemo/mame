@@ -15,7 +15,6 @@ public:
         Normal,         // 普通の地形
         Move,           // 動く地形
         NoClimb,        // 登れない地形
-        NoCollision,    // 当たり判定なし地形
     };
 
 public:
@@ -55,6 +54,10 @@ public:
 public:
     static float    renderLengthXLimit_;     // 描画される限界距離
     static int      nameNum;
+
+public:
+    bool isCollisionPlayer_ = true;    //　プレイヤーと当たり判定をさせるか(デフォルトはtrue)
+    bool isCollisionEnemy_  = true;    //　エネミーと当たり判定をさせるか(デフォルトはtrue)
 
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders = {};

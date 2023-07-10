@@ -8,6 +8,8 @@
 #include "EnemyTofu.h"
 #include "CannonBall.h"
 
+#include "Stage/StageManager.h"
+
 
 // playerが索敵範囲内にいるか判定する
 bool State::FindPlayer()
@@ -341,6 +343,8 @@ namespace BOSS
     {
         owner->PlayAnimation(static_cast<int>(BossAnimation::GetAttack), false);   
 
+        SetTimer(1.0f);
+
         AudioManager& audioManager = AudioManager::Instance();
         audioManager.StopSE(SE::Boss_Stun); // 気絶SE停止
     }
@@ -359,6 +363,9 @@ namespace BOSS
             else
             {
                 owner->GetStateMachine()->ChangeState(static_cast<int>(STATE::Cry));
+
+                // ステージクリアフラグを立てる
+                StageManager::Instance().GetCurrentStage()->isStageClear_ = true;
 
                 // ボス戦BGM停止
                 AudioManager::Instance().StopBGM(BGM::StageBoss);

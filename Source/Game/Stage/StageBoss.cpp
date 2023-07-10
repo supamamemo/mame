@@ -85,6 +85,7 @@ void StageBoss::Initialize()
     
     camera.SetIsShake();
     camera.SetCameraMoveY();
+    camera.Initialize();
 
     // 背景仮
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 6.0f, 12.0f));
@@ -220,6 +221,7 @@ void StageBoss::Update(const float& elapsedTime)
         PlayerManager& playerManager = PlayerManager::Instance();
         playerManager.Update(elapsedTime);
 
+        // enemy更新
         EnemyManager& enemyManager = EnemyManager::Instance();
         if (!isEnemyUpdate_)
         {
@@ -244,58 +246,41 @@ void StageBoss::Update(const float& elapsedTime)
             }
         }
 
-        // プレイヤーがゴールを超えたらステージクリアにする
-        //{
-        //    if (/*!isStageClear_*/0)
-        //    {
-        //        if (enemyManager.GetEnemy(0)->GetHealth() <= 0)
-        //        {
-        //            enemyManager.AllKill(); // 敵を全員倒す
-        //            isStageClear_ = true;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // プレイヤーのステートをクリアステートへ遷移
-        //        const Player::State playerState = playerManager.GetPlayer()->GetState();
-        //        if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
 
-        //        // 位置を修正
-        //        if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
-        //        {
-        //            NO_CONST float playerPositionX = playerTransform->GetPosition().x;
 
-        //            const float targetPositionX = goalPositionX + 3.0f;
-        //            const float addPositionX = 10.0f * elapsedTime;
-        //            if (playerPositionX > targetPositionX)
-        //            {
-        //                playerPositionX = (std::max)(targetPositionX, (playerPositionX - addPositionX));
-        //            }
-        //            else if (playerPositionX < targetPositionX)
-        //            {
-        //                playerPositionX = (std::min)(targetPositionX, (playerPositionX + addPositionX));
-        //            }
+        // ステージクリア処理
+        Transform* playerTransform = playerManager.GetPlayer()->GetTransform();
+        {
+            if (isStageClear_)
+            {
+                clearTimer_ += elapsedTime;
 
-        //            playerTransform->SetPositionX(playerPositionX);
-        //        }
-        //        // 右に走り去っていったらステージセレクトに切り替える
-        //        else
-        //        {
-        //            const float moveLimitX = goalPositionX + 10.0f;
-        //            if (playerTransform->GetPosition().x > moveLimitX)
-        //            {
-        //                playerTransform->SetPositionX(moveLimitX);
+                if (clearTimer_ >= 3.0f)
+                {
+                    clearTimer_ = 3.0f;
 
-        //                stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
+                    // プレイヤーのステートをクリアステートへ遷移
+                    const Player::State playerState = playerManager.GetPlayer()->GetState();
+                    if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
 
-        //                StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
-        //            }
-        //        }
-        //    }
-        //}
+                    // 右に走り去っていったらステージセレクトに切り替える
+                    if (playerManager.GetPlayer()->GetClearState() == ClearState::MoveToRight)
+                    {
+                        const float moveLimitX = 10.0f;
+                        if (playerTransform->GetPosition().x > moveLimitX)
+                        {
+                            playerTransform->SetPositionX(moveLimitX);
+
+                            //stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
+
+                            StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+                        }
+                    }
+                }
+            }
+        }
 
         // 死亡処理
-        Transform* playerTransform = playerManager.GetPlayer()->GetTransform();
         if (playerTransform->GetPosition().z <= -25.0f ||
             playerTransform->GetPosition().y <= -40.0f)
         {

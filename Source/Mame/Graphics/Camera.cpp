@@ -7,8 +7,8 @@
 
 void Camera::Initialize()
 {
-    transform.SetPosition({ 0, 21.0f, -30 });
-    transform.SetRotation({});
+    parabolaStage_ = 0;
+    velocityY_     = 0.01f;
 }
 
 
@@ -357,56 +357,98 @@ void Camera::UpdateBoss(const float elapsedTime)
 {
     UpdateShake(elapsedTime);   // 画面振動更新
 
-    DirectX::XMFLOAT3 cameraPos = GetTransform()->GetPosition();
-    DirectX::XMFLOAT3 playerPos = PlayerManager::Instance().GetPlayer()->GetTransform()->GetPosition();
-    DirectX::XMFLOAT3 bossPos = EnemyManager::Instance().GetEnemy(0)->GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 cameraPos  = GetTransform()->GetPosition();
+    PlayerManager& playerManager = PlayerManager::Instance();
+    DirectX::XMFLOAT3 playerPos  = playerManager.GetPlayer()->GetTransform()->GetPosition();
+    DirectX::XMFLOAT3 bossPos    = EnemyManager::Instance().GetEnemy(0)->GetTransform()->GetPosition();
 
-    float leftLimit = -30.0f;
+    float leftLimit  = -30.0f;
     float rightLimit = -5.0f;
 
-    switch (cameraMoveY)
+    if (playerManager.GetPlayer()->GetState() != Player::State::Clear)
     {
-    case 0:
-        GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
-        GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
-
-        if (playerPos.x >= -10.0f)
-            cameraMoveY = 1;
-
-        break;
-    case 1:
-        leftLimit = -10.0f;
-
-        cameraPos.x += elapsedTime * 5;
-        if (cameraPos.x >= 0.0f)
+        switch (cameraMoveY)
         {
-            cameraPos.x = 0.0f;
-            cameraMoveY = 2;
+        case 0:
+            GetTransform()->SetPosition(DirectX::XMFLOAT3(-20.0f, 10.0f, -12.0f));
+            GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
+
+            if (playerPos.x >= -10.0f)
+                cameraMoveY = 1;
+
+            break;
+        case 1:
+            leftLimit = -10.0f;
+
+            cameraPos.x += elapsedTime * 5;
+            if (cameraPos.x >= 0.0f)
+            {
+                cameraPos.x = 0.0f;
+                cameraMoveY = 2;
+            }
+
+            break;
+        case 2:
+            leftLimit = -10.0f;
+            if (playerPos.x <= -8.6f)
+                playerPos.x += elapsedTime;
+
+            if (bossPos.x <= 5.5)cameraMoveY = 3;
+
+            break;
+        case 3:
+            rightLimit = 100.0f;
+            break;
         }
 
-        break;
-    case 2:
-        leftLimit = -10.0f;
-        if (playerPos.x <= -8.6f)
-            playerPos.x += elapsedTime;
+        // 画面左端は止まるようにする
+        {
+            if (playerPos.x <= leftLimit)playerPos.x = leftLimit;
+            if (playerPos.x >= rightLimit)playerPos.x = rightLimit;
 
-        if (bossPos.x <= 5.5)cameraMoveY = 3;
+            PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
+        }
+    }
+    // プレイヤーのステートがクリアステートならクリア時のカメラワークにする
+    else
+    {
+        switch (parabolaStage_)
+        {
+        case 0:
+            velocityY_  += -0.03f * elapsedTime;
+            cameraPos.y += velocityY_;
 
-        break;
-    case 3:
-        rightLimit = 100.0f;
-        break;
+            const float targetPositionY = 4.5f;
+
+            if (cameraPos.y >= 10.9f)
+            {
+                playerManager.GetPlayer()->GetTransform()->SetPositionX(0.0f);
+            }
+            else if (cameraPos.y <= targetPositionY)
+            {
+                cameraPos.y = targetPositionY;
+                velocityY_  = 0.0f;
+
+                ++parabolaStage_;
+                break;
+            }
+
+            break;
+        }
+
+        const float targetPositionZ = 0.0f;
+        const float moveSpeedZ = 10.5f * elapsedTime;
+        if (cameraPos.z < targetPositionZ)
+        {
+            cameraPos.z = (std::min)(targetPositionZ, (cameraPos.z + moveSpeedZ));
+        }
+        if (cameraPos.z > targetPositionZ)
+        {
+            cameraPos.z = (std::max)(targetPositionZ, (cameraPos.z - moveSpeedZ));
+        }
     }
 
     GetTransform()->SetPosition(cameraPos);
-
-    // 画面左端は止まるようにする
-    {
-        if (playerPos.x <= leftLimit)playerPos.x = leftLimit;
-        if (playerPos.x >= rightLimit)playerPos.x = rightLimit;
-
-        PlayerManager::Instance().GetPlayer()->GetTransform()->SetPosition(playerPos);
-    }
 }
 
 

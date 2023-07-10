@@ -27,12 +27,11 @@ public:
     void Render(const float& elapsedTime) override;  // 描画処理
     void DrawDebug()                      override;  // デバッグ描画
 
-private:
-    //static const int TERRAIN_COUNT = 3;
-    
+private:    
     std::unique_ptr<Box> back;
 
-    bool isEnemyUpdate_ = false;
+    float   clearTimer_     = 0.0f;
+    bool    isEnemyUpdate_  = false;
 
 public:
     // UI関連（急ぎで作ってるからコメントなしでごめん。。）

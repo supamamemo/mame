@@ -46,6 +46,7 @@ namespace RED_TOFU
         searchLengthX_   = 6.0f;        // X軸で索敵できる距離
         searchLengthY_   = 6.0f;        // Y軸で索敵できる距離
 
+        characterType_ = CharacterType::Enemy;
         enemyType_ = EnemyType::RedTofu;    // 敵の種類を設定
 
         // ステートマシン

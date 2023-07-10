@@ -75,6 +75,8 @@ void Boss::Initialize()
 
     turnSpeed_ = ToRadian(90.0f);  // ù‰ñ‘¬“x‚ÌÝ’è
 
+    characterType_ = CharacterType::Enemy;
+
     // –³“Gó‘Ô‚É‚·‚é
     isInvincible = true;
 }
@@ -181,5 +183,4 @@ void Boss::OnHitWall()
 void Boss::OnDamaged()
 {
     stateMachine->ChangeState(static_cast<int>(BOSS::STATE::Damage));
-    stateMachine->GetCurrentState()->SetTimer(1.0f);
 }

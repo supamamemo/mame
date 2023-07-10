@@ -92,7 +92,7 @@ private:
     float addAngle = ToRadian(15.0f);
 
     ShakeType   shakeType_              = ShakeType::None;      // シェイクの種類
-    float       defaultShakeTime_       = 0.025f;                // 揺れる時間(速度調整)
+    float       defaultShakeTime_       = 0.025f;               // 揺れる時間(速度調整)
     float       shakeTimer_             = defaultShakeTime_;    // 振動タイマー
     int         shakeState_             = 0;                    // 揺れるステート
     int         currentShakeLoopCount_  = 0;                    // 現在のシェイクカウント
@@ -108,6 +108,9 @@ private:
 
     // tutorial用
     int tutorialState = 0;
+
+    int parabolaStage_ = 0;
+    float velocityY_ = 0.0f;
 
 private:
     // チュートリアル用

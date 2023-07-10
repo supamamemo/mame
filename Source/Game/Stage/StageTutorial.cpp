@@ -11,7 +11,6 @@
 
 #include "../Terrain/TerrainBoss.h"
 #include "../Terrain/TerrainNormal.h"
-#include "../Terrain/TerrainNoCollision.h"
 #include "../Terrain/TerrainManager.h"
 
 #include "../UIManager.h"
@@ -42,8 +41,6 @@ void StageTutorial::Initialize()
     // ステージの属性を設定
     SetStageType(static_cast<int>(Mame::Stage::TYPE::TUTORIAL));
 
-
-
     // 生成
     {
         // ステージ生成&登録
@@ -60,12 +57,12 @@ void StageTutorial::Initialize()
             terrainManager.Register(new TerrainNormal("./resources/stage/1.fbx"));  // 1
             terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));  // 1
 
-            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_yazi.fbx")); // 看板
-            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // 看板
-            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_drop.fbx")); // 看板
-            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_dash.fbx")); // 看板
-            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_nomal.fbx")); // 看板
-            terrainManager.Register(new TerrainNoCollision("./resources/stage/flag_nomal.fbx")); // 看板
+            terrainManager.Register(new TerrainNormal("./resources/stage/flag_yazi.fbx")); // 看板
+            terrainManager.Register(new TerrainNormal("./resources/stage/flag_drop.fbx")); // 看板
+            terrainManager.Register(new TerrainNormal("./resources/stage/flag_drop.fbx")); // 看板
+            terrainManager.Register(new TerrainNormal("./resources/stage/flag_dash.fbx")); // 看板
+            terrainManager.Register(new TerrainNormal("./resources/stage/flag_nomal.fbx")); // 看板
+            terrainManager.Register(new TerrainNormal("./resources/stage/flag_nomal.fbx")); // 看板
 
             //terrainManager.Register(new TerrainNoCollision("./resources/stage/goal.fbx")); // ゴール
         }
@@ -187,6 +184,12 @@ void StageTutorial::Initialize()
 
         terrainManager.GetTerrain(SignBoard_noTex0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, -3, 10.5f));
         terrainManager.GetTerrain(SignBoard_noTex0)->GetTransform()->SetScale(DirectX::XMFLOAT3(signBoardSize, signBoardSize, signBoardSize));
+
+        for (int i = 9; i <= 13; ++i)
+        {
+            terrainManager.GetTerrain(i)->isCollisionPlayer_ = false;
+            terrainManager.GetTerrain(i)->isCollisionEnemy_  = false;
+        }
 
         terrainManager.Initialize();
     }

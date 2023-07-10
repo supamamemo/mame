@@ -37,6 +37,7 @@ void EnemyTofu::Initialize()
     turnSpeed_  = ToRadian(90.0f);  // 旋回速度設定(ステートで変わるので最初だけ)
     jumpSpeed_  = 12.0f;            // ジャンプ速度設定
 
+    characterType_ = CharacterType::Enemy;
     enemyType_ = EnemyType::Tofu;
 
     // ステートマシン

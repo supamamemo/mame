@@ -20,6 +20,13 @@
 
 #include "Terrain/Terrain.h"
 
+enum class CharacterType
+{
+    None,
+    Player,
+    Enemy,
+};
+
 class Character
 {
 public:
@@ -165,6 +172,8 @@ public:
     Collision::AABB lastLandingTerrainAABB_ = {};                   // 最後に着地した地形のAABB（落下ミスの復活時に使用）
     Terrain*        saveTerrain_            = nullptr;              // 地形を保存するポインタ
     Terrain*        saveWall_               = nullptr;              // 壁のAABBを保存するAABB
+
+    CharacterType   characterType_          = CharacterType::None;
 
 protected:
     Microsoft::WRL::ComPtr<ID3D11PixelShader> pixel_shaders;

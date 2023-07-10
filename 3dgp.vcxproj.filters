@@ -265,9 +265,6 @@
     <ClCompile Include="Source\Game\Stage\StageSelection.cpp">
       <Filter>mamelib\Game\Stage</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Game\Terrain\TerrainNoCollision.cpp">
-      <Filter>mamelib\Game\Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Game\Boss.cpp">
       <Filter>mamelib\Game\Character\Enemy</Filter>
     </ClCompile>
@@ -569,9 +566,6 @@
     </ClInclude>
     <ClInclude Include="Source\Game\TitlePlayer.h">
       <Filter>mamelib\Game\Character\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Game\Terrain\TerrainNoCollision.h">
-      <Filter>mamelib\Game\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Source\Mame\Audio.h">
       <Filter>mamelib\Mame\Audio</Filter>
