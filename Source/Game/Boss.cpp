@@ -52,6 +52,7 @@ Boss::Boss(const char* filename)
     ++nameNum;
 }
 
+
 // デストラクタ
 Boss::~Boss()
 {
@@ -69,7 +70,7 @@ void Boss::Initialize()
     // TODO: ボスの当たり判定設定
     const DirectX::XMFLOAT3 min = { -0.6f, -0.0f, -0.6f };  // min設定
     const DirectX::XMFLOAT3 max = { +0.6f, +2.0f, +0.6f };  // max設定
-    SetAABB(min, max);                                    // minとmaxの再設定（ジオメトリックプリミティブの再生成も行っている）
+    SetAABB(min, max);                                      // minとmaxの再設定（ジオメトリックプリミティブの再生成も行っている）
     UpdateAABB();                                           // minとmaxを現在の位置に更新する
 
     turnSpeed_ = ToRadian(90.0f);  // 旋回速度の設定
@@ -118,14 +119,14 @@ void Boss::Update(const float& elapsedTime)
 
     // 無敵時間中のキャラクターの点滅(ダメージを受けたかの確認用)
     {
-        //if (invincibleTimer > 0.0f)
-        //{
-        //    modelColor.w = (static_cast<int>(invincibleTimer * 100.0f) & 0x04) ? 0.7f : 0.0f;
-        //}
-        //else
-        //{
-        //    modelColor.w = 1.0f;
-        //}
+        if (invincibleTimer > 0.0f)
+        {
+            modelColor.w = (static_cast<int>(invincibleTimer * 100.0f) & 0x04) ? 0.7f : 0.0f;
+        }
+        else
+        {
+            modelColor.w = 1.0f;
+        }
     }
 
     UpdateAnimation(elapsedTime);       // アニメーション更新

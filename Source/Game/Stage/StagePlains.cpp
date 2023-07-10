@@ -130,7 +130,6 @@ void StagePlains::Initialize()
         halfwayPoint_->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(-180.0f), 0, 0));
     }
 
-
     // ƒS[ƒ‹
     goal_->GetTransform()->SetPosition(DirectX::XMFLOAT3(277.0f, 5.5f, 10.7f));
 
@@ -300,8 +299,8 @@ void StagePlains::Update(const float& elapsedTime)
         }
 
         // Ž€–Sˆ—
-        if (playerTransform->GetPosition().z <= -50.0f ||
-            playerTransform->GetPosition().y <= -50.0f)
+        if (playerTransform->GetPosition().z <= -25.0f ||
+            playerTransform->GetPosition().y <= -40.0f)
         {
             StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
         }

@@ -154,9 +154,9 @@ void Camera::Update(float elapsedTime)
         {
             cameraPos.y = (std::max)(targetPositionY, (cameraPos.y - moveSpeedY));
         }        
-        
+          
         const float targetPositionZ = 0.0f;
-        const float moveSpeedZ      = 9.0f * elapsedTime;
+        const float moveSpeedZ      = 10.0f * elapsedTime;
         if (cameraPos.z < targetPositionZ)
         {
             cameraPos.z = (std::min)(targetPositionZ, (cameraPos.z + moveSpeedZ));

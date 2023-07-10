@@ -369,6 +369,14 @@ void StageTutorial::Update(const float& elapsedTime)
         }
     }
 
+
+    // Ž€–Sˆ—
+    if (playerTransform->GetPosition().z <= -25.0f ||
+        playerTransform->GetPosition().y <= -40.0f)
+    {
+        StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
+    }
+
     // animation
     const int totalFrame = 11;      // ƒtƒŒ[ƒ€‚Ì–‡”
     spriteAnimation[0]->PlayAnimation(elapsedTime, frameSpeed, totalFrame, true);
