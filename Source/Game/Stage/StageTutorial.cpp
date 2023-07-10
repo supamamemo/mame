@@ -625,13 +625,6 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
             case 1:
                 // “ü—Í
                 {
-                    if (gamePad.GetButtonDown() & GamePad::BTN_A)
-                    {
-                        isDisplaySignBoard[0] = false;
-                        signBoardState = 5;
-                    }
-
-
                     float aLx = gamePad.GetAxisLX();
                     if (gamePad.GetButton() & GamePad::BTN_RIGHT ||
                         aLx >= 0.7f)
