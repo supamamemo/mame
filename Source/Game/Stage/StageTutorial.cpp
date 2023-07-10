@@ -301,7 +301,7 @@ void StageTutorial::Render(const float& elapsedTime)
     TutorialStateRender(elapsedTime);
 
     graphics.GetShader()->SetState(graphics.GetDeviceContext(), 3, 0, 0);
-    spriteAnimation->Render();
+    //spriteAnimation->Render();
 
     // UI
     //UIManager::Instance().Render(elapsedTime);   
