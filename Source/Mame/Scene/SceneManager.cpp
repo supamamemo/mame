@@ -48,15 +48,19 @@ namespace Mame::Scene
 
         if (currentScene)
         {
-            if (hitStopTimer_ > 0.0f) hitStopTimer_ -= elapsedTime;
-            else isHitStop_ = false;
-
             // pose中じゃない
             if (!GetPose())
             {
-                currentScene->Begin();
-                currentScene->Update(elapsedTime);
-                currentScene->End();
+                // 経過時間が0.01フレーム以内なら更新処理を行う
+                if (elapsedTime <= 0.01f)
+                {
+                    if (hitStopTimer_ > 0.0f) hitStopTimer_ -= elapsedTime;
+                    else isHitStop_ = false;
+
+                    currentScene->Begin();
+                    currentScene->Update(elapsedTime);
+                    currentScene->End();
+                }
             }
             // pose中
             else

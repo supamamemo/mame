@@ -181,6 +181,13 @@ void StageEx::Update(const float& elapsedTime)
         playerManager.Update(elapsedTime);
 
         // enemyçXêV
+#if _DEBUG
+        //static bool isEnemyUpdate = true;
+        //ImGui::Begin("isEnemyUpdate0000000000000");
+        //ImGui::Checkbox("isEnemyUpdate", & isEnemyUpdate);
+        //ImGui::End();
+        //if (isEnemyUpdate) enemyManager.Update(elapsedTime);
+#endif
         enemyManager.Update(elapsedTime);
 
 
