@@ -48,6 +48,9 @@ void StageEx::Initialize()
         Box::nameNum = 0;
         back = std::make_unique<Box>("./resources/tutorialBack.fbx");
 
+        // 中間地点
+        halfwayPoint_ = std::make_unique<Box>("./resources/stage/goal.fbx");
+
         // ゴール
         goal_ = std::make_unique<Box>("./resources/stage/goal.fbx");
 
@@ -80,9 +83,10 @@ void StageEx::Initialize()
     {
         PlayerManager& playerManager = PlayerManager::Instance();
         // 保存してる中間地点がここのステージの中間地点だったら中間地点の位置をプレイヤーに代入
-        if (stageManager.savedHalfPoint_.savedHalfwayPointStage == StageManager::SavedHalfwayPointStage::StagePlains)
+        if (stageManager.savedHalfPoint_.savedHalfwayPointStage == StageManager::SavedHalfwayPointStage::StageEx)
         {
-            playerManager.GetPlayer()->GetTransform()->SetPosition(stageManager.savedHalfPoint_.position);
+            playerManager.GetPlayer()->GetTransform()->SetPositionX(stageManager.savedHalfPoint_.position.x);
+            playerManager.GetPlayer()->GetTransform()->SetPositionY(stageManager.savedHalfPoint_.position.y - 1.0f);
             playerManager.GetPlayer()->GetTransform()->SetPositionZ(10.0f);
         }
         // 保存してる中間地点がここのステージの中間地点でなければプレイヤーに初期位置を代入し、保存した中間地点情報をリセット
@@ -105,6 +109,21 @@ void StageEx::Initialize()
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 4.5f, 27.0f));
     back->GetTransform()->SetScale(DirectX::XMFLOAT3(50, 30, 0));
     // back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
+
+    // 中間地点
+    halfwayPoint_->GetTransform()->SetPosition(DirectX::XMFLOAT3(127.3f, 4.0f, 10.5f));
+    halfwayPoint_->GetTransform()->SetScale(DirectX::XMFLOAT3(0.35f, 0.35f, 0.35f));
+    // 保存してる中間地点がここのステージの中間地点だったら中間地点を回転済みにして到着フラグをtrueにする
+    if (stageManager.savedHalfPoint_.savedHalfwayPointStage == StageManager::SavedHalfwayPointStage::StageEx)
+    {
+        halfwayPoint_->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, 0, 0, 0));
+        isArrivedHalfwayPoint_ = true;
+    }
+    // 保存してる中間地点がここのステージの中間地点でなければ旗の初期回転値を代入
+    else
+    {
+        halfwayPoint_->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, ToRadian(-180.0f), 0, 0));
+    }
 
     // ゴール
     goal_->GetTransform()->SetPosition(DirectX::XMFLOAT3(272.0f, 10.0f, 10.0f));
@@ -202,30 +221,30 @@ void StageEx::Update(const float& elapsedTime)
         Transform* playerTransform = playerManager.GetPlayer()->GetTransform();
 
         // 中間地点処理
-        //const DirectX::XMFLOAT3 halfwayPointPos = halfwayPoint_->GetTransform()->GetPosition();
-        //{
-        //    // 中間地点を超えたらその中間地点情報を保存
-        //    if (!isArrivedHalfwayPoint_)
-        //    {
-        //        if (playerTransform->GetPosition().x >= halfwayPointPos.x)
-        //        {
-        //            stageManager.savedHalfPoint_.savedHalfwayPointStage = StageManager::SavedHalfwayPointStage::StagePlains;
-        //            stageManager.savedHalfPoint_.position = halfwayPointPos;
-        //            isArrivedHalfwayPoint_ = true;
-        //        }
-        //    }
-        //    // 旗を回転させる
-        //    else
-        //    {
-        //        NO_CONST float halfwayPointRotationY = halfwayPoint_->GetTransform()->GetRotation().y;
-        //        if (halfwayPointRotationY < 0.0f)
-        //        {
-        //            const float AddRotationY = ToRadian(540.) * elapsedTime;
-        //            halfwayPointRotationY = (std::min)(0.0f, halfwayPointRotationY + AddRotationY);
-        //        }
-        //        halfwayPoint_->GetTransform()->SetRotationY(halfwayPointRotationY);
-        //    }
-        //}
+        const DirectX::XMFLOAT3 halfwayPointPos = halfwayPoint_->GetTransform()->GetPosition();
+        {
+            // 中間地点を超えたらその中間地点情報を保存
+            if (!isArrivedHalfwayPoint_)
+            {
+                if (playerTransform->GetPosition().x >= halfwayPointPos.x)
+                {
+                    stageManager.savedHalfPoint_.savedHalfwayPointStage = StageManager::SavedHalfwayPointStage::StageEx;
+                    stageManager.savedHalfPoint_.position = halfwayPointPos;
+                    isArrivedHalfwayPoint_ = true;
+                }
+            }
+            // 旗を回転させる
+            else
+            {
+                NO_CONST float halfwayPointRotationY = halfwayPoint_->GetTransform()->GetRotation().y;
+                if (halfwayPointRotationY < 0.0f)
+                {
+                    const float AddRotationY = ToRadian(540.) * elapsedTime;
+                    halfwayPointRotationY = (std::min)(0.0f, halfwayPointRotationY + AddRotationY);
+                }
+                halfwayPoint_->GetTransform()->SetRotationY(halfwayPointRotationY);
+            }
+        }
 
         // プレイヤーがゴールを超えたらステージクリアにする
         const float goalPositionX = goal_->GetTransform()->GetPosition().x;
@@ -320,6 +339,9 @@ void StageEx::Render(const float& elapsedTime)
     // 背景
     back->Render(elapsedTime, 1.0f);
 
+    // 中間地点
+    halfwayPoint_->Render(elapsedTime);
+
     // ゴール
     goal_->Render(elapsedTime);
 
@@ -350,6 +372,9 @@ void StageEx::DrawDebug()
 
     // 背景
     back->DrawDebug();
+
+    // 中間地点
+    halfwayPoint_->DrawDebug();
 
     // ゴール
     goal_->DrawDebug();

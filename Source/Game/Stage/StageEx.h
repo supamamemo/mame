@@ -54,7 +54,11 @@ public:
 private:
     std::unique_ptr<Box> back = nullptr;
 
+    std::unique_ptr<Box> halfwayPoint_ = nullptr;    // íÜä‘ínì_
+
     std::unique_ptr<Box> goal_ = nullptr;    // ÉSÅ[Éã
+
+    bool isArrivedHalfwayPoint_ = false;
 
 private:
     enum UISPRITE
