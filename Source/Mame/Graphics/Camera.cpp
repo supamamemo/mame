@@ -136,7 +136,7 @@ void Camera::Update(float elapsedTime)
         }
         else if (cameraPos.y < coordinatesY)
         {
-            cameraPos.y += elapsedTime * 1;
+            cameraPos.y += elapsedTime * 5;
             if (cameraPos.y >= coordinatesY)cameraPos.y = coordinatesY;
         }
         
