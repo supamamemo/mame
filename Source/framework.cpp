@@ -56,6 +56,10 @@ bool framework::initialize()
         ifs.close();
     }
 
+#ifndef _DEBUG
+    ShowCursor(!FULLSCREEN);	// フルスクリーン時はカーソルを消す
+#endif
+
     return true;
 }
 
