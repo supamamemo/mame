@@ -338,6 +338,9 @@ namespace BOSS
             SubtractTime(elapsedTime);
             if (GetTimer() <= 0.0f)
             {
+                // ñ≥ìGèÛë‘Ç…Ç∑ÇÈ
+                owner->SetIsInvincible(true);
+
                 owner->PlayAnimation(static_cast<int>(BossAnimation::DeConfusion), false);
 
                 state = 2;
@@ -350,9 +353,6 @@ namespace BOSS
             {
                 AudioManager& audioManager = AudioManager::Instance();
                 audioManager.StopSE(SE::Boss_Stun); // ãCê‚SEí‚é~
-
-                // ñ≥ìGèÛë‘Ç…Ç∑ÇÈ
-                owner->SetIsInvincible(true);
 
                 state = 3;
                 break;
@@ -381,6 +381,9 @@ namespace BOSS
         owner->PlayAnimation(static_cast<int>(BossAnimation::GetAttack), false);   
 
         SetTimer(1.0f);
+
+        // ñ≥ìGèÛë‘Ç…Ç∑ÇÈ
+        owner->SetIsInvincible(true);
 
         AudioManager& audioManager = AudioManager::Instance();
         audioManager.StopSE(SE::Boss_Stun); // ãCê‚SEí‚é~

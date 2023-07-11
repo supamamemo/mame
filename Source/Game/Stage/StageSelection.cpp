@@ -26,11 +26,15 @@ StageSelection::StageSelection()
 // ‰Šú‰»
 void StageSelection::Initialize()
 {
+    StageManager& stageManager = StageManager::Instance();
+
     // ƒXƒe[ƒW‚Ì‘®«‚ğİ’è
     SetStageType(static_cast<int>(Mame::Stage::TYPE::SELECT));
 
     // ¶¬
     {
+        //stageManager.spriteDissolve = std::make_unique<SpriteDissolve>();
+
         // ”wŒi
         //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
         back = std::make_unique<Box>("./resources/tutorialBack.fbx");
@@ -60,10 +64,15 @@ void StageSelection::Initialize()
         PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
     }
 
+
+    //stageManager.spriteDissolve->Initialize();
+    //stageManager.spriteDissolve->SetFadeInTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
+
     // camera‰Šú‰»
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 16, -20));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(30), 0, 0, 0));
+    camera.Initialize();
 
     // ”wŒi
     {
@@ -156,6 +165,10 @@ void StageSelection::Update(const float& elapsedTime)
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     AudioManager& audioManager = AudioManager::Instance();
+
+    StageManager& stageManager = StageManager::Instance();
+
+    //stageManager.spriteDissolve->Update();
 
     // boss
     boss->SelectBossUpdate(elapsedTime);
@@ -293,6 +306,8 @@ void StageSelection::End()
 // •`‰æˆ—
 void StageSelection::Render(const float& elapsedTime)
 {
+    StageManager& stageManager = StageManager::Instance();
+
     // ”wŒi
     back->Render(elapsedTime, true, 1.0f);
 

@@ -134,10 +134,10 @@ void StageTutorial::Initialize()
         }
     }
 
-
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 10.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0.0f, 0.0f, 0.0f));
+    camera.Initialize();
 
     float signBoardSize = 2.0f;
 

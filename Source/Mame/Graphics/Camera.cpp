@@ -7,8 +7,13 @@
 
 void Camera::Initialize()
 {
+    coordinatesY = 0.0f;
+
     parabolaStage_ = 0;
     velocityY_     = 0.01f;
+
+    isParabolaMove_ = false;
+    isPlayerWarp_   = false;
 }
 
 
@@ -66,10 +71,8 @@ void Camera::Update(float elapsedTime)
     NO_CONST DirectX::XMFLOAT3& cameraPos = GetTransform()->GetPosition();
 
     NO_CONST PlayerManager&  playerManager = PlayerManager::Instance();
-    NO_CONST DirectX::XMFLOAT3& playerPos     = playerManager.GetPlayer()->GetTransform()->GetPosition();
+    NO_CONST DirectX::XMFLOAT3& playerPos   = playerManager.GetPlayer()->GetTransform()->GetPosition();
     const float plLastLandingTerrainMaxY   = playerManager.GetPlayer()->lastLandingTerrainAABB_.max.y;
-
-
 
     // カメラのX位置をプレイヤーのX位置と同期
     if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
@@ -115,17 +118,15 @@ void Camera::Update(float elapsedTime)
         }
 #endif
 
-
-
-        if (playerPos.x < 37.0f)coordinatesY = 8.0f;
-        if ((playerPos.x > 31.0f && playerPos.x <= 36.7f)&& playerPos.y > 6.1f)coordinatesY = 9.0f;
-        if ((playerPos.x > 36.7f && playerPos.x < 60.0f) && playerPos.y > 7.6f)coordinatesY = 11.0f;
-        if ((playerPos.x > 60.1f && playerPos.x < 63.5f) && playerPos.y > 6.4f)coordinatesY = 10.0f;
-        if (playerPos.x > 65.0f)coordinatesY = 8.0f;
-        if ((playerPos.x > 98.0f && playerPos.y > 7.4f))coordinatesY = 10.0f;
-        if ((playerPos.x > 121.0f && playerPos.x < 128.0f) && playerPos.y > 7.4f)coordinatesY = 10.0f;
-        if ((playerPos.x > 140.0f && playerPos.x < 145.0f) && playerPos.y > 7.0f)coordinatesY = 10.0f;
-        if ((playerPos.x > 223.0f) && playerPos.y > 7.0f)coordinatesY = 8.0f;
+        if (playerPos.x < 37.0f) coordinatesY = 8.0f;
+        if ((playerPos.x > 31.0f && playerPos.x <= 36.7f) && playerPos.y > 6.1f) coordinatesY = 9.0f;
+        if ((playerPos.x > 36.7f && playerPos.x <  60.0f) && playerPos.y > 7.6f) coordinatesY = 11.0f;
+        if ((playerPos.x > 60.1f && playerPos.x <  63.5f) && playerPos.y > 6.4f) coordinatesY = 10.0f;
+        if (playerPos.x > 65.0f) coordinatesY = 8.0f;
+        if (playerPos.x > 98.0f  && playerPos.y > 7.4f) coordinatesY = 10.0f;
+        if ((playerPos.x > 121.0f && playerPos.x < 128.0f) && playerPos.y > 7.4f) coordinatesY = 10.0f;
+        if ((playerPos.x > 140.0f && playerPos.x < 145.0f) && playerPos.y > 7.0f) coordinatesY = 10.0f;
+        if (playerPos.x > 223.0f && playerPos.y > 7.0f) coordinatesY = 8.0f;
         
 
         if (cameraPos.y >= coordinatesY)
@@ -369,7 +370,7 @@ void Camera::UpdateBoss(const float elapsedTime)
     float leftLimit  = -30.0f;
     float rightLimit = -5.0f;
 
-    if (playerManager.GetPlayer()->GetState() != Player::State::Clear)
+    if (!isParabolaMove_)
     {
         switch (cameraMoveY)
         {
@@ -423,20 +424,23 @@ void Camera::UpdateBoss(const float elapsedTime)
         switch (parabolaStage_)
         {
         case 0:
-            velocityY_  += -0.015f * elapsedTime;
+            velocityY_  += -0.0075f * elapsedTime;
             cameraPos.y += velocityY_;
-
 
             const float targetPositionY = 4.5f;
 
-            if (cameraPos.y >= 11.25f)
+            if (cameraPos.y >= 13.0f)
             {
+                velocityY_ += -0.01f * elapsedTime;
+                cameraPos.y += velocityY_;
+
                 playerManager.GetPlayer()->GetTransform()->SetPositionX(0.0f);
+
+                isPlayerWarp_ = true;
             }
             else if (cameraPos.y <= targetPositionY)
             {
                 cameraPos.y = targetPositionY;
-                velocityY_  = 0.0f;
 
                 ++parabolaStage_;
                 break;
@@ -456,6 +460,12 @@ void Camera::UpdateBoss(const float elapsedTime)
             cameraPos.z = (std::max)(targetPositionZ, (cameraPos.z - moveSpeedZ));
         }
 
+        // プレイヤーのステートをクリアステートへ遷移
+        if (isPlayerWarp_)
+        {
+            const Player::State playerState = playerManager.GetPlayer()->GetState();
+            if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
+        }
     }
 
     GetTransform()->SetPosition(cameraPos);

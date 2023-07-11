@@ -81,6 +81,12 @@ public:
 
     void SetLength(float l) { length = l; }
 
+public:
+    float coordinatesY = 0.0f;
+
+    bool isParabolaMove_ = false;
+    bool isPlayerWarp_   = false;
+
 private:
     Transform transform{};
 
@@ -105,13 +111,11 @@ private:
     bool cameraUp = false; // カメラ上昇するか
     bool cameraDown = false;
 
-    float coordinatesY = 0;
-
     // tutorial用
     int tutorialState = 0;
 
-    int parabolaStage_ = 0;
-    float velocityY_ = 0.0f;
+    int     parabolaStage_       = 0;
+    float   velocityY_           = 0.0f;
 
 private:
     // チュートリアル用

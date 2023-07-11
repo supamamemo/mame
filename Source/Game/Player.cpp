@@ -760,7 +760,7 @@ void Player::OnDead()
 // 落下死・落下ミスしたときに呼ばれる
 void Player::OnFallDead()
 {
-    health -= 1; // 体力減少
+    if (health > 0) health -= 1; // 体力減少
 
     // 死んでいたらreturn
     if (health <= 0) return;
@@ -783,12 +783,18 @@ void Player::OnFallDead()
         UpdateAABB();           // 忘れずにAABB更新
     }
 
-    invincibleTimer  =  1.0f;   // 無敵時間設定
+    {
+        invincibleTimer = 1.0f;   // 無敵時間設定
 
-    Camera::Instance().GetTransform()->SetPositionX(GetTransform()->GetPosition().x);
-    Camera::Instance().GetTransform()->SetPositionY(GetTransform()->GetPosition().y);
-     // ui
-    UIManager::Instance().SetUiCenter(true);
+        Camera& camera = Camera::Instance();
+        camera.GetTransform()->SetPositionX(GetTransform()->GetPosition().x);
+        const float coordinatesY = camera.coordinatesY;
+        if (coordinatesY != 0.0f) camera.GetTransform()->SetPositionY(coordinatesY);
+        //Camera::Instance().GetTransform()->SetPositionY(GetTransform()->GetPositio().y);
+        // 
+        // ui
+        UIManager::Instance().SetUiCenter(true);
+    }
 
     // 走行中・ジャンプ中・バウンス中に落ちたときのためにリセットする
     {
@@ -853,7 +859,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
             return;
         }
         // 移動速度が走行速度と同じ（走行状態）でダッシュキーが押され続けていれば走行ステートへ遷移
-        else if (moveSpeed_ == runMoveSpeed && gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
+        else if (/*moveSpeed_ == runMoveSpeed && */gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
             moveSpeed_ = defaultMoveSpeed; // 移動速度をリセット
             TransitionRunState();

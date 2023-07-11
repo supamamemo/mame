@@ -75,6 +75,7 @@ void StagePlains::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 8.0f, -12.0f));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(10), 0, 0, 0));
+    camera.Initialize();
 
     // terrain‰Šú‰»
     {
@@ -616,7 +617,6 @@ void StagePlains::RegisterEnemies(EnemyManager& enemyManager)
     enemyManager.Register(new EnemyTofu());                 // 28
     enemyManager.Register(new EnemyTofu());                 // 29
     enemyManager.Register(new EnemyTofu());                 // 30
-
 }
 
 // ’nŒ`İ’è
