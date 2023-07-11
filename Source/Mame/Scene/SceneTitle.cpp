@@ -195,12 +195,15 @@ void SceneTitle::Update(const float& elapsedTime)
     const float aRy = gamePad.GetAxisRY();
     if (gamePad.GetButtonDown() & anyButton ||
         (aLx > 0.7f) || (aLx < -0.7f) || (aLy > 0.7f) || (aLy < -0.7f) ||
-        (aRx > 0.7f) || (aRx < -0.7f) || (aRy > 0.7f) || (aRy < -0.7f))
+        (aRx > 0.7f) || (aRx < -0.7f) || (aRy > 0.7f) || (aRy < -0.7f))  
     {
-        spriteDissolve->SetFade(true);
+        if (!spriteDissolve->IsFade())
+        {
+            spriteDissolve->SetFade(true);
 
-        audioManager.StopSE(SE::Select);
-        audioManager.PlaySE(SE::Select, false, true); // ‘I‘ğSEÄ¶
+            audioManager.StopSE(SE::Select);
+            audioManager.PlaySE(SE::Select, false, true); // ‘I‘ğSEÄ¶
+        }
     }
 
     // todo:Œã‚ÅÁ‚·
