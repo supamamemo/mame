@@ -794,7 +794,7 @@ void Player::UpdateIdleState(const float& elapsedTime)
             return;
         }
         // 移動速度が走行速度と同じ（走行状態）でダッシュキーが押され続けていれば走行ステートへ遷移
-        else if (moveSpeed_ == runMoveSpeed && gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
+        else if (/*moveSpeed_ == runMoveSpeed && */gamePad.GetButton() & (GamePad::BTN_X | GamePad::BTN_Y))
         {
             moveSpeed_ = defaultMoveSpeed; // 移動速度をリセット
             TransitionRunState();
