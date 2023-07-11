@@ -214,6 +214,67 @@ void Player::UpdateSelectStage(const float& elapsedTime, int* state)
             break;
         }
 
+        // bossStageに行けるかどうか
+        if (Mame::Scene::SceneManager::Instance().selectState > 1)
+        {
+            // スティック右に傾けたら
+            if (ax > 0)
+            {
+                SetIsAnimationSet(false);
+                rot.y = DirectX::XMConvertToRadians(90);
+
+                audioManager.StopSE(SE::SelectStage);
+                audioManager.PlaySE(SE::SelectStage, false, true); // 選択SE再生
+
+                *state = SELECT::Move_B_E;
+                break;
+            }
+        }
+
+        break;
+
+    case SELECT::Move_B_E:
+        if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+        pos.x += moveSpeed;
+        if (pos.x >= 14)
+        {
+            *state = SELECT::ExStage;
+            pos.x = 14;
+            SetIsAnimationSet(false);
+        }
+
+        break;
+    case SELECT::Move_E_B:
+        if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Walk, true);
+
+        pos.x -= moveSpeed;
+        if (pos.x <= 7)
+        {
+            *state = SELECT::BossStage;
+            pos.x = 7;
+            SetIsAnimationSet(false);
+        }
+
+
+        break;
+    case SELECT::ExStage:
+        if (!GetIsAnimationSet())PlayAnimation(Animation::Anim_Idle, true);
+        rot.y = DirectX::XMConvertToRadians(180);
+
+        // スティック左に傾けたら
+        if (ax < 0)
+        {
+            SetIsAnimationSet(false);
+            rot.y = DirectX::XMConvertToRadians(270);
+
+            audioManager.StopSE(SE::SelectStage);
+            audioManager.PlaySE(SE::SelectStage, false, true); // 選択SE再生
+
+            *state = SELECT::Move_E_B;
+            break;
+        }
+
         break;
     }
 

@@ -91,7 +91,7 @@ void SceneTitle::Initialize()
     {
 #if MAME
         castleModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.45f, 0.0f));
-        groundModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(4.0f, -1.0f, -36.0f));
+        groundModel->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, -1.0f, 0.0f));
         groundModel->GetTransform()->SetScale(DirectX::XMFLOAT3(0.5f, 1.0f, 0.5f));
         groundModel->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(90), 0, 0));
 #endif

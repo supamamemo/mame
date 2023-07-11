@@ -16,6 +16,7 @@
 #include "StageTutorial.h"
 #include "StagePlains.h"
 #include "StageBoss.h"
+#include "StageEx.h"
 
 // コンストラクタ
 StageSelection::StageSelection()
@@ -39,6 +40,9 @@ void StageSelection::Initialize()
 
         // boss
         boss = std::make_unique<Box>("./resources/bossall.fbx");
+
+        Ex = std::make_unique<Box>("./resources/stage/8.fbx");
+        signBoard = std::make_unique<Box>("./resources/stage/flag_yazi.fbx");
 
         // point
         point[POINT::Black] = std::make_unique<Box>("./resources/select/pointBlack.fbx");
@@ -80,6 +84,17 @@ void StageSelection::Initialize()
         boss->GetTransform()->SetPosition(DirectX::XMFLOAT3(7.0f, 4.5f, 2.0f));
         boss->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(-10), 0.0f, 0.0f, 0.0f));
         boss->SelectBossInitialize();
+    }
+
+    // 雲
+    {
+        Ex->GetTransform()->SetPosition(DirectX::XMFLOAT3(14, 5, 2));
+    }
+
+    // 看板
+    {
+        signBoard->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 3, 1));
+        signBoard->GetTransform()->SetRotation(DirectX::XMFLOAT4(0, DirectX::XMConvertToRadians(180), 0, 0));
     }
 
     // point
@@ -151,6 +166,19 @@ void StageSelection::Update(const float& elapsedTime)
     // player更新
     PlayerManager::Instance().UpdateSelectStage(elapsedTime, &selectState);
 
+    DirectX::XMFLOAT3 cameraPos = Camera::Instance().GetTransform()->GetPosition();
+    if (selectState <= SELECT::PlainsStage)
+    {
+        cameraPos.x -= elapsedTime * 10;
+        if (cameraPos.x <= 0.0f)cameraPos.x = 0.0f;
+    }
+    if (selectState >= SELECT::BossStage)
+    {
+        cameraPos.x += elapsedTime * 10;
+        if (cameraPos.x >= 5.0f)cameraPos.x = 5.0f;
+    }
+    Camera::Instance().GetTransform()->SetPosition(cameraPos);
+
     // ステージ選択
     switch (selectState)
     {
@@ -158,7 +186,8 @@ void StageSelection::Update(const float& elapsedTime)
         castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.2f, 0.2f, 0.2f));
         TerrainManager::Instance().GetTerrain(1)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.3f, 0.3f, 0.3f));
         boss->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-
+        Ex->GetTransform()->SetScale(DirectX::XMFLOAT3(0.7f, 0.7f, 0.7f));
+        
         // tutorialStageへ
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
@@ -174,6 +203,7 @@ void StageSelection::Update(const float& elapsedTime)
         castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.15f, 0.15f, 0.15f));
         TerrainManager::Instance().GetTerrain(1)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.4f, 0.4f, 0.4f));
         boss->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+        Ex->GetTransform()->SetScale(DirectX::XMFLOAT3(0.7f, 0.7f, 0.7f));
 
         // plainsStageへ
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
@@ -191,11 +221,30 @@ void StageSelection::Update(const float& elapsedTime)
         castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.15f, 0.15f, 0.15f));
         TerrainManager::Instance().GetTerrain(1)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.3f, 0.3f, 0.3f));
         boss->GetTransform()->SetScale(DirectX::XMFLOAT3(1.3f, 1.3f, 1.3f));
+        Ex->GetTransform()->SetScale(DirectX::XMFLOAT3(0.7f, 0.7f, 0.7f));
 
         // bossStageへ
         if (gamePad.GetButtonDown() & (GamePad::BTN_A))
         {
             StageManager::Instance().ChangeStage(new StageLoading(new StageBoss));
+
+            audioManager.StopSE(SE::Select);
+            audioManager.PlaySE(SE::Select, false, true); // 選択SE再生
+
+            break;
+        }
+
+        break;
+    case SELECT::ExStage:
+        castle->GetTransform()->SetScale(DirectX::XMFLOAT3(0.15f, 0.15f, 0.15f));
+        TerrainManager::Instance().GetTerrain(1)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.3f, 0.3f, 0.3f));
+        boss->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+        Ex->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
+        // exStageへ
+        if (gamePad.GetButtonDown() & (GamePad::BTN_A))
+        {
+            StageManager::Instance().ChangeStage(new StageLoading(new StageEx));
 
             audioManager.StopSE(SE::Select);
             audioManager.PlaySE(SE::Select, false, true); // 選択SE再生
@@ -213,18 +262,22 @@ void StageSelection::Update(const float& elapsedTime)
         DirectX::XMFLOAT4 bossRot = boss->GetTransform()->GetRotation();
         DirectX::XMFLOAT4 castleRot = castle->GetTransform()->GetRotation();
         DirectX::XMFLOAT4 terrainRot = TerrainManager::Instance().GetTerrain(1)->GetTransform()->GetRotation();
+        DirectX::XMFLOAT4 exRot = Ex->GetTransform()->GetRotation();
 
         bossRot.y += DirectX::XMConvertToRadians(rotSpeed);
         castleRot.y += DirectX::XMConvertToRadians(rotSpeed);
         terrainRot.y += DirectX::XMConvertToRadians(rotSpeed);
+        exRot.y += DirectX::XMConvertToRadians(rotSpeed);
 
         if (bossRot.y >= DirectX::XMConvertToRadians(360))bossRot.y -= DirectX::XMConvertToRadians(360);
         if (castleRot.y >= DirectX::XMConvertToRadians(360))castleRot.y -= DirectX::XMConvertToRadians(360);
         if (terrainRot.y >= DirectX::XMConvertToRadians(360))terrainRot.y -= DirectX::XMConvertToRadians(360);
+        if (exRot.y >= DirectX::XMConvertToRadians(360))exRot.y -= DirectX::XMConvertToRadians(360);
 
         boss->GetTransform()->SetRotation(bossRot);
         castle->GetTransform()->SetRotation(castleRot);
         TerrainManager::Instance().GetTerrain(1)->GetTransform()->SetRotation(terrainRot);
+        Ex->GetTransform()->SetRotation(exRot);
     }
 }
 
@@ -244,6 +297,8 @@ void StageSelection::Render(const float& elapsedTime)
 
     // boss
     boss->Render(elapsedTime);
+    Ex->Render(elapsedTime);
+    signBoard->Render(elapsedTime);
 
     // point
     PointRender(elapsedTime);
@@ -267,6 +322,9 @@ void StageSelection::DrawDebug()
 
     // boss
     boss->DrawDebug();
+
+    Ex->DrawDebug();
+    signBoard->DrawDebug();
 
     ImGui::SliderInt("state", &Mame::Scene::SceneManager::Instance().selectState, 0, 2);
 
@@ -302,6 +360,9 @@ void StageSelection::PointRender(const float& elapsedTime)
         point[POINT::Black]->GetTransform()->SetPosition(DirectX::XMFLOAT3(7, 2.2f, 0));
         point[POINT::Black]->Render(elapsedTime, 1.0f);
 
+        point[POINT::Black]->GetTransform()->SetPosition(DirectX::XMFLOAT3(14, 2.2f, 0));
+        point[POINT::Black]->Render(elapsedTime, 1.0f);
+
         break;
     case POINTSTATE::Plains:
         point[POINT::Blue]->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 2.2f, 0));
@@ -311,6 +372,9 @@ void StageSelection::PointRender(const float& elapsedTime)
         point[POINT::Red]->Render(elapsedTime, 1.0f);
 
         point[POINT::Black]->GetTransform()->SetPosition(DirectX::XMFLOAT3(7, 2.2f, 0));
+        point[POINT::Black]->Render(elapsedTime, 1.0f);
+
+        point[POINT::Black]->GetTransform()->SetPosition(DirectX::XMFLOAT3(14, 2.2f, 0));
         point[POINT::Black]->Render(elapsedTime, 1.0f);
 
         break;
@@ -324,6 +388,34 @@ void StageSelection::PointRender(const float& elapsedTime)
         point[POINT::Red]->GetTransform()->SetPosition(DirectX::XMFLOAT3(7, 2.2f, 0));
         point[POINT::Red]->Render(elapsedTime, 1.0f);
 
+        point[POINT::Black]->GetTransform()->SetPosition(DirectX::XMFLOAT3(14, 2.2f, 0));
+        point[POINT::Black]->Render(elapsedTime, 1.0f);
+
+        break;
+    case POINTSTATE::EX:
+        point[POINT::Blue]->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 2.2f, 0));
+        point[POINT::Blue]->Render(elapsedTime, 1.0f);
+
+        point[POINT::Blue]->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2.2f, 0));
+        point[POINT::Blue]->Render(elapsedTime, 1.0f);
+
+        point[POINT::Blue]->GetTransform()->SetPosition(DirectX::XMFLOAT3(7, 2.2f, 0));
+        point[POINT::Blue]->Render(elapsedTime, 1.0f);
+
+        point[POINT::Red]->GetTransform()->SetPosition(DirectX::XMFLOAT3(14, 2.2f, 0));
+        point[POINT::Red]->Render(elapsedTime, 1.0f);
+    case POINTSTATE::Clear:
+        point[POINT::Blue]->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 2.2f, 0));
+        point[POINT::Blue]->Render(elapsedTime, 1.0f);
+
+        point[POINT::Blue]->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 2.2f, 0));
+        point[POINT::Blue]->Render(elapsedTime, 1.0f);
+
+        point[POINT::Blue]->GetTransform()->SetPosition(DirectX::XMFLOAT3(7, 2.2f, 0));
+        point[POINT::Blue]->Render(elapsedTime, 1.0f);
+
+        point[POINT::Blue]->GetTransform()->SetPosition(DirectX::XMFLOAT3(14, 2.2f, 0));
+        point[POINT::Blue]->Render(elapsedTime, 1.0f);
         break;
     }
 }
