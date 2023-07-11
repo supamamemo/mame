@@ -25,11 +25,15 @@ StageSelection::StageSelection()
 // 初期化
 void StageSelection::Initialize()
 {
+    StageManager& stageManager = StageManager::Instance();
+
     // ステージの属性を設定
     SetStageType(static_cast<int>(Mame::Stage::TYPE::SELECT));
 
     // 生成
     {
+        stageManager.spriteDissolve = std::make_unique<SpriteDissolve>();
+
         // 背景
         //back = std::make_unique<Box>("./resources/tutorialBack1.fbx");
         back = std::make_unique<Box>("./resources/tutorialBack.fbx");
@@ -55,6 +59,10 @@ void StageSelection::Initialize()
         // player生成
         PlayerManager::Instance().GetPlayer() = std::make_unique<Player>();
     }
+
+
+    stageManager.spriteDissolve->Initialize();
+    stageManager.spriteDissolve->SetFadeInTexture({ 0,0,0 }, { 1280,720 }, 0.4f, 2);
 
     // camera初期化
     Camera& camera = Camera::Instance();
@@ -142,6 +150,10 @@ void StageSelection::Update(const float& elapsedTime)
     GamePad& gamePad = Input::Instance().GetGamePad();
 
     AudioManager& audioManager = AudioManager::Instance();
+
+    StageManager& stageManager = StageManager::Instance();
+
+    stageManager.spriteDissolve->Update();
 
     // boss
     boss->SelectBossUpdate(elapsedTime);
