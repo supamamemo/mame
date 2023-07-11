@@ -9,6 +9,9 @@ void Camera::Initialize()
 {
     parabolaStage_ = 0;
     velocityY_     = 0.01f;
+
+    isParabolaMove_ = false;
+    isPlayerWarp_   = false;
 }
 
 
@@ -369,7 +372,7 @@ void Camera::UpdateBoss(const float elapsedTime)
     float leftLimit  = -30.0f;
     float rightLimit = -5.0f;
 
-    if (playerManager.GetPlayer()->GetState() != Player::State::Clear)
+    if (!isParabolaMove_)
     {
         switch (cameraMoveY)
         {
@@ -423,20 +426,23 @@ void Camera::UpdateBoss(const float elapsedTime)
         switch (parabolaStage_)
         {
         case 0:
-            velocityY_  += -0.015f * elapsedTime;
+            velocityY_  += -0.0075f * elapsedTime;
             cameraPos.y += velocityY_;
-
 
             const float targetPositionY = 4.5f;
 
-            if (cameraPos.y >= 11.25f)
+            if (cameraPos.y >= 13.0f)
             {
+                velocityY_ += -0.01f * elapsedTime;
+                cameraPos.y += velocityY_;
+
                 playerManager.GetPlayer()->GetTransform()->SetPositionX(0.0f);
+
+                isPlayerWarp_ = true;
             }
             else if (cameraPos.y <= targetPositionY)
             {
                 cameraPos.y = targetPositionY;
-                velocityY_  = 0.0f;
 
                 ++parabolaStage_;
                 break;
@@ -456,6 +462,12 @@ void Camera::UpdateBoss(const float elapsedTime)
             cameraPos.z = (std::max)(targetPositionZ, (cameraPos.z - moveSpeedZ));
         }
 
+        // プレイヤーのステートをクリアステートへ遷移
+        if (isPlayerWarp_)
+        {
+            const Player::State playerState = playerManager.GetPlayer()->GetState();
+            if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
+        }
     }
 
     GetTransform()->SetPosition(cameraPos);

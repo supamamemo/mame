@@ -80,6 +80,9 @@ public:
 
     void SetLength(float l) { length = l; }
 
+public:
+    bool isParabolaMove_ = false;
+    bool isPlayerWarp_   = false;
 private:
     Transform transform{};
 
@@ -109,8 +112,8 @@ private:
     // tutorial用
     int tutorialState = 0;
 
-    int parabolaStage_ = 0;
-    float velocityY_ = 0.0f;
+    int     parabolaStage_       = 0;
+    float   velocityY_           = 0.0f;
 
 private:
     // チュートリアル用

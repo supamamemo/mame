@@ -49,6 +49,7 @@ void StageBoss::Initialize()
             TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
 
             TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
         }
 
         // player生成
@@ -117,6 +118,9 @@ void StageBoss::Initialize()
 
             terrainManager.GetTerrain(7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 12.5f, 10));
             terrainManager.GetTerrain(7)->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.5f));
+
+            terrainManager.GetTerrain(8)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 14.0f, 10));
+            terrainManager.GetTerrain(8)->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.5f));
         }
         
         // materialColor
@@ -261,14 +265,12 @@ void StageBoss::Update(const float& elapsedTime)
                 {
                     clearTimer_ = 3.0f;
 
-                    // プレイヤーのステートをクリアステートへ遷移
-                    const Player::State playerState = playerManager.GetPlayer()->GetState();
-                    if (playerState != Player::State::Clear) playerManager.GetPlayer()->TransitionClearState();
+                    Camera::Instance().isParabolaMove_ = true;
 
                     // 右に走り去っていったらステージセレクトに切り替える
                     if (playerManager.GetPlayer()->GetClearState() == ClearState::MoveToRight)
                     {
-                        const float moveLimitX = 7.0f;
+                        const float moveLimitX = 7.5f;
                         if (playerTransform->GetPosition().x > moveLimitX)
                         {
                             playerTransform->SetPositionX(moveLimitX);
