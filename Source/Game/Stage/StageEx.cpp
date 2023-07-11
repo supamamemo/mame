@@ -368,6 +368,17 @@ void StageEx::RegisterTerrains(TerrainManager& terrainManager)
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 24
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
 
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
 }
 
 void StageEx::RegisterEnemies(EnemyManager& enemyManager)
@@ -384,10 +395,8 @@ void StageEx::RegisterEnemies(EnemyManager& enemyManager)
     enemyManager.Register(new EnemyTofu());                 // 8
     enemyManager.Register(new EnemyTofu());                 // 9
 
-    //enemyManager.Register(new RED_TOFU::EnemyRedTofu());    // 10
-    //enemyManager.Register(new RED_TOFU::EnemyRedTofu());    // 11
-    enemyManager.Register(new EnemyTofu());                 // 12
-    enemyManager.Register(new EnemyTofu());                 // 12
+    enemyManager.Register(new RED_TOFU::EnemyRedTofu());    // 10
+    enemyManager.Register(new RED_TOFU::EnemyRedTofu());    // 11
     enemyManager.Register(new EnemyTofu());                 // 12
     enemyManager.Register(new EnemyTofu());                 // 13
     enemyManager.Register(new EnemyTofu());                 // 14
