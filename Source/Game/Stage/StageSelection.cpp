@@ -60,6 +60,7 @@ void StageSelection::Initialize()
     Camera& camera = Camera::Instance();
     camera.GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 16, -20));
     camera.GetTransform()->SetRotation(DirectX::XMFLOAT4(ToRadian(30), 0, 0, 0));
+    camera.Initialize();
 
     // îwåi
     {

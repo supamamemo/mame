@@ -725,8 +725,12 @@ void Player::OnFallDead()
     {
         invincibleTimer = 1.0f;   // –³“GŽžŠÔÝ’è
 
-        Camera::Instance().GetTransform()->SetPositionX(GetTransform()->GetPosition().x);
-        Camera::Instance().GetTransform()->SetPositionY(GetTransform()->GetPosition().y);
+        Camera& camera = Camera::Instance();
+        camera.GetTransform()->SetPositionX(GetTransform()->GetPosition().x);
+        const float coordinatesY = camera.coordinatesY;
+        if (coordinatesY != 0.0f) camera.GetTransform()->SetPositionY(coordinatesY);
+        //Camera::Instance().GetTransform()->SetPositionY(GetTransform()->GetPositio().y);
+        // 
         // ui
         UIManager::Instance().SetUiCenter(true);
     }

@@ -197,6 +197,7 @@ void SceneTitle::Update(const float& elapsedTime)
         (aLx > 0.7f) || (aLx < -0.7f) || (aLy > 0.7f) || (aLy < -0.7f) ||
         (aRx > 0.7f) || (aRx < -0.7f) || (aRy > 0.7f) || (aRy < -0.7f))  
     {
+        // SE˜A‘±Ä¶–hŽ~
         if (!spriteDissolve->IsFade())
         {
             spriteDissolve->SetFade(true);

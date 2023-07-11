@@ -383,6 +383,11 @@ void Character::VerticalFall(const float& fallSpeed)
         // ‰æ–Ê‚©‚çŒ©‚¦‚È‚­‚È‚é‚­‚ç‚¢‚Ü‚Å—Ž‚¿‚½‚çX‘¬“x‚ð0‚É‚·‚é
         else if (GetTransform()->GetPosition().y < -3.0f)
         {
+            if (this == PlayerManager::Instance().GetPlayer().get())
+            {
+                AudioManager::Instance().StopPlayerMoveSE();
+            }
+
             velocity.x = 0.0f;
         }
     }

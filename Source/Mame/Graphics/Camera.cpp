@@ -7,6 +7,8 @@
 
 void Camera::Initialize()
 {
+    coordinatesY = 0.0f;
+
     parabolaStage_ = 0;
     velocityY_     = 0.01f;
 
@@ -69,10 +71,8 @@ void Camera::Update(float elapsedTime)
     NO_CONST DirectX::XMFLOAT3& cameraPos = GetTransform()->GetPosition();
 
     NO_CONST PlayerManager&  playerManager = PlayerManager::Instance();
-    NO_CONST DirectX::XMFLOAT3& playerPos     = playerManager.GetPlayer()->GetTransform()->GetPosition();
+    NO_CONST DirectX::XMFLOAT3& playerPos   = playerManager.GetPlayer()->GetTransform()->GetPosition();
     const float plLastLandingTerrainMaxY   = playerManager.GetPlayer()->lastLandingTerrainAABB_.max.y;
-
-
 
     // カメラのX位置をプレイヤーのX位置と同期
     if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
@@ -118,17 +118,15 @@ void Camera::Update(float elapsedTime)
         }
 #endif
 
-
-
-        if (playerPos.x < 37.0f)coordinatesY = 8.0f;
-        if ((playerPos.x > 31.0f && playerPos.x <= 36.7f)&& playerPos.y > 6.1f)coordinatesY = 9.0f;
-        if ((playerPos.x > 36.7f && playerPos.x < 60.0f) && playerPos.y > 7.6f)coordinatesY = 11.0f;
-        if ((playerPos.x > 60.1f && playerPos.x < 63.5f) && playerPos.y > 6.4f)coordinatesY = 10.0f;
-        if (playerPos.x > 65.0f)coordinatesY = 8.0f;
-        if ((playerPos.x > 98.0f && playerPos.y > 7.4f))coordinatesY = 10.0f;
-        if ((playerPos.x > 121.0f && playerPos.x < 128.0f) && playerPos.y > 7.4f)coordinatesY = 10.0f;
-        if ((playerPos.x > 140.0f && playerPos.x < 145.0f) && playerPos.y > 7.0f)coordinatesY = 10.0f;
-        if ((playerPos.x > 223.0f) && playerPos.y > 7.0f)coordinatesY = 8.0f;
+        if (playerPos.x < 37.0f) coordinatesY = 8.0f;
+        if ((playerPos.x > 31.0f && playerPos.x <= 36.7f) && playerPos.y > 6.1f) coordinatesY = 9.0f;
+        if ((playerPos.x > 36.7f && playerPos.x <  60.0f) && playerPos.y > 7.6f) coordinatesY = 11.0f;
+        if ((playerPos.x > 60.1f && playerPos.x <  63.5f) && playerPos.y > 6.4f) coordinatesY = 10.0f;
+        if (playerPos.x > 65.0f) coordinatesY = 8.0f;
+        if (playerPos.x > 98.0f  && playerPos.y > 7.4f) coordinatesY = 10.0f;
+        if ((playerPos.x > 121.0f && playerPos.x < 128.0f) && playerPos.y > 7.4f) coordinatesY = 10.0f;
+        if ((playerPos.x > 140.0f && playerPos.x < 145.0f) && playerPos.y > 7.0f) coordinatesY = 10.0f;
+        if (playerPos.x > 223.0f && playerPos.y > 7.0f) coordinatesY = 8.0f;
         
 
         if (cameraPos.y >= coordinatesY)
@@ -138,7 +136,7 @@ void Camera::Update(float elapsedTime)
         }
         else if (cameraPos.y < coordinatesY)
         {
-            cameraPos.y += elapsedTime * 5;
+            cameraPos.y += elapsedTime * 1;
             if (cameraPos.y >= coordinatesY)cameraPos.y = coordinatesY;
         }
         
