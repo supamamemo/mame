@@ -56,6 +56,9 @@ private:
         Move_P_B,       // 野原->ボス
         Move_B_P,       // ボス->野原
         BossStage,      // ボス
+        Move_B_E,   // ボス->Ex
+        Move_E_B,   // Ex->ボス
+        ExStage,    // Ex
     };
 
 public:

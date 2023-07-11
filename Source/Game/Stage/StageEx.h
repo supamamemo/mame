@@ -54,6 +54,8 @@ public:
 private:
     std::unique_ptr<Box> back = nullptr;
 
+    std::unique_ptr<Box> goal_ = nullptr;    // ÉSÅ[Éã
+
 private:
     enum UISPRITE
     {

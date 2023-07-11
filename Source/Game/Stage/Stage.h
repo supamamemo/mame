@@ -39,6 +39,7 @@ public:
 
     // 準備完了
     void SetReady() { ready = true; }
+    void ReSetRead() { ready = false; }
     
     // 今どのステージなのか
     void SetStageType(int type) { stageType = type; }

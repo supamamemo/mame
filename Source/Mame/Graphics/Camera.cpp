@@ -489,12 +489,12 @@ void Camera::UpdateEx(const float elapsedTime)
     {
         if (playerPos.x < 30.0f)coordinatesY = 8.0f;
         if (playerPos.x > 27.0f && playerPos.y > 7.0f)coordinatesY = 9.0f;
-        if (playerPos.x > 32.0f && playerPos.y > 9.0f)coordinatesY = 10.0f;
-        if (playerPos.x > 37.0f)coordinatesY = 10.0f;
+        if (playerPos.x > 32.0f && playerPos.y > 9.0f)coordinatesY = 10.5f;
+        if (playerPos.x > 37.0f)coordinatesY = 10.5f;
         if (playerPos.x > 143.0f && playerPos.y > 7.5f)coordinatesY = 11.0f;
         if (playerPos.x > 148.0f && playerPos.y > 10.5f)coordinatesY = 13.0f;
-        
-
+        if (playerPos.x > 174.0f)coordinatesY = 10.5f;
+        if (playerPos.x > 210.0f && playerPos.y > 8.9f)coordinatesY = 12.0f;
 
         if (cameraPos.y >= coordinatesY)
         {
@@ -511,7 +511,7 @@ void Camera::UpdateEx(const float elapsedTime)
     // プレイヤーのステートがクリアステートならカメラを寄せる
     else
     {
-        const float targetPositionY = 3.5f;
+        const float targetPositionY = 9.0f;
         const float moveSpeedY = 7.0f * elapsedTime;
         if (cameraPos.y < targetPositionY)
         {

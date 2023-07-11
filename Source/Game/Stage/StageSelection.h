@@ -27,6 +27,8 @@ private:
     std::unique_ptr<Box>back = nullptr;
     std::unique_ptr<Box>castle = nullptr;
     std::unique_ptr<Box>boss = nullptr;
+    std::unique_ptr<Box>Ex = nullptr;
+    std::unique_ptr<Box>signBoard = nullptr;
 
     std::unique_ptr<Box>point[3];
 
@@ -43,6 +45,8 @@ private:
         Tutorial,
         Plains,
         Boss,
+        EX,
+        Clear,
     };
 
     enum SELECT
@@ -54,6 +58,11 @@ private:
         Move_P_B,       // 野原->ボス
         Move_B_P,       // ボス->野原
         BossStage,      // ボス
+
+        Move_B_E,   // ボス->Ex
+        Move_E_B,   // Ex->ボス
+        ExStage,    // Ex
+
     };
 
 };

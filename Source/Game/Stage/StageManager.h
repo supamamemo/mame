@@ -40,7 +40,7 @@ public:
 
     SavedHalfPoint savedHalfPoint_ = {};
 
-    std::unique_ptr<SpriteDissolve> spriteDissolve;
+    //std::unique_ptr<SpriteDissolve> spriteDissolve;
 
 private:
     Stage* currentStage = nullptr;

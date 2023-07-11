@@ -116,9 +116,6 @@ void SceneGame::Update(const float& elapsedTime)
             // fadeOut最後までできたら
             if (spriteDissolve->FadeOutReady(2.0f))
             {
-                // シーンを切り替える
-                //Mame::Scene::SceneManager::Instance().ChangeScene(new SceneLoading(new SceneGame));
-
                 // fadeOut判定をリセット
                 spriteDissolve->SetFade(false);
             }

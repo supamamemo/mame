@@ -17,7 +17,7 @@ public:
     void End() {}                               // 毎フレーム一番最後に呼ばれる
     void Render(const float& elapsedTime);    // 描画処理
     void Render(const float& elapsedTime, float size);    // 描画処理
-    void Render(const float& elapsedTime, bool noPlayer);    // 描画処理(playerいないとき用)
+    void Render(const float& elapsedTime, bool noPlayer, float size = 0.01f);    // 描画処理(playerいないとき用)
     void DrawDebug();                         // デバッグ描画
 
     // これは仮すぎるがこのままで
