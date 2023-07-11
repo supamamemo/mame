@@ -125,7 +125,7 @@ void StageTutorial::Initialize()
             uiManager.Register(new UI(L"./resources/tutorial/plus.png"));           // plus
             uiManager.Register(new UI(L"./resources/tutorial/batu.png"));           // batu
             uiManager.Register(new UI(L"./resources/tutorial/maru.png"));           // maru
-            
+            uiManager.Register(new UI(L"./resources/tutorial/tutorial.png"));
         }
 
         // ‰ŠúÝ’è‚µ‚Ü‚·
@@ -246,7 +246,9 @@ void StageTutorial::Initialize()
 
 
     // —U“±—p
-    tutorialState = STATE::MoveReception;
+    tutorialState = STATE::Start;
+    setumeiTimer = 5.0f;
+    //tutorialState = STATE::MoveReception;
 
     isPlayerMove = true;
 
@@ -490,7 +492,22 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
     switch (tutorialState)
     {
+    case STATE::Start:
+        UIManager::Instance().GetUI(UISPRITE::Setumei)->SetIsRender(true);
+        isPlayerMove = false;
 
+        setumeiTimer -= elapsedTime;
+
+        UIManager::Instance().GetUI(UISPRITE::Setumei)->SetSize(DirectX::XMFLOAT2(1280, 720));
+
+        if (setumeiTimer < 0.0f)
+        {
+            tutorialState = STATE::MoveReception;
+            UIManager::Instance().GetUI(UISPRITE::Setumei)->SetIsRender(false);
+            isPlayerMove = true;
+        }
+
+        break;
 
     case STATE::MoveReception:
 

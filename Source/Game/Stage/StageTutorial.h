@@ -48,6 +48,7 @@ private:
         Plus,           // +
         Batu,
         Maru,
+        Setumei,
     };
 
     enum STATE
@@ -58,6 +59,7 @@ private:
         Run,
         Free,
         GoalState,
+        Start,
     };
 
     enum TutorialTerrain
@@ -91,6 +93,8 @@ private:
     void MarkUpdate(float elapsedTime);
     int markState = 0;
     float markTimer = 0.0f;
+
+    float setumeiTimer = 0.0f;
 
 private:
     std::unique_ptr<Box> back = nullptr;
