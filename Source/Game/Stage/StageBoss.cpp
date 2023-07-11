@@ -36,20 +36,34 @@ void StageBoss::Initialize()
     {
         // ステージ生成&登録
         {
-            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));   // 0
 
-            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
-            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));     // 1
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx"));     // 2
 
-            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));  // 3
 
-            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
-            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));     // 4
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/door.fbx"));     // 5
 
-            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ground.fbx"));   // 6
 
-            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
-            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));  // 7 第二の床
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/ceiling.fbx"));  // 8 第三の床
+
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 9    壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 10   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 11   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 12   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 13   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 14   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 15   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 16   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 17   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 18   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 19   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 20   壁
+            TerrainManager::Instance().Register(new TerrainBoss("./resources/bossStage/wall.fbx")); // 21   壁
         }
 
         // player生成
@@ -97,30 +111,49 @@ void StageBoss::Initialize()
 
         // 位置設定
         {
-            terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1, 10));
+            terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 1, 10));     // 右の床地形
+            terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 11, 10));  // 室内左の壁
+            terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 11, 10));   // 室内右の壁
 
-            terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 11, 10));
-
-            terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 11, 10));
-
-            terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 11, 10));
+            terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 11, 10)); // 天井
             terrainManager.GetTerrain(3)->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.5f));
 
-            terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 8, 10));
+            terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 8, 10));   //　左の扉
             terrainManager.GetTerrain(4)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
             // terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-10, 4, 10)); // しまった後
            
-            terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 8, 10));
+            terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 8, 10));    //　右の扉
             //terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(10, 4, 10));
             terrainManager.GetTerrain(5)->GetTransform()->SetScale(DirectX::XMFLOAT3(0.9f, 0.9f, 0.9f));
             
-            terrainManager.GetTerrain(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-24.0f, 1.0f, 10.0f));
+            terrainManager.GetTerrain(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-24.0f, 1.0f, 10.0f)); // 左の床地形
 
-            terrainManager.GetTerrain(7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 12.5f, 10));
+            terrainManager.GetTerrain(7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 13.0f, 10)); // 第二の天井
             terrainManager.GetTerrain(7)->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.5f));
-
-            terrainManager.GetTerrain(8)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 14.0f, 10));
+            terrainManager.GetTerrain(8)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.1f, 15.0f, 10)); // 第三の天井
             terrainManager.GetTerrain(8)->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.5f));
+
+            terrainManager.GetTerrain(9 )->GetTransform()->SetPosition(DirectX::XMFLOAT3(-11.0f, 7.0f, 12.0f)); // 室内左の壁の後ろの壁
+            terrainManager.GetTerrain(10)->GetTransform()->SetPosition(DirectX::XMFLOAT3( 10.9f, 7.0f, 12.0f)); // 室内右の壁の後ろの壁
+
+            terrainManager.GetTerrain(11)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-13.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(12)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-15.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(13)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-17.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(14)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-19.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(15)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-21.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(16)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-23.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(17)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-25.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(18)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-27.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(19)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-29.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(20)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-31.0f, 7.0f, 12.0f)); // 壁
+            terrainManager.GetTerrain(21)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-33.0f, 7.0f, 12.0f)); // 壁
+
+            // 色を暗めに設定
+            static DirectX::XMFLOAT4 materialColor = { 0.7f, 0.7f, 0.7f, 1.0f };
+            for (int i = 9; i <= 21; ++i)
+            {
+                terrainManager.GetTerrain(i)->SetMaterialColor(materialColor);
+            }
         }
         
         // materialColor

@@ -4,7 +4,7 @@
 #include "../Mame/Scene/SceneManager.h"
 #include "../Mame/AudioManager.h"
 
-float Enemy::renderLengthXLimit_ = 40.0f;
+float Enemy::renderLengthXLimit_ = 20.0f;
 float Enemy::playSELengthXLimit_ = 10.0f;
 
 

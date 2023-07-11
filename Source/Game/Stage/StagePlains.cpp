@@ -111,7 +111,8 @@ void StagePlains::Initialize()
 
     // 背景
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 5, 27));
-    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 19, 15));
+
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(2.0f, 19.0f, 14.5f));
     back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
 
     // 中間地点
@@ -617,7 +618,6 @@ void StagePlains::RegisterEnemies(EnemyManager& enemyManager)
     enemyManager.Register(new EnemyTofu());                 // 28
     enemyManager.Register(new EnemyTofu());                 // 29
     enemyManager.Register(new EnemyTofu());                 // 30
-
 }
 
 // 地形設定
