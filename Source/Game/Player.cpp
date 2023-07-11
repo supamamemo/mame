@@ -699,7 +699,7 @@ void Player::OnDead()
 // 落下死・落下ミスしたときに呼ばれる
 void Player::OnFallDead()
 {
-    health -= 1; // 体力減少
+    if (health > 0) health -= 1; // 体力減少
 
     // 死んでいたらreturn
     if (health <= 0) return;
@@ -722,12 +722,14 @@ void Player::OnFallDead()
         UpdateAABB();           // 忘れずにAABB更新
     }
 
-    invincibleTimer  =  1.0f;   // 無敵時間設定
+    {
+        invincibleTimer = 1.0f;   // 無敵時間設定
 
-    Camera::Instance().GetTransform()->SetPositionX(GetTransform()->GetPosition().x);
-    Camera::Instance().GetTransform()->SetPositionY(GetTransform()->GetPosition().y);
-     // ui
-    UIManager::Instance().SetUiCenter(true);
+        Camera::Instance().GetTransform()->SetPositionX(GetTransform()->GetPosition().x);
+        Camera::Instance().GetTransform()->SetPositionY(GetTransform()->GetPosition().y);
+        // ui
+        UIManager::Instance().SetUiCenter(true);
+    }
 
     // 走行中・ジャンプ中・バウンス中に落ちたときのためにリセットする
     {

@@ -11,6 +11,8 @@ void AudioManager::LoadAudio()
             bgm_[static_cast<int>(BGM::StageSelection)  ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StageSelection.wav");
             bgm_[static_cast<int>(BGM::StagePlains)     ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StagePlains.wav");
             bgm_[static_cast<int>(BGM::StagePlains_Back)] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StagePlainsBackSound.wav");
+            bgm_[static_cast<int>(BGM::StageEx)         ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StageEx.wav");
+            bgm_[static_cast<int>(BGM::StageEx_Back)    ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StageExBackSound.wav");
             bgm_[static_cast<int>(BGM::StageBoss)       ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StageBoss.wav");
             bgm_[static_cast<int>(BGM::StageBoss_Back)  ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/BGM/StageBossBackSound.wav");
             bgm_[static_cast<int>(BGM::StageClear)      ] = std::make_unique<Audio>(xAudio2.Get(), L"./resources/audio/Jingle/StageClear.wav");
@@ -56,6 +58,7 @@ void AudioManager::LoadAudio()
         {
             bgm_[static_cast<int>(BGM::Title)           ]->Volume(0.75f);
             bgm_[static_cast<int>(BGM::StagePlains_Back)]->Volume(0.5f);
+            bgm_[static_cast<int>(BGM::StageEx_Back)    ]->Volume(0.25f);
             bgm_[static_cast<int>(BGM::StageBoss)       ]->Volume(0.65f);
             bgm_[static_cast<int>(BGM::StageBoss_Back)  ]->Volume(0.25f);
         }

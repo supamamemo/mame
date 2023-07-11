@@ -14,6 +14,8 @@ enum class BGM
     StageSelection,
     StagePlains,
     StagePlains_Back,   // 草原ステージの環境音
+    StageEx,   
+    StageEx_Back,
     StageBoss,
     StageBoss_Back,     // ボスステージの環境音
 

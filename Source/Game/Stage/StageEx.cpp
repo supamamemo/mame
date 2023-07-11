@@ -122,8 +122,8 @@ void StageEx::Initialize()
 
     // BGM再生
     AudioManager& audioManager = AudioManager::Instance();
-    audioManager.PlayBGM(BGM::StagePlains, true);  // 草原ステージBGM再生
-    audioManager.PlayBGM(BGM::StagePlains_Back, true);  // 草原ステージの環境音BGM再生
+    audioManager.PlayBGM(BGM::StageEx,      true);  // ExステージBGM再生
+    audioManager.PlayBGM(BGM::StageEx_Back, true);  // Exステージの環境音BGM再生
 }
 
 void StageEx::Finalize()
@@ -408,10 +408,10 @@ void StageEx::SetTerrains(TerrainManager& terrainManager)
     terrainManager.GetTerrain(0)->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7.0f, 0.0f, 10.0f));
     terrainManager.GetTerrain(1)->GetTransform()->SetPosition(DirectX::XMFLOAT3(6.0f, -2.0f, 10.0f));
 
-    terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 3.9f, 10.0f));
-    terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(4.0f, 3.9f, 10.0f));
-    terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.0f, 3.9f, 10.0f));
-    terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(12.0f, 3.9f, 10.0f));
+    terrainManager.GetTerrain(2)->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f,  3.98f, 10.0f));
+    terrainManager.GetTerrain(3)->GetTransform()->SetPosition(DirectX::XMFLOAT3(4.0f,  3.98f, 10.0f));
+    terrainManager.GetTerrain(4)->GetTransform()->SetPosition(DirectX::XMFLOAT3(8.0f,  3.98f, 10.0f));
+    terrainManager.GetTerrain(5)->GetTransform()->SetPosition(DirectX::XMFLOAT3(12.0f, 3.98f, 10.0f));
 
     terrainManager.GetTerrain(6)->GetTransform()->SetPosition(DirectX::XMFLOAT3(17.0f, -3.0f, 10.0f));
     terrainManager.GetTerrain(7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(23.5f, 0.0f, 10.0f));
