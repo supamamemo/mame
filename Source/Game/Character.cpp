@@ -360,10 +360,9 @@ void Character::VerticalFall(const float& fallSpeed)
                         saveTerrain_ = nullptr;
                     }
 
-                    terrain->OnRiding();    // 地形の乗られた時の処理を行う
                     if (this == PlayerManager::Instance().GetPlayer().get())
                     {
-                        
+                        terrain->OnRiding();    // 地形の乗られた時の処理を行う                        
                     }
                 }
             }
