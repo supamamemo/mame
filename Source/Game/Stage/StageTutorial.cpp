@@ -38,6 +38,8 @@ void StageTutorial::Initialize()
 {
     StageManager& stageManager = StageManager::Instance();
 
+
+
     // ステージの属性を設定
     SetStageType(static_cast<int>(Mame::Stage::TYPE::TUTORIAL));
 
@@ -123,6 +125,7 @@ void StageTutorial::Initialize()
             uiManager.Register(new UI(L"./resources/tutorial/plus.png"));           // plus
             uiManager.Register(new UI(L"./resources/tutorial/batu.png"));           // batu
             uiManager.Register(new UI(L"./resources/tutorial/maru.png"));           // maru
+            
         }
 
         // 初期設定します
@@ -487,7 +490,10 @@ void StageTutorial::TutorialStateUpdate(float elapsedTime)
 
     switch (tutorialState)
     {
+
+
     case STATE::MoveReception:
+
         // effect
         effect[0]->SetPosition(DirectX::XMFLOAT3(-2.5f, 2.0f, 10.0f));
         effect[0]->SetScale(DirectX::XMFLOAT3(1.0f, 1.0f, 0.6f));
