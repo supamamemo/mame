@@ -473,6 +473,82 @@ void Camera::UpdateBoss(const float elapsedTime)
     GetTransform()->SetPosition(cameraPos);
 }
 
+void Camera::UpdateEx(const float elapsedTime)
+{
+    NO_CONST DirectX::XMFLOAT3& cameraPos = GetTransform()->GetPosition();
+
+    NO_CONST PlayerManager& playerManager = PlayerManager::Instance();
+    NO_CONST DirectX::XMFLOAT3& playerPos = playerManager.GetPlayer()->GetTransform()->GetPosition();
+    const float plLastLandingTerrainMaxY = playerManager.GetPlayer()->lastLandingTerrainAABB_.max.y;
+
+    // カメラのX位置をプレイヤーのX位置と同期
+    if (playerManager.GetPlayer()->GetClearState() != ClearState::MoveToRight)
+    {
+        cameraPos.x = playerPos.x;
+    }
+
+    if (playerManager.GetPlayer()->GetState() != Player::State::Clear)
+    {
+        if (playerPos.x < 30.0f)coordinatesY = 8.0f;
+        if (playerPos.x > 27.0f && playerPos.y > 7.0f)coordinatesY = 9.0f;
+        if (playerPos.x > 32.0f && playerPos.y > 9.0f)coordinatesY = 10.0f;
+        if (playerPos.x > 37.0f)coordinatesY = 10.0f;
+        if (playerPos.x > 143.0f && playerPos.y > 7.5f)coordinatesY = 11.0f;
+        if (playerPos.x > 148.0f && playerPos.y > 10.5f)coordinatesY = 13.0f;
+        
+
+
+        if (cameraPos.y >= coordinatesY)
+        {
+            cameraPos.y -= elapsedTime * 5;
+            if (cameraPos.y <= coordinatesY)cameraPos.y = coordinatesY;
+        }
+        else if (cameraPos.y < coordinatesY)
+        {
+            cameraPos.y += elapsedTime * 5;
+            if (cameraPos.y >= coordinatesY)cameraPos.y = coordinatesY;
+        }
+
+    }
+    // プレイヤーのステートがクリアステートならカメラを寄せる
+    else
+    {
+        const float targetPositionY = 3.5f;
+        const float moveSpeedY = 7.0f * elapsedTime;
+        if (cameraPos.y < targetPositionY)
+        {
+            cameraPos.y = (std::min)(targetPositionY, (cameraPos.y + moveSpeedY));
+        }
+        if (cameraPos.y > targetPositionY)
+        {
+            cameraPos.y = (std::max)(targetPositionY, (cameraPos.y - moveSpeedY));
+        }
+
+        const float targetPositionZ = 0.0f;
+        const float moveSpeedZ = 10.0f * elapsedTime;
+        if (cameraPos.z < targetPositionZ)
+        {
+            cameraPos.z = (std::min)(targetPositionZ, (cameraPos.z + moveSpeedZ));
+        }
+        if (cameraPos.z > targetPositionZ)
+        {
+            cameraPos.z = (std::max)(targetPositionZ, (cameraPos.z - moveSpeedZ));
+        }
+    }
+
+
+    float leftLimit = -8.5f;
+    float playerLeftLimit = -18.6f;
+    // 画面左端は止まるようにする
+    {
+        if (cameraPos.x <= leftLimit)cameraPos.x = leftLimit;
+        if (playerPos.x <= playerLeftLimit)playerPos.x = playerLeftLimit;
+    }    
+
+    GetTransform()->SetPosition(cameraPos);
+    playerManager.GetPlayer()->GetTransform()->SetPosition(playerPos);
+}
+
 
 void Camera::SetPerspectiveFov(ID3D11DeviceContext* dc)
 {

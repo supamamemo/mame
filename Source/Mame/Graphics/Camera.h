@@ -33,6 +33,7 @@ public:
     void UpdateTitle(float elapsedTime);
     void UpdateTutorial(float elapsedTime, int state);
     void UpdateBoss(const float elapsedTime);
+    void UpdateEx(const float elapsedTime);
 
     void SetPerspectiveFov(ID3D11DeviceContext* dc);
     void SetPerspectiveFovTitle(ID3D11DeviceContext* dc);
