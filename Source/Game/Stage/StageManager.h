@@ -30,6 +30,7 @@ public:
     {
         None,
         StagePlains,
+        StageEx,
     };
 
     struct SavedHalfPoint
