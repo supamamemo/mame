@@ -423,7 +423,7 @@ void Camera::UpdateBoss(const float elapsedTime)
         switch (parabolaStage_)
         {
         case 0:
-            velocityY_  += -0.02f * elapsedTime;
+            velocityY_  += -0.015f * elapsedTime;
             cameraPos.y += velocityY_;
 
 

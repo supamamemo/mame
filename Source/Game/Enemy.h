@@ -84,6 +84,10 @@ public:
     const float& GetMoveDirectionX() const { return moveDirectionX_; }
     void SetMoveDirectionX(const float& moveDirectionX) { moveDirectionX_ = moveDirectionX; }
 
+    // プレイヤーに当たったかの取得・設定
+    const bool GetIsHitPlayer() const { return isHitPlayer_; }
+    void SetIsHitPlayer(const bool isHitPlayer) { isHitPlayer_ = isHitPlayer; }
+
     // 味方に当たったかの取得・設定
     const bool GetIsHitFriend() const { return isHitFriend_; }
     void SetIsHitFriend(const bool isHitFriend) { isHitFriend_ = isHitFriend; }
@@ -111,6 +115,7 @@ protected:
     float searchLengthY_    =    2.0f;     // Y軸で索敵できる距離
     float moveDirectionX_   =   -1.0f;     // 移動方向X（デフォルトは左向き）
 
+    bool  isHitPlayer_      =   false;     // プレイヤーに当たったか
     bool  isHitFriend_      =   false;     // 味方に当たったか
     bool  isOnFriend_       =   false;     // 味方の上に乗っかっているか
 

@@ -268,7 +268,7 @@ void StageBoss::Update(const float& elapsedTime)
                     // 右に走り去っていったらステージセレクトに切り替える
                     if (playerManager.GetPlayer()->GetClearState() == ClearState::MoveToRight)
                     {
-                        const float moveLimitX = 10.0f;
+                        const float moveLimitX = 7.0f;
                         if (playerTransform->GetPosition().x > moveLimitX)
                         {
                             playerTransform->SetPositionX(moveLimitX);
@@ -298,6 +298,7 @@ void StageBoss::Update(const float& elapsedTime)
         if (terrainPos.y <= 4.0f)terrainPos.y = 4.0f;
         TerrainManager::Instance().GetTerrain(4)->GetTransform()->SetPosition(terrainPos);
     }
+
     if (EnemyManager::Instance().GetEnemy(0)->GetHealth() > 0)
     {
         if (EnemyManager::Instance().GetEnemy(0)->GetTransform()->GetPosition().x <= 8.5f)
@@ -308,13 +309,13 @@ void StageBoss::Update(const float& elapsedTime)
             TerrainManager::Instance().GetTerrain(5)->GetTransform()->SetPosition(terrainPos);
         }
     }
-    else
-    {
-        DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(5)->GetTransform()->GetPosition();
-        terrainPos.y += elapsedTime;
-        if (terrainPos.y >= 8.0f)terrainPos.y = 8.0f;
-        TerrainManager::Instance().GetTerrain(5)->GetTransform()->SetPosition(terrainPos);
-    }
+    //else
+    //{
+    //    DirectX::XMFLOAT3 terrainPos = TerrainManager::Instance().GetTerrain(5)->GetTransform()->GetPosition();
+    //    terrainPos.y += elapsedTime;
+    //    if (terrainPos.y >= 8.0f)terrainPos.y = 8.0f;
+    //    TerrainManager::Instance().GetTerrain(5)->GetTransform()->SetPosition(terrainPos);
+    //}
 
     // playerHp
     PlayerHpUiUpdate(elapsedTime);
