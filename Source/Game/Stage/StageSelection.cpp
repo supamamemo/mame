@@ -423,6 +423,7 @@ void StageSelection::PointRender(const float& elapsedTime)
 
         point[POINT::Red]->GetTransform()->SetPosition(DirectX::XMFLOAT3(14, 2.2f, 0));
         point[POINT::Red]->Render(elapsedTime, 1.0f);
+        break;
     case POINTSTATE::Clear:
         point[POINT::Blue]->GetTransform()->SetPosition(DirectX::XMFLOAT3(-7, 2.2f, 0));
         point[POINT::Blue]->Render(elapsedTime, 1.0f);
