@@ -375,15 +375,15 @@ void StageEx::RegisterTerrains(TerrainManager& terrainManager)
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 24
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
 
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
 }
