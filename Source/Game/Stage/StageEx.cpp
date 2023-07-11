@@ -437,11 +437,7 @@ void StageEx::SetTerrains(TerrainManager& terrainManager)
     terrainManager.GetTerrain(25)->GetTransform()->SetPosition(DirectX::XMFLOAT3(102.0f, 2.0f, 10.0f));
 
 
-    // “G‚ª‰º‚É‚·‚è”²‚¯‚È‚¢‚æ‚¤‚É‚·‚é
-    {
-        terrainManager.GetTerrain(21)->isCollisionEnemy_ = true;
-        terrainManager.GetTerrain(22)->isCollisionEnemy_ = true;
-    }
+
 
 }
 
@@ -458,14 +454,14 @@ void StageEx::SetEnemies(EnemyManager& enemyManager)
     enemyManager.GetEnemy(7)->GetTransform()->SetPosition(DirectX::XMFLOAT3(38.2f, 2.4f, 10.0f));
     enemyManager.GetEnemy(8)->GetTransform()->SetPosition(DirectX::XMFLOAT3(39.2f, 2.4f, 10.0f));
     enemyManager.GetEnemy(9)->GetTransform()->SetPosition(DirectX::XMFLOAT3(40.2f, 2.4f, 10.0f));
-    
-    enemyManager.GetEnemy(10)->GetTransform()->SetPosition(DirectX::XMFLOAT3(76.7f, 7.7f, 10.0f));
-    enemyManager.GetEnemy(11)->GetTransform()->SetPosition(DirectX::XMFLOAT3(79.7f, 7.7f, 10.0f));
-    enemyManager.GetEnemy(12)->GetTransform()->SetPosition(DirectX::XMFLOAT3(80.0f, 7.7f, 10.0f));
-    enemyManager.GetEnemy(13)->GetTransform()->SetPosition(DirectX::XMFLOAT3(82.0f, 7.7f, 10.0f));
-    enemyManager.GetEnemy(14)->GetTransform()->SetPosition(DirectX::XMFLOAT3(84.0f, 7.7f, 10.0f));
-    enemyManager.GetEnemy(15)->GetTransform()->SetPosition(DirectX::XMFLOAT3(86.0f, 7.7f, 10.0f));
-    enemyManager.GetEnemy(16)->GetTransform()->SetPosition(DirectX::XMFLOAT3(88.0f, 7.7f, 10.0f));
+
+    enemyManager.GetEnemy(10)->GetTransform()->SetPosition(DirectX::XMFLOAT3(76.7f, 0.5f, 10.0f));
+    enemyManager.GetEnemy(11)->GetTransform()->SetPosition(DirectX::XMFLOAT3(79.7f, 0.5f, 10.0f));
+    enemyManager.GetEnemy(12)->GetTransform()->SetPosition(DirectX::XMFLOAT3(80.0f, 0.5f, 10.0f));
+    enemyManager.GetEnemy(13)->GetTransform()->SetPosition(DirectX::XMFLOAT3(82.0f, 0.5f, 10.0f));
+    enemyManager.GetEnemy(14)->GetTransform()->SetPosition(DirectX::XMFLOAT3(84.0f, 0.5f, 10.0f));
+    enemyManager.GetEnemy(15)->GetTransform()->SetPosition(DirectX::XMFLOAT3(86.0f, 0.5f, 10.0f));
+    enemyManager.GetEnemy(16)->GetTransform()->SetPosition(DirectX::XMFLOAT3(88.0f, 0.5f, 10.0f));
 }
 
 void StageEx::PlayerHpUiUpdate(float elapsedTime)
