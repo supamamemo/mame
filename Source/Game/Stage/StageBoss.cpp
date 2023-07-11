@@ -275,6 +275,10 @@ void StageBoss::Update(const float& elapsedTime)
 
                             //stageManager.savedHalfPoint_ = {}; // 保存した中間地点リセット
 
+
+                            Mame::Scene::SceneManager::Instance().selectState =
+                                (std::max)(Mame::Scene::SceneManager::Instance().selectState, 3);
+
                             StageManager::Instance().ChangeStage(new StageLoading(new StageSelection));
                         }
                     }

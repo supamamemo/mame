@@ -179,6 +179,10 @@ void StageSelection::Update(const float& elapsedTime)
     }
     Camera::Instance().GetTransform()->SetPosition(cameraPos);
 
+    DirectX::XMFLOAT3 backPos = back->GetTransform()->GetPosition();
+    backPos.x = cameraPos.x;
+    back->GetTransform()->SetPosition(backPos);
+
     // ステージ選択
     switch (selectState)
     {

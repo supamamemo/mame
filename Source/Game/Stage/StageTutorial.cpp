@@ -224,9 +224,11 @@ void StageTutorial::Initialize()
     //back->GetTransform()->SetPosition(DirectX::XMFLOAT3(45.0f, 7.0f, 32.0f));
     //back->GetTransform()->SetScale(DirectX::XMFLOAT3(85.0f, 50.0f, 3.0f));
     //back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(180), 0.0f, DirectX::XMConvertToRadians(180), 0.0f));
-    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.0f, 32.0f));
-    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 22.0f, 10.0f));
-    back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0.0f, 0.0f));
+    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 5, 40));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(50, 30, 8));
+    //back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 5.0f, 32.0f));
+    //back->GetTransform()->SetScale(DirectX::XMFLOAT3(1.0f, 22.0f, 10.0f));
+
 
     // ƒS[ƒ‹
     goal_->GetTransform()->SetPosition(DirectX::XMFLOAT3(68.0f, 6.0f, 10.7f));
@@ -409,7 +411,7 @@ void StageTutorial::Render(const float& elapsedTime)
     Graphics& graphics = Graphics::Instance(); 
 
     // ”wŒi‰¼
-    back->Render(elapsedTime);
+    back->Render(elapsedTime, 1.0f);
 
     goal_->Render(elapsedTime);
 

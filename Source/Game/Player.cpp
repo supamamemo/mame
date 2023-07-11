@@ -214,8 +214,8 @@ void Player::UpdateSelectStage(const float& elapsedTime, int* state)
             break;
         }
 
-        // bossStageに行けるかどうか
-        if (Mame::Scene::SceneManager::Instance().selectState > 1)
+        // exStageに行けるかどうか
+        if (Mame::Scene::SceneManager::Instance().selectState > 2)
         {
             // スティック右に傾けたら
             if (ax > 0)
