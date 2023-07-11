@@ -249,6 +249,8 @@ void StageSelection::End()
 // •`‰æˆ—
 void StageSelection::Render(const float& elapsedTime)
 {
+    StageManager& stageManager = StageManager::Instance();
+
     // ”wŒi
     back->Render(elapsedTime, true);
 
