@@ -70,13 +70,13 @@ void Box::Render(const float& elapsedTime, float size)
     }
 }
 
-void Box::Render(const float& elapsedTime, bool noPlayer)
+void Box::Render(const float& elapsedTime, bool noPlayer, float size)
 {
-    Graphics& graphics = Graphics::Instance();
+    Graphics& graphics = Graphics::Instance(); 
 
     // worlds—ñXV
     NO_CONST DirectX::XMFLOAT4X4 transform = {};
-    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(0.01f));
+    DirectX::XMStoreFloat4x4(&transform, model->GetTransform()->CalcWorldMatrix(size));
 
     // model•`‰æ
     if (&model->keyframe)

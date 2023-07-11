@@ -110,8 +110,8 @@ void StagePlains::Initialize()
 
     // ”wŒi
     back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 5, 27));
-    back->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 19, 15));
-    back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
+    back->GetTransform()->SetScale(DirectX::XMFLOAT3(50, 30, 0));
+    //back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
 
     // ’†ŠÔ’n“_
     halfwayPoint_->GetTransform()->SetPosition(DirectX::XMFLOAT3(160.5f, 2.5f, 10.5f));
@@ -337,7 +337,7 @@ void StagePlains::Render(const float& elapsedTime)
     TerrainManager::Instance().Render(elapsedTime);
 
     // ”wŒi
-    back->Render(elapsedTime);
+    back->Render(elapsedTime, 1.0f);
 
     // ’†ŠÔ’n“_
     halfwayPoint_->Render(elapsedTime);
