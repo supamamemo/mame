@@ -172,7 +172,7 @@ void StageEx::Update(const float& elapsedTime)
         back->BackUpdate(elapsedTime);
 
         // camera更新
-        Camera::Instance().Update(elapsedTime);
+        Camera::Instance().UpdateEx(elapsedTime);
 
         // terrain更新
         TerrainManager::Instance().Update(elapsedTime);
@@ -366,8 +366,8 @@ void StageEx::RegisterTerrains(TerrainManager& terrainManager)
     terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx"));    // 16
     
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 17
-    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 18
-    terrainManager.Register(new TerrainNoClimb("./resources/stage/7.fbx"));   // 19
+    terrainManager.Register(new TerrainNoClimb("./resources/stage/3.fbx"));    // 18
+    terrainManager.Register(new TerrainNormal("./resources/stage/7.fbx"));   // 19
     terrainManager.Register(new TerrainNormal("./resources/stage/7.fbx"));    // 20
     terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 21
     terrainManager.Register(new TerrainDelayFall("./resources/stage/7.fbx")); // 22
@@ -375,17 +375,28 @@ void StageEx::RegisterTerrains(TerrainManager& terrainManager)
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 24
     terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
 
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
-    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 22
-    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
-    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 25
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 26
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 27
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 28
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 29
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 30
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx"));    // 31
+
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 32
+    terrainManager.Register(new TerrainNormal("./resources/stage/2.fbx"));    // 33
+    terrainManager.Register(new TerrainNormal("./resources/stage/5.fbx"));    // 34
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 35
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 36
+    terrainManager.Register(new TerrainDelayFall("./resources/stage/8.fbx")); // 37
+    terrainManager.Register(new TerrainNoClimb("./resources/stage/4.fbx"));    // 38
+    terrainManager.Register(new TerrainNormal("./resources/stage/2.fbx"));    // 39
+
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx")); // 40
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx")); // 41
+    terrainManager.Register(new TerrainNormal("./resources/stage/3.fbx")); // 41
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx")); // 41
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx")); // 41
+    terrainManager.Register(new TerrainNormal("./resources/stage/8.fbx")); // 41
 }
 
 void StageEx::RegisterEnemies(EnemyManager& enemyManager)
@@ -409,6 +420,25 @@ void StageEx::RegisterEnemies(EnemyManager& enemyManager)
     enemyManager.Register(new EnemyTofu());                 // 14
     enemyManager.Register(new EnemyTofu());                 // 15
     enemyManager.Register(new EnemyTofu());                 // 16
+    
+    enemyManager.Register(new EnemyTofu());                 // 17
+    enemyManager.Register(new EnemyTofu());                 // 18
+    enemyManager.Register(new EnemyTofu());                 // 19
+    
+    enemyManager.Register(new EnemyTofu());                 // 20
+    
+    enemyManager.Register(new EnemyTofu());                 // 21
+
+    enemyManager.Register(new EnemyTofu());                 // 22
+    enemyManager.Register(new EnemyTofu());                 // 23
+    enemyManager.Register(new EnemyTofu());                 // 24
+    
+    enemyManager.Register(new EnemyTofu());                 // 25
+    enemyManager.Register(new EnemyTofu());                 // 26
+    
+    enemyManager.Register(new EnemyTofu());                 // 27
+    enemyManager.Register(new EnemyTofu());                 // 28
+
 
 }
 
@@ -445,8 +475,25 @@ void StageEx::SetTerrains(TerrainManager& terrainManager)
     terrainManager.GetTerrain(24)->GetTransform()->SetPosition(DirectX::XMFLOAT3(97.8f, 0.0f, 10.0f));
     terrainManager.GetTerrain(25)->GetTransform()->SetPosition(DirectX::XMFLOAT3(102.0f, 2.0f, 10.0f));
 
-
-
+    terrainManager.GetTerrain(26)->GetTransform()->SetPosition(DirectX::XMFLOAT3(106.6f, 5.98f, 10.0f));
+    terrainManager.GetTerrain(27)->GetTransform()->SetPosition(DirectX::XMFLOAT3(110.6f, 5.98f, 10.0f));
+    terrainManager.GetTerrain(28)->GetTransform()->SetPosition(DirectX::XMFLOAT3(114.6f, 5.98f, 10.0f));
+    
+    terrainManager.GetTerrain(29)->GetTransform()->SetPosition(DirectX::XMFLOAT3(119.0f, 2.0f, 10.0f));
+    terrainManager.GetTerrain(30)->GetTransform()->SetPosition(DirectX::XMFLOAT3(123.3f, -4.0f, 10.0f));
+    terrainManager.GetTerrain(31)->GetTransform()->SetPosition(DirectX::XMFLOAT3(127.5f, -2.0f, 10.0f));
+    terrainManager.GetTerrain(32)->GetTransform()->SetPosition(DirectX::XMFLOAT3(132.0f, 1.98f, 10.0f));
+    terrainManager.GetTerrain(33)->GetTransform()->SetPosition(DirectX::XMFLOAT3(143.0f, 0.193f, 10.0f));
+    
+    terrainManager.GetTerrain(34)->GetTransform()->SetPosition(DirectX::XMFLOAT3(138.5f, 11.0f, 10.0f));
+    terrainManager.GetTerrain(35)->GetTransform()->SetPosition(DirectX::XMFLOAT3(150.0f, 4.5f, 10.0f));
+    terrainManager.GetTerrain(36)->GetTransform()->SetPosition(DirectX::XMFLOAT3(145.0f, 7.5f, 10.0f));
+    terrainManager.GetTerrain(37)->GetTransform()->SetPosition(DirectX::XMFLOAT3(150.0f, 10.5f, 10.0f));
+    terrainManager.GetTerrain(38)->GetTransform()->SetPosition(DirectX::XMFLOAT3(154.3f, 6.0f, 10.1f));
+    
+    terrainManager.GetTerrain(39)->GetTransform()->SetPosition(DirectX::XMFLOAT3(160.8f, 0.193f, 10.0f));
+    terrainManager.GetTerrain(40)->GetTransform()->SetPosition(DirectX::XMFLOAT3(160.0f, 10.5f, 10.0f));
+    terrainManager.GetTerrain(41)->GetTransform()->SetPosition(DirectX::XMFLOAT3(165.0f, 8.5f, 10.0f));
 
 }
 
@@ -471,6 +518,24 @@ void StageEx::SetEnemies(EnemyManager& enemyManager)
     enemyManager.GetEnemy(14)->GetTransform()->SetPosition(DirectX::XMFLOAT3(84.0f, 0.5f, 10.0f));
     enemyManager.GetEnemy(15)->GetTransform()->SetPosition(DirectX::XMFLOAT3(86.0f, 0.5f, 10.0f));
     enemyManager.GetEnemy(16)->GetTransform()->SetPosition(DirectX::XMFLOAT3(88.0f, 0.5f, 10.0f));
+    
+    enemyManager.GetEnemy(17)->GetTransform()->SetPosition(DirectX::XMFLOAT3(78.0f, 5.4f, 10.0f));
+    enemyManager.GetEnemy(18)->GetTransform()->SetPosition(DirectX::XMFLOAT3(83.0f, 5.4f, 10.0f));
+    enemyManager.GetEnemy(19)->GetTransform()->SetPosition(DirectX::XMFLOAT3(88.0f, 5.4f, 10.0f));
+
+    enemyManager.GetEnemy(20)->GetTransform()->SetPosition(DirectX::XMFLOAT3(97.0f, 4.4f, 10.0f));
+
+    enemyManager.GetEnemy(21)->GetTransform()->SetPosition(DirectX::XMFLOAT3(110.0f, 6.4f, 10.0f));
+    
+    enemyManager.GetEnemy(22)->GetTransform()->SetPosition(DirectX::XMFLOAT3(122.0f, 0.4f, 10.0f));
+    enemyManager.GetEnemy(23)->GetTransform()->SetPosition(DirectX::XMFLOAT3(123.0f, 0.4f, 10.0f));
+    enemyManager.GetEnemy(24)->GetTransform()->SetPosition(DirectX::XMFLOAT3(124.0f, 0.4f, 10.0f));
+
+    enemyManager.GetEnemy(25)->GetTransform()->SetPosition(DirectX::XMFLOAT3(140.0f, 1.0f, 10.0f));
+    enemyManager.GetEnemy(26)->GetTransform()->SetPosition(DirectX::XMFLOAT3(143.0f, 1.0f, 10.0f));
+    
+    enemyManager.GetEnemy(27)->GetTransform()->SetPosition(DirectX::XMFLOAT3(160.0f, 11.0f, 10.0f));
+    enemyManager.GetEnemy(28)->GetTransform()->SetPosition(DirectX::XMFLOAT3(165.0f, 9.0f, 10.0f));
 }
 
 void StageEx::PlayerHpUiUpdate(float elapsedTime)
