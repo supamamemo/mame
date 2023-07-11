@@ -102,7 +102,7 @@ void StageEx::Initialize()
     }
 
     // ”wŒi
-    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, 5, 27));
+    back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0.0f, 4.5f, 27.0f));
     back->GetTransform()->SetScale(DirectX::XMFLOAT3(50, 30, 0));
     // back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
 
