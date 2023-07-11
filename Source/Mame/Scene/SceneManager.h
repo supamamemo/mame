@@ -69,5 +69,8 @@ namespace Mame::Scene
     public:
         // ファイル用
         int selectState = 0;
+
+
+
     };
 }

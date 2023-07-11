@@ -64,8 +64,8 @@ void StageSelection::Initialize()
     // ”wŒi
     {
         back->GetTransform()->SetPosition(DirectX::XMFLOAT3(0, -1, 20));
-        back->GetTransform()->SetScale(DirectX::XMFLOAT3(1, 22, 8));
-        back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
+        back->GetTransform()->SetScale(DirectX::XMFLOAT3(50, 30, 8));
+        //back->GetTransform()->SetRotation(DirectX::XMFLOAT4(DirectX::XMConvertToRadians(270), DirectX::XMConvertToRadians(270), 0, 0));
     }
 
     // é
@@ -237,7 +237,7 @@ void StageSelection::End()
 void StageSelection::Render(const float& elapsedTime)
 {
     // ”wŒi
-    back->Render(elapsedTime, true);
+    back->Render(elapsedTime, true, 1.0f);
 
     // é
     castle->Render(elapsedTime);
